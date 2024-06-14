@@ -51,10 +51,10 @@
             <h1 class="title is-1 publication-title">Let Occ Flow: Self-Supervised Occupancy Flow Prediction</h1>
             <div class="is-size-5 publication-authors">
               <span class="author-block">
-                <a href="https://scholar.google.com/citations?user=pBEZ7V4AAAAJ&hl=zh-CN">Yili Liu</a>,
+                <a href="https://scholar.google.com/citations?user=pBEZ7V4AAAAJ&hl=zh-CN">Yili Liu</a>*,
               </span>
               <span class="author-block">
-                <a href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&hl=en">Linzhan Mou</a>,
+                <a href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&hl=en">Linzhan Mou</a>*,
               </span>
               <span class="author-block">
                 <a href="https://scholar.google.com/citations?hl=zh-CN&user=4Ry3CKsAAAAJ">Xuan Yu</a>,
@@ -69,12 +69,17 @@
                 <a href="https://scholar.google.com/citations?user=1hI9bqUAAAAJ&hl=en">Rong Xiong</a>,
               </span>
               <span class="author-block">
-                <a href="https://ywang-zju.github.io/">Yue Wang</a>,
+                <a href="https://ywang-zju.github.io/">Yue Wang</a><sup>†</sup>,
               </span>
             </div>
 
             <div class="is-size-5 publication-authors">
-              <span class="author-block">Robotics Lab, Zhejiang University</span>
+              <span class="author-block">Zhejiang University</span>
+              <!-- <span class="author-block"><sup>2</sup>Google Research</span> -->
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">* Equal contribution. † Corresponding author.</span>
               <!-- <span class="author-block"><sup>2</sup>Google Research</span> -->
             </div>
 
@@ -166,11 +171,11 @@
               TPV for unified scene representation and deformable attention layers for feature
               aggregation, our approach incorporates a backward-forward temporal attention
               module to capture dynamic object dependencies, followed by a 3D refine module
-              for fine-gained volumetric representation. Besides, our method extends differen-
-              tiable rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmenta-
-              tion and optical flow cues for dynamic decomposition and motion optimization.
-              Extensive experiments on nuScenes and KITTI datasets demonstrate the compet-
-              itive performance of our approach over prior state-of-the-art methods.
+              for fine-gained volumetric representation. Besides, our method extends differentiable 
+              rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmentation 
+              and optical flow cues for dynamic decomposition and motion optimization.
+              Extensive experiments on nuScenes and KITTI datasets demonstrate the competitive 
+              performance of our approach over prior state-of-the-art methods.
             </p>
 
             <!-- <p>
@@ -259,7 +264,7 @@
             <p>
               We show the results for depth estimation, 3D occupancy and occupancy flow prediction on the KITTI dataset.
               Our method can predict visually appealing depth maps, fine-grained occupancy, and accurate dynamic
-              decomposition and motion estimation
+              decomposition and motion estimation.
             </p>
           </div>
           <div class="columns is-vcentered interpolation-panel">
