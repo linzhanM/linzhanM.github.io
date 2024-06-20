@@ -87,14 +87,11 @@
 
 
                         I was very fortunate to work closely with <a href="https://ywang-zju.github.io/">Prof. Yue Wang</a>, <a href="https://xzhou.me/">Prof. Xiaowei Zhou</a> at ZJU, and <a href="https://yxw.cs.illinois.edu/">Prof. Yu-Xiong Wang</a> at UIUC.
-
-                        <!-- I work as a research intern at <a href="https://www.antgroup.com/en">Ant Research</a>. -->
-                    
                     </p>
 
                     <p>
                         My research interest lies in 3D vision and robotics, specifically focusing on 3D/4D
-                        reconstruction for robot learning. Recently I am working on generalizable 3D representation learning for robotics. My ultimate goal is to develop a physics-aware and user-friendly multi-modal system to better perceive, understand and interact with the dynamic world.
+                        reconstruction and 3D representation learning for robotics. My ultimate goal is to develop a physics-aware multi-modal system to better perceive, understand and interact with the 4D open world.
                     </p>
                 </div>
             </section>
@@ -117,54 +114,94 @@
             <section>
                 <h2>
                     Publications and Preprints
-                    <!-- <br class="publication-list_mobileBreak__24vsO">
+                    <br class="publication-list_mobileBreak__24vsO">
                     <span class="publication-list_filters__3ikvu">
-                        <span class="publication-list_filter__1x1Xu"><a class="publication-list_active__y3dLZ" data-filter="show selected">show selected</a></span>
-                        <span class="publication-list_filter__1x1Xu"><a data-filter="show all by date">show all by date</a></span>
-                    </span> -->
+                        <span class="publication-list_filter__1x1Xu">
+                            <a href="https://linzhanm.github.io/" id="select0" onclick="showPubs(0); return false;" style="text-decoration: underline; color: rgb(0, 0, 99);">show selected</a>
+                        </span>
+                        <span class="publication-list_filter__1x1Xu">
+                            <a href="https://linzhanm.github.io/" id="select1" onclick="showPubs(1); return false;" style="">show all by date</a>
+                        </span>
+                    </span>
                 </h2> 
+                
+                <script>
+                    document.getElementById("select0").addEventListener("click", function() {
+                        document.getElementById("select0").style.textDecoration = "underline";
+                        document.getElementById("select0").style.color = "rgb(0, 0, 139)";
+                        document.getElementById("select1").style.textDecoration = "";
+                        document.getElementById("select1").style.color = "";
+                    });
+                    document.getElementById("select1").addEventListener("click", function() {
+                        document.getElementById("select1").style.textDecoration = "underline";
+                        document.getElementById("select1").style.color = "rgb(0, 0, 139)";
+                        document.getElementById("select0").style.textDecoration = "";
+                        document.getElementById("select0").style.color = "";
+                    });
+                </script>
 
-                <div class="publication-list_smallText__pUJXB">* denotes equal contribution; ♯ denotes the corresponding author. </div>
+                <script>
+                    function showPubs(index) {
+                        var pubs = document.getElementsByClassName("publication_publication__1Icb_");
+                        if (index == 0) {
+                            for (var i = 0; i < pubs.length; i++) {
+                                if (pubs[i].getAttribute("name") == "letoccflow" || pubs[i].getAttribute("name") == "i4d" || pubs[i].getAttribute("name") == "avatar") {
+                                    pubs[i].style.display = ""
+                                } else {
+                                    pubs[i].style.display = "none";
+                                }
+                            }
+                        } else {
+                            for (var i = 0; i < pubs.length; i++) {
+                                pubs[i].style.display = ""
+                            }
+                        }
+                    }
+                </script>
 
-                    <div class="publication_publication__1Icb_">
-                        <div class="publication_image__1EUuC">
-                            <video class="vjs-tech" title="Let Occ Flow video loading.." id="vjs_video_3_html5_api"
-                                tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-                                src="images/corl.mp4"></video>
+                <div 
+                    class="publication-list_smallText__pUJXB">* denotes equal contribution; ♯ denotes the corresponding author. 
+                </div>
+
+                <div class="publication_publication__1Icb_" name="letoccflow">
+                    <div class="publication_image__1EUuC" name="letoccflow">
+                        <video class="vjs-tech" title="Let Occ Flow video loading.." id="vjs_video_3_html5_api"
+                            tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+                            src="images/corl.mp4"></video>
+                    </div>
+                    <div class="publication_info__kLRGP" name="letoccflow">
+                        <div class="publication_title__3m6SE">Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction
                         </div>
-                        <div class="publication_info__kLRGP">
-                            <div class="publication_title__3m6SE">Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction
-                            </div>
-                            <div class="publication_authors__qkFXc">
-                                <!-- <span><u>Linzhan Mou*</u></span>
-                                and -->
-                                <span> Anonymous authors </span> 
-                            </div>
-    
-                            <div class="publication_venue__1Dv6R"><span>Under Review</span><span></span> </div>
-                            <div class="publication_venue__1Dv6R"><span><i>(Final Year Project)</i> </span><span></span> </div>
+                        <div class="publication_authors__qkFXc">
+                            <span> Anonymous authors </span> 
+                        </div>
 
-                            <div class="publication_links__aEpO_">
-                                <span class="publication_link__fXY43"><a
-                                        >Paper</a></span>
-                                <span class="publication_link__fXY43"><a
-                                        >Project</a></span>
-                                <span class="publication_link__fXY43"><a
-                                        >Code</a></span>
-                                <span class="publication_link__fXY43"><a
-                                        >Video</a></span>
-                            </div>
+                        <div class="publication_venue__1Dv6R"><span>Under Review</span><span></span> </div>
+                        <div class="publication_venue__1Dv6R"><span><i>(Final Year Project)</i> </span><span></span> </div>
+
+                        <div class="publication_links__aEpO_">
+                            <span class="publication_link__fXY43"><a
+                                >arXiv</a></span>
+                            <span class="publication_link__fXY43"><a
+                                >Project</a></span>
+                            <span class="publication_link__fXY43"><a
+                                >Code</a></span>
+                            <span class="publication_link__fXY43"><a
+                                >Video</a></span>
+                            <span class="publication_link__fXY43"><a
+                                >Demo</a></span>
                         </div>
                     </div>
+                </div>
 
-                <div class="publication_publication__1Icb_">
-                    <div class="publication_image__1EUuC">
+                <div class="publication_publication__1Icb_" name="i4d">
+                    <div class="publication_image__1EUuC" name="i4d">
                         <video class="vjs-tech" title="Instruct 4D-to-4D video loading.." id="vjs_video_3_html5_api"
                             tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
                             src="images/i4d.mp4"></video>
                     </div>
 
-                    <div class="publication_info__kLRGP">
+                    <div class="publication_info__kLRGP" name="i4d">
                         <div class="publication_title__3m6SE"> Instruct 4D-to-4D: Editing 4D Scenes as Pseudo-3D Scenes
                             Using 2D Diffusion
                         </div>
@@ -188,14 +225,14 @@
                     </div>
                 </div>
 
-                <div class="publication_publication__1Icb_">
-                    <div class="publication_image__1EUuC">
+                <div class="publication_publication__1Icb_" name="avatar">
+                    <div class="publication_image__1EUuC" name="avatar">
                         <video class="vjs-tech" title="Relightable and Animatable Neural Avatar video loading.."
                             id="vjs_video_3_html5_api" tabindex="-1" preload="auto" loop="" muted="muted"
                             playsinline="playsinline" autoplay="" src="images/sigasia.mp4"></video>
                     </div>
 
-                    <div class="publication_info__kLRGP">
+                    <div class="publication_info__kLRGP" name="avatar">
                         <div class="publication_title__3m6SE"> Relightable and Animatable Neural Avatar from Sparse-View
                             Video
                         </div>
@@ -229,11 +266,12 @@
                     </div>
                 </div>
 
-                <div class="publication_publication__1Icb_">
-                    <div class="publication_image__1EUuC"><img src="images/NIPS.png"
+                <div class="publication_publication__1Icb_" name="compactvv" style="display: none;">
+                    <div class="publication_image__1EUuC" name="compactvv">
+                        <img src="images/NIPS.png"
                             alt="Reconstructing Hand-Held Objects from Monocular Video thumbnail loading..." />
                     </div>
-                    <div class="publication_info__kLRGP">
+                    <div class="publication_info__kLRGP" name="compactvv">
                         <div class="publication_title__3m6SE">Compact Neural Volumetric Video Representations
                             with Dynamic Codebooks
                         </div>
@@ -260,13 +298,13 @@
                 </div>
 
                 <div>
-                    <div class="publication_publication__1Icb_">
-                        <div class="publication_image__1EUuC">
+                    <div class="publication_publication__1Icb_" name="paintingnature" style="display: none;">
+                        <div class="publication_image__1EUuC" name="paintingnature">
                             <video class="vjs-tech" title="Painting 3D Nature in 2D video loading.."
                                 id="vjs_video_3_html5_api" tabindex="-1" preload="auto" loop="" muted="muted"
                                 playsinline="playsinline" autoplay="" src="images/teaser.mp4"></video>
                         </div>
-                        <div class="publication_info__kLRGP">
+                        <div class="publication_info__kLRGP" name="paintingnature">
                             <div class="publication_title__3m6SE">Painting 3D Nature in 2D: View Synthesis of Natural
                                 Scenes from a Single Semantic Mask</div>
                             <div class="publication_authors__qkFXc">
@@ -293,10 +331,11 @@
                     </div>
 
 
-                    <div class="publication_publication__1Icb_">
-                        <div class="publication_image__1EUuC"><img src="images/attface.png">
+                    <div class="publication_publication__1Icb_" name="attface" style="display: none;">
+                        <div class="publication_image__1EUuC" name="attface">
+                            <img src="images/attface.png">
                         </div>
-                        <div class="publication_info__kLRGP">
+                        <div class="publication_info__kLRGP" name="attface">
                             <div class="publication_title__3m6SE"> MAttFace: High-Resolution Face Swapping with
                                 Multi-Level Attention
                             </div>
@@ -311,14 +350,13 @@
                             <div class="publication_venue__1Dv6R"><span> Pattern Recognition</div>
                             <div class="publication_venue__1Dv6R"><span><i>(National Student Research Training Program)</i> </span><span></span> </div>
                             <div class="publication_links__aEpO_">
-                                <span class="publication_link__fXY43"><a>Paper</a></span>
+                                <span class="publication_link__fXY43"><a href="./media/TCI_MAttFace.pdf">Paper</a></span>
                                 <span class="publication_link__fXY43"><a>Project</a></span>
                                 <span class="publication_link__fXY43"><a>Code</a></span>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </section>
 
             <section>
@@ -332,7 +370,7 @@
                             <td>
                                 <div class="institution">Research Asistant, UIUC</div>
                                 <div class="period">Jul. 2023 - Dec. 2023</div>
-                                <div class="advisor">Advisor: <a href="https://yxw.cs.illinois.edu/">Prof. Yu-Xiong Wang</a></div>
+                                <!-- <div class="advisor">Advisor: <a href="https://yxw.cs.illinois.edu/">Prof. Yu-Xiong Wang</a></div> -->
                             </td>
                             <td width="15%">
                                 <img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;" src="./images/ant.png">
@@ -340,7 +378,7 @@
                             <td>
                                 <div class="institution">Research Intern, Ant Group</div>
                                 <div class="period">Feb. 2024 - Jun. 2024</div>
-                                <div class="advisor">Advisor: <a href="https://xuenan.net/">Dr. Nan Xue</a></div>
+                                <!-- <div class="advisor">Advisor: <a href="https://xuenan.net/">Dr. Nan Xue</a></div> -->
                             </td>
                         </tr>
                     </tbody>
