@@ -85,12 +85,14 @@
                         Currently, I am a research intern advised by <a href="https://www.cis.upenn.edu/~kostas/">Prof. Kostas Daniilidis</a> at UPenn GRASP Lab and <a href="https://hangzhaomit.github.io/">Prof. Hang Zhao</a> at Tsinghua MARS Lab.
 
 
-                        I was also privileged to work closely with <a href="https://ywang-zju.github.io/">Prof. Yue Wang</a>, <a href="https://xzhou.me/">Prof. Xiaowei Zhou</a> and <a href="https://yxw.cs.illinois.edu/">Prof. Yu-Xiong Wang</a>.
+                        I was also privileged to work closely with <a href="https://ywang-zju.github.io/">Prof. Yue Wang</a>, <a href="https://xzhou.me/">Prof. Xiaowei Zhou</a> and <a href="https://yxw.cs.illinois.edu/">Prof. Yu-Xiong Wang</a> on several research projects.
                     </p>
 
                     <p>
                         My research interest lies in 3D vision and robotics, specifically focusing on 3D/4D
-                        reconstruction and 3D representation learning for robotics. My ultimate goal is to develop a physics-aware multi-modal system to better perceive, understand and interact with the 4D open world.
+                        reconstruction, generation and 3D representation learning for robotics to solve the real2sim2real gap.
+                        
+                        <!-- My ultimate goal is to develop a physics-aware multi-modal system to better perceive, understand and interact with the 4D open world. -->
                     </p>
                 </div>
             </section>
@@ -100,7 +102,7 @@
                 
                 <ul>
                     <li>
-                        Our paper "Let Occ Flow" accepted by CoRL 2024 with all accept score!
+                        Our paper "Let Occ Flow" accepted by CoRL 2024 with all positive score!
                     </li>
                     <li>
                         "RelightableAvatar" and "Instruct 4D-to-4D" are open-sourced.
@@ -151,7 +153,7 @@
                         var pubs = document.getElementsByClassName("publication_publication__1Icb_");
                         if (index == 0) {
                             for (var i = 0; i < pubs.length; i++) {
-                                if (pubs[i].getAttribute("name") == "letoccflow" || pubs[i].getAttribute("name") == "i4d" || pubs[i].getAttribute("name") == "avatar") {
+                                if (pubs[i].getAttribute("name") == "letoccflow" || pubs[i].getAttribute("name") == "i4d" || pubs[i].getAttribute("name") == "avatar" || pubs[i].getAttribute("name") == "walker") {
                                     pubs[i].style.display = ""
                                 } else {
                                     pubs[i].style.display = "none";
@@ -167,6 +169,45 @@
 
                 <div 
                     class="publication-list_smallText__pUJXB">* denotes equal contribution; ♯ denotes the corresponding author. 
+                </div>
+
+                <div class="publication_publication__1Icb_" name="walker">
+                    <div class="publication_image__1EUuC" name="avatar">
+                        <video class="vjs-tech" title="Robust Robot Walker video loading.."
+                            id="vjs_video_3_html5_api" tabindex="-1" preload="auto" loop="" muted="muted"
+                            playsinline="playsinline" autoplay="" src="images/icra.mov"></video>
+                    </div>
+                    <div class="publication_info__kLRGP" name="avatar">
+                        <div class="publication_title__3m6SE"> Robust Robot Walker: Learning Agile Locomotion over Tiny Traps
+                        </div>
+                        <div class="publication_authors__qkFXc">
+                            <span><a href="https://zst1406217.github.io/">Shaoting Zhu</a></span>
+                            <span><a>Runhan Huang</a></span>
+                            <span><u>Linzhan Mou</u></span>
+                            <span><a href="https://hangzhaomit.github.io/">Hang Zhao</a><sup>♯</sup></span>
+                        </div>
+                        <div class="publication_venue__1Dv6R"><span>
+                                arXiv 2024</span>
+                            <span></span>
+                        </div>
+                        <div class="publication_venue__1Dv6R"><span>
+                                My first RL project</span>
+                            <span></span>
+                        </div>
+                        
+                        <div class="publication_links__aEpO_">
+                            <span class="publication_link__fXY43"><a
+                                    href="">arXiv</a></span>
+                            <span class="publication_link__fXY43"><a
+                                    href="https://robust-robot-walker.github.io/">Project</a></span>
+                            <span class="publication_link__fXY43"><a
+                                    href="https://github.com/zst1406217/robust_robot_walker">Code</a></span>
+                            <span class="publication_link__fXY43"><a
+                                href="https://youtu.be/eVvEu1nQFvk">YouTube</a></span>
+                            <span class="publication_link__fXY43"><a
+                                href="https://www.bilibili.com/video/BV1R64qesE4u/">Bilibili</a></span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="publication_publication__1Icb_" name="letoccflow">
@@ -220,15 +261,14 @@
                         <div class="publication_title__3m6SE">Instruct 4D-to-4D: Editing 4D Scenes as 3D Scenes Using 2D Diffusion</div>
                         <div class="publication_authors__qkFXc">
                             <span><u>Linzhan Mou</u></span>
-                            <span><a href="https://scholar.google.com/citations?user=_m5__wUAAAAJ&hl=en">Jun-Kun
-                                    Chen</a></span>
+                            <span><a href="https://scholar.google.com/citations?user=_m5__wUAAAAJ&hl=en">Jun-Kun Chen</a></span>
                             <span><a href="https://yxw.web.illinois.edu/">Yu-Xiong Wang</a><sup>♯</sup></span>
                         </div>
                         <div class="publication_venue__1Dv6R"><span>
                             CVPR 2024</span><span></span></div>
                         <div class="publication_venue__1Dv6R"><span>
                             also in Multimodal AI Workshop</span>
-                            <span class="publication_highlights__2ILmf">Oral Presentation</span>
+                            <span class="publication_highlights__2ILmf">Oral</span>
                             <span></span>
                         </div>
 
@@ -393,6 +433,7 @@
                                         Liu</a><sup>♯</sup></span>
                             </div>
                             <div class="publication_venue__1Dv6R"><span> Preprint 2023</div>
+                            <div class="publication_venue__1Dv6R"><span> My first computer vision project</div>
                             <div class="publication_links__aEpO_">
                                 <span class="publication_link__fXY43"><a>Paper</a></span>
                                 <span class="publication_link__fXY43"><a>Project</a></span>
@@ -407,24 +448,6 @@
                 <h2>Experiences</h2>
                 <table cellspacing="17">
                     <tbody>
-                        <!-- <tr>    
-                            <td width="15%">
-                                <img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;" src="./images/zju.png">
-                            </td>
-                            <td>
-                                <div class="institution">Research Intern, CS, ZJU</div>
-                                <div class="period">State Key Lab of CAD&CG</div>
-                                <div class="region">Hangzhou, China</div>
-                            </td>
-                            <td width="15%">
-                                <img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;" src="./images/manifold.png">
-                            </td>
-                            <td>
-                                <div class="institution">Tech Co-founder, Manifold AI</div>
-                                <div class="work"> Product Delivered: <a href="https://www.manifold-s.com/">Klein</a></div>
-                                <div class="region">Shanghai, China</div>
-                            </td>
-                        </tr> -->
                         <tr>
                             <td width="15%">
                                 <img style="width: 100%; max-height: 95px; max-width: 95px; object-fit: cover;" src="./images/uiuc2.png">
@@ -465,6 +488,27 @@
                         </tr>
                     </tbody>
                 </table>
+
+                <section>
+                    <h2>Projects</h2>
+                    <table cellspacing="17">
+                        <tbody>
+                            <tr>
+                                <td width="15%">
+                                    <img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;" src="./images/manifold.png">
+                                </td>
+                                <td>
+                                    <div class="institution">Tech Co-founder, Manifold AI</div>
+                                    <div class="work"> Product Delivered: <a href="https://www.manifold-s.com/">Klein</a></div> 
+                                    <div class="region">
+                                        Engine for controllable 3D scene GenAI,
+                                        diverse training scenes for embodied AI,
+                                        intergrating any real-world objects with 360° identicality
+                                    </div>
+                                </td>
+                            </tr> 
+                        </tbody>
+                    </table>
 
             <section>
                 <h2>Selected Honors</h2>
