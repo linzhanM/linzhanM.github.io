@@ -102,10 +102,10 @@
                 
                 <ul>
                     <li>
-                        Our paper "Let Occ Flow" accepted by CoRL 2024 with all positive score!
+                        Our paper "Robust Robot Walker" and "SARO" released on arXiv!
                     </li>
                     <li>
-                        "RelightableAvatar" and "Instruct 4D-to-4D" are open-sourced.
+                        Our paper "Let Occ Flow" accepted by CoRL 2024 with all positive score!
                     </li>
                     <li>
                         Our paper "Instruct 4D-to-4D" accepted by CVPR 2024!
@@ -153,7 +153,7 @@
                         var pubs = document.getElementsByClassName("publication_publication__1Icb_");
                         if (index == 0) {
                             for (var i = 0; i < pubs.length; i++) {
-                                if (pubs[i].getAttribute("name") == "letoccflow" || pubs[i].getAttribute("name") == "i4d" || pubs[i].getAttribute("name") == "avatar" || pubs[i].getAttribute("name") == "walker") {
+                                if (pubs[i].getAttribute("name") == "letoccflow" || pubs[i].getAttribute("name") == "i4d" || pubs[i].getAttribute("name") == "avatar") {
                                     pubs[i].style.display = ""
                                 } else {
                                     pubs[i].style.display = "none";
@@ -171,8 +171,46 @@
                     class="publication-list_smallText__pUJXB">* denotes equal contribution; ♯ denotes the corresponding author. 
                 </div>
 
-                <div class="publication_publication__1Icb_" name="walker">
-                    <div class="publication_image__1EUuC" name="avatar">
+                <div class="publication_publication__1Icb_" name="saro", style="display: none;">
+                    <div class="publication_image__1EUuC" name="saro">
+                        <video class="vjs-tech" title="Robust Robot Walker video loading.."
+                            id="vjs_video_3_html5_api" tabindex="-1" preload="auto" loop="" muted="muted"
+                            playsinline="playsinline" autoplay="" src="images/saro.mp4"></video>
+                    </div>
+                    <div class="publication_info__kLRGP" name="avatar">
+                        <div class="publication_title__3m6SE"> SARO: Space-Aware Robot System for Terrain Crossing via VLM
+                        </div>
+                        <div class="publication_authors__qkFXc">
+                            <span><a href="https://zst1406217.github.io/">Shaoting Zhu</a></span>
+                            <span><a>Derun Li</a></span>
+                            <span><u>Linzhan Mou</u></span>
+                            <span><a href="https://scholar.google.com/citations?hl=zh-CN&user=qYcgBbEAAAAJ">Yong Liu</a></span>
+                            <span><a>Ningyi Xu</a></span>
+                            <span><a href="https://hangzhaomit.github.io/">Hang Zhao</a><sup>♯</sup>
+                        </div>
+                        <div class="publication_venue__1Dv6R"><span>
+                                arXiv 2024</span>
+                            <span></span>
+                        </div>
+                        
+                        <div class="publication_links__aEpO_">
+                            <span class="publication_link__fXY43"><a
+                                    href="https://arxiv.org/abs/2407.16412">arXiv</a></span>
+                            <span class="publication_link__fXY43"><a
+                                    href="https://saro-vlm.github.io/">Project</a></span>
+                            <span class="publication_link__fXY43"><a
+                                    >Code</a></span>
+                            <span class="publication_link__fXY43"><a
+                                href="https://youtu.be/nzzRdFPNHMs">Video</a></span>
+                            <span class="publication_link__fXY43"><a
+                                href="https://www.bilibili.com/video/BV1uMtreoE6n/">Bilibili</a></span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="publication_publication__1Icb_" name="walker", style="display: none;">
+                    <div class="publication_image__1EUuC" name="walker">
                         <video class="vjs-tech" title="Robust Robot Walker video loading.."
                             id="vjs_video_3_html5_api" tabindex="-1" preload="auto" loop="" muted="muted"
                             playsinline="playsinline" autoplay="" src="images/icra.mp4"></video>
