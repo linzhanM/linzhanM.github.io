@@ -11,24 +11,25 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<!-- Bootstrap core CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+		crossorigin="anonymous">
 	<!-- https://fontawesome.com/cheatsheet -->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons/css/academicons.min.css">
 	<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Palatino"> -->
 	<link rel="stylesheet" href="static/custom-navbar.css">
-    <link rel="stylesheet" href="static/styles.css">
+	<link rel="stylesheet" href="static/styles.css">
 	<style>
-        body {
-            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
-        }
-    </style>
+		body {
+			font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+		}
+	</style>
 
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-131374046-3"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
+		function gtag() { dataLayer.push(arguments); }
 		gtag('js', new Date());
 		gtag('config', 'UA-131374046-3');
 	</script>
@@ -39,28 +40,28 @@
 	<!-- Show more content -->
 	<script type="text/javascript">
 		function toggle_vis(id) {
-	    	var e = document.getElementsByClassName(id);
+			var e = document.getElementsByClassName(id);
 			var showText = document.getElementById("showText");
 			for (var i = 0; i < e.length; i++) {
-		    	if (e[i].style.display == "none") {
-		        	e[i].style.display = "inline";
-	    			showText.innerHTML = "[Show selected]";
-		    	} else {
-		    		e[i].style.display = "none";
-		    		showText.innerHTML = "[Show more]";
-		    	}
-		    }
-	    }
+				if (e[i].style.display == "none") {
+					e[i].style.display = "inline";
+					showText.innerHTML = "[Show selected]";
+				} else {
+					e[i].style.display = "none";
+					showText.innerHTML = "[Show more]";
+				}
+			}
+		}
 
 		function display(id) {
-            var currentDisplay = document.getElementById(id).style.display;
-            if (currentDisplay == 'none') {
-                document.getElementById(id).style.display = "inline-block";
-            }
-            else {
-                document.getElementById(id).style.display = "none";
-            }
-        }
+			var currentDisplay = document.getElementById(id).style.display;
+			if (currentDisplay == 'none') {
+				document.getElementById(id).style.display = "inline-block";
+			}
+			else {
+				document.getElementById(id).style.display = "none";
+			}
+		}
 	</script>
 
 	<!-- Github button icon -->
@@ -71,380 +72,500 @@
 
 <body>
 	<nav class="navbar" role="navigation">
-        <div class="navbar-brand">
-          <a class="navbar-item" href="/">
-            <strong>Linzhan Mou</strong>
-          </a>
-  
-          <div class="navbar-burger" data-target="navbar-main">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-  
-        <div class="navbar-menu" id="navbar-main">
-  
-            <div class="navbar-end">
-                <div class="navbar-item">
-                    <a target="_blank" href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&hl=en" class="button is-white">
-                        <i class="ai ai-google-scholar ai-lg" aria-hidden="true"></i>
-                    </a>
-                    <a target="_blank" href="https://github.com/Friedrich-M" class="button is-white">
-                        <i class="fab fa-github fa-lg" aria-hidden="true"></i>
-                    </a>
+		<div class="navbar-brand">
+			<a class="navbar-item" href="/">
+				<strong>Linzhan Mou</strong>
+			</a>
+
+			<div class="navbar-burger" data-target="navbar-main">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+		</div>
+
+		<div class="navbar-menu" id="navbar-main">
+
+			<div class="navbar-end">
+				<div class="navbar-item">
+					<a target="_blank" href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&hl=en"
+						class="button is-white">
+						<i class="ai ai-google-scholar ai-lg" aria-hidden="true"></i>
+					</a>
+					<a target="_blank" href="https://github.com/Friedrich-M" class="button is-white">
+						<i class="fab fa-github fa-lg" aria-hidden="true"></i>
+					</a>
 					<a target="_blank" href="https://twitter.com/LinzhanMou" class="button is-white">
-                        <i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
-                    </a>
-					<a target="_blank" href="https://www.linkedin.com/in/linzhan-mou-292272256/" class="button is-white">
-                        <i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
+						<i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
+					</a>
+					<a target="_blank" href="https://www.linkedin.com/in/linzhan-mou-292272256/"
+						class="button is-white">
+						<i class="fab fa-linkedin fa-lg" aria-hidden="true"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</nav>
 
 
 	<div class="container" style="padding-bottom: 10px; font-size: 18px">
 		<div class="row">
-			<div class="col-md-3 text-center", style="padding-right: 00px; padding-top: 30px; font-size: 17px">
-				<img class="img-responsive img-rounded" src="images/1.jpeg" alt="" style="max-height: 280px; width: auto; border:3px solid rgb(66, 66, 66); border-radius: 18%" >
-				<p class="mt-2 mb-0 small text-muted">Photo with <a href="https://nooraovo.github.io/">Shuning</a> in 2025.</p>
+			<div class="col-md-3 text-center" , style="padding-right: 00px; padding-top: 30px; font-size: 17px">
+				<img class="img-responsive img-rounded" src="images/1.jpeg" alt=""
+					style="max-height: 280px; width: auto; border:3px solid rgb(66, 66, 66); border-radius: 18%">
+				<p class="mt-2 mb-0 small text-muted">Photo with <a href="https://nooraovo.github.io/">Shuning</a> in
+					2025.</p>
 				<i id="index-img-description"></i>
 			</div>
-			<div class="col-md-9", style="padding-left: 45px; padding-right: 0px; font-size: 17 px">
+			<div class="col-md-9" , style="padding-left: 45px; padding-right: 0px; font-size: 17 px">
 				<br>
 				<h1>Linzhan Mou</h1>
 				<p style="padding-top: 4px;">
-					I am an incoming CS Ph.D. student at <a href="https://www.princeton.edu/">Princeton University</a>. I also work closely with <a href="https://www.cis.upenn.edu/~kostas/">Prof. Kostas Daniilidis</a> at <a href="https://www.grasp.upenn.edu/">UPenn GRASP Lab</a>. 
-					I received B.S. from <a href="https://www.zju.edu.cn/english/">Zhejiang University</a> with  honors from <a href="http://ckc.zju.edu.cn/ckcen/">Chu Kochen Honors College</a>, advised by <a href="https://xzhou.me/">Prof. Xiaowei Zhou</a>.
+					I am an incoming CS Ph.D. student at <a href="https://www.princeton.edu/">Princeton University</a>.
+					I also work closely with <a href="https://www.cis.upenn.edu/~kostas/">Prof. Kostas Daniilidis</a> at
+					<a href="https://www.grasp.upenn.edu/">UPenn GRASP Lab</a>.
+					I received B.S. from <a href="https://www.zju.edu.cn/english/">Zhejiang University</a> with honors
+					from <a href="http://ckc.zju.edu.cn/ckcen/">Chu Kochen Honors College</a>, advised by <a
+						href="https://xzhou.me/">Prof. Xiaowei Zhou</a>.
 					<br><br>
-					My research lies at the intersection of 4D Vision and Robotics. I aim to build intelligent machines which can perceive, understand and interact with the dynamic 3D world.
+					My research lies at the intersection of 4D Vision and Robotics. I aim to build intelligent machines
+					which can perceive, understand and interact with the dynamic 3D world.
 					<br><br>
 					Email: linzhan [at] princeton [dot] edu
-				
-					<div style="font-size: 19px;">
-					<a target="_blank" href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&hl=en"><font color="black"><i class="ai ai-google-scholar ai-lg"></i></font></a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
+
+				<div style="font-size: 19px;">
+					<a target="_blank" href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&hl=en">
+						<font color="black"><i class="ai ai-google-scholar ai-lg"></i></font>
+					</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
 					<!-- <a target="_blank" href="static/cv.pdf"><font color="black"><i class="ai ai-cv ai-lg"></i></font></a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp; -->
-					<a target="_blank" href="https://github.com/Friedrich-M"><font color="black"><i class="fab fa-github fa-lg"></i></font></a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
-					<a target="_blank" href="https://twitter.com/LinzhanMou"><font color="black"><i class="fab fa-twitter fa-lg"></i></font></a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
-					<a target="_blank" href="https://www.linkedin.com/in/linzhan-mou-292272256/"><font color="black"><i class="fab fa-linkedin fa-lg"></i></font></a>&nbsp;&nbsp;&nbsp;
+					<a target="_blank" href="https://github.com/Friedrich-M">
+						<font color="black"><i class="fab fa-github fa-lg"></i></font>
+					</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
+					<a target="_blank" href="https://twitter.com/LinzhanMou">
+						<font color="black"><i class="fab fa-twitter fa-lg"></i></font>
+					</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
+					<a target="_blank" href="https://www.linkedin.com/in/linzhan-mou-292272256/">
+						<font color="black"><i class="fab fa-linkedin fa-lg"></i></font>
+					</a>&nbsp;&nbsp;&nbsp;
 					<!-- <a target="_blank" href="https://www.instagram.com/xiuyul_/"><font color="black"><i class="fab fa-instagram fa-lg"></i></font></a>&nbsp;&nbsp;&nbsp; -->
 				</div>
 			</div>
 		</div>
 
-	<br>
-
-	<!-- Publications -->
-	<div class="container" style="font-size: 17px">
-		<h2 id="Publications" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Selected Publications </h2>
-		<font style="font-size: 16px;" color="black">(* indicates equal contribution, † indicates corresponding author)</font>
-		<hr style="margin-top:0.4em">
-
-		<div class="row">
-			<div class="col-md-3">
-				<video class="img-thumbnail" title="DIMO video loading.." id="vjs_video_3_html5_api"
-                            tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-                            src="images/dimo.mp4"></video>
-			</div>
-			<div class="col-md-8">
-				<font style="font-size: 18px;" color="black"><strong>DIMO: Diverse 3D Motion Generation for Arbitrary Objects<!-- Place this tag where you want the button to render. -->
-					</strong><br></font>
-				<span><u>Linzhan Mou</u></span>,
-				<span>Jiahui Lei†</span>,
-				<span>Chen Wang</span>,
-				<span>Lingjie Liu</span>,
-				<span>Kostas Daniilidis</span>
-				<br> ICCV 2025 <br> 
-				<br> 
-				<!-- <div style="height: 0.5em;"></div> -->
-				[<a href="javascript:void(0)" onclick="display('dimo-abs')">abs</a>]&nbsp;
-				[<a target="_blank" href="https://drive.google.com/file/d/11YTgropS_COVTUhq55ZYYwOB155vFaY3/view?usp=drive_link">arXiv</a>]&nbsp;
-				[<a target="_blank" href="">website</a>]&nbsp;
-				[<a target="_blank" href="">code</a> (coming soon)]&nbsp;
-				[<a target="_blank" href="https://www.youtube.com/watch?v=mwryklD0Cds">video</a>]&nbsp;
-				<br>
-				<div id="dimo-abs" style="display:none">
-					<p>
-					We present DIMO, a generative approach capable of generating diverse 3D motions for arbitrary objects from a single image. The core idea of our work is to leverage the rich priors in well-trained video models to extract the common motion patterns and then embed them into a shared low-dimensional latent space. Specifically, we first generate multiple videos of the same object with diverse motions. We then embed each motion into a latent vector and train a shared motion decoder to learn the distribution of motions represented by a structured and compact motion representation, i.e., neural key point trajectories. The canonical 3D Gaussians are then driven by these key points and fused to model the geometry and appearance. During inference time with learned latent space, we can instantly sample diverse 3D motions in a single-forward pass and support several interesting applications including 3D motion interpolation and language-guided motion generation.
-					</p>
-				</div>
-			</div>
-		</div>
-
-		<hr>
-
-		<div class="row">
-			<div class="col-md-3">
-				<!-- <img class="img-thumbnail" src="images/rss.png" alt=""> -->
-				<video class="img-thumbnail" title="VR-Robo video loading.." id="vjs_video_3_html5_api"
-				tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-				src="images/rss_vr-robo.mp4"></video>
-			</div>
-			<div class="col-md-9">
-				<font style="font-size: 18px;" color="black"><strong>VR-Robo: A Real-to-Sim-to-Real Framework for Visual Robot Navigation and Locomotion<!-- Place this tag where you want the button to render. -->
-					</strong><br></font>
-				<span>Shaoting Zhu*</span>,
-				<span><u>Linzhan Mou</u>*</span>,
-				<span>Derun Li</span>,
-				<span>Baijun Ye</span>,
-				<span>Runhan Huang</span>,
-				<span>Hang Zhao†</span>
-				<br> RA-L 2025 <br> 
-				<br>
-				[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
-				[<a target="_blank" href="https://arxiv.org/abs/2502.01536">arXiv</a>]&nbsp;
-				[<a target="_blank" href="https://vr-robo.github.io/">website</a>]&nbsp;
-				[<a target="_blank" href="https://github.com/zst1406217/VR-Robo">code</a>]&nbsp;
-				[<a target="_blank" href="https://www.youtube.com/watch?v=W-G_-H7X0Pw">video</a>]&nbsp;
-				[<a target="_blank" href="">poster</a>]&nbsp;
-				<a class="more-link" href="https://github.com/zst1406217/VR-Robo" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/zst1406217/VR-Robo?style=social"></a>
-				<div id="vr-abs" style="display:none">
-					<p>
-						Recent success in legged robot locomotion is attributed to the integration of reinforcement learning and physical simulators. However, these policies often encounter challenges when deployed in real-world environments due to sim-to-real gaps, as simulators typically fail to replicate visual realism and complex real-world geometry. Moreover, the lack of realistic visual rendering limits the ability of these policies to support high-level tasks requiring RGB-based perception like ego-centric navigation. This paper presents a Real-to-Sim-to-Real framework that generates photorealistic and physically interactive "digital twin" simulation environments for visual navigation and locomotion learning. Our approach leverages 3D Gaussian Splatting (3DGS) based scene reconstruction from multi-view images and integrates these environments into simulations that support ego-centric visual perception and mesh-based physical interactions. To demonstrate its effectiveness, we train a reinforcement learning policy within the simulator to perform a visual goal-tracking task. Extensive experiments show that our framework achieves RGB-only sim-to-real policy transfer. Additionally, our framework facilitates the rapid adaptation of robot policies with effective exploration capability in complex new environments, highlighting its potential for applications in households and factories.
-					</p>
-				</div>
-			</div>
-		</div>
-
-		<hr>
-
-		<div class="row">
-			<div class="col-md-3">
-				<video class="img-thumbnail" title="Let Occ Flow video loading.." id="vjs_video_3_html5_api"
-                            tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-                            src="images/corl.mp4"></video>
-			</div>
-			<div class="col-md-9">
-				<font style="font-size: 18px;" color="black"><strong>Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction<!-- Place this tag where you want the button to render. -->
-					</strong><br></font>
-				<span><u>Linzhan Mou</u>*</span>,
-				<span>Yili Liu*</span>,
-				<span>Xuan Yu</span>,
-				<span>Chenrui Han</span>,
-				<span>Sitong Mao</span>,
-				<span>Rong Xiong</span>,
-				<span>Yue Wang†</span>
-				<br> CoRL 2024 <br> 
-				<br>
-				[<a href="javascript:void(0)" onclick="display('occflow-abs')">abs</a>]&nbsp;
-				[<a target="_blank" href="https://arxiv.org/abs/2407.07587">arXiv</a>]&nbsp;
-				[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/">website</a>]&nbsp;
-				[<a target="_blank" href="https://github.com/eliliu2233/occ-flow">code</a>]&nbsp;
-				[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/static/videos/letoccflow.mp4">video</a>]&nbsp;
-				[<a target="_blank" href="./images/letoccflow-poster.pdf">poster</a>]&nbsp;
-				<a class="more-link" href="https://github.com/eliliu2233/occ-flow" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/eliliu2233/occ-flow?style=social"></a>
-				<div id="occflow-abs" style="display:none">
-					<p>
-						Accurate perception of the dynamic environment is a fundamental task for autonomous driving and robot systems. This paper introduces Let Occ Flow, the first self-supervised work for joint 3D occupancy and occupancy flow prediction using only camera inputs, eliminating the need for 3D annotations. Utilizing TPV for unified scene representation and deformable attention layers for feature aggregation, our approach incorporates a novel attention-based temporal fusion module to capture dynamic object dependencies, followed by a 3D refine module for fine-gained volumetric representation. Besides, our method extends differentiable rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmentation and optical flow cues for dynamic decomposition and motion optimization. Extensive experiments on nuScenes and KITTI datasets demonstrate the competitive performance of our approach over prior state-of-the-art methods.
-					</p>
-				</div>
-			</div>
-		</div>
-
-		<hr>
-
-		<div class="row">
-			<div class="col-md-3">
-				<video class="img-thumbnail" title="Instruct 4D-to-4D video loading.." id="vjs_video_3_html5_api"
-                            tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-                            src="images/cvpr.mp4"></video>
-			</div>
-			<div class="col-md-9">
-				<font style="font-size: 18px;" color="black"><strong>Instruct 4D-to-4D: Editing 4D Scenes as Pseudo-3D Scenes Using 2D Diffusion<!-- Place this tag where you want the button to render. -->
-					</strong><br></font>
-				<span><u>Linzhan Mou</u>*</span>,
-				<span>Jun-Kun Chen*</span>,
-				<span>Yu-Xiong Wang†</span>
-				<br> CVPR 2024 <br>
-				<br> 
-				 <!-- <font style="color: #7c7c7c;">Invited Talk at TTIC 2024 Multimodal AI Workshop</font> -->
-				<!-- <div style="height: 0.5em;"></div> -->
-				
-				[<a href="javascript:void(0)" onclick="display('i4d-abs')">abs</a>]&nbsp;
-				[<a target="_blank" href="https://arxiv.org/abs/2406.09402">arXiv</a>]&nbsp;
-				[<a target="_blank" href="https://immortalco.github.io/Instruct-4D-to-4D/">website</a>]&nbsp;
-				[<a target="_blank" href="https://github.com/Friedrich-M/Instruct-4D-to-4D">code</a>]&nbsp;
-				[<a target="_blank" href="">video</a>]&nbsp;
-				[<a target="_blank" href="./images/i4d-poster.pdf">poster</a>]&nbsp;
-				<a class="more-link" href="https://github.com/Friedrich-M/Instruct-4D-to-4D" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/Friedrich-M/Instruct-4D-to-4D?style=social"></a>
-				<div id="i4d-abs" style="display:none">
-					<p>
-						This paper proposes Instruct 4D-to-4D that achieves 4D awareness and spatial-temporal consistency for 2D diffusion models to generate high-quality instruction-guided dynamic scene editing results. Traditional applications of 2D diffusion models in dynamic scene editing often result in inconsistency, primarily due to their inherent frame-by-frame editing methodology. Addressing the complexities of extending instruction-guided editing to 4D, our key insight is to treat a 4D scene as a pseudo-3D scene, decoupled into two sub-problems: achieving temporal consistency in video editing and applying these edits to the pseudo-3D scene. Following this, we first enhance the Instruct-Pix2Pix (IP2P) model with an anchor-aware attention module for batch processing and consistent editing. Additionally, we integrate optical flow-guided appearance propagation in a sliding window fashion for more precise frame-to-frame editing and incorporate depth-based projection to manage the extensive data of pseudo-3D scenes, followed by iterative editing to achieve convergence. We extensively evaluate our approach in various scenes and editing instructions, and demonstrate that it achieves spatially and temporally consistent editing results, with significantly enhanced detail and sharpness over the prior art. Notably, Instruct 4D-to-4D is general and applicable to both monocular and challenging multi-camera scenes.
-					</p>
-				</div>
-			</div>
-		</div>
-
-		<hr>
-
-		<div class="row">
-			<div class="col-md-3">
-				<video class="img-thumbnail" title="Avatar video loading.." id="vjs_video_3_html5_api"
-                            tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-                            src="images/sigasia.mp4"></video>
-			</div>
-			<div class="col-md-9">
-				<font style="font-size: 18px;" color="black"><strong>Relightable and Animatable Neural Avatar from Sparse-View Video<!-- Place this tag where you want the button to render. -->
-					</strong><br></font>
-				<span>Zhen Xu</span>,
-				<span>Sida Peng†</span>,
-				<span>Chen Geng</span>,
-				<span><u>Linzhan Mou</u></span>,
-				<span>Zihan Yan</span>,
-				<span>Jiaming Sun</span>,
-				<span>Hujun Bao</span>,
-				<span>Xiaowei Zhou</span>
-				<br> CVPR 2024 <b><font color="red">(Highlight) </font></b> <br> 
-				<br>
-				[<a href="javascript:void(0)" onclick="display('avatar-abs')">abs</a>]&nbsp;
-				[<a target="_blank" href="https://arxiv.org/abs/2308.07903">arXiv</a>]&nbsp;
-				[<a target="_blank" href="https://zju3dv.github.io/relightable_avatar/">website</a>]&nbsp;
-				[<a target="_blank" href="https://github.com/zju3dv/RelightableAvatar">code</a>]&nbsp;
-				[<a target="_blank" href="https://www.youtube.com/watch?v=bZaP0PXUWdc">video</a>]&nbsp;
-				[<a target="_blank" href="./images/avatar-poster.pdf">poster</a>]&nbsp;
-				<a class="more-link" href="https://github.com/zju3dv/RelightableAvatar" target="_blank"><img alt="GitHub stars" src="https://img.shields.io/github/stars/zju3dv/RelightableAvatar?style=social"></a>
-				<div id="avatar-abs" style="display:none">
-					<p>
-						This paper tackles the challenge of creating relightable and animatable neural avatars from sparse-view (or even monocular) videos of dynamic humans under unknown illumination. Compared to studio environments, this setting is more practical and accessible but poses an extremely challenging ill-posed problem. Previous neural human reconstruction methods are able to reconstruct animatable avatars from sparse views using deformed Signed Distance Fields (SDF) but cannot recover material parameters for relighting. While differentiable inverse rendering-based methods have succeeded in material recovery of static objects, it is not straightforward to extend them to dynamic humans as it is computationally intensive to compute pixel-surface intersection and light visibility on deformed SDFs for inverse rendering. To solve this challenge, we propose a Hierarchical Distance Query (HDQ) algorithm to approximate the world space distances under arbitrary human poses. Specifically, we estimate coarse distances based on a parametric human model and compute fine distances by exploiting the local deformation invariance of SDF. Based on the HDQ algorithm, we leverage sphere tracing to efficiently estimate the surface intersection and light visibility. This allows us to develop the first system to recover animatable and relightable neural avatars from sparse view (or monocular) inputs. Experiments demonstrate that our approach is able to produce superior results compared to state-of-the-art methods. Our code will be released for reproducibility.
-					</p>
-				</div>
-			</div>
-		</div>
-
 		<br>
-	</div>
 
-	<div class="container" style="font-size: 17px">
-		<h2 id="Publications" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Experience </h2>
-		<hr style="margin-top:0.4em">
+		<!-- Publications -->
+		<div class="container" style="font-size: 17px">
+			<h2 id="Publications" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Selected
+				Publications </h2>
+			<font style="font-size: 16px;" color="black">(* indicates equal contribution, † indicates corresponding
+				author)</font>
+			<hr style="margin-top:0.4em">
 
-		<table cellspacing="17" cellpadding="8" align="center">
-			<tbody>
-				<tr>
-					<td width="13%" style="padding-left:20px;padding-right:20px">
-						<img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;" src="./images/penn2.png">
-					</td>
-					<td width="37%" valign="center">
-						<div class="institution"><b>Visiting Student, GRASP Lab, CIS, UPenn</b></div>
-						<div class="period">Aug. 2024 - Mar. 2025</div>
-						<div class="advisor">Advisor: <a href="https://www.cis.upenn.edu/~kostas/">Prof. Kostas Daniilidis</a> & <a href="https://lingjie0206.github.io/">Prof. Lingjie Liu</a></div>
-						<div class="region">Philadelphia, PA, USA</div>
-					</td>
-					<td width="13%" style="padding-left:20px;padding-right:20px">
-						<img style="width: 98%; max-height: 100px; max-width: 100px; object-fit: cover;" src="./images/uiuc2.png">
-					</td>
-					<td width="37%" valign="center">
-						<div class="institution"><b>Visiting Student, Vision Group, CS, UIUC</b></div>
-						<div class="period">Jul. 2023 - Dec. 2023</div>
-						<div class="advisor">Advisor: <a href="https://yxw.cs.illinois.edu/">Prof. Yu-Xiong Wang</a></div>
-						<div class="region">Urbana, IL, USA</div>
-					</td>
-				</tr>
-				<tr>
-					<td width="13%" style="padding-left:20px;padding-right:20px">
-						<img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;" src="./images/tsinghua.png">
-					</td>
-					<td width="37%" valign="center">
-						<div class="institution"><b>Research Intern, MARS Lab, IIIS, THU</b></div>
-						<div class="period">Jun. 2024 - Jan. 2025</div>
-						<div class="advisor">Advisor: <a href="https://hangzhaomit.github.io/">Prof. Hang Zhao</a></div>
-						<div class="region">Affiliated with Galaxea AI & Qizhi Institute </div>
-					</td>
-					<td width="13%" style="padding-left:20px;padding-right:20px">
-						<img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;" src="./images/zju.png">
-					</td>
-					<td width="37%" valign="center">
-						<div class="institution"><b>Undergrad Intern, ZJU3DV Lab, CS, ZJU</b></div>
-						<div class="period">Jun. 2022 - Jun. 2024</div>
-						<div class="period">Advisor: <a href="https://xzhou.me/">Prof. Xiaowei Zhou</a> & <a href="https://pengsida.net/">Prof. Sida Peng</a></div>
-						<div class="period">GPA: 3.99/4.0, 92.73/100 </div>
-						<!-- <div class="region">Hangzhou, China</div> -->
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		<br>
-	</div>
+			<div class="row">
+				<div class="col-md-3">
+					<video class="img-thumbnail" title="DIMO video loading.." id="vjs_video_3_html5_api" tabindex="-1"
+						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						src="images/dimo.mp4"></video>
+				</div>
+				<div class="col-md-8">
+					<div style="height: 0.2em;"></div>
+					<font style="font-size: 18px;" color="black"><strong>DIMO: Diverse 3D Motion Generation for
+							Arbitrary Objects<!-- Place this tag where you want the button to render. -->
+						</strong><br></font>
+					<span><u>Linzhan Mou</u></span>,
+					<span>Jiahui Lei†</span>,
+					<span>Chen Wang</span>,
+					<span>Lingjie Liu</span>,
+					<span>Kostas Daniilidis</span>
+					<br> ICCV 2025 <br>
+					<br>
+					<!-- <div style="height: 0.5em;"></div> -->
+					[<a href="javascript:void(0)" onclick="display('dimo-abs')">abs</a>]&nbsp;
+					[<a target="_blank"
+						href="https://drive.google.com/file/d/11YTgropS_COVTUhq55ZYYwOB155vFaY3/view?usp=drive_link">arXiv</a>]&nbsp;
+					[<a target="_blank" href="">website</a>]&nbsp;
+					[<a target="_blank" href="">code</a> (coming soon)]&nbsp;
+					[<a target="_blank" href="https://www.youtube.com/watch?v=mwryklD0Cds">video</a>]&nbsp;
+					<br>
+					<div id="dimo-abs" style="display:none">
+						<p>
+							We present DIMO, a generative approach capable of generating diverse 3D motions for
+							arbitrary objects from a single image. The core idea of our work is to leverage the rich
+							priors in well-trained video models to extract the common motion patterns and then embed
+							them into a shared low-dimensional latent space. Specifically, we first generate multiple
+							videos of the same object with diverse motions. We then embed each motion into a latent
+							vector and train a shared motion decoder to learn the distribution of motions represented by
+							a structured and compact motion representation, i.e., neural key point trajectories. The
+							canonical 3D Gaussians are then driven by these key points and fused to model the geometry
+							and appearance. During inference time with learned latent space, we can instantly sample
+							diverse 3D motions in a single-forward pass and support several interesting applications
+							including 3D motion interpolation and language-guided motion generation.
+						</p>
+					</div>
+				</div>
+			</div>
 
-	<div class="container" style="font-size: 17px">
-		<h2 id="Publications" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Industry Experience </h2>
-		<hr style="margin-top:0.4em">
+			<hr>
 
-		<table cellspacing="17" cellpadding="8" align="center">
-			<tbody>
-				<tr> 
-					<td width="13%" style="padding-left:20px;padding-right:20px">
-						<img style="width: 99%; max-height: 100px; max-width: 100px; object-fit: cover;" src="./images/kuaishou.png">
-					</td>
-					<td width="37%" valign="center">
-						<div class="institution"><b>Research Intern, Kling AI, Kuaishou Tech</b></div>
-						<div class="period">2025 - Present </div>
-						<div class="advisor">Advisor: <a href="https://xinntao.github.io/">Dr. Xintao Wang</a></div>
-						<div class="region">Shenzhen, China</div>
-					</td> 
-					<td width="13%" style="padding-left:20px;padding-right:20px">
-						<img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;" src="./images/manifold.png">
-					</td>
-					<td width="37%" valign="center">
-						<div class="institution"><b>Tech Co-founder, Manifolds AI (start-up)</b></div>
-						<div class="period">2024 - Present</div>
-						<div class="period">Product Delivered: <a href="https://www.manifold-s.com/">Klein Studio</a></div>
-						<div class="advisor"></a>Shanghai, China</div> 
-					</td> 
-				 </tr>
-			</tbody> 
-		</table>
-		<br>
-	</div>
+			<div class="row">
+				<div class="col-md-3">
+					<!-- <img class="img-thumbnail" src="images/rss.png" alt=""> -->
+					<video class="img-thumbnail" title="VR-Robo video loading.." id="vjs_video_3_html5_api"
+						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						src="images/rss_vr-robo.mp4"></video>
+				</div>
+				<div class="col-md-9">
+					<div style="height: 0.2em;"></div>
+					<font style="font-size: 18px;" color="black"><strong>VR-Robo: A Real-to-Sim-to-Real Framework for Visual Robot Navigation and Locomotion<!-- Place this tag where you want the button to render. -->
+						</strong><br></font>
+					<span>Shaoting Zhu*</span>,
+					<span><u>Linzhan Mou</u>*</span>,
+					<span>Derun Li</span>,
+					<span>Baijun Ye</span>,
+					<span>Runhan Huang</span>,
+					<span>Hang Zhao†</span>
+					<br> RA-L 2025 <br>
+					<br>
+					[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2502.01536">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://vr-robo.github.io/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/zst1406217/VR-Robo">code</a>]&nbsp;
+					[<a target="_blank" href="https://www.youtube.com/watch?v=W-G_-H7X0Pw">video</a>]&nbsp;
+					[<a target="_blank" href="">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/zst1406217/VR-Robo" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/zst1406217/VR-Robo?style=social"></a>
+					<div id="vr-abs" style="display:none">
+						<p>
+							Recent success in legged robot locomotion is attributed to the integration of reinforcement
+							learning and physical simulators. However, these policies often encounter challenges when
+							deployed in real-world environments due to sim-to-real gaps, as simulators typically fail to
+							replicate visual realism and complex real-world geometry. Moreover, the lack of realistic
+							visual rendering limits the ability of these policies to support high-level tasks requiring
+							RGB-based perception like ego-centric navigation. This paper presents a Real-to-Sim-to-Real
+							framework that generates photorealistic and physically interactive "digital twin" simulation
+							environments for visual navigation and locomotion learning. Our approach leverages 3D
+							Gaussian Splatting (3DGS) based scene reconstruction from multi-view images and integrates
+							these environments into simulations that support ego-centric visual perception and
+							mesh-based physical interactions. To demonstrate its effectiveness, we train a reinforcement
+							learning policy within the simulator to perform a visual goal-tracking task. Extensive
+							experiments show that our framework achieves RGB-only sim-to-real policy transfer.
+							Additionally, our framework facilitates the rapid adaptation of robot policies with
+							effective exploration capability in complex new environments, highlighting its potential for
+							applications in households and factories.
+						</p>
+					</div>
+				</div>
+			</div>
 
-	<div class="container" style="font-size: 17px">
-		<h2 id="Publications" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Selected Honors and Awards </h2>
-		<hr style="margin-top:0.4em">
+			<hr>
 
-		<ul>
-			<li>
-				<span class="styles_collaborator__VflHz">China National Scholarship </span>
-			</li>
-			<li>
-				<span class="styles_collaborator__VflHz">First-Class Scholarship of
-					Zhejiang University </span>
-			</li>
-			<!-- <li>
+			<div class="row">
+				<div class="col-md-3">
+					<video class="img-thumbnail" title="Let Occ Flow video loading.." id="vjs_video_3_html5_api"
+						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						src="images/corl.mp4"></video>
+				</div>
+				<div class="col-md-9">
+					<div style="height: 0.2em;"></div>
+					<font style="font-size: 18px;" color="black"><strong>Let Occ Flow: Self-Supervised 3D Occupancy Flow
+							Prediction<!-- Place this tag where you want the button to render. -->
+						</strong><br></font>
+					<span><u>Linzhan Mou</u>*</span>,
+					<span>Yili Liu*</span>,
+					<span>Xuan Yu</span>,
+					<span>Chenrui Han</span>,
+					<span>Sitong Mao</span>,
+					<span>Rong Xiong</span>,
+					<span>Yue Wang†</span>
+					<br> CoRL 2024 <br>
+					<br>
+					[<a href="javascript:void(0)" onclick="display('occflow-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2407.07587">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/eliliu2233/occ-flow">code</a>]&nbsp;
+					[<a target="_blank"
+						href="https://eliliu2233.github.io/letoccflow/static/videos/letoccflow.mp4">video</a>]&nbsp;
+					[<a target="_blank" href="./images/letoccflow-poster.pdf">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/eliliu2233/occ-flow" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/eliliu2233/occ-flow?style=social"></a>
+					<div id="occflow-abs" style="display:none">
+						<p>
+							Accurate perception of the dynamic environment is a fundamental task for autonomous driving
+							and robot systems. This paper introduces Let Occ Flow, the first self-supervised work for
+							joint 3D occupancy and occupancy flow prediction using only camera inputs, eliminating the
+							need for 3D annotations. Utilizing TPV for unified scene representation and deformable
+							attention layers for feature aggregation, our approach incorporates a novel attention-based
+							temporal fusion module to capture dynamic object dependencies, followed by a 3D refine
+							module for fine-gained volumetric representation. Besides, our method extends differentiable
+							rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmentation and optical
+							flow cues for dynamic decomposition and motion optimization. Extensive experiments on
+							nuScenes and KITTI datasets demonstrate the competitive performance of our approach over
+							prior state-of-the-art methods.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="row">
+				<div class="col-md-3">
+					<video class="img-thumbnail" title="Instruct 4D-to-4D video loading.." id="vjs_video_3_html5_api"
+						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						src="images/cvpr.mp4"></video>
+				</div>
+				<div class="col-md-9">
+					<div style="height: 0.2em;"></div>
+					<font style="font-size: 18px;" color="black"><strong>Instruct 4D-to-4D: Editing 4D Scenes as
+							Pseudo-3D Scenes Using 2D Diffusion<!-- Place this tag where you want the button to render. -->
+						</strong><br></font>
+					<span><u>Linzhan Mou</u>*</span>,
+					<span>Jun-Kun Chen*</span>,
+					<span>Yu-Xiong Wang†</span>
+					<br> CVPR 2024 <br>
+					<br>
+					<!-- <font style="color: #7c7c7c;">Invited Talk at TTIC 2024 Multimodal AI Workshop</font> -->
+					<!-- <div style="height: 0.5em;"></div> -->
+
+					[<a href="javascript:void(0)" onclick="display('i4d-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2406.09402">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://immortalco.github.io/Instruct-4D-to-4D/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/Friedrich-M/Instruct-4D-to-4D">code</a>]&nbsp;
+					[<a target="_blank" href="">video</a>]&nbsp;
+					[<a target="_blank" href="./images/i4d-poster.pdf">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/Friedrich-M/Instruct-4D-to-4D" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/Friedrich-M/Instruct-4D-to-4D?style=social"></a>
+					<div id="i4d-abs" style="display:none">
+						<p>
+							This paper proposes Instruct 4D-to-4D that achieves 4D awareness and spatial-temporal
+							consistency for 2D diffusion models to generate high-quality instruction-guided dynamic
+							scene editing results. Traditional applications of 2D diffusion models in dynamic scene
+							editing often result in inconsistency, primarily due to their inherent frame-by-frame
+							editing methodology. Addressing the complexities of extending instruction-guided editing to
+							4D, our key insight is to treat a 4D scene as a pseudo-3D scene, decoupled into two
+							sub-problems: achieving temporal consistency in video editing and applying these edits to
+							the pseudo-3D scene. Following this, we first enhance the Instruct-Pix2Pix (IP2P) model with
+							an anchor-aware attention module for batch processing and consistent editing. Additionally,
+							we integrate optical flow-guided appearance propagation in a sliding window fashion for more
+							precise frame-to-frame editing and incorporate depth-based projection to manage the
+							extensive data of pseudo-3D scenes, followed by iterative editing to achieve convergence. We
+							extensively evaluate our approach in various scenes and editing instructions, and
+							demonstrate that it achieves spatially and temporally consistent editing results, with
+							significantly enhanced detail and sharpness over the prior art. Notably, Instruct 4D-to-4D
+							is general and applicable to both monocular and challenging multi-camera scenes.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="row">
+				<div class="col-md-3">
+					<video class="img-thumbnail" title="Avatar video loading.." id="vjs_video_3_html5_api" tabindex="-1"
+						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						src="images/sigasia.mp4"></video>
+				</div>
+				<div class="col-md-9">
+					<div style="height: 0.2em;"></div>
+					<font style="font-size: 18px;" color="black"><strong>Relightable and Animatable Neural Avatar from Sparse-View Video<!-- Place this tag where you want the button to render. -->
+						</strong><br></font>
+					<span>Zhen Xu</span>,
+					<span>Sida Peng†</span>,
+					<span>Chen Geng</span>,
+					<span><u>Linzhan Mou</u></span>,
+					<span>Zihan Yan</span>,
+					<span>Jiaming Sun</span>,
+					<span>Hujun Bao</span>,
+					<span>Xiaowei Zhou</span>
+					<br> CVPR 2024 <b>
+						<font color="red">(Highlight) </font>
+					</b> <br>
+					<br>
+					[<a href="javascript:void(0)" onclick="display('avatar-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2308.07903">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://zju3dv.github.io/relightable_avatar/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/zju3dv/RelightableAvatar">code</a>]&nbsp;
+					[<a target="_blank" href="https://www.youtube.com/watch?v=bZaP0PXUWdc">video</a>]&nbsp;
+					[<a target="_blank" href="./images/avatar-poster.pdf">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/zju3dv/RelightableAvatar" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/zju3dv/RelightableAvatar?style=social"></a>
+					<div id="avatar-abs" style="display:none">
+						<p>
+							This paper tackles the challenge of creating relightable and animatable neural avatars from
+							sparse-view (or even monocular) videos of dynamic humans under unknown illumination.
+							Compared to studio environments, this setting is more practical and accessible but poses an
+							extremely challenging ill-posed problem. Previous neural human reconstruction methods are
+							able to reconstruct animatable avatars from sparse views using deformed Signed Distance
+							Fields (SDF) but cannot recover material parameters for relighting. While differentiable
+							inverse rendering-based methods have succeeded in material recovery of static objects, it is
+							not straightforward to extend them to dynamic humans as it is computationally intensive to
+							compute pixel-surface intersection and light visibility on deformed SDFs for inverse
+							rendering. To solve this challenge, we propose a Hierarchical Distance Query (HDQ) algorithm
+							to approximate the world space distances under arbitrary human poses. Specifically, we
+							estimate coarse distances based on a parametric human model and compute fine distances by
+							exploiting the local deformation invariance of SDF. Based on the HDQ algorithm, we leverage
+							sphere tracing to efficiently estimate the surface intersection and light visibility. This
+							allows us to develop the first system to recover animatable and relightable neural avatars
+							from sparse view (or monocular) inputs. Experiments demonstrate that our approach is able to
+							produce superior results compared to state-of-the-art methods. Our code will be released for
+							reproducibility.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<br>
+		</div>
+
+		<div class="container" style="font-size: 17px">
+			<h2 id="Publications" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Experience </h2>
+			<hr style="margin-top:0.4em">
+			<table cellspacing="17" cellpadding="8" align="center">
+				<tbody>
+					<tr>
+						<td width="13%" style="padding-left:20px;padding-right:20px">
+							<img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;"
+								src="./images/penn2.png">
+						</td>
+						<td width="37%" valign="center">
+							<div class="institution"><b>Visiting Student, GRASP Lab, CIS, UPenn</b></div>
+							<div class="period">Aug. 2024 - Mar. 2025</div>
+							<div class="advisor">Advisor: <a href="https://www.cis.upenn.edu/~kostas/">Prof. Kostas
+									Daniilidis</a> & <a href="https://lingjie0206.github.io/">Prof. Lingjie Liu</a>
+							</div>
+							<div class="region">Philadelphia, PA, USA</div>
+						</td>
+						<td width="13%" style="padding-left:20px;padding-right:20px">
+							<img style="width: 98%; max-height: 100px; max-width: 100px; object-fit: cover;"
+								src="./images/uiuc2.png">
+						</td>
+						<td width="37%" valign="center">
+							<div class="institution"><b>Visiting Student, Vision Group, CS, UIUC</b></div>
+							<div class="period">Jul. 2023 - Dec. 2023</div>
+							<div class="advisor">Advisor: <a href="https://yxw.cs.illinois.edu/">Prof. Yu-Xiong Wang</a>
+							</div>
+							<div class="region">Urbana, IL, USA</div>
+						</td>
+					</tr>
+					<tr>
+						<td width="13%" style="padding-left:20px;padding-right:20px">
+							<img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;"
+								src="./images/tsinghua.png">
+						</td>
+						<td width="37%" valign="center">
+							<div class="institution"><b>Research Intern, MARS Lab, IIIS, THU</b></div>
+							<div class="period">Jun. 2024 - Jan. 2025</div>
+							<div class="advisor">Advisor: <a href="https://hangzhaomit.github.io/">Prof. Hang Zhao</a>
+							</div>
+							<div class="region">Affiliated with Galaxea AI & Qizhi Institute </div>
+						</td>
+						<td width="13%" style="padding-left:20px;padding-right:20px">
+							<img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;"
+								src="./images/zju.png">
+						</td>
+						<td width="37%" valign="center">
+							<div class="institution"><b>Undergrad Intern, ZJU3DV Lab, CS, ZJU</b></div>
+							<div class="period">Jun. 2022 - Jun. 2024</div>
+							<div class="period">Advisor: <a href="https://xzhou.me/">Prof. Xiaowei Zhou</a> & <a
+									href="https://pengsida.net/">Prof. Sida Peng</a></div>
+							<div class="period">GPA: 3.99/4.0, 92.73/100 </div>
+							<!-- <div class="region">Hangzhou, China</div> -->
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<br>
+		</div>
+
+		<div class="container" style="font-size: 17px">
+			<h2 id="Publications" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Industry Experience
+			</h2>
+			<hr style="margin-top:0.4em">
+
+			<table cellspacing="17" cellpadding="8" align="center">
+				<tbody>
+					<tr>
+						<td width="13%" style="padding-left:20px;padding-right:20px">
+							<img style="width: 99%; max-height: 100px; max-width: 100px; object-fit: cover;"
+								src="./images/kuaishou.png">
+						</td>
+						<td width="37%" valign="center">
+							<div class="institution"><b>Research Intern, Kling AI, Kuaishou Tech</b></div>
+							<div class="period">2025 - Present </div>
+							<div class="advisor">Advisor: <a href="https://xinntao.github.io/">Dr. Xintao Wang</a></div>
+							<div class="region">Shenzhen, China</div>
+						</td>
+						<td width="13%" style="padding-left:20px;padding-right:20px">
+							<img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;"
+								src="./images/manifold.png">
+						</td>
+						<td width="37%" valign="center">
+							<div class="institution"><b>Tech Co-founder, Manifolds AI (start-up)</b></div>
+							<div class="period">2024 - Present</div>
+							<div class="period">Product Delivered: <a href="https://www.manifold-s.com/">Klein
+									Studio</a></div>
+							<div class="advisor"></a>Shanghai, China</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<br>
+		</div>
+
+		<div class="container" style="font-size: 17px">
+			<h2 id="Publications" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Selected Honors and
+				Awards </h2>
+			<hr style="margin-top:0.4em">
+
+			<ul>
+				<li>
+					<span class="styles_collaborator__VflHz">China National Scholarship </span>
+				</li>
+				<li>
+					<span class="styles_collaborator__VflHz">First-Class Scholarship of
+						Zhejiang University </span>
+				</li>
+				<!-- <li>
 				<span class="styles_collaborator__VflHz">Government Scholarship of
 					Zhejiang Province </b></span>
 			</li> -->
-			<!-- <li>
+				<!-- <li>
 				<span class="styles_collaborator__VflHz">Top 10 Outstanding Students of Qiushi Institute </b></span>
 			</li> -->
-			<li>
-				<span class="styles_collaborator__VflHz">Outstanding Graduates of Zhejiang University </span>
-			</li>
-			<li>
-				<span class="styles_collaborator__VflHz">Outstanding Graduation Thesis Award of Zhejiang University </span>
-			</li>
-			<li>
-				<span class="styles_collaborator__VflHz">
-					National First Prize, China Undergraduate Mathematical Contest in Modeling
-				</span>
-			</li>
-			<li>
-				<span class="styles_collaborator__VflHz">
-					First Prize, "Supcon Cup" Robot Competition (Mobile Manipulator Track) 
-				</span>
-			</li>
-			<!-- <li>
+				<li>
+					<span class="styles_collaborator__VflHz">Outstanding Graduates of Zhejiang University </span>
+				</li>
+				<li>
+					<span class="styles_collaborator__VflHz">Outstanding Graduation Thesis Award of Zhejiang University
+					</span>
+				</li>
+				<li>
+					<span class="styles_collaborator__VflHz">
+						National First Prize, China Undergraduate Mathematical Contest in Modeling
+					</span>
+				</li>
+				<li>
+					<span class="styles_collaborator__VflHz">
+						First Prize, "Supcon Cup" Robot Competition (Mobile Manipulator Track)
+					</span>
+				</li>
+				<!-- <li>
 				<span class="styles_collaborator__VflHz">
 					Provincial First Prize, Physics Olympiad
 				</span>
 			</li> -->
-		</ul>
-		<br>
-		<br>
-	</div>
+			</ul>
+			<br>
+			<br>
+		</div>
 
-	<!-- <div class="container" style="font-size: 17px">
+		<!-- <div class="container" style="font-size: 17px">
 		<h2 id="Publications" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Academic Service </h2>
 		<hr style="margin-top:0.4em">
 
@@ -457,28 +578,30 @@
 		<br>
 	</div> -->
 
-	<!-- Bootstrap core JavaScript -->
-	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" crossorigin="anonymous"></script>
-	<script src="burger.js"></script>
+		<!-- Bootstrap core JavaScript -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+			crossorigin="anonymous"></script>
+		<script src="burger.js"></script>
 
-	<!-- Default Statcounter code for Personal website https://linzhanm.github.io/
+		<!-- Default Statcounter code for Personal website https://linzhanm.github.io/
     -->
-    <script type="text/javascript">
-        var sc_project = 12925377;
-        var sc_invisible = 1;
-        var sc_security = "43deea45"; 
-    </script>
-    <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
-    <noscript>
-        <div class="statcounter"><a title="Web Analytics Made Easy -
+		<script type="text/javascript">
+			var sc_project = 12925377;
+			var sc_invisible = 1;
+			var sc_security = "43deea45"; 
+		</script>
+		<script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+		<noscript>
+			<div class="statcounter"><a title="Web Analytics Made Easy -
         Statcounter" href="https://statcounter.com/" target="_blank"><img class="statcounter"
-                    src="https://c.statcounter.com/12925377/0/43deea45/1/" alt="Web Analytics Made Easy - Statcounter"
-                    referrerPolicy="no-referrer-when-downgrade"></a></div>
-    </noscript>
-    <!-- End of Statcounter Code -->
-	 
+						src="https://c.statcounter.com/12925377/0/43deea45/1/"
+						alt="Web Analytics Made Easy - Statcounter" referrerPolicy="no-referrer-when-downgrade"></a>
+			</div>
+		</noscript>
+		<!-- End of Statcounter Code -->
+
 </body>
 
 </html>
