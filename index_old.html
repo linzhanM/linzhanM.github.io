@@ -80,261 +80,274 @@
                 <h2>About Me</h2>
                 <div>
                     <p>
-                        I am an incoming CS Ph.D. student at <a href="https://www.princeton.edu/">Princeton University</a>.
+                        I am an incoming CS Ph.D. student at <a href="https://www.princeton.edu/">Princeton
+                            University</a>.
 
-                        I also worked closely with <a href="https://www.cis.upenn.edu/~kostas/">Prof. Kostas Daniilidis</a> and <a href="https://lingjie0206.github.io/">Prof. Lingjie Liu</a> at UPenn <a href="https://www.grasp.upenn.edu/">GRASP Lab</a>. 
+                        I also worked closely with <a href="https://www.cis.upenn.edu/~kostas/">Prof. Kostas
+                            Daniilidis</a> and <a href="https://lingjie0206.github.io/">Prof. Lingjie Liu</a> at UPenn
+                        <a href="https://www.grasp.upenn.edu/">GRASP Lab</a>.
 
-                        I obtained my B.Eng. (Honors) degree in CSE from <a href="https://www.zju.edu.cn/english/">Zhejiang University</a>, advised by <a href="https://xzhou.me/">Prof. Xiaowei Zhou</a>.
+                        I obtained my B.Eng. (Honors) degree in CSE from <a
+                            href="https://www.zju.edu.cn/english/">Zhejiang University</a>, advised by <a
+                            href="https://xzhou.me/">Prof. Xiaowei Zhou</a>.
                     </p>
 
                     <p>
-                        My research interests lie in 3D/4D vision, generative models and robotics, specifically focusing on perceiving and modeling the 4D world from visual input.
+                        My research interests lie in 3D/4D vision, generative models and robotics, specifically focusing
+                        on perceiving and modeling the 4D world from visual input.
                     </p>
 
                     <p>
-                
+
                     </p>
                 </div>
             </section>
 
 
-                <h2>
-                    Publications
-                    <br class="publication-list_mobileBreak__24vsO">
-                    <span class="publication-list_filters__3ikvu">
-                        <span class="publication-list_filter__1x1Xu">
-                            <a href="https://linzhanm.github.io/" id="select0" onclick="showPubs(0); return false;" style="text-decoration: underline; color: rgb(0, 0, 99);">show selected</a>
-                        </span>
-                        <span class="publication-list_filter__1x1Xu">
-                            <a href="https://linzhanm.github.io/" id="select1" onclick="showPubs(1); return false;" style="">show all by date</a>
-                        </span>
+            <h2>
+                Publications
+                <br class="publication-list_mobileBreak__24vsO">
+                <span class="publication-list_filters__3ikvu">
+                    <span class="publication-list_filter__1x1Xu">
+                        <a href="https://linzhanm.github.io/" id="select0" onclick="showPubs(0); return false;"
+                            style="text-decoration: underline; color: rgb(0, 0, 99);">show selected</a>
                     </span>
-                </h2> 
-                
-                <script>
-                    document.getElementById("select0").addEventListener("click", function() {
-                        document.getElementById("select0").style.textDecoration = "underline";
-                        document.getElementById("select0").style.color = "rgb(0, 0, 139)";
-                        document.getElementById("select1").style.textDecoration = "";
-                        document.getElementById("select1").style.color = "";
-                    });
-                    document.getElementById("select1").addEventListener("click", function() {
-                        document.getElementById("select1").style.textDecoration = "underline";
-                        document.getElementById("select1").style.color = "rgb(0, 0, 139)";
-                        document.getElementById("select0").style.textDecoration = "";
-                        document.getElementById("select0").style.color = "";
-                    });
-                </script>
+                    <span class="publication-list_filter__1x1Xu">
+                        <a href="https://linzhanm.github.io/" id="select1" onclick="showPubs(1); return false;"
+                            style="">show all by date</a>
+                    </span>
+                </span>
+            </h2>
 
-                <script>
-                    function showPubs(index) {
-                        var pubs = document.getElementsByClassName("publication_publication__1Icb_");
-                        if (index == 0) {
-                            for (var i = 0; i < pubs.length; i++) {
-                                if (pubs[i].getAttribute("name") == "dimo" || pubs[i].getAttribute("name") == "letoccflow" || pubs[i].getAttribute("name") == "i4d" || pubs[i].getAttribute("name") == "avatar" || pubs[i].getAttribute("name") == "mobile" || pubs[i].getAttribute("name") == "walker" || pubs[i].getAttribute("name") == "saro" || pubs[i].getAttribute("name") == "vr-robo") {
-                                    pubs[i].style.display = ""
-                                } else {
-                                    pubs[i].style.display = "none";
-                                }
-                            }
-                        } else {
-                            for (var i = 0; i < pubs.length; i++) {
+            <script>
+                document.getElementById("select0").addEventListener("click", function () {
+                    document.getElementById("select0").style.textDecoration = "underline";
+                    document.getElementById("select0").style.color = "rgb(0, 0, 139)";
+                    document.getElementById("select1").style.textDecoration = "";
+                    document.getElementById("select1").style.color = "";
+                });
+                document.getElementById("select1").addEventListener("click", function () {
+                    document.getElementById("select1").style.textDecoration = "underline";
+                    document.getElementById("select1").style.color = "rgb(0, 0, 139)";
+                    document.getElementById("select0").style.textDecoration = "";
+                    document.getElementById("select0").style.color = "";
+                });
+            </script>
+
+            <script>
+                function showPubs(index) {
+                    var pubs = document.getElementsByClassName("publication_publication__1Icb_");
+                    if (index == 0) {
+                        for (var i = 0; i < pubs.length; i++) {
+                            if (pubs[i].getAttribute("name") == "dimo" || pubs[i].getAttribute("name") == "letoccflow" || pubs[i].getAttribute("name") == "i4d" || pubs[i].getAttribute("name") == "avatar" || pubs[i].getAttribute("name") == "mobile" || pubs[i].getAttribute("name") == "walker" || pubs[i].getAttribute("name") == "saro" || pubs[i].getAttribute("name") == "vr-robo") {
                                 pubs[i].style.display = ""
+                            } else {
+                                pubs[i].style.display = "none";
                             }
                         }
+                    } else {
+                        for (var i = 0; i < pubs.length; i++) {
+                            pubs[i].style.display = ""
+                        }
                     }
-                </script>
+                }
+            </script>
 
-                <div 
-                    class="publication-list_smallText__pUJXB">* denotes equal contribution; ♯ denotes the corresponding author. 
+            <div class="publication-list_smallText__pUJXB">* denotes equal contribution; ♯ denotes the corresponding
+                author.
+            </div>
+            <div class="publication_publication__1Icb_" name="dimo">
+                <div class="publication_image__1EUuC" name="dimo">
+                    <video class="vjs-tech" title="DIMO video loading.." id="vjs_video_3_html5_api" tabindex="-1"
+                        preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+                        src="images/dimo.mp4"></video>
                 </div>
-                <div class="publication_publication__1Icb_" name="dimo">
-                    <div class="publication_image__1EUuC" name="dimo">
-                        <video class="vjs-tech" title="DIMO video loading.." id="vjs_video_3_html5_api"
-                            tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-                            src="images/dimo.mp4"></video>
+                <div class="publication_info__kLRGP" name="i4d">
+                    <div class="publication_title__3m6SE">DIMO: Diverse 3D Motion Generation for Arbitrary Objects</div>
+                    <div class="publication_authors__qkFXc">
+                        <span><u>Linzhan Mou</u></span>
+                        <span><a href="https://www.cis.upenn.edu/~leijh/">Jiahui Lei</a><sup>♯</sup></span>
+                        <span><a href="https://cwchenwang.github.io/">Chen Wang</a></span>
+                        <span><a href="https://lingjie0206.github.io/">Lingjie Liu</a></span>
+                        <span><a href="https://www.cis.upenn.edu/~kostas/">Kostas Daniilidis</a></span>
                     </div>
-                    <div class="publication_info__kLRGP" name="i4d">
-                        <div class="publication_title__3m6SE">DIMO: Diverse 3D Motion Generation for Arbitrary Objects</div>
-                        <div class="publication_authors__qkFXc">
-                            <span><u>Linzhan Mou</u></span>
-                            <span><a href="https://www.cis.upenn.edu/~leijh/">Jiahui Lei</a><sup>♯</sup></span>
-                            <span><a href="https://cwchenwang.github.io/">Chen Wang</a></span>
-                            <span><a href="https://lingjie0206.github.io/">Lingjie Liu</a></span>
-                            <span><a href="https://www.cis.upenn.edu/~kostas/">Kostas Daniilidis</a></span>
-                        </div>
-                        <div class="publication_venue__1Dv6R"><span>
+                    <div class="publication_venue__1Dv6R"><span>
                             Under Review 2025</span><span></span></div>
 
-                        <div class="publication_links__aEpO_">
-                            <span class="publication_link__fXY43"><a href="https://drive.google.com/file/d/11YTgropS_COVTUhq55ZYYwOB155vFaY3/view?usp=drive_link">Paper</a></span>
-                            <span class="publication_link__fXY43"><a
-                                >Code</a> (coming soon) </span>
-                            <span class="publication_link__fXY43"><a href="https://www.youtube.com/watch?v=mwryklD0Cds">Video</a></span>
-                            <span class="publication_link__fXY43"><a href="https://youtu.be/mwryklD0Cds">YouTube</a></span>
-                        </div>
+                    <div class="publication_links__aEpO_">
+                        <span class="publication_link__fXY43"><a
+                                href="https://drive.google.com/file/d/11YTgropS_COVTUhq55ZYYwOB155vFaY3/view?usp=drive_link">Paper</a></span>
+                        <span class="publication_link__fXY43"><a>Code</a> (coming soon) </span>
+                        <span class="publication_link__fXY43"><a
+                                href="https://www.youtube.com/watch?v=mwryklD0Cds">Video</a></span>
+                        <span class="publication_link__fXY43"><a href="https://youtu.be/mwryklD0Cds">YouTube</a></span>
                     </div>
                 </div>
+            </div>
 
-                <div class="publication_publication__1Icb_" name="vr-robo">
-                    <div class="publication_image__1EUuC" name="vr-robo">
-                        <!-- <video class="vjs-tech" title="VR-Robo video loading.." id="vjs_video_3_html5_api"
+            <div class="publication_publication__1Icb_" name="vr-robo">
+                <div class="publication_image__1EUuC" name="vr-robo">
+                    <!-- <video class="vjs-tech" title="VR-Robo video loading.." id="vjs_video_3_html5_api"
                             tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
                             src="images/1.mp4"></video> -->
-                        <img src="images/rss.png"
-                            alt="VR-Robo image loading..." />
+                    <img src="images/rss.png" alt="VR-Robo image loading..." />
+                </div>
+                <div class="publication_info__kLRGP" name="vr-robo">
+                    <div class="publication_title__3m6SE">VR-Robo: A Real-to-Sim-to-Real Framework for
+                        Visual Robot Navigation and Locomotion
                     </div>
-                    <div class="publication_info__kLRGP" name="vr-robo">
-                        <div class="publication_title__3m6SE">VR-Robo: A Real-to-Sim-to-Real Framework for
-                            Visual Robot Navigation and Locomotion
-                        </div>
-                        <div class="publication_authors__qkFXc">
-                            <span><a href="https://zst1406217.github.io/">Shaoting Zhu</a>*</span>
-                            <span><u>Linzhan Mou*</u></span>
-                            <!-- <span>Derun Li</span> -->
-                            <!-- <span><a href="https://scholar.google.cz/citations?user=u-ELP2oAAAAJ&hl=zh-CN">Baijun Ye</a></span> -->
-                            <span><a href="https://scholar.google.com/citations?user=7N0VoNsAAAAJ&hl=en">Runhan Huang</a></span>
-                            <span><a href="https://hangzhaomit.github.io/">Hang Zhao</a><sup>♯</sup></span>
-                        </div>
+                    <div class="publication_authors__qkFXc">
+                        <span><a href="https://zst1406217.github.io/">Shaoting Zhu</a>*</span>
+                        <span><u>Linzhan Mou*</u></span>
+                        <!-- <span>Derun Li</span> -->
+                        <!-- <span><a href="https://scholar.google.cz/citations?user=u-ELP2oAAAAJ&hl=zh-CN">Baijun Ye</a></span> -->
+                        <span><a href="https://scholar.google.com/citations?user=7N0VoNsAAAAJ&hl=en">Runhan
+                                Huang</a></span>
+                        <span><a href="https://hangzhaomit.github.io/">Hang Zhao</a><sup>♯</sup></span>
+                    </div>
 
-                        <div class="publication_venue__1Dv6R"><span>Under Review 2025</span>
-                            <!-- <span class="publication_highlights__2ILmf">All Accept</span> -->
-                        </div>
+                    <div class="publication_venue__1Dv6R"><span>Under Review 2025</span>
+                        <!-- <span class="publication_highlights__2ILmf">All Accept</span> -->
+                    </div>
 
-                        <div class="publication_links__aEpO_">
-                            <span class="publication_link__fXY43"><a
+                    <div class="publication_links__aEpO_">
+                        <span class="publication_link__fXY43"><a
                                 href="https://arxiv.org/abs/2502.01536">arXiv</a></span>
-                            <span class="publication_link__fXY43"><a
-                                href="https://vr-robo.github.io/">Project</a></span>
-                            <span class="publication_link__fXY43"><a
+                        <span class="publication_link__fXY43"><a href="https://vr-robo.github.io/">Project</a></span>
+                        <span class="publication_link__fXY43"><a
                                 href="https://www.youtube.com/watch?v=CcTCECSCwz4">Video (YouTube)</a></span>
-                            <span class="publication_link__fXY43"><a
-                                href="https://www.bilibili.com/video/BV1fqFfeQEAZ/?vd_source=1f197036525036157c93c205b858ea43">Video (Bilibili)</a></span>
-                        </div>
+                        <span class="publication_link__fXY43"><a
+                                href="https://www.bilibili.com/video/BV1fqFfeQEAZ/?vd_source=1f197036525036157c93c205b858ea43">Video
+                                (Bilibili)</a></span>
                     </div>
                 </div>
+            </div>
 
-                <div class="publication_publication__1Icb_" name="letoccflow">
-                    <div class="publication_image__1EUuC" name="letoccflow">
-                        <video class="vjs-tech" title="Let Occ Flow video loading.." id="vjs_video_3_html5_api"
-                            tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-                            src="images/corl.mp4"></video>
+            <div class="publication_publication__1Icb_" name="letoccflow">
+                <div class="publication_image__1EUuC" name="letoccflow">
+                    <video class="vjs-tech" title="Let Occ Flow video loading.." id="vjs_video_3_html5_api"
+                        tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+                        src="images/corl.mp4"></video>
+                </div>
+                <div class="publication_info__kLRGP" name="letoccflow">
+                    <div class="publication_title__3m6SE">Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction
                     </div>
-                    <div class="publication_info__kLRGP" name="letoccflow">
-                        <div class="publication_title__3m6SE">Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction
-                        </div>
-                        <div class="publication_authors__qkFXc">
-                            <span><u>Linzhan Mou*</u></span>
-                            <span><a href="https://scholar.google.com/citations?user=pBEZ7V4AAAAJ&hl=zh-CN">Yili Liu</a>*</span>
-                            <span><a href="https://scholar.google.com/citations?hl=zh-CN&user=4Ry3CKsAAAAJ">Xuan Yu</a></span>
-                            <span><a >Chenrui Han</a></span>
-                            <span><a >Sitong Mao</a></span>
-                            <a href="https://scholar.google.com/citations?user=1hI9bqUAAAAJ&hl=en">Rong Xiong,</a>
-                            <span><a href="https://ywang-zju.github.io/">Yue Wang</a><sup>♯</sup></span>
-                        </div>
+                    <div class="publication_authors__qkFXc">
+                        <span><u>Linzhan Mou*</u></span>
+                        <span><a href="https://scholar.google.com/citations?user=pBEZ7V4AAAAJ&hl=zh-CN">Yili
+                                Liu</a>*</span>
+                        <span><a href="https://scholar.google.com/citations?hl=zh-CN&user=4Ry3CKsAAAAJ">Xuan
+                                Yu</a></span>
+                        <span><a>Chenrui Han</a></span>
+                        <span><a>Sitong Mao</a></span>
+                        <a href="https://scholar.google.com/citations?user=1hI9bqUAAAAJ&hl=en">Rong Xiong,</a>
+                        <span><a href="https://ywang-zju.github.io/">Yue Wang</a><sup>♯</sup></span>
+                    </div>
 
-                        <div class="publication_venue__1Dv6R"><span>CoRL 2024</span>
-                            <!-- <span class="publication_highlights__2ILmf">All Accept</span> -->
-                        </div>
+                    <div class="publication_venue__1Dv6R"><span>CoRL 2024</span>
+                        <!-- <span class="publication_highlights__2ILmf">All Accept</span> -->
+                    </div>
 
-                        
 
-                        <div class="publication_links__aEpO_">
-                            <span class="publication_link__fXY43"><a
+
+                    <div class="publication_links__aEpO_">
+                        <span class="publication_link__fXY43"><a
                                 href="https://arxiv.org/abs/2407.07587">arXiv</a></span>
-                            <span class="publication_link__fXY43"><a
+                        <span class="publication_link__fXY43"><a
                                 href="https://eliliu2233.github.io/letoccflow/">Project</a></span>
-                            <span class="publication_link__fXY43"><a
+                        <span class="publication_link__fXY43"><a
                                 href="https://github.com/eliliu2233/occ-flow">Code</a></span>
-                            <span class="publication_link__fXY43"><a
+                        <span class="publication_link__fXY43"><a
                                 href="https://eliliu2233.github.io/letoccflow/static/videos/letoccflow.mp4">Video</a></span>
-                            <span class="publication_link__fXY43"><a
-                                href="./images/letoccflow-poster.pdf">Poster</a></span>
-                        </div>
+                        <span class="publication_link__fXY43"><a href="./images/letoccflow-poster.pdf">Poster</a></span>
                     </div>
                 </div>
+            </div>
 
-                <div class="publication_publication__1Icb_" name="i4d">
-                    <div class="publication_image__1EUuC" name="i4d">
-                        <video class="vjs-tech" title="Instruct 4D-to-4D video loading.." id="vjs_video_3_html5_api"
-                            tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-                            src="images/cvpr.mp4"></video>
+            <div class="publication_publication__1Icb_" name="i4d">
+                <div class="publication_image__1EUuC" name="i4d">
+                    <video class="vjs-tech" title="Instruct 4D-to-4D video loading.." id="vjs_video_3_html5_api"
+                        tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+                        src="images/cvpr.mp4"></video>
+                </div>
+
+                <div class="publication_info__kLRGP" name="i4d">
+                    <div class="publication_title__3m6SE">Instruct 4D-to-4D: Editing 4D Scenes as Pseudo-3D Scenes Using
+                        2D Diffusion</div>
+                    <div class="publication_authors__qkFXc">
+                        <span><u>Linzhan Mou*</u></span>
+                        <span><a href="https://scholar.google.com/citations?user=_m5__wUAAAAJ&hl=en">Jun-Kun
+                                Chen*</a></span>
+                        <span><a href="https://yxw.web.illinois.edu/">Yu-Xiong Wang</a><sup>♯</sup></span>
                     </div>
-
-                    <div class="publication_info__kLRGP" name="i4d">
-                        <div class="publication_title__3m6SE">Instruct 4D-to-4D: Editing 4D Scenes as Pseudo-3D Scenes Using 2D Diffusion</div>
-                        <div class="publication_authors__qkFXc">
-                            <span><u>Linzhan Mou*</u></span>
-                            <span><a href="https://scholar.google.com/citations?user=_m5__wUAAAAJ&hl=en">Jun-Kun Chen*</a></span>
-                            <span><a href="https://yxw.web.illinois.edu/">Yu-Xiong Wang</a><sup>♯</sup></span>
-                        </div>
-                        <div class="publication_venue__1Dv6R"><span>
+                    <div class="publication_venue__1Dv6R"><span>
                             CVPR 2024</span><span></span></div>
-                        <!-- <div class="publication_venue__1Dv6R"><span>
+                    <!-- <div class="publication_venue__1Dv6R"><span>
                             also in Multimodal AI Workshop</span>
                             <span class="publication_highlights__2ILmf">Oral</span>
                             <span></span>
                         </div> -->
 
-                        <div class="publication_links__aEpO_">
-                            <span class="publication_link__fXY43"><a
+                    <div class="publication_links__aEpO_">
+                        <span class="publication_link__fXY43"><a
                                 href="https://arxiv.org/abs/2406.09402">arXiv</a></span>
-                            <span class="publication_link__fXY43"><a
+                        <span class="publication_link__fXY43"><a
                                 href="https://immortalco.github.io/Instruct-4D-to-4D/">Project</a></span>
-                            <span class="publication_link__fXY43"><a href="https://github.com/Friedrich-M/Instruct-4D-to-4D">Code</a></span>
-                            <span class="publication_link__fXY43"><a>Video</a></span>
-                            <span class="publication_link__fXY43"><a href="./images/i4d-poster.pdf">Poster</a></span>
-                        </div>
+                        <span class="publication_link__fXY43"><a
+                                href="https://github.com/Friedrich-M/Instruct-4D-to-4D">Code</a></span>
+                        <span class="publication_link__fXY43"><a>Video</a></span>
+                        <span class="publication_link__fXY43"><a href="./images/i4d-poster.pdf">Poster</a></span>
                     </div>
                 </div>
+            </div>
 
-                <div class="publication_publication__1Icb_" name="avatar">
-                    <div class="publication_image__1EUuC" name="avatar">
-                        <video class="vjs-tech" title="Relightable and Animatable Neural Avatar video loading.."
-                            id="vjs_video_3_html5_api" tabindex="-1" preload="auto" loop="" muted="muted"
-                            playsinline="playsinline" autoplay="" src="images/sigasia.mp4"></video>
+            <div class="publication_publication__1Icb_" name="avatar">
+                <div class="publication_image__1EUuC" name="avatar">
+                    <video class="vjs-tech" title="Relightable and Animatable Neural Avatar video loading.."
+                        id="vjs_video_3_html5_api" tabindex="-1" preload="auto" loop="" muted="muted"
+                        playsinline="playsinline" autoplay="" src="images/sigasia.mp4"></video>
+                </div>
+
+                <div class="publication_info__kLRGP" name="avatar">
+                    <div class="publication_title__3m6SE"> Relightable and Animatable Neural Avatar from Sparse-View
+                        Video
                     </div>
-
-                    <div class="publication_info__kLRGP" name="avatar">
-                        <div class="publication_title__3m6SE"> Relightable and Animatable Neural Avatar from Sparse-View Video
-                        </div>
-                        <div class="publication_authors__qkFXc">
-                            <span><a href="https://zhenx.me/">Zhen Xu</a></span>
-                            <span><a href="http://pengsida.net/">Sida Peng</a></span>
-                            <span><a href="https://chen-geng.com/">Chen Geng</a></span>
-                            <span><u>Linzhan Mou</u></span>
-                            <span><a >Zihan Yan</a></span>
-                            <span><a href="https://jiamingsun.ml/">Jiaming Sun</a></span>
-                            <span><a href="http://www.cad.zju.edu.cn/home/bao/">Hujun Bao</a></span>
-                            <span><a href="https://xzhou.me/">Xiaowei Zhou</a><sup>♯</sup></span>
-                        </div>
-                        <div class="publication_venue__1Dv6R"><span>
-                                CVPR 2024</span>
-                            <span class="publication_highlights__2ILmf">Highlight</span>
-                            <span></span>
-                        </div>
-                        <div class="publication_links__aEpO_">
-                            <span class="publication_link__fXY43"><a
-                                    href="https://arxiv.org/abs/2308.07903">arXiv</a></span>
-                            <span class="publication_link__fXY43"><a
-                                    href="https://zju3dv.github.io/relightable_avatar/">Project</a></span>
-                            <span class="publication_link__fXY43"><a
-                                    href="https://github.com/zju3dv/RelightableAvatar">Code</a></span>
-                            <span class="publication_link__fXY43"><a
+                    <div class="publication_authors__qkFXc">
+                        <span><a href="https://zhenx.me/">Zhen Xu</a></span>
+                        <span><a href="http://pengsida.net/">Sida Peng</a></span>
+                        <span><a href="https://chen-geng.com/">Chen Geng</a></span>
+                        <span><u>Linzhan Mou</u></span>
+                        <span><a>Zihan Yan</a></span>
+                        <span><a href="https://jiamingsun.ml/">Jiaming Sun</a></span>
+                        <span><a href="http://www.cad.zju.edu.cn/home/bao/">Hujun Bao</a></span>
+                        <span><a href="https://xzhou.me/">Xiaowei Zhou</a><sup>♯</sup></span>
+                    </div>
+                    <div class="publication_venue__1Dv6R"><span>
+                            CVPR 2024</span>
+                        <span class="publication_highlights__2ILmf">Highlight</span>
+                        <span></span>
+                    </div>
+                    <div class="publication_links__aEpO_">
+                        <span class="publication_link__fXY43"><a
+                                href="https://arxiv.org/abs/2308.07903">arXiv</a></span>
+                        <span class="publication_link__fXY43"><a
+                                href="https://zju3dv.github.io/relightable_avatar/">Project</a></span>
+                        <span class="publication_link__fXY43"><a
+                                href="https://github.com/zju3dv/RelightableAvatar">Code</a></span>
+                        <span class="publication_link__fXY43"><a
                                 href="https://www.youtube.com/watch?v=bZaP0PXUWdc">Video</a></span>
-                            <span class="publication_link__fXY43"><a
-                                href="./images/avatar-poster.pdf">Poster</a></span>
-                        </div>
+                        <span class="publication_link__fXY43"><a href="./images/avatar-poster.pdf">Poster</a></span>
                     </div>
                 </div>
+            </div>
 
-                <!-- <div class="publication_publication__1Icb_" name="duquant" style="display: none;">
+            <!-- <div class="publication_publication__1Icb_" name="duquant" style="display: none;">
                     <div class="publication_image__1EUuC" name="duquant">
                         <img src="images/llm.png"
                             alt="Reconstructing Hand-Held Objects from Monocular Video thumbnail loading..." />
                     </div> -->
 
-                    <!-- <div class="publication_info__kLRGP" name="duquant">
+            <!-- <div class="publication_info__kLRGP" name="duquant">
                         <div class="publication_title__3m6SE"> DuQuant: Distributing Outliers via Dual
                             Transformation Makes Stronger Quantized LLMs
                         </div>
@@ -357,121 +370,124 @@
                     </div>
                 </div> -->
 
-                <div class="publication_publication__1Icb_" name="compactvv" style="display: none;">
-                    <div class="publication_image__1EUuC" name="compactvv">
-                        <img src="images/NIPS.png"
-                            alt="Reconstructing Hand-Held Objects from Monocular Video thumbnail loading..." />
+            <div class="publication_publication__1Icb_" name="compactvv" style="display: none;">
+                <div class="publication_image__1EUuC" name="compactvv">
+                    <img src="images/NIPS.png"
+                        alt="Reconstructing Hand-Held Objects from Monocular Video thumbnail loading..." />
+                </div>
+                <div class="publication_info__kLRGP" name="compactvv">
+                    <div class="publication_title__3m6SE">Compact Neural Volumetric Video Representations
+                        with Dynamic Codebooks
                     </div>
-                    <div class="publication_info__kLRGP" name="compactvv">
-                        <div class="publication_title__3m6SE">Compact Neural Volumetric Video Representations
-                            with Dynamic Codebooks
-                        </div>
+                    <div class="publication_authors__qkFXc">
+                        <span><a href="https://github.com/ghy0324">Haoyu Guo</a></span>
+                        <span><a href="http://pengsida.net/">Sida Peng</a></span>
+                        <span><a href="https://yunzhiy.github.io/">Yunzhi Yan</a></span>
+                        <span><u>Linzhan Mou</u></span>
+                        <span><a href="https://shenyujun.github.io/">Yujun Shen</a></span>
+                        <span><a href="http://www.cad.zju.edu.cn/home/bao/">Hujun Bao</a></span>
+                        <span><a href="https://xzhou.me/">Xiaowei Zhou</a><sup>♯</sup></span>
+                    </div>
+
+                    <div class="publication_venue__1Dv6R"><span>NeurIPS 2023 </span><span></span> </div>
+                    <div class="publication_links__aEpO_">
+                        <span class="publication_link__fXY43"><a
+                                href="https://openreview.net/pdf?id=xTgM7XLN9P">Paper</a></span>
+                        <span class="publication_link__fXY43"><a
+                                href="https://github.com/zju3dv/compact_vv">Code</a></span>
+                        <span class="publication_link__fXY43"><a
+                                href="https://neurips.cc/media/PosterPDFs/NeurIPS%202023/70004.png?t=1702193339.444763">Poster</a></span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="publication_publication__1Icb_" name="paintingnature" style="display: none;">
+                    <div class="publication_image__1EUuC" name="paintingnature">
+                        <video class="vjs-tech" title="Painting 3D Nature in 2D video loading.."
+                            id="vjs_video_3_html5_api" tabindex="-1" preload="auto" loop="" muted="muted"
+                            playsinline="playsinline" autoplay="" src="images/teaser.mp4"></video>
+                    </div>
+                    <div class="publication_info__kLRGP" name="paintingnature">
+                        <div class="publication_title__3m6SE">Painting 3D Nature in 2D: View Synthesis of Natural
+                            Scenes from a Single Semantic Mask</div>
                         <div class="publication_authors__qkFXc">
-                            <span><a href="https://github.com/ghy0324">Haoyu Guo</a></span>
+                            <span><a href="https://zhanghe3z.github.io/">Shangzhan Zhang</a></span>
                             <span><a href="http://pengsida.net/">Sida Peng</a></span>
-                            <span><a href="https://yunzhiy.github.io/">Yunzhi Yan</a></span>
+                            <span><a href="https://tianrun-chen.github.io/">Tianrun Chen</a></span>
                             <span><u>Linzhan Mou</u></span>
-                            <span><a href="https://shenyujun.github.io/">Yujun Shen</a></span>
-                            <span><a href="http://www.cad.zju.edu.cn/home/bao/">Hujun Bao</a></span>
+                            <span><a href="https://haotongl.github.io/">Haotong Lin</a></span>
+                            <span><a href="https://scholar.google.com/citations?user=Jtmq_m0AAAAJ">Kaicheng
+                                    Yu</a></span>
+                            <span><a href="https://yiyiliao.github.io/">Yiyi Liao</a></span>
                             <span><a href="https://xzhou.me/">Xiaowei Zhou</a><sup>♯</sup></span>
                         </div>
-
-                        <div class="publication_venue__1Dv6R"><span>NeurIPS 2023 </span><span></span> </div>
+                        <div class="publication_venue__1Dv6R"><span>CVPR 2023 </span> </div>
                         <div class="publication_links__aEpO_">
                             <span class="publication_link__fXY43"><a
-                                    href="https://openreview.net/pdf?id=xTgM7XLN9P">Paper</a></span>
+                                    href="https://arxiv.org/abs/2302.07224.pdf">arXiv</a></span>
                             <span class="publication_link__fXY43"><a
-                                    href="https://github.com/zju3dv/compact_vv">Code</a></span>
+                                    href="https://zju3dv.github.io/paintingnature//">Project</a></span>
                             <span class="publication_link__fXY43"><a
-                                    href="https://neurips.cc/media/PosterPDFs/NeurIPS%202023/70004.png?t=1702193339.444763">Poster</a></span>
+                                    href="https://github.com/zhanghe3z/PaintingNature//">Code</a></span>
                         </div>
                     </div>
                 </div>
 
-                <div>
-                    <div class="publication_publication__1Icb_" name="paintingnature" style="display: none;">
-                        <div class="publication_image__1EUuC" name="paintingnature">
-                            <video class="vjs-tech" title="Painting 3D Nature in 2D video loading.."
-                                id="vjs_video_3_html5_api" tabindex="-1" preload="auto" loop="" muted="muted"
-                                playsinline="playsinline" autoplay="" src="images/teaser.mp4"></video>
-                        </div>
-                        <div class="publication_info__kLRGP" name="paintingnature">
-                            <div class="publication_title__3m6SE">Painting 3D Nature in 2D: View Synthesis of Natural
-                                Scenes from a Single Semantic Mask</div>
-                            <div class="publication_authors__qkFXc">
-                                <span><a href="https://zhanghe3z.github.io/">Shangzhan Zhang</a></span>
-                                <span><a href="http://pengsida.net/">Sida Peng</a></span>
-                                <span><a href="https://tianrun-chen.github.io/">Tianrun Chen</a></span>
-                                <span><u>Linzhan Mou</u></span>
-                                <span><a href="https://haotongl.github.io/">Haotong Lin</a></span>
-                                <span><a href="https://scholar.google.com/citations?user=Jtmq_m0AAAAJ">Kaicheng Yu</a></span>
-                                <span><a href="https://yiyiliao.github.io/">Yiyi Liao</a></span>
-                                <span><a href="https://xzhou.me/">Xiaowei Zhou</a><sup>♯</sup></span>
-                            </div>
-                            <div class="publication_venue__1Dv6R"><span>CVPR 2023 </span> </div>
-                            <div class="publication_links__aEpO_">
-                                <span class="publication_link__fXY43"><a
-                                        href="https://arxiv.org/abs/2302.07224.pdf">arXiv</a></span>
-                                <span class="publication_link__fXY43"><a
-                                        href="https://zju3dv.github.io/paintingnature//">Project</a></span>
-                                <span class="publication_link__fXY43"><a
-                                        href="https://github.com/zhanghe3z/PaintingNature//">Code</a></span>
-                            </div>
-                        </div>
+
+                <div class="publication_publication__1Icb_" name="attface" style="display: none;">
+                    <div class="publication_image__1EUuC" name="attface">
+                        <img src="images/attface.png">
                     </div>
-
-
-                    <div class="publication_publication__1Icb_" name="attface" style="display: none;">
-                        <div class="publication_image__1EUuC" name="attface">
-                            <img src="images/attface.png">
+                    <div class="publication_info__kLRGP" name="attface">
+                        <div class="publication_title__3m6SE"> MAttFace: High-Resolution Face Swapping with
+                            Multi-Level Attention
                         </div>
-                        <div class="publication_info__kLRGP" name="attface">
-                            <div class="publication_title__3m6SE"> MAttFace: High-Resolution Face Swapping with
-                                Multi-Level Attention
-                            </div>
-                            <div class="publication_authors__qkFXc">
-                                <span><u>Linzhan Mou*</u></span>
-                                <span><a href="https://zst1406217.github.io/">Shaoting Zhu*</a></span>
-                                <span><a href="">Junyi Shen</a></span>
-                                <span><a href="https://april.zju.edu.cn/team/chao-xu/">Chao Xu</a></span>
-                                <span><a href="https://april.zju.edu.cn/team/dr-yong-liu/">Yong
-                                        Liu</a><sup>♯</sup></span>
-                            </div>
-                            <div class="publication_venue__1Dv6R"><span> Preprint 2023</div>
-                            <div class="publication_venue__1Dv6R"><span> My first computer vision project</div>
-                            <div class="publication_links__aEpO_">
-                                <span class="publication_link__fXY43"><a>Paper</a></span>
-                                <span class="publication_link__fXY43"><a>Project</a></span>
-                                <span class="publication_link__fXY43"><a>Code</a></span>
-                            </div>
+                        <div class="publication_authors__qkFXc">
+                            <span><u>Linzhan Mou*</u></span>
+                            <span><a href="https://zst1406217.github.io/">Shaoting Zhu*</a></span>
+                            <span><a href="">Junyi Shen</a></span>
+                            <span><a href="https://april.zju.edu.cn/team/chao-xu/">Chao Xu</a></span>
+                            <span><a href="https://april.zju.edu.cn/team/dr-yong-liu/">Yong
+                                    Liu</a><sup>♯</sup></span>
+                        </div>
+                        <div class="publication_venue__1Dv6R"><span> Preprint 2023</div>
+                        <div class="publication_venue__1Dv6R"><span> My first computer vision project</div>
+                        <div class="publication_links__aEpO_">
+                            <span class="publication_link__fXY43"><a>Paper</a></span>
+                            <span class="publication_link__fXY43"><a>Project</a></span>
+                            <span class="publication_link__fXY43"><a>Code</a></span>
                         </div>
                     </div>
                 </div>
+            </div>
             </section>
 
             <section>
                 <h2>
                     Robotics Projects
                     <br class="publication-list_mobileBreak__24vsO">
-                </h2> 
+                </h2>
 
                 <div class="publication_publication__1Icb_" name="walker">
                     <div class="publication_image__1EUuC" name="walker">
-                        <video class="vjs-tech" title="Robust Robot Walker video loading.."
-                            id="vjs_video_3_html5_api" tabindex="-1" preload="auto" loop="" muted="muted"
-                            playsinline="playsinline" autoplay="" src="images/icra.mp4"></video>
+                        <video class="vjs-tech" title="Robust Robot Walker video loading.." id="vjs_video_3_html5_api"
+                            tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+                            src="images/icra.mp4"></video>
                     </div>
                     <div class="publication_info__kLRGP" name="avatar">
                         <div class="publication_title__3m6SE">Learning Agile Locomotion over Challenging Terrains
                         </div>
                         <div class="publication_authors__qkFXc">
                             <span>
-                                To enables quadruped robots to pass various small obstacles, we incorporate a contact encoder and a classification head to learn implicit representations of traps and design tailored reward functions to improve stability.
+                                To enables quadruped robots to pass various small obstacles, we incorporate a contact
+                                encoder and a classification head to learn implicit representations of traps and design
+                                tailored reward functions to improve stability.
                             </span>
                         </div>
 
                         <div class="publication_venue__1Dv6R">
-                            <span>ICRA 2025 (<a href="https://robust-robot-walker.github.io/">Project</a>)</span> 
+                            <span>ICRA 2025 (<a href="https://robust-robot-walker.github.io/">Project</a>)</span>
                         </div>
                         <!-- <div class="publication_links__aEpO_">
                             <span class="publication_link__fXY43">ICRA 2025</span>
@@ -487,20 +503,21 @@
 
                 <div class="publication_publication__1Icb_" name="saro">
                     <div class="publication_image__1EUuC" name="saro">
-                        <video class="vjs-tech" title="SARO video loading.."
-                            id="vjs_video_3_html5_api" tabindex="-1" preload="auto" loop="" muted="muted"
-                            playsinline="playsinline" autoplay="" src="images/saro.mp4"></video>
+                        <video class="vjs-tech" title="SARO video loading.." id="vjs_video_3_html5_api" tabindex="-1"
+                            preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+                            src="images/saro.mp4"></video>
                     </div>
                     <div class="publication_info__kLRGP" name="avatar">
-                        <div class="publication_title__3m6SE">Space-Aware Robot System for Terrain Crossing via VLM
+                        <div class="publication_title__3m6SE">SARO: Space-Aware Robot System for Terrain Crossing via Vision-Language Model
                         </div>
                         <div class="publication_authors__qkFXc">
                             <span>
-                                To enble robot navigate across 3D terrains, we leverage VLM for high-level reasoning and execution, with a design of task decomposition and closedloop sub-task execution.
+                                To enble robot navigate across 3D terrains, we leverage VLM for high-level reasoning and
+                                execution, with a design of task decomposition and closedloop sub-task execution.
                             </span>
                         </div>
                         <div class="publication_venue__1Dv6R">
-                            <span>ICRA 2025 (<a href="https://saro-vlm.github.io/">Project</a>)</span> 
+                            <span>ICRA 2025 (<a href="https://saro-vlm.github.io/">Project</a>)</span>
                         </div>
                         <!-- <div class="publication_links__aEpO_">
                             <span class="publication_link__fXY43">ICRA 2025</span>
@@ -516,50 +533,54 @@
 
                 <div class="publication_publication__1Icb_" name="mobile">
                     <div class="publication_image__1EUuC" name="mobile">
-                        <video class="vjs-tech" title="Mobile Manipulator video loading.."
-                            id="vjs_video_3_html5_api" tabindex="-1" preload="auto" loop="" muted="muted"
-                            playsinline="playsinline" autoplay="" src="images/robot.mp4"></video>
+                        <video class="vjs-tech" title="Mobile Manipulator video loading.." id="vjs_video_3_html5_api"
+                            tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+                            src="images/robot.mp4"></video>
                     </div>
                     <div class="publication_info__kLRGP" name="mobile">
                         <div class="publication_title__3m6SE"> Vision-Centric Mobile Manipulator
                         </div>
                         <div class="publication_authors__qkFXc">
                             <span>
-                                To enable agents to autonomously navigate and grasp objects in complex factory environments, we design a mobile manipulator, with YOLO-based detection module, patrol navigation module, and grasp planning module.
+                                To enable agents to autonomously navigate and grasp objects in complex factory
+                                environments, we design a mobile manipulator, with YOLO-based detection module, patrol
+                                navigation module, and grasp planning module.
                             </span>
                         </div>
                         <div class="publication_venue__1Dv6R"><span>
-                                First Prize in "Supcon Cup" Robot Competition</span> 
+                                First Prize in "Supcon Cup" Robot Competition</span>
                             <span></span>
                         </div>
-                        
+
                     </div>
                 </div>
 
-            <section>
-                <h2>Experiences</h2>
-                <table cellspacing="17">
-                    <tbody>
-                        <tr>
-                            <td width="15%">
-                                <img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;" src="./images/uiuc2.png">
-                            </td>
-                            <td>
-                                <div class="institution">Visiting Student, CS, UIUC</div>
-                                <div class="period">Jul. 2023 - Dec. 2023</div>
-                                <div class="region">Urbana, IL, USA</div>
-                            </td>
-                            <td width="15%">
-                                <img style="width: 100%; max-height: 95px; max-width: 95px; object-fit: cover;" src="./images/penn2.png">
-                            </td>
-                            <td>
-                                <div class="institution">Research Intern, CIS, UPenn</div>
-                                <div class="period">Aug. 2024 - Mar. 2025</div>
-                                <!-- <div class="advisor">Advisor: <a href="https://www.cis.upenn.edu/~kostas/">Prof. Kostas Daniilidis</a></div> -->
-                                <div class="region">Philadelphia, PA, USA</div>
-                            </td>
-                        </tr>
-                        <!-- <tr>     
+                <section>
+                    <h2>Experiences</h2>
+                    <table cellspacing="17">
+                        <tbody>
+                            <tr>
+                                <td width="15%">
+                                    <img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;"
+                                        src="./images/uiuc2.png">
+                                </td>
+                                <td>
+                                    <div class="institution">Visiting Student, CS, UIUC</div>
+                                    <div class="period">Jul. 2023 - Dec. 2023</div>
+                                    <div class="region">Urbana, IL, USA</div>
+                                </td>
+                                <td width="15%">
+                                    <img style="width: 100%; max-height: 95px; max-width: 95px; object-fit: cover;"
+                                        src="./images/penn2.png">
+                                </td>
+                                <td>
+                                    <div class="institution">Research Intern, CIS, UPenn</div>
+                                    <div class="period">Aug. 2024 - Mar. 2025</div>
+                                    <!-- <div class="advisor">Advisor: <a href="https://www.cis.upenn.edu/~kostas/">Prof. Kostas Daniilidis</a></div> -->
+                                    <div class="region">Philadelphia, PA, USA</div>
+                                </td>
+                            </tr>
+                            <!-- <tr>     
                             <td width="15%">
                                 <img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;" src="./images/tsinghua.png">
                             </td>
@@ -575,57 +596,63 @@
                                 <div class="period">Apr. 2025 - Present </div> <div class="region">Shenzhen, China</div>
                             </td> 
                         </tr> -->
-                    </tbody>
-                </table>
-
-                <section>
-                    <h2>Employment</h2>
-                    <table cellspacing="17">
-                        <tbody>
-                            <tr>
-                                <td width="15%">
-                                    <img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;" src="./images/manifold.png">
-                                </td>
-                                <td>
-                                    <div class="institution">Tech Co-founder, Manifolds AI (start-up)</div>
-                                    <div class="work"> Product Delivered: <a href="https://www.manifold-s.com/">Klein</a></div> 
-                                    <div class="region">
-                                        Engine for controllable 3D scene GenAI,
-                                        diverse training scenes for embodied AI,
-                                        intergrating any real-world objects with 360° identicality
-                                    </div>
-                                </td>
-                            </tr> 
                         </tbody>
                     </table>
 
-            <section>
-                <h2>Selected Honors and Awards</h2>
-                <ul>
-                    <li>
-                        <span class="styles_collaborator__VflHz">Princeton Graduate Fellowship Award </span>
-                    </li>
-                    <li>
-                        <span class="styles_collaborator__VflHz">China National Scholarship </span>
-                    </li>
-                    <li>
-                        <span class="styles_collaborator__VflHz">First-Class Scholarship of
-                                Zhejiang University </span>
-                    </li>
-                    <li>
-                        <span class="styles_collaborator__VflHz">Government Scholarship of
-                            Zhejiang Province </b></span>
-                    </li>
-                    <li>
-                        <span class="styles_collaborator__VflHz">Top 10 Outstanding Students of Qiushi Institute </b></span>
-                    </li>
-                    <li>
-                        <span class="styles_collaborator__VflHz">
-                            National First Prize in China Mathematical Contest in Modeling 
-                    </li>
-                </ul>
+                    <section>
+                        <h2>Employment</h2>
+                        <table cellspacing="17">
+                            <tbody>
+                                <tr>
+                                    <td width="15%">
+                                        <img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;"
+                                            src="./images/manifold.png">
+                                    </td>
+                                    <td>
+                                        <div class="institution">Tech Co-founder, Manifolds AI (start-up)</div>
+                                        <div class="work"> Product Delivered: <a
+                                                href="https://www.manifold-s.com/">Klein</a></div>
+                                        <div class="region">
+                                            Engine for controllable 3D scene GenAI,
+                                            diverse training scenes for embodied AI,
+                                            intergrating any real-world objects with 360° identicality
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-            <footer class="styles_footer__3qp3V"><p>Last updated on <time datetime="Sat Jan 20 2025">Jan. 20, 2025</time></p><p>© 2020-<!-- -->2025<!-- --> Linzhan Mou. </p></footer>
+                        <section>
+                            <h2>Selected Honors and Awards</h2>
+                            <ul>
+                                <li>
+                                    <span class="styles_collaborator__VflHz">Princeton Graduate Fellowship Award </span>
+                                </li>
+                                <li>
+                                    <span class="styles_collaborator__VflHz">China National Scholarship </span>
+                                </li>
+                                <li>
+                                    <span class="styles_collaborator__VflHz">First-Class Scholarship of
+                                        Zhejiang University </span>
+                                </li>
+                                <li>
+                                    <span class="styles_collaborator__VflHz">Government Scholarship of
+                                        Zhejiang Province </b></span>
+                                </li>
+                                <li>
+                                    <span class="styles_collaborator__VflHz">Top 10 Outstanding Students of Qiushi
+                                        Institute </b></span>
+                                </li>
+                                <li>
+                                    <span class="styles_collaborator__VflHz">
+                                        National First Prize in China Mathematical Contest in Modeling
+                                </li>
+                            </ul>
+
+                            <footer class="styles_footer__3qp3V">
+                                <p>Last updated on <time datetime="Sat Jan 20 2025">Jan. 20, 2025</time></p>
+                                <p>© 2020-<!-- -->2025<!-- --> Linzhan Mou. </p>
+                            </footer>
 
         </div>
     </div>
