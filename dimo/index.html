@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<!-- python .\scripts\tools\compress_videos.py --data_root "C:\Users\56295\OneDrive - xudenden\418\Long Volumetric Video\Long Volumetric Video Materials\videos" --videos_dir demo --output_dir demo_x0.5 --vcodec libx264 --pix_fmt yuv420p --tag "" --preset "" --crf 28 --resize 0.5 -->
+<html lang="en">
+
+<head>
+  <meta content="DIMO" name="title" />
+  <meta content="This paper aims to address the challenge of generating diverse 3D motions for arbitrary objects."
+    name="description" />
+  <meta content="3D Motion Generation, 4D Generation" name="keywords" />
+  <meta content="index, follow" name="robots" />
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+  <meta content="English" name="language" />
+  <meta content="Linzhan Mou" name="author" />
+  <title>DIMO</title>
+  <!-- Bootstrap -->
+  <script src="js/video_comparison.js"></script>
+  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="js/bootstrap-4.4.1.js"></script>
+
+  <link href="css/bootstrap-4.4.1.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/brands.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/solid.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/fontawesome.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700;800;900&amp;display=swap"
+    rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css" rel="stylesheet" />
+  <link href="img/1.png" rel="icon" sizes="any" type="image/svg+xml" />
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    code {
+      white-space: pre-wrap;
+    }
+
+    body {
+      font-family: 'Jost';
+      font-weight: 500;
+      font-size: 1.25em;
+    }
+
+    h1 {
+      font-size: 2.25em;
+    }
+
+    h2 {
+      font-size: 1.75em;
+    }
+
+    h3 {
+      font-size: 1.5em;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: bolder;
+    }
+
+    b {
+      font-weight: bolder;
+    }
+
+    strong {
+      font-weight: bold;
+    }
+
+    section>h5 {
+      padding-bottom: 30px;
+    }
+
+    .col-12>h3 {
+      padding-top: 30px;
+    }
+
+    .results-section {
+      padding-bottom: 30px;
+    }
+
+    .carousel-control-prev,
+    .carousel-control-next {
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .carousel-control-prev {
+      left: 25px;
+    }
+
+    .carousel-control-next {
+      right: 25px;
+    }
+
+    .carousel-indicators {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      bottom: 10%;
+      left: 90%;
+
+      /* Adjust vertical position */
+      text-align: center;
+      /* Center the content horizontally */
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .carousel-indicators li {
+      background-color: transparent;
+      /* Hide the default Bootstrap indicators */
+      border: none;
+      /* Remove border */
+      margin: 0 25px;
+      display: inline-block;
+    }
+
+    .indicator-dot {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      text-indent: -999px;
+      border: none;
+      border-radius: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .row.sm-gutters {
+      margin-right: 5px;
+      margin-left: 5px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .row.sm-gutters>.col-md-4 {
+      padding-right: 5px;
+      padding-left: 5px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+
+    .row.sm-gutters>.col-md-6 {
+      padding-right: 5px;
+      padding-left: 5px;
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+
+    .row.sm-gutters>.col-md-12 {
+      padding-top: 5px;
+      padding-bottom: 5px;
+      padding-right: 5px;
+      padding-left: 5px;
+    }
+
+    .zoom-element {
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .zoom-element:hover {
+      transform: scale(1.25);
+    }
+
+    video,
+    iframe {
+      border-radius: 10px;
+      padding: 0px;
+      margin: 0px;
+    }
+
+    .comparison-canvas {
+      border-radius: 10px;
+      padding: 0px;
+      margin: 0px;
+    }
+
+    .a16x9 {
+      aspect-ratio: 16/9;
+    }
+
+    .a4x3 {
+      aspect-ratio: 4/3;
+    }
+
+    .a1x1 {
+      aspect-ratio: 1;
+    }
+
+    .a085 {
+      aspect-ratio: 1430/1678;
+    }
+
+    .a133 {
+      aspect-ratio: 1352/1014;
+    }
+
+    .a1875 {
+      aspect-ratio: 1920/1024;
+    }
+  </style>
+  <script>
+
+  </script>
+  </link>
+</head>
+
+<body>
+  <!-- cover -->
+  <section>
+    <div class="jumbotron text-center mt-0">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h1 style="font-weight: bold">
+              <b>
+                DIMO: <span style="color: #00A2FF">Diverse 3D Motion</span> Generation
+                <br />
+                for <span style="color: #FF8495">Arbitrary Objects</span>
+              </b>
+            </h1>
+            <h4 style="color:#5a6268; font-weight: bold;">ICCV 2025 <span style="color: #d52d43">(Highlight)</span></h4>
+            <hr>
+            <a href="https://linzhanm.github.io/" target="_blank">Linzhan Mou<sup>1</sup></a>&nbsp;
+            <a href="https://www.cis.upenn.edu/~leijh/" target="_blank">Jiahui Lei<sup>1</sup><sup>x</sup></a>&nbsp;
+            <a href="https://cwchenwang.github.io/" target="_blank">Chen Wang<sup>1</sup></a>&nbsp;
+            <a href="https://lingjie0206.github.io/" target="_blank">Lingjie Liu<sup>1</sup></a>&nbsp;
+            <a href="https://www.cis.upenn.edu/~kostas/" target="_blank">Kostas Daniilidis<sup>1,2</sup></a>
+            </a>
+            <p>
+              <sup>1</sup>University of Pennsylvania&nbsp;&nbsp;&nbsp;&nbsp;<sup>2</sup>Archimedes, Athena RC&nbsp;&nbsp;&nbsp;&nbsp;
+              <br />
+              <span style="color: #5a6268;">
+                <sup>x</sup>Corresponding Author
+              </span>
+            </p>
+            <div class="row justify-content-center">
+              <div class="column">
+                <p class="mb-5">
+                  <a class="btn btn-large btn-light"
+                    href="assets/DIMO.pdf"
+                    role="button" target="_blank">
+                    <i class="fa fa-file-pdf-o"></i>
+                    <b>Paper</b>
+                  </a>
+                </p>
+              </div>
+              <div class="column">
+                <p class="mb-5">
+                  <a class="btn btn-large btn-light" href="assets/DIMO.pdf" role="button"
+                    target="_blank">
+                    <i class="ai ai-arxiv"></i>
+                    <b>arXiv</b>
+                  </a>
+                </p>
+              </div>
+
+              <div class="column">
+                <p class="mb-5">
+                  <a class="btn btn-large btn-light" href="https://youtu.be/CY2jTIpEN-I?si=HY_yQnwXyZh12dSF" role="button" target="_blank">
+                    <i class="fa fa-youtube-play"></i>
+                    <b>YouTube</b>
+                    <!-- <i class="fa fa-file-video-o"></i> -->
+                    <!-- <img src="img/youtube.svg" style="width: 16px; height: 16px;"></i> -->
+                    <!-- <b>&nbsp;YouTube</b> -->
+                  </a>
+                </p>
+              </div>
+
+              <!-- <div class="column">
+                <p class="mb-5">
+                  <a class="btn btn-large btn-light" href="https://www.bilibili.com/video/BV14NqhYhES1/"
+                    style="display: flex; align-items: center; justify-content: center;" role="button" target="_blank">
+                    <i class="fa-brands fa-bilibili"></i>
+                    <b>&nbsp;Bilibili</b>
+                  </a>
+                </p>
+              </div> -->
+
+              <!-- <div class="column">
+                <p class="mb-5">
+                  <a class="btn btn-large btn-light" href="https://github.com/zju3dv/EasyVolcap" role="button" target="_blank">
+                    <i class="fa fa-github"></i>
+                    <b>Online Demo (TBD)</b>
+                  </a>
+                </p>
+              </div> -->
+
+              <!-- <div class="column">
+                <p class="mb-5">
+                  <a class="btn btn-large btn-light" href="https://github.com/dendenxu/fast-gaussian-rasterization"
+                    role="button" target="_blank">
+                    <i class="fa fa-github"></i>
+                    <b>Renderer</b>
+                  </a>
+                </p>
+              </div> -->
+
+              <div class="column">
+                <p class="mb-5">
+                  <a class="btn btn-large btn-light" href="https://github.com/Friedrich-M/DIMO" role="button"
+                    target="_blank">
+                    <i class="fa fa-github"></i>
+                    <b>Code</b>
+                  </a>
+                </p>
+              </div>
+
+              <!-- <div class="column">
+                <p class="mb-5">
+                  <a class="btn btn-large btn-light" href="https://forms.gle/MzJqZjBfyZ53fRMZ7" role="button"
+                    target="_blank">
+                    <i class="fa-solid fa-database"></i>
+                    <b><span style="font-style: italic">SelfCap</span> Dataset</b>
+                  </a>
+                </p>
+              </div> -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- <section>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12 text-center">
+          <b style="color: #8899a5">
+             <span style="font-style: italic">Diverse</span> 3D motion generation for arbitrary objects in a single generative model.
+          </b>
+
+
+          <div class="carousel slide" data-interval="100000" data-ride="carousel" id="demo-carousel">
+            <ol class="carousel-indicators">
+              <li class="active" data-slide-to="0" data-target="#demo-carousel">
+                <span class="indicator-dot"></span>
+              </li>
+              <li data-slide-to="1" data-target="#demo-carousel">
+                <span class="indicator-dot"></span>
+              </li>
+              <li data-slide-to="2" data-target="#demo-carousel">
+                <span class="indicator-dot"></span>
+              </li>
+              <li data-slide-to="3" data-target="#demo-carousel">
+                <span class="indicator-dot"></span>
+              </li>
+              <li data-slide-to="4" data-target="#demo-carousel">
+                <span class="indicator-dot"></span>
+              </li>
+              <li data-slide-to="5" data-target="#demo-carousel">
+                <span class="indicator-dot"></span>
+              </li>
+            </ol>
+            <div class="carousel-inner zoom-element">
+              <div class="carousel-item active">
+                <div class="row sm-gutters">
+                  <div class="col-md-12">
+                    <video autoplay class="a16x9"
+                      data-desktop-vid1="img/demo.mp4"
+                      data-desktop-vid2="https://raw.githubusercontent.com/dendenxu/longvolcap.assets/main/demo/yoga_6000_comp.mp4"
+                      data-mobile-vid1="https://vultr.zhenx.me/longvolcap.assets/demo_x0.5/yoga_6000_comp.mp4"
+                      data-mobile-vid2="https://raw.githubusercontent.com/dendenxu/longvolcap.assets/main/demo_x0.5/yoga_6000_comp.mp4"
+                      loop muted playsinline controls aria-controls poster="img/spinner.svg" width="100%">
+                    </video>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h3>Overview Video</h3>
+          <hr style="margin-top: 0px" />
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <section class="results-section">
+    <div class="container">
+      <div class="row sm-gutters">
+        <div class="col-md-12 zoom-element">
+          <div class="embed-responsive embed-responsive-16by9">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/CY2jTIpEN-I?si=QZN7sjfANDS790h9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h3>Abstract</h3>
+          <hr style="margin-top: 0px" />
+          <img src="img/teaser.png" width="100%" />
+          <div style="height: 0.3em;"></div>
+          <p style="text-align: justify; text-justify: inter-word;">
+            We present DIMO, a generative approach capable of generating <b>diverse 3D motions for arbitrary objects</b> from a single image. The core idea of our work is to leverage the rich priors in well-trained video models to extract the common motion patterns and then embed them into a shared low-dimensional latent space. Specifically, we first generate multiple videos of the same object with diverse motions. We then embed each motion into a latent vector and train a shared motion decoder to learn the distribution of motions represented by a structured and compact motion representation, i.e., neural key point trajectories. The canonical 3D Gaussians are then driven by these key points and fused to model the geometry and appearance. During inference time with learned latent space, we can <b>instantly sample diverse 3D motions in a single-forward pass</b> and support interesting applications including 3D motion interpolation and language-guided motion generation.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h3>Method</h3>
+          <hr style="margin-top: 0px" />
+          <img src="img/pipeline.png" width="100%" />
+          <div style="height: 0.5em;"></div>
+          <p style="text-align: justify; text-justify: inter-word;">
+            Given a single-view image of any general object, DIMO first <b>distills rich motion priors</b> from video models. We then represent each motion as structured neural key point trajectories. During training, we embed each motion sequence into a latent code in motion latent space and <b>jointly model diverse motion patterns</b> using a shared motion decoder. The decoded key point transformations are used to drive canonical 3DGS for 4D optimization with only photometric losses.
+          </ul>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <!-- citing -->
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        </br>
+        </br>
+        <h3>Citation</h3>
+        <hr style="margin-top: 0px" />
+        <pre style="background-color: #e9eeef; padding: 1.5em 1.5em; border-radius: 20px; font-size: 0.75em;">
+<code>@inproceedings{mou2025dimo,
+  author  = {Mou, Linzhan and Lei, Jiahui and Wang, Chen and Liu, Lingjie and Daniilidis, Kostas},
+  title   = {DIMO: Diverse 3D Motion Generation for Arbitrary Objects},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision},
+  year    = {2025},
+}
+</code></pre>
+        <hr />
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center" style="margin-bottom: 10px">
+    Thanks to
+    <a href="https://zhenx.me/" target="_blank">Zhen Xu</a>
+    for the website template, which can be found
+    <a href="https://github.com/zju3dv/zju3dv.github.io/tree/master/longvolcap" target="_blank">here</a>.
+  </footer>
+  <!-- Default Statcounter code for Long Volumetric Video
+http://zju3dv.github.io/longvolcap -->
+  <script type="text/javascript">
+    var sc_project = 13068940;
+    var sc_invisible = 1;
+    var sc_security = "a17e5a49"; 
+  </script>
+  <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+  <noscript>
+    <div class="statcounter"><a title="web statistics" href="https://statcounter.com/" target="_blank"><img
+          class="statcounter" src="https://c.statcounter.com/13068940/0/a17e5a49/1/" alt="web statistics"
+          referrerPolicy="no-referrer-when-downgrade"></a></div>
+  </noscript>
+  <!-- End of Statcounter Code -->
+  <script>
+    var buttonIds = [
+      'dnarendering-demos-button',
+      'sports-demos-button',
+      'mobilestage-demos-button',
+      'n3dv-demos-button',
+      'panoptic-demos-button',
+      'enerfoutdoor-demos-button',
+      'vr-demos-button',
+      'comp-render-button',
+     /* ...other button ids... */];
+    var sectionIds = [
+      'dnarendering-demos',
+      'sports-demos',
+      'mobilestage-demos',
+      'n3dv-demos',
+      'panoptic-demos',
+      'enerfoutdoor-demos',
+      'vr-demos',
+      'comp-render',
+     /* ...other section ids... */];
+    for (var i = 0; i < buttonIds.length; i++) {
+      (function (index) {
+        var button = document.getElementById(buttonIds[index]);
+        var section = document.getElementById(sectionIds[index]);
+        button.addEventListener('click', function () {
+          if (section.classList.contains('show')) {
+            button.innerText = '\u00a0Click to Expand\u00a0';
+            var videos = section.getElementsByTagName('video');
+            for (var j = 0; j < videos.length; j++) {
+              if (videos[j].readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+                videos[j].pause();
+              }
+            }
+          } else {
+            button.innerText = 'Click to Collapse';
+            var videos = section.getElementsByTagName('video');
+            for (var j = 0; j < videos.length; j++) {
+              videos[j].play();
+            }
+          }
+        });
+      })(i);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: "$", right: "$", display: false },
+          { left: "$$", right: "$$", display: true }
+        ]
+      });
+    });
+
+
+    function handleCarouselSlide(event) {
+      // Reference to the current carousel
+      var currentCarousel = $(event.target);
+
+      // Check each video in the current carousel
+      currentCarousel.find('video').each(function () {
+        var isVideoInActiveItem = $(this).closest('.carousel-item').hasClass('active');
+        if (isVideoInActiveItem) {
+          if (this.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+            this.height = (this.videoHeight / this.videoWidth) * $(this).parent().width();
+          }
+          this.play();
+        } else {
+          if (this.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+            this.pause();
+          }
+        }
+      });
+    }
+
+    $('.carousel').on('slid.bs.carousel', handleCarouselSlide);
+
+    $(document).ready(function () {
+      $('video').each(function () {
+        var $video = $(this);
+        var $carousel = $video.closest('.carousel');
+        if ($carousel.length > 0) {
+          $video.on('ended', function () {
+            $carousel.carousel('next');
+          });
+        }
+      });
+    });
+
+    function updateVideoShape() {
+      this.height = (this.videoHeight / this.videoWidth) * $(this).parent().width();
+    }
+
+    // fix the element's width and height properties to the current video ones
+    $("video").each(function () {
+      if (!this.classList.contains('comparison-video')) {
+        $(this).on('loadeddata', updateVideoShape);
+      }
+    });
+
+    // $("#renbody-results-button").click()
+    document.addEventListener("DOMContentLoaded", function () {
+      // Get all videos
+      var videos = document.querySelectorAll('video');
+
+      // Add source to video tag
+      function addSourceToVideo(element, src) {
+        var source = document.createElement('source');
+        source.src = src;
+        source.type = 'video/mp4';
+        element.appendChild(source);
+      }
+
+      // Determine screen size and select appropriate videos
+      function whichSizeVideo(element) {
+        var windowWidth = window.innerWidth || window.innerWidth;
+        var prefix = windowWidth > 1200 ? "desktop" : "mobile";
+
+        // Get all data attributes for the given prefix (e.g., data-mobile-vid1, data-mobile-vid2, ...)
+        var i = 1;
+        while (element.dataset[prefix + "Vid" + i]) {
+          addSourceToVideo(element, element.dataset[prefix + "Vid" + i]);
+          i++;
+        }
+      }
+
+      // Initialize only if the page has videos
+      function videoBandwidth() {
+        if (videos) {
+          videos.forEach(whichSizeVideo);
+        }
+      }
+      videoBandwidth();
+
+      // FIXME: this is not working yet
+      function videoSize() {
+        if (videos) {
+          videos.forEach(updateVideoShape);
+        }
+      }
+      // Listen to window resize
+      window.onresize = videoSize;
+
+      setInterval(function () {
+        // Select all comparison-video type videos
+        let videos = document.querySelectorAll('.comparison-video');
+
+        videos.forEach(video => {
+          // If the id does not end with After
+          if (!video.id.endsWith('After')) {
+            resizeAndPlay(video);
+          }
+        });
+      }, 10000);  // 每500毫秒检测一次
+
+    });
+  </script>
+</body>
+
+</html>
