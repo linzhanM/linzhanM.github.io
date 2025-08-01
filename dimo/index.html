@@ -242,7 +242,8 @@
             <a href="https://www.cis.upenn.edu/~kostas/" target="_blank">Kostas Daniilidis<sup>1,2</sup></a>
             </a>
             <p>
-              <sup>1</sup>University of Pennsylvania&nbsp;&nbsp;&nbsp;&nbsp;<sup>2</sup>Archimedes, Athena RC&nbsp;&nbsp;&nbsp;&nbsp;
+              <sup>1</sup>University of Pennsylvania&nbsp;&nbsp;&nbsp;&nbsp;<sup>2</sup>Archimedes, Athena
+              RC&nbsp;&nbsp;&nbsp;&nbsp;
               <br />
               <span style="color: #5a6268;">
                 <sup>x</sup>Corresponding Author
@@ -251,9 +252,7 @@
             <div class="row justify-content-center">
               <div class="column">
                 <p class="mb-5">
-                  <a class="btn btn-large btn-light"
-                    href="assets/DIMO.pdf"
-                    role="button" target="_blank">
+                  <a class="btn btn-large btn-light" href="assets/DIMO.pdf" role="button" target="_blank">
                     <i class="fa fa-file-pdf-o"></i>
                     <b>Paper</b>
                   </a>
@@ -261,8 +260,7 @@
               </div>
               <div class="column">
                 <p class="mb-5">
-                  <a class="btn btn-large btn-light" href="assets/DIMO.pdf" role="button"
-                    target="_blank">
+                  <a class="btn btn-large btn-light" href="assets/DIMO.pdf" role="button" target="_blank">
                     <i class="ai ai-arxiv"></i>
                     <b>arXiv</b>
                   </a>
@@ -271,7 +269,8 @@
 
               <div class="column">
                 <p class="mb-5">
-                  <a class="btn btn-large btn-light" href="https://youtu.be/CY2jTIpEN-I?si=HY_yQnwXyZh12dSF" role="button" target="_blank">
+                  <a class="btn btn-large btn-light" href="https://youtu.be/CY2jTIpEN-I?si=HY_yQnwXyZh12dSF"
+                    role="button" target="_blank">
                     <i class="fa fa-youtube-play"></i>
                     <b>YouTube</b>
                     <!-- <i class="fa fa-file-video-o"></i> -->
@@ -402,7 +401,10 @@
       <div class="row sm-gutters">
         <div class="col-md-12 zoom-element">
           <div class="embed-responsive embed-responsive-16by9">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/CY2jTIpEN-I?si=QZN7sjfANDS790h9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/CY2jTIpEN-I?si=QZN7sjfANDS790h9"
+              title="YouTube video player" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
         </div>
       </div>
@@ -418,7 +420,16 @@
           <img src="img/teaser.png" width="100%" />
           <div style="height: 0.3em;"></div>
           <p style="text-align: justify; text-justify: inter-word;">
-            We present DIMO, a generative approach capable of generating <b>diverse 3D motions for arbitrary objects</b> from a single image. The core idea of our work is to leverage the rich priors in well-trained video models to extract the common motion patterns and then embed them into a shared low-dimensional latent space. Specifically, we first generate multiple videos of the same object with diverse motions. We then embed each motion into a latent vector and train a shared motion decoder to learn the distribution of motions represented by a structured and compact motion representation, i.e., neural key point trajectories. The canonical 3D Gaussians are then driven by these key points and fused to model the geometry and appearance. During inference time with learned latent space, we can <b>instantly sample diverse 3D motions in a single-forward pass</b> and support interesting applications including 3D motion interpolation and language-guided motion generation.
+            We present DIMO, a generative approach capable of generating <b>diverse 3D motions for arbitrary objects</b>
+            from a single image. The core idea of our work is to leverage the rich priors in well-trained video models
+            to extract the common motion patterns and then embed them into a shared low-dimensional latent space.
+            Specifically, we first generate multiple videos of the same object with diverse motions. We then embed each
+            motion into a latent vector and train a shared motion decoder to learn the distribution of motions
+            represented by a structured and compact motion representation, i.e., neural key point trajectories. The
+            canonical 3D Gaussians are then driven by these key points and fused to model the geometry and appearance.
+            During inference time with learned latent space, we can <b>instantly sample diverse 3D motions in a
+              single-forward pass</b> and support interesting applications including 3D motion interpolation and
+            language-guided motion generation.
           </p>
         </div>
       </div>
@@ -434,15 +445,19 @@
           <img src="img/pipeline.png" width="100%" />
           <div style="height: 0.5em;"></div>
           <p style="text-align: justify; text-justify: inter-word;">
-            Given a single-view image of any general object, DIMO first <b>distills rich motion priors</b> from video models. We then represent each motion as structured neural key point trajectories. During training, we embed each motion sequence into a latent code in motion latent space and <b>jointly model diverse motion patterns</b> using a shared motion decoder. The decoded key point transformations are used to drive canonical 3DGS for 4D optimization with only photometric losses.
-          </ul>
+            Given a single-view image of any general object, DIMO first <b>distills rich motion priors</b> from video
+            models. We then represent each motion as structured neural key point trajectories. During training, we embed
+            each motion sequence into a latent code in motion latent space and <b>jointly model diverse motion
+              patterns</b> using a shared motion decoder. The decoded key point transformations are used to drive
+            canonical 3DGS for 4D optimization with only photometric losses.
+            </ul>
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  
+
   <!-- citing -->
   <div class="container">
     <div class="row">
