@@ -124,7 +124,7 @@
 					I received my bachelor's degree from <a href="https://www.zju.edu.cn/english/">Zhejiang University</a> with honors from <a href="http://ckc.zju.edu.cn/ckcen/">Chu Kochen Honors College</a>. 
 					<!-- I am a first-year CS Ph.D. student at Princeton, fortunate to be advised by <a href="https://www.cs.princeton.edu/~fheide/">Prof. Felix Heide</a>. My research focuses on 4D vision, robotics and generative models. -->
 					<br><br>
-					My research focuses on 4D vision, generative models and robotics. I was fortunate to work with <a href="https://www.cis.upenn.edu/~kostas/">Prof.&nbsp;Kostas Daniilidis</a> and <a href="https://lingjie0206.github.io/">Prof. Lingjie Liu</a> at <a href="https://www.grasp.upenn.edu/">UPenn GRASP Lab</a>.
+					My research focuses on 4D foundation models and generative AI. I was fortunate to work with <a href="https://www.cis.upenn.edu/~kostas/">Prof.&nbsp;Kostas Daniilidis</a> and <a href="https://lingjie0206.github.io/">Prof. Lingjie Liu</a> at <a href="https://www.grasp.upenn.edu/">UPenn GRASP Lab</a>.
 					<!-- and <a href="https://jiahuilei.com/">Dr.&nbsp;Jiahui Lei</a> at <a href="https://bair.berkeley.edu/">UC Berkeley</a>. -->
 					<br><br>
 					Email: linzhan [at] princeton [dot] edu
@@ -295,21 +295,65 @@
 
 			<div class="row">
 				<div class="col-md-3">
+					<img class="img-thumbnail" title="DuQuant video loading.." id="vjs_video_3_html5_api"
+						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						src="images/nips24.png">
+				</div>
+				<div class="col-md-9">
+					<div style="height: 0.2em;"></div>
+					<font style="font-size: 18px;" color="black"><strong>DuQuant: Distributing Outliers via Dual Transformation Makes Stronger Quantized LLMs<!-- Place this tag where you want the button to render. -->
+						</strong><br></font>
+					<span>Haokun Lin*</span>,
+					<span>Haobo Xu*</span>,
+					<span>Yichen Wu*</span>,
+					<span>Jingzhi Cui</span>,
+					<span><u>Linzhan Mou</u></span>,
+					<span>Linqi Song</span>,
+					<span>Zhenan Sun</span>,
+					<span>Ying Wei†</span>
+					<br> NeurIPS 2024 <b>
+						<font color="red">(Oral) </font>
+					</b> <br>
+					<br>
+
+					[<a href="javascript:void(0)" onclick="display('i4d-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2406.01721">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://duquant.github.io/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/Hsu1023/DuQuant">code</a>]&nbsp;
+					[<a target="_blank" href="">video</a>]&nbsp;
+					[<a target="_blank" href="https://neurips.cc/media/PosterPDFs/NeurIPS%202024/93727.png?t=1733734195.4992867">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/Hsu1023/DuQuant" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/Hsu1023/DuQuant?style=social"></a>
+					<div id="i4d-abs" style="display:none">
+						<p>
+							Quantization of large language models (LLMs) faces significant challenges, particularly due to the presence of outlier activations that impede efficient low-bit representation. Traditional approaches predominantly address Normal Outliers, which are activations across all tokens with relatively large magnitudes.
+
+							However, these methods struggle with smoothing Massive Outliers that display significantly larger values, which leads to significant performance degradation in low-bit quantization.
+
+							In this paper, we introduce DuQuant, a novel approach that utilizes rotation and permutation transformations to more effectively mitigate both massive and normal outliers. First, DuQuant starts by constructing the rotation matrix, using specific outlier dimensions as prior knowledge, to redistribute outliers to adjacent channels by block-wise rotation. Second, We further employ a zigzag permutation to balance the distribution of outliers across blocks, thereby reducing block-wise variance. A subsequent rotation further smooths the activation landscape, enhancing model performance. DuQuant establishs new state-of-the-art baselines for 4-bit weight-activation quantization across various model types and downstream tasks.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- <hr>
+
+			<div class="row">
+				<div class="col-md-3">
 					<video class="img-thumbnail" title="Instruct 4D-to-4D video loading.." id="vjs_video_3_html5_api"
 						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/cvpr.mp4"></video>
 				</div>
 				<div class="col-md-9">
 					<div style="height: 0.2em;"></div>
-					<font style="font-size: 18px;" color="black"><strong>Instruct 4D-to-4D: Editing 4D Scenes as Pseudo-3D Scenes Using 2D Diffusion<!-- Place this tag where you want the button to render. -->
+					<font style="font-size: 18px;" color="black"><strong>Instruct 4D-to-4D: Editing 4D Scenes as Pseudo-3D Scenes Using 2D Diffusion
 						</strong><br></font>
 					<span><u>Linzhan Mou</u>*</span>,
 					<span>Jun-Kun Chen*</span>,
 					<span>Yu-Xiong Wang†</span>
 					<br> CVPR 2024 <br>
 					<br>
-					<!-- <font style="color: #7c7c7c;">Invited Talk at TTIC 2024 Multimodal AI Workshop</font> -->
-					<!-- <div style="height: 0.5em;"></div> -->
 
 					[<a href="javascript:void(0)" onclick="display('i4d-abs')">abs</a>]&nbsp;
 					[<a target="_blank" href="https://arxiv.org/abs/2406.09402">arXiv</a>]&nbsp;
@@ -341,9 +385,9 @@
 						</p>
 					</div>
 				</div>
-			</div>
+			</div> -->
 
-			<hr>
+			<!-- <hr>
 
 			<div class="row">
 				<div class="col-md-3">
@@ -363,7 +407,7 @@
 					<span>Hang Zhao†</span>
 					<br> RA-L 2025 <br>
 					<font style="color: #7c7c7c;">CoRL 2025 LSRW Workshop</font> 
-					<!-- <font style="color: #7c7c7c;">CoRL 2025 Learning to Simulate Robot Worlds Workshop</font>   -->
+					
 					<div style="height: 0.6em;"></div> 
 					[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
 					[<a target="_blank" href="https://arxiv.org/abs/2502.01536">arXiv</a>]&nbsp;
@@ -395,92 +439,11 @@
 						</p>
 					</div>
 				</div>
-			</div>
-
-			<!-- <hr>
-
-			<div class="row">
-				<div class="col-md-3">
-					<video class="img-thumbnail" title="Avatar video loading.." id="vjs_video_3_html5_api" tabindex="-1"
-						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/saro.mp4"></video>
-				</div>
-				<div class="col-md-9">
-					<div style="height: 0.2em;"></div>
-					<font style="font-size: 18px;" color="black"><strong>SARO: Space-Aware Robot System for Terrain Crossing via Vision-Language Model
-						</strong><br></font>
-					<span>Shaoting Zhu*</span>,
-					<span>Derun Li*</span>,
-					<span><u>Linzhan Mou</u></span>,
-					<span>Yong Liu</span>,
-					<span>Ningyi Xu</span>,
-					<span>Hang Zhao†</span>
-					<br> ICRA 2025 <b>
-					</b> <br>
-					<br>
-					[<a href="javascript:void(0)" onclick="display('saro-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2407.16412">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://saro-vlm.github.io/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/zst1406217/robust_robot_walker">code</a>]&nbsp;
-					[<a target="_blank" href="https://www.youtube.com/watch?v=vfsAgrhWkp0">video</a>]&nbsp;
-					[<a target="_blank" href="./images/saro_icra.pdf">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/zst1406217/robust_robot_walker" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/zst1406217/robust_robot_walker?style=social"></a>
-					<div id="saro-abs" style="display:none">
-						<p>
-							The application of vision-language models (VLMs) has achieved impressive success in various robotics tasks. However, there are few explorations for these foundation models used in quadruped robot navigation through terrains in 3D environments. In this work, we introduce SARO (Space Aware Robot System for Terrain Crossing), an innovative system composed of a high-level reasoning module, a closed-loop sub-task execution module, and a low-level control policy. It enables the robot to navigate across 3D terrains and reach the goal position. For high-level reasoning and execution, we propose a novel algorithmic system taking advantage of a VLM, with a design of task decomposition and a closed-loop sub-task execution mechanism. For low-level locomotion control, we utilize the Probability Annealing Selection (PAS) method to effectively train a control policy by reinforcement learning. Numerous experiments show that our whole system can accurately and robustly navigate across several 3D terrains, and its generalization ability ensures the applications in diverse indoor and outdoor scenarios and terrains.
-						</p>
-					</div>
-				</div>
 			</div> -->
 
 			<br>
 		</div>
 
-
-		<!-- <div class="container" style="font-size: 17px">
-			<h2 id="Publications" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Projects </h2>
-			<hr style="margin-top:0.4em">
-
-			<div class="row">
-				<div class="col-md-3">
-					<video class="img-thumbnail" title="Avatar video loading.." id="vjs_video_3_html5_api" tabindex="-1"
-						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/saro.mp4"></video>
-				</div>
-				<div class="col-md-9">
-					<div style="height: 0.2em;"></div>
-					<font style="font-size: 18px;" color="black"><strong>SARO: Space-Aware Robot System for Terrain Crossing via Vision-Language Model
-						</strong><br></font>
-					<span>Shaoting Zhu*</span>,
-					<span>Derun Li*</span>,
-					<span><u>Linzhan Mou</u></span>,
-					<span>Yong Liu</span>,
-					<span>Ningyi Xu</span>,
-					<span>Hang Zhao†</span>
-					<br> ICRA 2025 <b>
-					</b> <br>
-					<br>
-					[<a href="javascript:void(0)" onclick="display('saro-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2407.16412">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://saro-vlm.github.io/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/zst1406217/robust_robot_walker">code</a>]&nbsp;
-					[<a target="_blank" href="https://www.youtube.com/watch?v=vfsAgrhWkp0">video</a>]&nbsp;
-					[<a target="_blank" href="./images/saro_icra.pdf">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/zst1406217/robust_robot_walker" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/zst1406217/robust_robot_walker?style=social"></a>
-					<div id="saro-abs" style="display:none">
-						<p>
-							The application of vision-language models (VLMs) has achieved impressive success in various robotics tasks. However, there are few explorations for these foundation models used in quadruped robot navigation through terrains in 3D environments. In this work, we introduce SARO (Space Aware Robot System for Terrain Crossing), an innovative system composed of a high-level reasoning module, a closed-loop sub-task execution module, and a low-level control policy. It enables the robot to navigate across 3D terrains and reach the goal position. For high-level reasoning and execution, we propose a novel algorithmic system taking advantage of a VLM, with a design of task decomposition and a closed-loop sub-task execution mechanism. For low-level locomotion control, we utilize the Probability Annealing Selection (PAS) method to effectively train a control policy by reinforcement learning. Numerous experiments show that our whole system can accurately and robustly navigate across several 3D terrains, and its generalization ability ensures the applications in diverse indoor and outdoor scenarios and terrains.
-						</p>
-					</div>
-				</div>
-			</div>
-
-			<br>
-		</div> -->
 
 		<!-- <div class="container" style="font-size: 17px">
 			<h2 id="Publications" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Experience </h2>
