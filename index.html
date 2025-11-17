@@ -110,21 +110,19 @@
 
 	<div class="container" style="padding-bottom: 10px; font-size: 18px">
 		<div class="row">
-			<div class="col-md-3 text-center" , style="padding-right: 00px; padding-top: 18px; font-size: 17px">
+			<div class="col-md-3 text-center" , style="padding-right: 00px; padding-top: 15px; font-size: 17px">
 				<img class="img-responsive img-rounded" src="images/1.jpeg" alt=""
 					style="max-height: 280px; width: auto; border:3px solid rgb(66, 66, 66); border-radius: 18%">
-				<p class="mt-2 mb-0 small text-muted">Photo with <a href="https://nooraovo.github.io/">Shuning</a> at ZJU.</p>
+				<!-- <p class="mt-2 mb-0 small text-muted">Photo with <a href="https://nooraovo.github.io/">Shuning</a> at ZJU.</p> -->
 				<i id="index-img-description"></i>
 			</div>
 			<div class="col-md-9" ,="" style="padding-left: 45px; padding-right: 0px; font-size: 17 px">
 				<br>
 				<h1>Linzhan Mou</h1>
 				<p style="padding-top: 4px;">
-					I am a first-year CS Ph.D. student at <a href="https://www.princeton.edu/">Princeton University</a>. 
-					I received my bachelor's degree from <a href="https://www.zju.edu.cn/english/">Zhejiang University</a> with honors from <a href="http://ckc.zju.edu.cn/ckcen/">Chu Kochen Honors College</a>. 
-					<!-- I am a first-year CS Ph.D. student at Princeton, fortunate to be advised by <a href="https://www.cs.princeton.edu/~fheide/">Prof. Felix Heide</a>. My research focuses on 4D vision, robotics and generative models. -->
+					I am a first-year CS Ph.D. student at Princeton. Previously, I was advised by <a href="https://www.cis.upenn.edu/~kostas/">Prof.&nbsp;Kostas Daniilidis</a> and <a href="https://lingjie0206.github.io/">Prof. Lingjie Liu</a> at UPenn GRASP Lab.
 					<br><br>
-					My research focuses on 4D foundation models and generative AI. I was fortunate to work with <a href="https://www.cis.upenn.edu/~kostas/">Prof.&nbsp;Kostas Daniilidis</a>, <a href="https://lingjie0206.github.io/">Prof. Lingjie Liu</a> at <a href="https://www.grasp.upenn.edu/">UPenn</a> and <a href="https://jiahuilei.com/">Dr. Jiahui Lei</a> at <a href="https://bair.berkeley.edu/">UC Berkeley</a>.
+					My research focuses on computer vision, graphics and generative models.
 					<br><br>
 					Email: linzhan [at] princeton [dot] edu
 
@@ -294,51 +292,6 @@
 
 			<div class="row">
 				<div class="col-md-3">
-					<img class="img-thumbnail" title="DuQuant image loading.." id="vjs_video_3_html5_api" tabindex="-1"
-						preload="auto" src="images/nips24.png">
-				</div>
-				<div class="col-md-9">
-					<div style="height: 0.2em;"></div>
-					<font style="font-size: 18px;" color="black"><strong>DuQuant: Distributing Outliers via Dual Transformation Makes Stronger Quantized LLMs<!-- Place this tag where you want the button to render. -->
-						</strong><br></font>
-					<span>Haokun Lin*</span>,
-					<span>Haobo Xu*</span>,
-					<span>Yichen Wu*</span>,
-					<span>Jingzhi Cui</span>,
-					<span><u>Linzhan Mou</u></span>,
-					<span>Linqi Song</span>,
-					<span>Zhenan Sun</span>,
-					<span>Ying Wei</span>
-					<br> NeurIPS 2024 <b>
-						<font color="red">(Oral) </font>
-					</b> <br>
-					<br>
-
-					[<a href="javascript:void(0)" onclick="display('i4d-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2406.01721">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://duquant.github.io/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/Hsu1023/DuQuant">code</a>]&nbsp;
-					[<a target="_blank" href="">video</a>]&nbsp;
-					[<a target="_blank" href="https://neurips.cc/media/PosterPDFs/NeurIPS%202024/93727.png?t=1733734195.4992867">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/Hsu1023/DuQuant" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/Hsu1023/DuQuant?style=social"></a>
-					<div id="i4d-abs" style="display:none">
-						<p>
-							Quantization of large language models (LLMs) faces significant challenges, particularly due to the presence of outlier activations that impede efficient low-bit representation. Traditional approaches predominantly address Normal Outliers, which are activations across all tokens with relatively large magnitudes.
-
-							However, these methods struggle with smoothing Massive Outliers that display significantly larger values, which leads to significant performance degradation in low-bit quantization.
-
-							In this paper, we introduce DuQuant, a novel approach that utilizes rotation and permutation transformations to more effectively mitigate both massive and normal outliers. First, DuQuant starts by constructing the rotation matrix, using specific outlier dimensions as prior knowledge, to redistribute outliers to adjacent channels by block-wise rotation. Second, We further employ a zigzag permutation to balance the distribution of outliers across blocks, thereby reducing block-wise variance. A subsequent rotation further smooths the activation landscape, enhancing model performance. DuQuant establishs new state-of-the-art baselines for 4-bit weight-activation quantization across various model types and downstream tasks.
-						</p>
-					</div>
-				</div>
-			</div>
-
-			<hr>
-
-			<div class="row">
-				<div class="col-md-3">
 					<video class="img-thumbnail" title="Instruct 4D-to-4D video loading.." id="vjs_video_3_html5_api"
 						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/cvpr.mp4"></video>
@@ -389,11 +342,56 @@
 
 			<div class="row">
 				<div class="col-md-3">
-					<!-- <img class="img-thumbnail" title="VR-Robo image loading.." id="vjs_video_3_html5_api" tabindex="-1"
-						preload="auto" src="images/gs.png"> -->
-					<video class="img-thumbnail" title="VR-Robo video loading.." id="vjs_video_3_html5_api"
+					<img class="img-thumbnail" title="DuQuant image loading.." id="vjs_video_3_html5_api" tabindex="-1"
+						preload="auto" src="images/nips24.png">
+				</div>
+				<div class="col-md-9">
+					<div style="height: 0.2em;"></div>
+					<font style="font-size: 18px;" color="black"><strong>DuQuant: Distributing Outliers via Dual Transformation Makes Stronger Quantized LLMs<!-- Place this tag where you want the button to render. -->
+						</strong><br></font>
+					<span>Haokun Lin*</span>,
+					<span>Haobo Xu*</span>,
+					<span>Yichen Wu*</span>,
+					<span>Jingzhi Cui</span>,
+					<span><u>Linzhan Mou</u></span>,
+					<span>Linqi Song</span>,
+					<span>Zhenan Sun</span>,
+					<span>Ying Wei</span>
+					<br> NeurIPS 2024 <b>
+						<font color="red">(Oral) </font>
+					</b> <br>
+					<br>
+
+					[<a href="javascript:void(0)" onclick="display('i4d-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2406.01721">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://duquant.github.io/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/Hsu1023/DuQuant">code</a>]&nbsp;
+					[<a target="_blank" href="">video</a>]&nbsp;
+					[<a target="_blank" href="https://neurips.cc/media/PosterPDFs/NeurIPS%202024/93727.png?t=1733734195.4992867">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/Hsu1023/DuQuant" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/Hsu1023/DuQuant?style=social"></a>
+					<div id="i4d-abs" style="display:none">
+						<p>
+							Quantization of large language models (LLMs) faces significant challenges, particularly due to the presence of outlier activations that impede efficient low-bit representation. Traditional approaches predominantly address Normal Outliers, which are activations across all tokens with relatively large magnitudes.
+
+							However, these methods struggle with smoothing Massive Outliers that display significantly larger values, which leads to significant performance degradation in low-bit quantization.
+
+							In this paper, we introduce DuQuant, a novel approach that utilizes rotation and permutation transformations to more effectively mitigate both massive and normal outliers. First, DuQuant starts by constructing the rotation matrix, using specific outlier dimensions as prior knowledge, to redistribute outliers to adjacent channels by block-wise rotation. Second, We further employ a zigzag permutation to balance the distribution of outliers across blocks, thereby reducing block-wise variance. A subsequent rotation further smooths the activation landscape, enhancing model performance. DuQuant establishs new state-of-the-art baselines for 4-bit weight-activation quantization across various model types and downstream tasks.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="row">
+				<div class="col-md-3">
+					<img class="img-thumbnail" title="VR-Robo image loading.." id="vjs_video_3_html5_api" tabindex="-1"
+						preload="auto" src="images/gs.png">
+					<!-- <video class="img-thumbnail" title="VR-Robo video loading.." id="vjs_video_3_html5_api"
 						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/rss_vr-robo.mp4"></video>
+						src="images/rss_vr-robo.mp4"></video> -->
 				</div>
 				<div class="col-md-9">
 					<div style="height: 0.2em;"></div>
@@ -567,7 +565,8 @@
 							<div class="advisor">Mentor: <a href="https://xinntao.github.io/">Dr. Xintao Wang</a></div>
 							<div class="topic">Topic: Video diffusion distillation</div>
 						</td>
-						<td>
+						<td></td>
+						<!-- <td>
 							<td width="13%" style="padding-left:20px;padding-right:20px">
 								<img style="width: 100%; max-height: 100px; max-width: 100px; object-fit: cover;"
 									src="./images/galaxea.jpeg">
@@ -576,9 +575,9 @@
 								<div class="institution"><b>Research Intern, Galaxea AI</b></div>
 								<div class="period">2024 - 2025 </div>
 								<div class="advisor">Mentor: <a href="https://hangzhaomit.github.io/">Prof. Hang Zhao</a></div>
-								<div class="topic">Topic: Reinforcement learning</div>
+								<div class="topic">Topic: Reinforcement learning (RL)</div>
 							</td>
-						</td>
+						</td> -->
 					</tr>
 				</tbody>
 			</table>
