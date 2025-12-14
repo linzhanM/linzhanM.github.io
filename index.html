@@ -120,10 +120,9 @@
 				<br>
 				<h1>Linzhan Mou</h1>
 				<p style="padding-top: 4px;">
-					I am a first-year CS Ph.D. at Princeton, working with <a href="https://www.cs.princeton.edu/~smr/">Prof. Szymon Rusinkiewicz</a> at <a href="https://pixl.cs.princeton.edu/">Princeton ImageX&nbsp;Labs (PIXL)</a>. My research focuses on computer vision and robotics. 
-					<!-- I aim to build machines that learn to model and interact with our dynamic physical world autonomously. -->
+					I am a first-year CS Ph.D. at Princeton, working with <a href="https://www.cs.princeton.edu/~smr/">Prof. Szymon Rusinkiewicz</a> at <a href="https://pixl.cs.princeton.edu/">Princeton ImageX&nbsp;Labs (PIXL)</a>. My research focuses on computer vision and robotics.
 					<br><br>
-					I received my bechelor's degree at Zhejiang University with honors from Chu Kochen Honors College. I was fortunately advised by <a href="https://www.cis.upenn.edu/~kostas/">Prof.&nbsp;Kostas Daniilidis</a> and <a href="https://lingjie0206.github.io/">Prof. Lingjie Liu</a> at UPenn. 
+					I received my bechelor's degree at Zhejiang University with honors from Chu Kochen Honors College. I was  advised by <a href="https://www.cis.upenn.edu/~kostas/">Prof.&nbsp;Kostas Daniilidis</a> and <a href="https://lingjie0206.github.io/">Prof. Lingjie Liu</a> at <a href="https://www.grasp.upenn.edu/">UPenn GRASP Lab</a>. 
 					<br><br>
 					I will join Meta AI as a research intern.
 					<br>
@@ -297,6 +296,103 @@
 
 			<div class="row">
 				<div class="col-md-3">
+					<img class="img-thumbnail" title="DuQuant image loading.." id="vjs_video_3_html5_api" tabindex="-1"
+						preload="auto" src="images/nips24.png">
+				</div>
+				<div class="col-md-9">
+					<div style="height: 0.2em;"></div>
+					<font style="font-size: 18px;" color="black"><strong>DuQuant: Distributing Outliers via Dual Transformation Makes Stronger Quantized LLMs<!-- Place this tag where you want the button to render. -->
+						</strong><br></font>
+					<span>Haokun Lin*</span>,
+					<span>Haobo Xu*</span>,
+					<span>Yichen Wu*</span>,
+					<span>Jingzhi Cui</span>,
+					<span><u>Linzhan Mou</u></span>,
+					<span>Linqi Song</span>,
+					<span>Zhenan Sun</span>,
+					<span>Ying Wei</span>
+					<br> NeurIPS 2024 <b>
+						<font color="red">(Oral) </font>
+					</b> <br>
+					<br>
+
+					[<a href="javascript:void(0)" onclick="display('i4d-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2406.01721">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://duquant.github.io/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/Hsu1023/DuQuant">code</a>]&nbsp;
+					[<a target="_blank" href="">video</a>]&nbsp;
+					[<a target="_blank" href="https://neurips.cc/media/PosterPDFs/NeurIPS%202024/93727.png?t=1733734195.4992867">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/Hsu1023/DuQuant" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/Hsu1023/DuQuant?style=social"></a>
+					<div id="i4d-abs" style="display:none">
+						<p>
+							Quantization of large language models (LLMs) faces significant challenges, particularly due to the presence of outlier activations that impede efficient low-bit representation. Traditional approaches predominantly address Normal Outliers, which are activations across all tokens with relatively large magnitudes.
+
+							However, these methods struggle with smoothing Massive Outliers that display significantly larger values, which leads to significant performance degradation in low-bit quantization.
+
+							In this paper, we introduce DuQuant, a novel approach that utilizes rotation and permutation transformations to more effectively mitigate both massive and normal outliers. First, DuQuant starts by constructing the rotation matrix, using specific outlier dimensions as prior knowledge, to redistribute outliers to adjacent channels by block-wise rotation. Second, We further employ a zigzag permutation to balance the distribution of outliers across blocks, thereby reducing block-wise variance. A subsequent rotation further smooths the activation landscape, enhancing model performance. DuQuant establishs new state-of-the-art baselines for 4-bit weight-activation quantization across various model types and downstream tasks.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<hr>
+
+			<div class="row">
+				<div class="col-md-3">
+					<img class="img-thumbnail" title="VR-Robo image loading.." id="vjs_video_3_html5_api" tabindex="-1"
+						preload="auto" src="images/gs.png">
+				</div>
+				<div class="col-md-9">
+					<font style="font-size: 18px;" color="black"><strong>VR-Robo: A Real-to-Sim-to-Real Framework for Visual Robot Navigation and Locomotion
+						</strong><br></font>
+					<span>Shaoting Zhu*</span>,
+					<span><u>Linzhan Mou</u>*</span>,
+					<span>Derun Li</span>,
+					<span>Baijun Ye</span>,
+					<span>Runhan Huang</span>,
+					<span>Hang Zhao†</span> 
+					<br> RA-L 2025 <br> 
+					<font style="color: #7c7c7c;">CoRL 2025 LSRW Workshop</font> 
+					
+					<div style="height: 0.5em;"></div> 
+					[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2502.01536">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://vr-robo.github.io/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/zst1406217/VR-Robo">code</a>]&nbsp;
+					[<a target="_blank" href="https://www.youtube.com/watch?v=W-G_-H7X0Pw">video</a>]&nbsp;
+					[<a target="_blank" href="./images/vrrobo-poster.pdf">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/zst1406217/VR-Robo" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/zst1406217/VR-Robo?style=social"></a>
+					<div id="vr-abs" style="display:none">
+						<p>
+							Recent success in legged robot locomotion is attributed to the integration of reinforcement
+							learning and physical simulators. However, these policies often encounter challenges when
+							deployed in real-world environments due to sim-to-real gaps, as simulators typically fail to
+							replicate visual realism and complex real-world geometry. Moreover, the lack of realistic
+							visual rendering limits the ability of these policies to support high-level tasks requiring
+							RGB-based perception like ego-centric navigation. This paper presents a Real-to-Sim-to-Real
+							framework that generates photorealistic and physically interactive "digital twin" simulation
+							environments for visual navigation and locomotion learning. Our approach leverages 3D
+							Gaussian Splatting (3DGS) based scene reconstruction from multi-view images and integrates
+							these environments into simulations that support ego-centric visual perception and
+							mesh-based physical interactions. To demonstrate its effectiveness, we train a reinforcement
+							learning policy within the simulator to perform a visual goal-tracking task. Extensive
+							experiments show that our framework achieves RGB-only sim-to-real policy transfer.
+							Additionally, our framework facilitates the rapid adaptation of robot policies with
+							effective exploration capability in complex new environments, highlighting its potential for
+							applications in households and factories.
+						</p>
+					</div>
+				</div>
+			</div> 
+
+			<hr>
+
+			<div class="row">
+				<div class="col-md-3">
 					<video class="img-thumbnail" title="Instruct 4D-to-4D video loading.." id="vjs_video_3_html5_api"
 						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/cvpr.mp4"></video>
@@ -342,108 +438,6 @@
 					</div>
 				</div>
 			</div> 
-
-			<hr>
-
-			<div class="row">
-				<div class="col-md-3">
-					<img class="img-thumbnail" title="VR-Robo image loading.." id="vjs_video_3_html5_api" tabindex="-1"
-						preload="auto" src="images/gs.png">
-					<!-- <video class="img-thumbnail" title="VR-Robo video loading.." id="vjs_video_3_html5_api"
-						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/rss_vr-robo.mp4"></video> -->
-				</div>
-				<div class="col-md-9">
-					<!-- <div style="height: 0.1em;"></div> -->
-					<font style="font-size: 18px;" color="black"><strong>VR-Robo: A Real-to-Sim-to-Real Framework for Visual Robot Navigation and Locomotion
-						</strong><br></font>
-					<span>Shaoting Zhu*</span>,
-					<span><u>Linzhan Mou</u>*</span>,
-					<span>Derun Li</span>,
-					<span>Baijun Ye</span>,
-					<span>Runhan Huang</span>,
-					<span>Hang Zhao†</span> 
-					<br> RA-L 2025 <br> 
-					<font style="color: #7c7c7c;">CoRL 2025 LSRW Workshop</font> 
-					
-					<div style="height: 0.5em;"></div> 
-					[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2502.01536">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://vr-robo.github.io/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/zst1406217/VR-Robo">code</a>]&nbsp;
-					[<a target="_blank" href="https://www.youtube.com/watch?v=W-G_-H7X0Pw">video</a>]&nbsp;
-					[<a target="_blank" href="./images/vrrobo-poster.pdf">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/zst1406217/VR-Robo" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/zst1406217/VR-Robo?style=social"></a>
-					<div id="vr-abs" style="display:none">
-						<p>
-							Recent success in legged robot locomotion is attributed to the integration of reinforcement
-							learning and physical simulators. However, these policies often encounter challenges when
-							deployed in real-world environments due to sim-to-real gaps, as simulators typically fail to
-							replicate visual realism and complex real-world geometry. Moreover, the lack of realistic
-							visual rendering limits the ability of these policies to support high-level tasks requiring
-							RGB-based perception like ego-centric navigation. This paper presents a Real-to-Sim-to-Real
-							framework that generates photorealistic and physically interactive "digital twin" simulation
-							environments for visual navigation and locomotion learning. Our approach leverages 3D
-							Gaussian Splatting (3DGS) based scene reconstruction from multi-view images and integrates
-							these environments into simulations that support ego-centric visual perception and
-							mesh-based physical interactions. To demonstrate its effectiveness, we train a reinforcement
-							learning policy within the simulator to perform a visual goal-tracking task. Extensive
-							experiments show that our framework achieves RGB-only sim-to-real policy transfer.
-							Additionally, our framework facilitates the rapid adaptation of robot policies with
-							effective exploration capability in complex new environments, highlighting its potential for
-							applications in households and factories.
-						</p>
-					</div>
-				</div>
-			</div>
-
-
-			<hr>
-
-			<div class="row">
-				<div class="col-md-3">
-					<img class="img-thumbnail" title="DuQuant image loading.." id="vjs_video_3_html5_api" tabindex="-1"
-						preload="auto" src="images/nips24.png">
-				</div>
-				<div class="col-md-9">
-					<div style="height: 0.2em;"></div>
-					<font style="font-size: 18px;" color="black"><strong>DuQuant: Distributing Outliers via Dual Transformation Makes Stronger Quantized LLMs<!-- Place this tag where you want the button to render. -->
-						</strong><br></font>
-					<span>Haokun Lin*</span>,
-					<span>Haobo Xu*</span>,
-					<span>Yichen Wu*</span>,
-					<span>Jingzhi Cui</span>,
-					<span><u>Linzhan Mou</u></span>,
-					<span>Linqi Song</span>,
-					<span>Zhenan Sun</span>,
-					<span>Ying Wei</span>
-					<br> NeurIPS 2024 <b>
-						<font color="red">(Oral) </font>
-					</b> <br>
-					<br>
-
-					[<a href="javascript:void(0)" onclick="display('i4d-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2406.01721">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://duquant.github.io/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/Hsu1023/DuQuant">code</a>]&nbsp;
-					[<a target="_blank" href="">video</a>]&nbsp;
-					[<a target="_blank" href="https://neurips.cc/media/PosterPDFs/NeurIPS%202024/93727.png?t=1733734195.4992867">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/Hsu1023/DuQuant" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/Hsu1023/DuQuant?style=social"></a>
-					<div id="i4d-abs" style="display:none">
-						<p>
-							Quantization of large language models (LLMs) faces significant challenges, particularly due to the presence of outlier activations that impede efficient low-bit representation. Traditional approaches predominantly address Normal Outliers, which are activations across all tokens with relatively large magnitudes.
-
-							However, these methods struggle with smoothing Massive Outliers that display significantly larger values, which leads to significant performance degradation in low-bit quantization.
-
-							In this paper, we introduce DuQuant, a novel approach that utilizes rotation and permutation transformations to more effectively mitigate both massive and normal outliers. First, DuQuant starts by constructing the rotation matrix, using specific outlier dimensions as prior knowledge, to redistribute outliers to adjacent channels by block-wise rotation. Second, We further employ a zigzag permutation to balance the distribution of outliers across blocks, thereby reducing block-wise variance. A subsequent rotation further smooths the activation landscape, enhancing model performance. DuQuant establishs new state-of-the-art baselines for 4-bit weight-activation quantization across various model types and downstream tasks.
-						</p>
-					</div>
-				</div>
-			</div>
 
 			
 			<br>
