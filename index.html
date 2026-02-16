@@ -233,7 +233,7 @@
 				</div>
 			</div>
 
-			<!-- <hr>
+			<hr>
 
 			<div class="row">
 				<div class="col-md-3">
@@ -281,7 +281,60 @@
 						</p>
 					</div>
 				</div>
-			</div> -->
+			</div>
+			
+			<hr>
+
+			<div class="row">
+				<div class="col-md-3">
+					<video class="img-thumbnail" title="VR-Robo video loading.." id="vjs_video_3_html5_api"
+						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						src="images/hiking.mp4"></video>
+				</div>
+				<div class="col-md-9">
+					<font style="font-size: 18px;" color="black"><strong>VR-Robo: A Real-to-Sim-to-Real Framework for Visual Robot Navigation and Locomotion
+						</strong><br></font>
+					<span>Shaoting Zhu*</span>,
+					<span><u>Linzhan Mou</u>*</span>,
+					<span>Derun Li</span>,
+					<span>Baijun Ye</span>,
+					<span>Runhan Huang</span>,
+					<span>Hang Zhao†</span> 
+					<br> RA-L 2025 <br> 
+					<font style="color: #7c7c7c;">CoRL 2025 LSRW Workshop</font> 
+					
+					<div style="height: 0.5em;"></div> 
+					[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2502.01536">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://vr-robo.github.io/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/zst1406217/VR-Robo">code</a>]&nbsp;
+					[<a target="_blank" href="https://www.youtube.com/watch?v=W-G_-H7X0Pw">video</a>]&nbsp;
+					[<a target="_blank" href="./images/vrrobo-poster.pdf">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/zst1406217/VR-Robo" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/zst1406217/VR-Robo?style=social"></a>
+					<div id="vr-abs" style="display:none">
+						<p>
+							Recent success in legged robot locomotion is attributed to the integration of reinforcement
+							learning and physical simulators. However, these policies often encounter challenges when
+							deployed in real-world environments due to sim-to-real gaps, as simulators typically fail to
+							replicate visual realism and complex real-world geometry. Moreover, the lack of realistic
+							visual rendering limits the ability of these policies to support high-level tasks requiring
+							RGB-based perception like ego-centric navigation. This paper presents a Real-to-Sim-to-Real
+							framework that generates photorealistic and physically interactive "digital twin" simulation
+							environments for visual navigation and locomotion learning. Our approach leverages 3D
+							Gaussian Splatting (3DGS) based scene reconstruction from multi-view images and integrates
+							these environments into simulations that support ego-centric visual perception and
+							mesh-based physical interactions. To demonstrate its effectiveness, we train a reinforcement
+							learning policy within the simulator to perform a visual goal-tracking task. Extensive
+							experiments show that our framework achieves RGB-only sim-to-real policy transfer.
+							Additionally, our framework facilitates the rapid adaptation of robot policies with
+							effective exploration capability in complex new environments, highlighting its potential for
+							applications in households and factories.
+						</p>
+					</div>
+				</div>
+			</div> 
 
 			<hr>
 
@@ -328,167 +381,6 @@
 				</div>
 			</div>
 
-				<!-- <hr>
-
-				<div class="row">
-					<div class="col-md-3">
-						<video class="img-thumbnail" title="Avatar video loading.." id="vjs_video_3_html5_api" tabindex="-1"
-							preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-							src="images/avatar.mp4"></video>
-					</div>
-					<div class="col-md-9">
-						<div style="height: 0.2em;"></div>
-						<font style="font-size: 18px;" color="black"><strong>Relightable and Animatable Neural Avatar from Sparse-View Video
-							</strong><br></font>
-						<span>Zhen Xu</span>,
-						<span>Sida Peng</span>,
-						<span>Chen Geng</span>,
-						<span><u>Linzhan Mou</u></span>,
-						<span>Zihan Yan</span>,
-						<span>Jiaming Sun</span>,
-						<span>Hujun Bao</span>,
-						<span>Xiaowei Zhou†</span>
-						<br> CVPR 2024 <b>
-							<font color="red">(Highlight) </font>
-						</b> <br>
-						<br>
-						[<a href="javascript:void(0)" onclick="display('avatar-abs')">abs</a>]&nbsp;
-						[<a target="_blank" href="https://arxiv.org/abs/2308.07903">arXiv</a>]&nbsp;
-						[<a target="_blank" href="https://zju3dv.github.io/relightable_avatar/">website</a>]&nbsp;
-						[<a target="_blank" href="https://github.com/zju3dv/RelightableAvatar">code</a>]&nbsp;
-						[<a target="_blank" href="https://www.youtube.com/watch?v=bZaP0PXUWdc">video</a>]&nbsp;
-						[<a target="_blank" href="https://cvpr.thecvf.com/media/PosterPDFs/CVPR%202024/31220.png?t=1717317536.4682677">poster</a>]&nbsp;
-						<a class="more-link" href="https://github.com/zju3dv/RelightableAvatar" target="_blank"><img
-								alt="GitHub stars"
-								src="https://img.shields.io/github/stars/zju3dv/RelightableAvatar?style=social"></a>
-						<div id="avatar-abs" style="display:none">
-							<p>
-								This paper tackles the challenge of creating relightable and animatable neural avatars from
-								sparse-view (or even monocular) videos of dynamic humans under unknown illumination.
-								Compared to studio environments, this setting is more practical and accessible but poses an
-								extremely challenging ill-posed problem. Previous neural human reconstruction methods are
-								able to reconstruct animatable avatars from sparse views using deformed Signed Distance
-								Fields (SDF) but cannot recover material parameters for relighting. While differentiable
-								inverse rendering-based methods have succeeded in material recovery of static objects, it is
-								not straightforward to extend them to dynamic humans as it is computationally intensive to
-								compute pixel-surface intersection and light visibility on deformed SDFs for inverse
-								rendering. To solve this challenge, we propose a Hierarchical Distance Query (HDQ) algorithm
-								to approximate the world space distances under arbitrary human poses. Specifically, we
-								estimate coarse distances based on a parametric human model and compute fine distances by
-								exploiting the local deformation invariance of SDF. Based on the HDQ algorithm, we leverage
-								sphere tracing to efficiently estimate the surface intersection and light visibility. This
-								allows us to develop the first system to recover animatable and relightable neural avatars
-								from sparse view (or monocular) inputs. Experiments demonstrate that our approach is able to
-								produce superior results compared to state-of-the-art methods. Our code will be released for
-								reproducibility.
-							</p>
-						</div>
-					</div>
-				</div> -->
-
-			<!-- <hr>
-
-			<div class="row">
-				<div class="col-md-3">
-					<video class="img-thumbnail" title="VR-Robo video loading.." id="vjs_video_3_html5_api"
-						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/hiking.mp4"></video>
-				</div>
-				<div class="col-md-9">
-					<font style="font-size: 18px;" color="black"><strong>TTT-Parkour: Rapid Test-Time Training for Perceptive Robot Parkour
-						</strong><br></font>
-					<span>Shaoting Zhu*</span>,
-					<span><u>Linzhan Mou</u>*</span>,
-					<span>Derun Li</span>,
-					<span>Baijun Ye</span>,
-					<span>Runhan Huang</span>,
-					<span>Hang Zhao†</span> 
-					<br> RA-L 2025 <br> 
-					<font style="color: #7c7c7c;">CoRL 2025 LSRW Workshop</font> 
-					
-					<div style="height: 0.5em;"></div> 
-					[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2502.01536">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://vr-robo.github.io/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/zst1406217/VR-Robo">code</a>]&nbsp;
-					[<a target="_blank" href="https://www.youtube.com/watch?v=W-G_-H7X0Pw">video</a>]&nbsp;
-					[<a target="_blank" href="./images/vrrobo-poster.pdf">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/zst1406217/VR-Robo" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/zst1406217/VR-Robo?style=social"></a>
-					<div id="vr-abs" style="display:none">
-						<p>
-							Recent success in legged robot locomotion is attributed to the integration of reinforcement
-							learning and physical simulators. However, these policies often encounter challenges when
-							deployed in real-world environments due to sim-to-real gaps, as simulators typically fail to
-							replicate visual realism and complex real-world geometry. Moreover, the lack of realistic
-							visual rendering limits the ability of these policies to support high-level tasks requiring
-							RGB-based perception like ego-centric navigation. This paper presents a Real-to-Sim-to-Real
-							framework that generates photorealistic and physically interactive "digital twin" simulation
-							environments for visual navigation and locomotion learning. Our approach leverages 3D
-							Gaussian Splatting (3DGS) based scene reconstruction from multi-view images and integrates
-							these environments into simulations that support ego-centric visual perception and
-							mesh-based physical interactions. To demonstrate its effectiveness, we train a reinforcement
-							learning policy within the simulator to perform a visual goal-tracking task. Extensive
-							experiments show that our framework achieves RGB-only sim-to-real policy transfer.
-							Additionally, our framework facilitates the rapid adaptation of robot policies with
-							effective exploration capability in complex new environments, highlighting its potential for
-							applications in households and factories.
-						</p>
-					</div>
-				</div>
-			</div>  -->
-
-			<!-- <hr>
-
-			<div class="row">
-				<div class="col-md-3">
-					<video class="img-thumbnail" title="Robust Robot Walker video loading.." id="vjs_video_3_html5_api"
-						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/icra.mp4"></video>
-				</div>
-				<div class="col-md-9">
-					<font style="font-size: 18px;" color="black"><strong>Robust Robot Walker: Learning Agile Locomotion over Tiny Traps
-						</strong><br></font>
-					<span>Shaoting Zhu</span>,
-					<span>Runhan Huang</span>,
-					<span><u>Linzhan Mou</u></span>,
-					<span>Hang Zhao†</span> 
-					<br> ICRA 2025 <br> <br>
-					
-					[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2502.01536">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://vr-robo.github.io/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/zst1406217/VR-Robo">code</a>]&nbsp;
-					[<a target="_blank" href="https://www.youtube.com/watch?v=W-G_-H7X0Pw">video</a>]&nbsp;
-					[<a target="_blank" href="./images/vrrobo-poster.pdf">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/zst1406217/VR-Robo" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/zst1406217/VR-Robo?style=social"></a>
-					<div id="vr-abs" style="display:none">
-						<p>
-							Recent success in legged robot locomotion is attributed to the integration of reinforcement
-							learning and physical simulators. However, these policies often encounter challenges when
-							deployed in real-world environments due to sim-to-real gaps, as simulators typically fail to
-							replicate visual realism and complex real-world geometry. Moreover, the lack of realistic
-							visual rendering limits the ability of these policies to support high-level tasks requiring
-							RGB-based perception like ego-centric navigation. This paper presents a Real-to-Sim-to-Real
-							framework that generates photorealistic and physically interactive "digital twin" simulation
-							environments for visual navigation and locomotion learning. Our approach leverages 3D
-							Gaussian Splatting (3DGS) based scene reconstruction from multi-view images and integrates
-							these environments into simulations that support ego-centric visual perception and
-							mesh-based physical interactions. To demonstrate its effectiveness, we train a reinforcement
-							learning policy within the simulator to perform a visual goal-tracking task. Extensive
-							experiments show that our framework achieves RGB-only sim-to-real policy transfer.
-							Additionally, our framework facilitates the rapid adaptation of robot policies with
-							effective exploration capability in complex new environments, highlighting its potential for
-							applications in households and factories.
-						</p>
-					</div>
-				</div>
-			</div>  -->
-
-			
 			<br>
 		</div>
 
