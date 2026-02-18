@@ -198,91 +198,40 @@
 
 			<div class="row">
 				<div class="col-md-3">
-					<video class="img-thumbnail" title="Let Occ Flow video loading.." id="vjs_video_3_html5_api"
+					<video class="img-thumbnail" title="VR-Robo video loading.." id="vjs_video_3_html5_api"
 						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/corl.mp4"></video>
+						src="images/ttt.mp4"></video>
 				</div>
 				<div class="col-md-9">
-					<div style="height: 0.2em;"></div>
-					<font style="font-size: 18px;" color="black"><strong>Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction<!-- Place this tag where you want the button to render. -->
+					<font style="font-size: 18px;" color="black"><strong>TTT-Parkour: Rapid Test-Time Training for Perceptive Robot Parkour
 						</strong><br></font>
-					<span><u>Linzhan Mou</u>*</span>,
-					<span>Yili Liu*</span>,
-					<span>Xuan Yu</span>,
-					<span>Chenrui Han</span>,
-					<span>Sitong Mao</span>,
-					<span>Rong Xiong</span>,
-					<span>Yue Wang†</span>
-					<br> CoRL 2024 <br>
+					<span>Shaoting Zhu*</span>,
+					<span>Baijun Ye*</span>,
+					<span>Jiaxuan Wang</span>,
+					<span>Jiakang Chen</span>,
+					<span>Linzhan Mou</span>,
+					<span>Runhan Huang</span>,
+					<span>Hang Zhao†</span> 
+					<br> arXiv 2026 <br> 
 					<br>
-					[<a href="javascript:void(0)" onclick="display('occflow-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2407.07587">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/eliliu2233/occ-flow">code</a>]&nbsp;
-					[<a target="_blank"
-						href="https://eliliu2233.github.io/letoccflow/static/videos/letoccflow.mp4">video</a>]&nbsp;
-					[<a target="_blank" href="./images/letoccflow-poster.pdf">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/eliliu2233/occ-flow" target="_blank"><img
+					
+					[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2602.02331">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://ttt-parkour.github.io/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/project-instinct/instinct_onboard">code</a>]&nbsp;
+					[<a target="_blank" href="https://youtu.be/ayfYpZf4N6M?si=eRQzRs3p4m3hFfSA">video</a>]&nbsp;
+					[<a target="_blank" href="">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/project-instinct/instinct_onboard" target="_blank"><img
 							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/eliliu2233/occ-flow?style=social"></a>
-					<div id="occflow-abs" style="display:none">
+							src="https://img.shields.io/github/stars/project-instinct/instinct_onboard?style=social"></a>
+					<div id="vr-abs" style="display:none">
 						<p>
-							Accurate perception of the dynamic environment is a fundamental task for autonomous driving and robot systems. This paper introduces Let Occ Flow, the first self-supervised work for joint 3D occupancy and occupancy flow prediction using only camera inputs, eliminating the need for 3D annotations. Utilizing TPV for unified scene representation and deformable attention layers for feature aggregation, our approach incorporates a novel attention-based temporal fusion module to capture dynamic object dependencies, followed by a 3D refine module for fine-gained volumetric representation. Besides, our method extends differentiable rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmentation and optical flow cues for dynamic decomposition and motion optimization. Extensive experiments on nuScenes and KITTI datasets demonstrate the competitive performance of our approach over prior state-of-the-art methods.
+							Achieving highly dynamic humanoid parkour on unseen, complex terrains remains a challenge in robotics. Although general locomotion policies demonstrate capabilities across broad terrain distributions, they often struggle with arbitrary and highly challenging environments. To overcome this limitation, we propose a real-to-sim-to-real framework that leverages rapid test-time training (TTT) on novel terrains, significantly enhancing the robot's capability to traverse extremely difficult geometries. We adopt a two-stage end-to-end learning paradigm: a policy is first pre-trained on diverse procedurally generated terrains, followed by rapid fine-tuning on high-fidelity meshes reconstructed from real-world captures. Specifically, we develop a feed-forward, efficient, and high-fidelity geometry reconstruction pipeline using RGB-D inputs, ensuring both speed and quality during test-time training. We demonstrate that TTT-Parkour empowers humanoid robots to master complex obstacles, including wedges, stakes, boxes, trapezoids, and narrow beams. The whole pipeline of capturing, reconstructing, and test-time training requires less than 10 minutes on most tested terrains. Extensive experiments show that the policy after test-time training exhibits robust zero-shot sim-to-real transfer capability.
 						</p>
 					</div>
 				</div>
 			</div>
 
-			<hr>
-
-			<div class="row">
-				<div class="col-md-3">
-					<video class="img-thumbnail" title="Instruct 4D-to-4D video loading.." id="vjs_video_3_html5_api"
-						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/cvpr.mp4"></video>
-				</div>
-				<div class="col-md-9">
-					<div style="height: 0.2em;"></div>
-					<font style="font-size: 18px;" color="black"><strong>Instruct 4D-to-4D: Editing 4D Scenes as Pseudo-3D Scenes Using 2D Diffusion
-						</strong><br></font>
-					<span><u>Linzhan Mou</u>*</span>,
-					<span>Jun-Kun Chen*</span>,
-					<span>Yu-Xiong Wang</span>
-					<br> CVPR 2024 <br>
-					<br>
-
-					[<a href="javascript:void(0)" onclick="display('i4d-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2406.09402">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://immortalco.github.io/Instruct-4D-to-4D/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/Friedrich-M/Instruct-4D-to-4D">code</a>]&nbsp;
-					[<a target="_blank" href="">video</a>]&nbsp;
-					[<a target="_blank" href="https://cvpr.thecvf.com/media/PosterPDFs/CVPR%202024/30298.png?t=1717443013.0046797">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/Friedrich-M/Instruct-4D-to-4D" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/Friedrich-M/Instruct-4D-to-4D?style=social"></a>
-					<div id="i4d-abs" style="display:none">
-						<p>
-							This paper proposes Instruct 4D-to-4D that achieves 4D awareness and spatial-temporal
-							consistency for 2D diffusion models to generate high-quality instruction-guided dynamic
-							scene editing results. Traditional applications of 2D diffusion models in dynamic scene
-							editing often result in inconsistency, primarily due to their inherent frame-by-frame
-							editing methodology. Addressing the complexities of extending instruction-guided editing to
-							4D, our key insight is to treat a 4D scene as a pseudo-3D scene, decoupled into two
-							sub-problems: achieving temporal consistency in video editing and applying these edits to
-							the pseudo-3D scene. Following this, we first enhance the Instruct-Pix2Pix (IP2P) model with
-							an anchor-aware attention module for batch processing and consistent editing. Additionally,
-							we integrate optical flow-guided appearance propagation in a sliding window fashion for more
-							precise frame-to-frame editing and incorporate depth-based projection to manage the
-							extensive data of pseudo-3D scenes, followed by iterative editing to achieve convergence. We
-							extensively evaluate our approach in various scenes and editing instructions, and
-							demonstrate that it achieves spatially and temporally consistent editing results, with
-							significantly enhanced detail and sharpness over the prior art. Notably, Instruct 4D-to-4D
-							is general and applicable to both monocular and challenging multi-camera scenes.
-						</p>
-					</div>
-				</div>
-			</div>
-			
 			<hr>
 
 			<div class="row">
@@ -335,45 +284,96 @@
 					</div>
 				</div>
 			</div> 
-
+			
 			<hr>
 
 			<div class="row">
 				<div class="col-md-3">
-					<video class="img-thumbnail" title="VR-Robo video loading.." id="vjs_video_3_html5_api"
+					<video class="img-thumbnail" title="Let Occ Flow video loading.." id="vjs_video_3_html5_api"
 						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/ttt.mp4"></video>
+						src="images/corl.mp4"></video>
 				</div>
 				<div class="col-md-9">
-					<font style="font-size: 18px;" color="black"><strong>TTT-Parkour: Rapid Test-Time Training for Perceptive Robot Parkour
+					<div style="height: 0.2em;"></div>
+					<font style="font-size: 18px;" color="black"><strong>Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction<!-- Place this tag where you want the button to render. -->
 						</strong><br></font>
-					<span>Shaoting Zhu*</span>,
-					<span>Baijun Ye*</span>,
-					<span>Jiaxuan Wang</span>,
-					<span>Jiakang Chen</span>,
-					<span>Ziwen Zhuang</span>,
-					<span>Linzhan Mou</span>,
-					<span>Runhan Huang</span>,
-					<span>Hang Zhao†</span> 
-					<br> arXiv 2026 <br> 
-					<div style="height: 0.5em;"></div>
-					
-					[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2602.02331">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://ttt-parkour.github.io/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/project-instinct/instinct_onboard">code</a>]&nbsp;
-					[<a target="_blank" href="https://youtu.be/ayfYpZf4N6M?si=eRQzRs3p4m3hFfSA">video</a>]&nbsp;
-					[<a target="_blank" href="">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/project-instinct/instinct_onboard" target="_blank"><img
+					<span><u>Linzhan Mou</u>*</span>,
+					<span>Yili Liu*</span>,
+					<span>Xuan Yu</span>,
+					<span>Chenrui Han</span>,
+					<span>Sitong Mao</span>,
+					<span>Rong Xiong</span>,
+					<span>Yue Wang†</span>
+					<br> CoRL 2024 <br>
+					<br>
+					[<a href="javascript:void(0)" onclick="display('occflow-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2407.07587">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/eliliu2233/occ-flow">code</a>]&nbsp;
+					[<a target="_blank"
+						href="https://eliliu2233.github.io/letoccflow/static/videos/letoccflow.mp4">video</a>]&nbsp;
+					[<a target="_blank" href="./images/letoccflow-poster.pdf">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/eliliu2233/occ-flow" target="_blank"><img
 							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/project-instinct/instinct_onboard?style=social"></a>
-					<div id="vr-abs" style="display:none">
+							src="https://img.shields.io/github/stars/eliliu2233/occ-flow?style=social"></a>
+					<div id="occflow-abs" style="display:none">
 						<p>
-							Achieving highly dynamic humanoid parkour on unseen, complex terrains remains a challenge in robotics. Although general locomotion policies demonstrate capabilities across broad terrain distributions, they often struggle with arbitrary and highly challenging environments. To overcome this limitation, we propose a real-to-sim-to-real framework that leverages rapid test-time training (TTT) on novel terrains, significantly enhancing the robot's capability to traverse extremely difficult geometries. We adopt a two-stage end-to-end learning paradigm: a policy is first pre-trained on diverse procedurally generated terrains, followed by rapid fine-tuning on high-fidelity meshes reconstructed from real-world captures. Specifically, we develop a feed-forward, efficient, and high-fidelity geometry reconstruction pipeline using RGB-D inputs, ensuring both speed and quality during test-time training. We demonstrate that TTT-Parkour empowers humanoid robots to master complex obstacles, including wedges, stakes, boxes, trapezoids, and narrow beams. The whole pipeline of capturing, reconstructing, and test-time training requires less than 10 minutes on most tested terrains. Extensive experiments show that the policy after test-time training exhibits robust zero-shot sim-to-real transfer capability.
+							Accurate perception of the dynamic environment is a fundamental task for autonomous driving and robot systems. This paper introduces Let Occ Flow, the first self-supervised work for joint 3D occupancy and occupancy flow prediction using only camera inputs, eliminating the need for 3D annotations. Utilizing TPV for unified scene representation and deformable attention layers for feature aggregation, our approach incorporates a novel attention-based temporal fusion module to capture dynamic object dependencies, followed by a 3D refine module for fine-gained volumetric representation. Besides, our method extends differentiable rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmentation and optical flow cues for dynamic decomposition and motion optimization. Extensive experiments on nuScenes and KITTI datasets demonstrate the competitive performance of our approach over prior state-of-the-art methods.
 						</p>
 					</div>
 				</div>
 			</div>
+			
+			<hr>
+
+			<div class="row">
+				<div class="col-md-3">
+					<video class="img-thumbnail" title="Instruct 4D-to-4D video loading.." id="vjs_video_3_html5_api"
+						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						src="images/cvpr.mp4"></video>
+				</div>
+				<div class="col-md-9">
+					<div style="height: 0.2em;"></div>
+					<font style="font-size: 18px;" color="black"><strong>Instruct 4D-to-4D: Editing 4D Scenes as Pseudo-3D Scenes Using 2D Diffusion
+						</strong><br></font>
+					<span><u>Linzhan Mou</u>*</span>,
+					<span>Jun-Kun Chen*</span>,
+					<span>Yu-Xiong Wang</span>
+					<br> CVPR 2024 <br>
+					<br>
+
+					[<a href="javascript:void(0)" onclick="display('i4d-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2406.09402">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://immortalco.github.io/Instruct-4D-to-4D/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/Friedrich-M/Instruct-4D-to-4D">code</a>]&nbsp;
+					[<a target="_blank" href="">video</a>]&nbsp;
+					[<a target="_blank" href="https://cvpr.thecvf.com/media/PosterPDFs/CVPR%202024/30298.png?t=1717443013.0046797">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/Friedrich-M/Instruct-4D-to-4D" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/Friedrich-M/Instruct-4D-to-4D?style=social"></a>
+					<div id="i4d-abs" style="display:none">
+						<p>
+							This paper proposes Instruct 4D-to-4D that achieves 4D awareness and spatial-temporal
+							consistency for 2D diffusion models to generate high-quality instruction-guided dynamic
+							scene editing results. Traditional applications of 2D diffusion models in dynamic scene
+							editing often result in inconsistency, primarily due to their inherent frame-by-frame
+							editing methodology. Addressing the complexities of extending instruction-guided editing to
+							4D, our key insight is to treat a 4D scene as a pseudo-3D scene, decoupled into two
+							sub-problems: achieving temporal consistency in video editing and applying these edits to
+							the pseudo-3D scene. Following this, we first enhance the Instruct-Pix2Pix (IP2P) model with
+							an anchor-aware attention module for batch processing and consistent editing. Additionally,
+							we integrate optical flow-guided appearance propagation in a sliding window fashion for more
+							precise frame-to-frame editing and incorporate depth-based projection to manage the
+							extensive data of pseudo-3D scenes, followed by iterative editing to achieve convergence. We
+							extensively evaluate our approach in various scenes and editing instructions, and
+							demonstrate that it achieves spatially and temporally consistent editing results, with
+							significantly enhanced detail and sharpness over the prior art. Notably, Instruct 4D-to-4D
+							is general and applicable to both monocular and challenging multi-camera scenes.
+						</p>
+					</div>
+				</div>
+			</div>
+
 
 			<!-- <hr>
 
