@@ -41,3 +41,88 @@ body {
   /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
   font-family: 'Monda', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
+
+/* --- Publications --- */
+.pub-row {
+  margin-bottom: 2em;
+}
+
+.pub-thumbnail {
+  width: 100%;
+  max-height: 140px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.pub-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.pub-authors {
+  font-size: 16px;
+  color: #444;
+  margin-bottom: 4px;
+}
+
+.pub-venue {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.venue-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b3a00;
+  background: linear-gradient(120deg, #ffeaa7, #fdcb6e);
+  border-radius: 20px;
+  padding: 2px 10px;
+  margin-left: 8px;
+  vertical-align: middle;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  letter-spacing: 0.01em;
+}
+
+.venue-badge::before {
+  content: "★ ";
+  font-size: 10px;
+}
+
+.pub-links {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.pub-links a {
+  color: #555;
+}
+
+.pub-links a:hover {
+  color: #0066CC;
+}
+
+.pub-abstract {
+  display: none;
+  font-size: 15px;
+  color: #444;
+  border-left: 3px solid #ddd;
+  padding: 8px 12px;
+  margin-top: 8px;
+  background: #fafafa;
+  border-radius: 0 4px 4px 0;
+}
+
+.pub-abstract p {
+  margin-bottom: 0;
+}
+
+/* Section headings */
+h2 {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
