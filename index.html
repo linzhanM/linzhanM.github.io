@@ -54,12 +54,12 @@
 		}
 
 		function display(id) {
-			var currentDisplay = document.getElementById(id).style.display;
-			if (currentDisplay == 'none') {
-				document.getElementById(id).style.display = "inline-block";
-			}
-			else {
-				document.getElementById(id).style.display = "none";
+			var el = document.getElementById(id);
+			var computed = window.getComputedStyle(el).display;
+			if (el.style.display === 'none' || (el.style.display === '' && computed === 'none')) {
+				el.style.display = "block";
+			} else {
+				el.style.display = "none";
 			}
 		}
 	</script>
@@ -119,30 +119,32 @@
 			<div class="col-md-9" ,="" style="padding-left: 45px; padding-right: 0px; font-size: 17 px">
 				<br>
 				<h1>Linzhan Mou</h1>
+				<p class="text-muted" style="margin-top:-4px; font-size:15px">Ph.D. Student · Princeton University · CS</p>
 				<p style="padding-top: 4px;">
 					I am a first-year CS Ph.D. student at Princeton, advised by <a href="https://www.cs.princeton.edu/~smr/">Prof. Szymon Rusinkiewicz</a>. I also collaborate closely with <a href="https://www.cs.princeton.edu/~af/">Prof.&nbsp;Adam Finkelstein</a>. 
 					<br><br>
-					Previously, I worked on vision, graphics and robot learning at UPenn GRASP Lab, advised by <a href="https://www.cis.upenn.edu/~kostas/">Prof.&nbsp;Kostas Daniilidis</a> and <a href="https://lingjie0206.github.io/">Prof. Lingjie Liu</a>.
-					<br><br>
-					Email: linzhan [at] princeton [dot] edu
+					Previously, I worked on vision and robot learning. Recently I have become interested in world modeling and multi-modal reasoning.
+					<br>
+					<!-- Email: linzhan [at] princeton [dot] edu -->
 					<br>
 
-				</p><div style="font-size: 19px;">
-					<a target="_blank" href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&amp;hl=en">
-						<font color="black"><i class="ai ai-google-scholar ai-lg"></i></font>
+				</p>
+				<div style="font-size: 19px;">
+					<a target="_blank" href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&amp;hl=en" style="color:black">
+						<i class="ai ai-google-scholar ai-lg"></i>
 					</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
-					<!-- <a target="_blank" href="static/cv.pdf"><font color="black"><i class="ai ai-cv ai-lg"></i></font></a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp; -->
-					<a target="_blank" href="https://github.com/Friedrich-M">
-						<font color="black"><i class="fab fa-github fa-lg"></i></font>
+					<!-- <a target="_blank" href="static/cv.pdf" style="color:black"><i class="ai ai-cv ai-lg"></i></a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp; -->
+					<a target="_blank" href="https://github.com/Friedrich-M" style="color:black">
+						<i class="fab fa-github fa-lg"></i>
 					</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
-					<a target="_blank" href="https://twitter.com/LinzhanMou">
-						<font color="black"><i class="fab fa-twitter fa-lg"></i></font>
+					<a target="_blank" href="https://twitter.com/LinzhanMou" style="color:black">
+						<i class="fab fa-twitter fa-lg"></i>
 					</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
-					<a target="_blank" href="mailto:linzhan@princeton.edu">
-						<font color="black"><i class="fas fa-envelope fa-lg"></i></font>
+					<a target="_blank" href="mailto:linzhan@princeton.edu" style="color:black">
+						<i class="fas fa-envelope fa-lg"></i>
 					</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
-					<a target="_blank" href="https://www.linkedin.com/in/linzhan-mou-292272256/">
-						<font color="black"><i class="fab fa-linkedin fa-lg"></i></font>
+					<a target="_blank" href="https://www.linkedin.com/in/linzhan-mou-292272256/" style="color:black">
+						<i class="fab fa-linkedin fa-lg"></i>
 					</a>&nbsp;&nbsp;&nbsp;
 				</div>
 			</div>
@@ -153,223 +155,151 @@
 		<!-- Publications -->
 		<div class="container" style="font-size: 17px">
 			<h2 id="Publications" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Publications </h2>
-			<font style="font-size: 16px;" color="black">(* indicates equal contribution, † indicates corresponding
-				author)</font>
+			<span style="font-size: 16px;">(* indicates equal contribution, † indicates corresponding author)</span>
 			<hr style="margin-top:0.4em">
 
-			<div class="row">
+			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
-					<video class="img-thumbnail" title="DIMO video loading.." id="vjs_video_3_html5_api" tabindex="-1"
+					<video class="pub-thumbnail img-thumbnail" title="DIMO video loading.." tabindex="-1"
 						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/dimo.mp4"></video>
 				</div>
-				<div class="col-md-8">
-					<div style="height: 0.2em;"></div>
-					<font style="font-size: 18px;" color="black"><strong>DIMO: Diverse 3D Motion Generation for Arbitrary Objects<!-- Place this tag where you want the button to render. -->
-						</strong><br></font>
-					<span><u>Linzhan Mou</u></span>,
-					<span>Jiahui Lei†</span>,
-					<span>Chen Wang</span>,
-					<span>Lingjie Liu</span>,
-					<span>Kostas Daniilidis</span>
-					<br> ICCV 2025 <b><font color="red">(Highlight)</font></b> <br>
-					<!-- <font style="color: #7c7c7c;">CVPR 2025 4D Vision Workshop</font>  -->
-					<!-- <div style="height: 0.6em;"></div>  -->
+				<div class="col-md-9">
+					<p class="pub-title">DIMO: Diverse 3D Motion Generation for Arbitrary Objects</p>
+					<p class="pub-authors"><u>Linzhan Mou</u>, Jiahui Lei†, Chen Wang, Lingjie Liu, Kostas Daniilidis</p>
+					<p class="pub-venue">ICCV 2025 <span class="venue-badge">Highlight</span></p>
 					<br>
-					[<a href="javascript:void(0)" onclick="display('dimo-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2511.07409">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://linzhanm.github.io/dimo">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/Friedrich-M/DIMO">code</a>]&nbsp;
-					[<a target="_blank" href="https://www.youtube.com/watch?v=CY2jTIpEN-I">video</a>]&nbsp;
-					[<a target="_blank" href="https://iccv.thecvf.com/media/PosterPDFs/ICCV%202025/1183.png?t=1755853954.3028586">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/Friedrich-M/DIMO" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/Friedrich-M/DIMO?style=social"></a>
-					<div id="dimo-abs" style="display:none">
-						<p>
-							We present DIMO, a generative approach capable of generating diverse 3D motions for arbitrary objects from a single image. The core idea of our work is to leverage the rich priors in well-trained video models to extract the common motion patterns and then embed them into a shared low-dimensional latent space. Specifically, we first generate multiple videos of the same object with diverse motions. We then embed each motion into a latent vector and train a shared motion decoder to learn the distribution of motions represented by a structured and compact motion representation, i.e., neural key point trajectories. The
-							canonical 3D Gaussians are then driven by these key points and fused to model the geometry and appearance. During inference time with learned latent space, we can instantly sample diverse 3D motions in a single-forward pass and support several interesting applications including 3D motion interpolation and language-guided motion generation.
-						</p>
+					<p class="pub-links">
+						[<a href="javascript:void(0)" onclick="display('dimo-abs')">abs</a>]&nbsp;
+						[<a target="_blank" href="https://arxiv.org/abs/2511.07409">arXiv</a>]&nbsp;
+						[<a target="_blank" href="https://linzhanm.github.io/dimo">website</a>]&nbsp;
+						[<a target="_blank" href="https://github.com/Friedrich-M/DIMO">code</a>]&nbsp;
+						[<a target="_blank" href="https://www.youtube.com/watch?v=CY2jTIpEN-I">video</a>]&nbsp;
+						[<a target="_blank" href="https://iccv.thecvf.com/media/PosterPDFs/ICCV%202025/1183.png?t=1755853954.3028586">poster</a>]&nbsp;
+						<a class="more-link" href="https://github.com/Friedrich-M/DIMO" target="_blank"><img
+								alt="GitHub stars"
+								src="https://img.shields.io/github/stars/Friedrich-M/DIMO?style=social"></a>
+					</p>
+					<div id="dimo-abs" class="pub-abstract">
+						<p>We present DIMO, a generative approach capable of generating diverse 3D motions for arbitrary objects from a single image. The core idea of our work is to leverage the rich priors in well-trained video models to extract the common motion patterns and then embed them into a shared low-dimensional latent space. Specifically, we first generate multiple videos of the same object with diverse motions. We then embed each motion into a latent vector and train a shared motion decoder to learn the distribution of motions represented by a structured and compact motion representation, i.e., neural key point trajectories. The canonical 3D Gaussians are then driven by these key points and fused to model the geometry and appearance. During inference time with learned latent space, we can instantly sample diverse 3D motions in a single-forward pass and support several interesting applications including 3D motion interpolation and language-guided motion generation.</p>
 					</div>
 				</div>
 			</div>
 
 			<hr>
 
-			<div class="row">
+			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
-					<video class="img-thumbnail" title="VR-Robo video loading.." id="vjs_video_3_html5_api"
-						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+					<video class="pub-thumbnail img-thumbnail" title="TTT-Parkour video loading.." tabindex="-1"
+						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/ttt.mp4"></video>
 				</div>
 				<div class="col-md-9">
-					<font style="font-size: 18px;" color="black"><strong>TTT-Parkour: Rapid Test-Time Training for Perceptive Robot Parkour
-						</strong><br></font>
-					<span>Shaoting Zhu*</span>,
-					<span>Baijun Ye*</span>,
-					<span>Jiaxuan Wang</span>,
-					<span>Jiakang Chen</span>,
-					<span>Linzhan Mou</span>,
-					<span>Runhan Huang</span>,
-					<span>Hang Zhao†</span> 
-					<br> arXiv 2026 <br> 
+					<p class="pub-title">TTT-Parkour: Rapid Test-Time Training for Perceptive Robot Parkour</p>
+					<p class="pub-authors">Shaoting Zhu*, Baijun Ye*, Jiaxuan Wang, Jiakang Chen, Linzhan Mou, Runhan Huang, Hang Zhao†</p>
+					<p class="pub-venue">arXiv 2026</p>
 					<br>
-					
-					[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2602.02331">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://ttt-parkour.github.io/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/project-instinct/instinct_onboard">code</a>]&nbsp;
-					[<a target="_blank" href="https://youtu.be/ayfYpZf4N6M?si=eRQzRs3p4m3hFfSA">video</a>]&nbsp;
-					[<a target="_blank" href="">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/project-instinct/instinct_onboard" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/project-instinct/instinct_onboard?style=social"></a>
-					<div id="vr-abs" style="display:none">
-						<p>
-							Achieving highly dynamic humanoid parkour on unseen, complex terrains remains a challenge in robotics. Although general locomotion policies demonstrate capabilities across broad terrain distributions, they often struggle with arbitrary and highly challenging environments. To overcome this limitation, we propose a real-to-sim-to-real framework that leverages rapid test-time training (TTT) on novel terrains, significantly enhancing the robot's capability to traverse extremely difficult geometries. We adopt a two-stage end-to-end learning paradigm: a policy is first pre-trained on diverse procedurally generated terrains, followed by rapid fine-tuning on high-fidelity meshes reconstructed from real-world captures. Specifically, we develop a feed-forward, efficient, and high-fidelity geometry reconstruction pipeline using RGB-D inputs, ensuring both speed and quality during test-time training. We demonstrate that TTT-Parkour empowers humanoid robots to master complex obstacles, including wedges, stakes, boxes, trapezoids, and narrow beams. The whole pipeline of capturing, reconstructing, and test-time training requires less than 10 minutes on most tested terrains. Extensive experiments show that the policy after test-time training exhibits robust zero-shot sim-to-real transfer capability.
-						</p>
+					<p class="pub-links">
+						[<a href="javascript:void(0)" onclick="display('ttt-abs')">abs</a>]&nbsp;
+						[<a target="_blank" href="https://arxiv.org/abs/2602.02331">arXiv</a>]&nbsp;
+						[<a target="_blank" href="https://ttt-parkour.github.io/">website</a>]&nbsp;
+						[<a target="_blank" href="https://github.com/project-instinct/instinct_onboard">code</a>]&nbsp;
+						[<a target="_blank" href="https://youtu.be/ayfYpZf4N6M?si=eRQzRs3p4m3hFfSA">video</a>]&nbsp;
+						<a class="more-link" href="https://github.com/project-instinct/instinct_onboard" target="_blank"><img
+								alt="GitHub stars"
+								src="https://img.shields.io/github/stars/project-instinct/instinct_onboard?style=social"></a>
+					</p>
+					<div id="ttt-abs" class="pub-abstract">
+						<p>Achieving highly dynamic humanoid parkour on unseen, complex terrains remains a challenge in robotics. Although general locomotion policies demonstrate capabilities across broad terrain distributions, they often struggle with arbitrary and highly challenging environments. To overcome this limitation, we propose a real-to-sim-to-real framework that leverages rapid test-time training (TTT) on novel terrains, significantly enhancing the robot's capability to traverse extremely difficult geometries. We adopt a two-stage end-to-end learning paradigm: a policy is first pre-trained on diverse procedurally generated terrains, followed by rapid fine-tuning on high-fidelity meshes reconstructed from real-world captures. Specifically, we develop a feed-forward, efficient, and high-fidelity geometry reconstruction pipeline using RGB-D inputs, ensuring both speed and quality during test-time training. We demonstrate that TTT-Parkour empowers humanoid robots to master complex obstacles, including wedges, stakes, boxes, trapezoids, and narrow beams. The whole pipeline of capturing, reconstructing, and test-time training requires less than 10 minutes on most tested terrains. Extensive experiments show that the policy after test-time training exhibits robust zero-shot sim-to-real transfer capability.</p>
 					</div>
 				</div>
 			</div>
 
 			<hr>
 
-			<div class="row">
+			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
-					<video class="img-thumbnail" title="VR-Robo video loading.." id="vjs_video_3_html5_api"
-						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+					<video class="pub-thumbnail img-thumbnail" title="VR-Robo video loading.." tabindex="-1"
+						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/hiking.mp4"></video>
 				</div>
 				<div class="col-md-9">
-					<font style="font-size: 18px;" color="black"><strong>VR-Robo: A Real-to-Sim-to-Real Framework for Visual Robot Navigation and Locomotion
-						</strong><br></font>
-					<span>Shaoting Zhu*</span>,
-					<span><u>Linzhan Mou</u>*</span>,
-					<span>Derun Li</span>,
-					<span>Baijun Ye</span>,
-					<span>Runhan Huang</span>,
-					<span>Hang Zhao†</span> 
-					<br> RA-L 2025 <br> 
-					<font style="color: #7c7c7c;">CoRL 2025 LSRW Workshop</font> 
-					
-					<div style="height: 0.5em;"></div> 
-					[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2502.01536">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://vr-robo.github.io/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/zst1406217/VR-Robo">code</a>]&nbsp;
-					[<a target="_blank" href="https://www.youtube.com/watch?v=W-G_-H7X0Pw">video</a>]&nbsp;
-					[<a target="_blank" href="./images/vrrobo-poster.pdf">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/zst1406217/VR-Robo" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/zst1406217/VR-Robo?style=social"></a>
-					<div id="vr-abs" style="display:none">
-						<p>
-							Recent success in legged robot locomotion is attributed to the integration of reinforcement
-							learning and physical simulators. However, these policies often encounter challenges when
-							deployed in real-world environments due to sim-to-real gaps, as simulators typically fail to
-							replicate visual realism and complex real-world geometry. Moreover, the lack of realistic
-							visual rendering limits the ability of these policies to support high-level tasks requiring
-							RGB-based perception like ego-centric navigation. This paper presents a Real-to-Sim-to-Real
-							framework that generates photorealistic and physically interactive "digital twin" simulation
-							environments for visual navigation and locomotion learning. Our approach leverages 3D
-							Gaussian Splatting (3DGS) based scene reconstruction from multi-view images and integrates
-							these environments into simulations that support ego-centric visual perception and
-							mesh-based physical interactions. To demonstrate its effectiveness, we train a reinforcement
-							learning policy within the simulator to perform a visual goal-tracking task. Extensive
-							experiments show that our framework achieves RGB-only sim-to-real policy transfer.
-							Additionally, our framework facilitates the rapid adaptation of robot policies with
-							effective exploration capability in complex new environments, highlighting its potential for
-							applications in households and factories.
-						</p>
+					<p class="pub-title">VR-Robo: A Real-to-Sim-to-Real Framework for Visual Robot Navigation and Locomotion</p>
+					<p class="pub-authors">Shaoting Zhu*, <u>Linzhan Mou</u>*, Derun Li, Baijun Ye, Runhan Huang, Hang Zhao†</p>
+					<p class="pub-venue">RA-L 2025 </p>
+					<br>
+					<p class="pub-links">
+						[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
+						[<a target="_blank" href="https://arxiv.org/abs/2502.01536">arXiv</a>]&nbsp;
+						[<a target="_blank" href="https://vr-robo.github.io/">website</a>]&nbsp;
+						[<a target="_blank" href="https://github.com/zst1406217/VR-Robo">code</a>]&nbsp;
+						[<a target="_blank" href="https://www.youtube.com/watch?v=W-G_-H7X0Pw">video</a>]&nbsp;
+						[<a target="_blank" href="./images/vrrobo-poster.pdf">poster</a>]&nbsp;
+						<a class="more-link" href="https://github.com/zst1406217/VR-Robo" target="_blank"><img
+								alt="GitHub stars"
+								src="https://img.shields.io/github/stars/zst1406217/VR-Robo?style=social"></a>
+					</p>
+					<div id="vr-abs" class="pub-abstract">
+						<p>Recent success in legged robot locomotion is attributed to the integration of reinforcement learning and physical simulators. However, these policies often encounter challenges when deployed in real-world environments due to sim-to-real gaps, as simulators typically fail to replicate visual realism and complex real-world geometry. Moreover, the lack of realistic visual rendering limits the ability of these policies to support high-level tasks requiring RGB-based perception like ego-centric navigation. This paper presents a Real-to-Sim-to-Real framework that generates photorealistic and physically interactive "digital twin" simulation environments for visual navigation and locomotion learning. Our approach leverages 3D Gaussian Splatting (3DGS) based scene reconstruction from multi-view images and integrates these environments into simulations that support ego-centric visual perception and mesh-based physical interactions. To demonstrate its effectiveness, we train a reinforcement learning policy within the simulator to perform a visual goal-tracking task. Extensive experiments show that our framework achieves RGB-only sim-to-real policy transfer. Additionally, our framework facilitates the rapid adaptation of robot policies with effective exploration capability in complex new environments, highlighting its potential for applications in households and factories.</p>
 					</div>
 				</div>
 			</div> 
 			
 			<hr>
 
-			<div class="row">
+			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
-					<video class="img-thumbnail" title="Let Occ Flow video loading.." id="vjs_video_3_html5_api"
-						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+					<video class="pub-thumbnail img-thumbnail" title="Let Occ Flow video loading.." tabindex="-1"
+						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/corl.mp4"></video>
 				</div>
 				<div class="col-md-9">
-					<div style="height: 0.2em;"></div>
-					<font style="font-size: 18px;" color="black"><strong>Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction<!-- Place this tag where you want the button to render. -->
-						</strong><br></font>
-					<span><u>Linzhan Mou</u>*</span>,
-					<span>Yili Liu*</span>,
-					<span>Xuan Yu</span>,
-					<span>Chenrui Han</span>,
-					<span>Sitong Mao</span>,
-					<span>Rong Xiong</span>,
-					<span>Yue Wang†</span>
-					<br> CoRL 2024 <br>
+					<p class="pub-title">Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction</p>
+					<p class="pub-authors"><u>Linzhan Mou</u>*, Yili Liu*, Xuan Yu, Chenrui Han, Sitong Mao, Rong Xiong, Yue Wang†</p>
+					<p class="pub-venue">CoRL 2024</p>
 					<br>
-					[<a href="javascript:void(0)" onclick="display('occflow-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2407.07587">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/eliliu2233/occ-flow">code</a>]&nbsp;
-					[<a target="_blank"
-						href="https://eliliu2233.github.io/letoccflow/static/videos/letoccflow.mp4">video</a>]&nbsp;
-					[<a target="_blank" href="./images/letoccflow-poster.pdf">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/eliliu2233/occ-flow" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/eliliu2233/occ-flow?style=social"></a>
-					<div id="occflow-abs" style="display:none">
-						<p>
-							Accurate perception of the dynamic environment is a fundamental task for autonomous driving and robot systems. This paper introduces Let Occ Flow, the first self-supervised work for joint 3D occupancy and occupancy flow prediction using only camera inputs, eliminating the need for 3D annotations. Utilizing TPV for unified scene representation and deformable attention layers for feature aggregation, our approach incorporates a novel attention-based temporal fusion module to capture dynamic object dependencies, followed by a 3D refine module for fine-gained volumetric representation. Besides, our method extends differentiable rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmentation and optical flow cues for dynamic decomposition and motion optimization. Extensive experiments on nuScenes and KITTI datasets demonstrate the competitive performance of our approach over prior state-of-the-art methods.
-						</p>
+					<p class="pub-links">
+						[<a href="javascript:void(0)" onclick="display('occflow-abs')">abs</a>]&nbsp;
+						[<a target="_blank" href="https://arxiv.org/abs/2407.07587">arXiv</a>]&nbsp;
+						[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/">website</a>]&nbsp;
+						[<a target="_blank" href="https://github.com/eliliu2233/occ-flow">code</a>]&nbsp;
+						[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/static/videos/letoccflow.mp4">video</a>]&nbsp;
+						[<a target="_blank" href="./images/letoccflow-poster.pdf">poster</a>]&nbsp;
+						<a class="more-link" href="https://github.com/eliliu2233/occ-flow" target="_blank"><img
+								alt="GitHub stars"
+								src="https://img.shields.io/github/stars/eliliu2233/occ-flow?style=social"></a>
+					</p>
+					<div id="occflow-abs" class="pub-abstract">
+						<p>Accurate perception of the dynamic environment is a fundamental task for autonomous driving and robot systems. This paper introduces Let Occ Flow, the first self-supervised work for joint 3D occupancy and occupancy flow prediction using only camera inputs, eliminating the need for 3D annotations. Utilizing TPV for unified scene representation and deformable attention layers for feature aggregation, our approach incorporates a novel attention-based temporal fusion module to capture dynamic object dependencies, followed by a 3D refine module for fine-gained volumetric representation. Besides, our method extends differentiable rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmentation and optical flow cues for dynamic decomposition and motion optimization. Extensive experiments on nuScenes and KITTI datasets demonstrate the competitive performance of our approach over prior state-of-the-art methods.</p>
 					</div>
 				</div>
 			</div>
 			
 			<hr>
 
-			<div class="row">
+			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
-					<video class="img-thumbnail" title="Instruct 4D-to-4D video loading.." id="vjs_video_3_html5_api"
-						tabindex="-1" preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+					<video class="pub-thumbnail img-thumbnail" title="Instruct 4D-to-4D video loading.." tabindex="-1"
+						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/cvpr.mp4"></video>
 				</div>
 				<div class="col-md-9">
-					<div style="height: 0.2em;"></div>
-					<font style="font-size: 18px;" color="black"><strong>Instruct 4D-to-4D: Editing 4D Scenes as Pseudo-3D Scenes Using 2D Diffusion
-						</strong><br></font>
-					<span><u>Linzhan Mou</u>*</span>,
-					<span>Jun-Kun Chen*</span>,
-					<span>Yu-Xiong Wang</span>
-					<br> CVPR 2024 <br>
+					<p class="pub-title">Instruct 4D-to-4D: Editing 4D Scenes as Pseudo-3D Scenes Using 2D Diffusion</p>
+					<p class="pub-authors"><u>Linzhan Mou</u>*, Jun-Kun Chen*, Yu-Xiong Wang</p>
+					<p class="pub-venue">CVPR 2024</p>
 					<br>
-
-					[<a href="javascript:void(0)" onclick="display('i4d-abs')">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2406.09402">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://immortalco.github.io/Instruct-4D-to-4D/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/Friedrich-M/Instruct-4D-to-4D">code</a>]&nbsp;
-					[<a target="_blank" href="">video</a>]&nbsp;
-					[<a target="_blank" href="https://cvpr.thecvf.com/media/PosterPDFs/CVPR%202024/30298.png?t=1717443013.0046797">poster</a>]&nbsp;
-					<a class="more-link" href="https://github.com/Friedrich-M/Instruct-4D-to-4D" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/Friedrich-M/Instruct-4D-to-4D?style=social"></a>
-					<div id="i4d-abs" style="display:none">
-						<p>
-							This paper proposes Instruct 4D-to-4D that achieves 4D awareness and spatial-temporal
-							consistency for 2D diffusion models to generate high-quality instruction-guided dynamic
-							scene editing results. Traditional applications of 2D diffusion models in dynamic scene
-							editing often result in inconsistency, primarily due to their inherent frame-by-frame
-							editing methodology. Addressing the complexities of extending instruction-guided editing to
-							4D, our key insight is to treat a 4D scene as a pseudo-3D scene, decoupled into two
-							sub-problems: achieving temporal consistency in video editing and applying these edits to
-							the pseudo-3D scene. Following this, we first enhance the Instruct-Pix2Pix (IP2P) model with
-							an anchor-aware attention module for batch processing and consistent editing. Additionally,
-							we integrate optical flow-guided appearance propagation in a sliding window fashion for more
-							precise frame-to-frame editing and incorporate depth-based projection to manage the
-							extensive data of pseudo-3D scenes, followed by iterative editing to achieve convergence. We
-							extensively evaluate our approach in various scenes and editing instructions, and
-							demonstrate that it achieves spatially and temporally consistent editing results, with
-							significantly enhanced detail and sharpness over the prior art. Notably, Instruct 4D-to-4D
-							is general and applicable to both monocular and challenging multi-camera scenes.
-						</p>
+					<p class="pub-links">
+						[<a href="javascript:void(0)" onclick="display('i4d-abs')">abs</a>]&nbsp;
+						[<a target="_blank" href="https://arxiv.org/abs/2406.09402">arXiv</a>]&nbsp;
+						[<a target="_blank" href="https://immortalco.github.io/Instruct-4D-to-4D/">website</a>]&nbsp;
+						[<a target="_blank" href="https://github.com/Friedrich-M/Instruct-4D-to-4D">code</a>]&nbsp;
+						[<a target="_blank" href="https://cvpr.thecvf.com/media/PosterPDFs/CVPR%202024/30298.png?t=1717443013.0046797">poster</a>]&nbsp;
+						<a class="more-link" href="https://github.com/Friedrich-M/Instruct-4D-to-4D" target="_blank"><img
+								alt="GitHub stars"
+								src="https://img.shields.io/github/stars/Friedrich-M/Instruct-4D-to-4D?style=social"></a>
+					</p>
+					<div id="i4d-abs" class="pub-abstract">
+						<p>This paper proposes Instruct 4D-to-4D that achieves 4D awareness and spatial-temporal consistency for 2D diffusion models to generate high-quality instruction-guided dynamic scene editing results. Traditional applications of 2D diffusion models in dynamic scene editing often result in inconsistency, primarily due to their inherent frame-by-frame editing methodology. Addressing the complexities of extending instruction-guided editing to 4D, our key insight is to treat a 4D scene as a pseudo-3D scene, decoupled into two sub-problems: achieving temporal consistency in video editing and applying these edits to the pseudo-3D scene. Following this, we first enhance the Instruct-Pix2Pix (IP2P) model with an anchor-aware attention module for batch processing and consistent editing. Additionally, we integrate optical flow-guided appearance propagation in a sliding window fashion for more precise frame-to-frame editing and incorporate depth-based projection to manage the extensive data of pseudo-3D scenes, followed by iterative editing to achieve convergence. We extensively evaluate our approach in various scenes and editing instructions, and demonstrate that it achieves spatially and temporally consistent editing results, with significantly enhanced detail and sharpness over the prior art. Notably, Instruct 4D-to-4D is general and applicable to both monocular and challenging multi-camera scenes.</p>
 					</div>
 				</div>
 			</div>
@@ -424,7 +354,7 @@
 		</div>
 
 		<div class="container" style="font-size: 17px">
-			<h2 id="Publications" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Service </h2>
+			<h2 id="Service" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Service</h2>
 			<hr style="margin-top:0.4em">
 
 			<ul>
