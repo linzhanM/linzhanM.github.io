@@ -1,45 +1,105 @@
-a:link,
-a:visited {
-  color: #0066CC;
+/* ============================================================
+   Anthropic design tokens (extracted from anthropic.com)
+   --swatch--ivory-light:   #faf9f5  (background)
+   --swatch--slate-dark:    #141413  (primary text / links)
+   --swatch--slate-light:   #5e5d59  (secondary text)
+   --swatch--slate-medium:  #3d3d3a  (medium text)
+   --swatch--clay:          #d97757  (accent only)
+   --swatch--accent:        #c6613f  (accent hover)
+   --swatch--ivory-dark:    #e8e6dc  (borders / dividers)
+   --swatch--ivory-medium:  #f0eee6  (subtle backgrounds)
+   body:  Georgia Pro, 18px, 400, line-height 1.5, letter-spacing 0
+   links: #141413, underline (anthropic.com link color = body color)
+   h1:    700, 2rem, letter-spacing -0.005em
+   h2:    600, 1.5rem, letter-spacing -0.005em
+   ============================================================ */
+
+/* --- Base --- */
+body {
+  font-family: 'Georgia Pro', Georgia, serif;
+  background-color: #faf9f5;
+  color: #141413;
+  font-size: 18px;
+  line-height: 1.5;
+  letter-spacing: 0em;
 }
 
-a:hover {
-  color: #0099FF;
+/* --- Headings --- */
+h1, h2, h3, h4, h5, h6 {
+  color: #141413;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+}
+
+h1 { font-size: 2.25rem; font-weight: 700; }
+h2 { font-size: 1.875rem; font-weight: 600; }
+
+/* --- Links: Anthropic uses body color (#141413) with underline --- */
+a:link,
+a:visited {
+  color: #E77500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: rgba(231, 117, 0, 0.35);
+}
+
+/* Icon-only links: no underline */
+a:has(> i):link,
+a:has(> i):visited,
+a:has(> i):hover {
   text-decoration: none;
 }
 
+a:hover {
+  color: #C45F00;
+  text-decoration: underline;
+  text-decoration-color: rgba(196, 95, 0, 0.5);
+}
+
+/* Nav / icon buttons: no underline */
 .navbar-item:link,
 .navbar-item:visited,
 .button:link,
-.button:visited {
-  color: #333;
+.button:visited,
+.navbar a:link,
+.navbar a:visited {
+  color: #141413;
+  text-decoration: none;
 }
 
-span.xiuyu {
-  color: #000000
+.navbar a:hover {
+  color: #5e5d59;
+  text-decoration: none;
 }
 
-div.abstract {
-  background-color: #ddd;
-  padding: 5px;
-}
-
+/* --- Legacy spans --- */
+span.xiuyu { color: #141413; }
+div.abstract { background-color: #f0eee6; padding: 5px; }
 span.highlight,
 span.highlight a:link,
-span.highlight a:visited {
-  color: #E60000
-  /*FF0000*/
-}
-
+span.highlight a:visited { color: #d97757; }
 span.tag,
 span.tag a:link,
-span.tag a:visited {
-  color: #003399
+span.tag a:visited { color: #3d3d3a; }
+
+/* --- Navbar --- */
+.navbar {
+  background-color: #faf9f5;
+  border-bottom: 1px solid #e8e6dc;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
-body {
-  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
-  font-family: 'Monda', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+a.navbar-item:focus,
+a.navbar-item:hover {
+  background-color: #f0eee6 !important;
+  color: #E77500 !important;
+}
+
+/* --- Dividers --- */
+hr {
+  border-color: #e8e6dc;
+  opacity: 1;
 }
 
 /* --- Publications --- */
@@ -56,21 +116,69 @@ body {
 .pub-title {
   font-size: 18px;
   font-weight: 600;
-  color: #111;
+  color: #141413;
   margin-bottom: 4px;
+  margin-top: 4px;
   line-height: 1.4;
+  text-decoration: none;
+}
+
+/* pub-title is typically not a link, but if it is, no underline */
+.pub-title a:link,
+.pub-title a:visited {
+  text-decoration: none;
 }
 
 .pub-authors {
   font-size: 16px;
-  color: #444;
+  color: #5e5d59;
   margin-bottom: 4px;
 }
 
 .pub-venue {
   font-size: 16px;
-  color: #1f1f1f;
-  margin-bottom: 6px;
+  color: #3d3d3a;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.pub-links {
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: #5e5d59;
+}
+
+.pub-links a:link,
+.pub-links a:visited {
+  color: #5e5d59;
+  text-decoration: none;
+}
+
+.pub-links a:hover {
+  color: #E77500;
+  text-decoration: none;
+}
+
+.pub-abstract {
+  display: none;
+  font-size: 16px;
+  color: #5e5d59;
+  border-left: 3px solid #E77500;
+  padding: 8px 12px;
+  margin-top: 8px;
+  background: #f0eee6;
+  border-radius: 0 4px 4px 0;
+  line-height: 1.5;
+}
+
+.pub-abstract p {
+  margin-bottom: 0;
+}
+
+/* --- Venue highlight (Highlight / Oral badges) --- */
+.venue-highlight {
+  color: #E77500;
+  font-weight: 700;
 }
 
 .venue-badge {
@@ -90,38 +198,4 @@ body {
 .venue-badge::before {
   content: "★ ";
   font-size: 10px;
-}
-
-.pub-links {
-  font-size: 15px;
-  margin-bottom: 4px;
-}
-
-.pub-links a {
-  color: #555;
-}
-
-.pub-links a:hover {
-  color: #0066CC;
-}
-
-.pub-abstract {
-  display: none;
-  font-size: 15px;
-  color: #444;
-  border-left: 3px solid #ddd;
-  padding: 8px 12px;
-  margin-top: 8px;
-  background: #fafafa;
-  border-radius: 0 4px 4px 0;
-}
-
-.pub-abstract p {
-  margin-bottom: 0;
-}
-
-/* Section headings */
-h2 {
-  font-weight: 600;
-  letter-spacing: 0.01em;
 }
