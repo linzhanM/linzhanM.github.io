@@ -8,7 +8,7 @@
    --swatch--accent:        #c6613f  (accent hover)
    --swatch--ivory-dark:    #e8e6dc  (borders / dividers)
    --swatch--ivory-medium:  #f0eee6  (subtle backgrounds)
-   body:  Georgia Pro, 18px, 400, line-height 1.5, letter-spacing 0
+   body:  Source Serif 4 / Georgia Pro, 18px, 400, line-height 1.5, letter-spacing 0
    links: #E77500, no underline
    h1:    700, 2rem, letter-spacing -0.005em
    h2:    600, 1.5rem, letter-spacing -0.005em
@@ -16,8 +16,7 @@
 
 /* --- Base --- */
 body {
-  font-family: 'Georgia Pro', Georgia, serif;
-  font-variant-numeric: lining-nums;
+  font-family: 'Source Serif 4', 'Georgia Pro', Georgia, serif;
   background-color: #faf9f5;
   color: #141413;
   font-size: 18px;
