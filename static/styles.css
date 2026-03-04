@@ -17,6 +17,7 @@
 /* --- Base --- */
 body {
   font-family: 'Source Serif 4', 'Georgia Pro', Georgia, serif;
+  font-variant-numeric: lining-nums;
   background-color: #faf9f5;
   color: #141413;
   font-size: 18px;
