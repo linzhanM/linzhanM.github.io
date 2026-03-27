@@ -66,7 +66,7 @@ a:hover {
 }
 
 .navbar a:hover {
-  color: #5e5d59;
+  color: #E77500;
   text-decoration: none;
 }
 
@@ -135,7 +135,7 @@ hr {
 
 .pub-venue {
   font-size: 16px;
-  color: #000000;
+  color: #141413;
   font-weight: 500;
   margin-bottom: 20px;
 }
@@ -164,7 +164,7 @@ hr {
   border-left: 3px solid #E77500;
   padding: 8px 12px;
   margin-top: 8px;
-  background: #f0eee6;
+  background: #fdf6ee;
   border-radius: 0 4px 4px 0;
   line-height: 1.5;
 }
