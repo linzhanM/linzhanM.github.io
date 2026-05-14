@@ -27,7 +27,6 @@ Large binary files (`.zip`) are tracked via Git LFS (configured in `.gitattribut
 
 **JavaScript**:
 - `burger.js` — toggles `.is-active` on `.navbar-burger` and `#navbar-main` for the mobile hamburger menu
-- `rand_pics.js` — loaded but currently non-functional (called with wrong argument count); referenced by `#index-img-description`
 - Inline JS in `index.html` — `toggle_vis(id)` shows/hides elements by CSS class; `display(id)` toggles individual abstract blocks per publication
 
 **Publications pattern**: Each publication entry is a Bootstrap `.row` with a video/image thumbnail in `.col-md-3` and details in `.col-md-8/9`. Abstract text is hidden in a `<div id="*-abs" style="display:none">` block, toggled by `onclick="display('*-abs')"`.
