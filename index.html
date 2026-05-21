@@ -102,7 +102,7 @@
 				<p style="margin-top: -2px;">
 					I am a first-year CS Ph.D. student at Princeton, advised by <a href="https://www.cs.princeton.edu/~smr/">Prof. Szymon Rusinkiewicz</a>. I also collaborate closely with <a href="https://www.cs.princeton.edu/~af/">Prof.&nbsp;Adam Finkelstein</a>.
 					<br><br>
-					I am currently a research scientist intern at <a href="https://ai.meta.com/">Meta AI</a>. I work on vision, robotics and machine learning at <a href="https://pixl.cs.princeton.edu/">Princeton PIXL Group</a> with recent interest in world models.
+					I am currently a research scientist intern at <a href="https://ai.meta.com/">Meta AI</a>. I work on vision, robotics and machine learning at <a href="https://pixl.engineering.princeton.edu/">Princeton PIXL Group</a> with recent interest in world models.
 						<br>
 				</p>
 				<div style="font-size: 18px; padding-top: 12px;">
@@ -129,6 +129,27 @@
 			<span style="font-size: 15px; color: #5e5d59;">(* indicates equal contribution)</span>
 			&nbsp;&nbsp;<span id="showText" onclick="toggle_vis('pub-extra')" style="font-size: 15px; cursor: pointer; color: #5e5d59;">[Show more]</span>
 			<hr style="margin-top:0.4em">
+
+			<div class="pub-row row align-items-start">
+				<div class="col-md-3">
+					<video class="pub-thumbnail img-thumbnail" title="UniMate video loading.." tabindex="-1"
+						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						src="images/unimate.mp4" style="background-color: black;"></video>
+				</div>
+				<div class="col-md-9">
+					<p class="pub-title">Large Animation Foundation Model for Diverse Topologies</p>
+					<p class="pub-authors"><u>Linzhan Mou</u>, et al., Adam Finkelstein, Szymon Rusinkiewicz</p>
+					<p class="pub-venue">Under Review</p>
+					<p class="pub-links">
+						[coming soon]&nbsp;
+					</p>
+					<div id="unimate-abs" class="pub-abstract">
+						<p>Recent advances in automatic rigging now deliver animation-ready 3D assets at scale, yet generating the motion to drive them remains a bottleneck. Existing learned animators are topology-constrained: they rely on category-specific templates or require per-skeleton fine-tuning and reference motions at inference. We present UniMate, a unified foundation model that synthesizes articulated motion for arbitrary skeletons from a rigged 3D asset and a text prompt, with no test-time optimization or per-skeleton retraining. UniMate relies on a topology-aware diffusion transformer, which integrates skeletal topology into attention via three mechanisms: (1) a graph-aware attention bias from pairwise joint relations and geodesic distances; (2) a spectral rotary position embedding generalizing RoPE to arbitrary kinematic trees via the graph Laplacian; and (3) a global topological conditioner attention-pooled from the rest-pose skeleton. We also curate UniML3D, 13,006 motion sequences spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid objects with unified canonicalization and text pairing. Trained on this dataset, UniMate outperforms state-of-the-art baselines in quality, generalization, and efficiency, and supports zero-shot cross-topology transfer, in-betweening, expansion and text-guided editing.</p>
+					</div>
+				</div>
+			</div>
+
+			<hr>
 
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
