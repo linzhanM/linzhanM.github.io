@@ -70,15 +70,12 @@ a:hover {
   text-decoration: none;
 }
 
-/* --- Legacy spans --- */
-span.xiuyu { color: #141413; }
-div.abstract { background-color: #f0eee6; padding: 5px; }
-span.highlight,
-span.highlight a:link,
-span.highlight a:visited { color: #d97757; }
-span.tag,
-span.tag a:link,
-span.tag a:visited { color: #3d3d3a; }
+/* --- Section headings (offset for fixed navbar anchor jumps) --- */
+.section-h2 {
+  padding-top: 90px;
+  margin-top: -80px;
+  margin-bottom: 0.1em;
+}
 
 /* --- Navbar --- */
 .navbar {
@@ -177,23 +174,4 @@ hr {
 .venue-highlight {
   color: #E77500;
   font-weight: 700;
-}
-
-.venue-badge {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 600;
-  color: #6b3a00;
-  background: linear-gradient(120deg, #ffeaa7, #fdcb6e);
-  border-radius: 20px;
-  padding: 2px 10px;
-  margin-left: 8px;
-  vertical-align: middle;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.10);
-  letter-spacing: 0.01em;
-}
-
-.venue-badge::before {
-  content: "★ ";
-  font-size: 10px;
 }
