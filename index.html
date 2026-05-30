@@ -26,9 +26,9 @@
 	</script>
 
 	<script type="text/javascript">
-		function toggle_vis(id) {
+		function toggle_vis(id, textId) {
 			var e = document.getElementsByClassName(id);
-			var showText = document.getElementById("showText");
+			var showText = document.getElementById(textId || "showText");
 			var hidden = e.length > 0 && e[0].style.display == "none";
 			for (var i = 0; i < e.length; i++) {
 				if (hidden) {
@@ -102,7 +102,7 @@
 				<p style="margin-top: -2px;">
 					I am a first-year CS Ph.D. student at Princeton, advised by <a href="https://www.cs.princeton.edu/~smr/">Prof. Szymon Rusinkiewicz</a>. I also collaborate closely with <a href="https://www.cs.princeton.edu/~af/">Prof.&nbsp;Adam Finkelstein</a>.
 					<br><br>
-					I work on data-driven vision, generative models and robotics at <a href="https://pixl.engineering.princeton.edu/">Princeton ImageX Lab (PIXL)</a>. <span style="white-space: nowrap;">I am currently</span> a research scientist intern at <a href="https://ai.meta.com/">Meta AI</a>.
+					I work on data-driven vision, robotics and machine learning at <a href="https://pixl.engineering.princeton.edu/">Princeton ImageX Lab (PIXL)</a>. <span style="white-space: nowrap;">I am currently</span> a research intern at <a href="https://ai.meta.com/">Meta AI</a> working on world dynamics model.
 					<br>
 				</p>
 				<div style="font-size: 18px; padding-top: 12px;">
@@ -137,15 +137,12 @@
 						src="images/unimate.mp4" style="background-color: black;"></video>
 				</div>
 				<div class="col-md-9">
-					<p class="pub-title">Large Animation Foundation Model for Diverse Skeletons</p>
+					<p class="pub-title">Large Animation Foundation Model for Arbitrary Skeletons</p>
 					<p class="pub-authors"><u>Linzhan Mou</u>, et al., Adam Finkelstein, Szymon Rusinkiewicz</p>
 					<p class="pub-venue">Under Review</p>
 					<p class="pub-links">
 						[coming soon]&nbsp;
 					</p>
-					<div id="unimate-abs" class="pub-abstract">
-						<p>Recent advances in automatic rigging now deliver animation-ready 3D assets at scale, yet generating the motion to drive them remains a bottleneck. Existing learned animators are topology-constrained: they rely on category-specific templates or require per-skeleton fine-tuning and reference motions at inference. We present UniMate, a unified foundation model that synthesizes articulated motion for arbitrary skeletons from a rigged 3D asset and a text prompt, with no test-time optimization or per-skeleton retraining. UniMate relies on a topology-aware diffusion transformer, which integrates skeletal topology into attention via three mechanisms: (1) a graph-aware attention bias from pairwise joint relations and geodesic distances; (2) a spectral rotary position embedding generalizing RoPE to arbitrary kinematic trees via the graph Laplacian; and (3) a global topological conditioner attention-pooled from the rest-pose skeleton. We also curate UniML3D, 13,006 motion sequences spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid objects with unified canonicalization and text pairing. Trained on this dataset, UniMate outperforms state-of-the-art baselines in quality, generalization, and efficiency, and supports zero-shot cross-topology transfer, in-betweening, expansion and text-guided editing.</p>
-					</div>
 				</div>
 			</div>
 
@@ -243,7 +240,7 @@
 						src="images/cvpr.mp4"></video>
 				</div>
 				<div class="col-md-9">
-					<p class="pub-title">Instruct 4D-to-4D: Multimodal Editing of 4D Scenes with Natural Language Instructions</p>
+					<p class="pub-title">Instruct 4D-to-4D: Instruction-Guided 4D Scene Editing</p>
 					<p class="pub-authors"><u>Linzhan Mou</u>*, Jun-Kun Chen*, Yu-Xiong Wang</p>
 					<p class="pub-venue">CVPR 2024</p>
 					<p class="pub-links">
@@ -261,10 +258,39 @@
 					</div>
 				</div>
 			</div>
+
+			<hr class="pub-extra" style="display:none">
+
+			<div class="pub-extra pub-row row align-items-start" style="display:none">
+				<div class="col-md-3">
+					<video class="pub-thumbnail img-thumbnail" title="Relightable Avatar video loading.." tabindex="-1"
+						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						src="images/relightable.mp4"></video>
+				</div>
+				<div class="col-md-9">
+					<p class="pub-title">Relightable and Animatable Neural Avatar from Sparse-View Video</p>
+					<p class="pub-authors">Zhen Xu, Sida Peng, Chen Geng, <u>Linzhan Mou</u>, Zihan Yan, Jiaming Sun, Hujun Bao, Xiaowei Zhou</p>
+					<p class="pub-venue">CVPR 2024 <b><span class="venue-highlight">(Highlight)</span></b></p>
+					<p class="pub-links">
+						[<a href="javascript:void(0)" onclick="display('relightable-abs')">abs</a>]&nbsp;
+						[<a target="_blank" href="https://arxiv.org/abs/2308.07903">arXiv</a>]&nbsp;
+						[<a target="_blank" href="https://zju3dv.github.io/relightable_avatar/">website</a>]&nbsp;
+						[<a target="_blank" href="https://github.com/zju3dv/RelightableAvatar">code</a>]&nbsp;
+						[<a target="_blank" href="https://www.youtube.com/watch?v=bZaP0PXUWdc">video</a>]&nbsp;
+						[<a target="_blank" href="https://cvpr.thecvf.com/media/PosterPDFs/CVPR%202024/31220.png?t=1717317536.4682677">poster</a>]&nbsp;
+						<a class="more-link" href="https://github.com/zju3dv/RelightableAvatar" target="_blank"><img
+								alt="GitHub stars"
+								src="https://img.shields.io/github/stars/zju3dv/RelightableAvatar?style=social"></a>
+					</p>
+					<div id="relightable-abs" class="pub-abstract">
+						<p>This paper tackles the challenge of creating relightable and animatable neural avatars from sparse-view (or even monocular) videos of dynamic humans under unknown illumination. Compared to studio environments, this setting is more practical and accessible but poses an extremely challenging ill-posed problem. Previous neural human reconstruction methods are able to reconstruct animatable avatars from sparse views using deformed Signed Distance Fields (SDF) but cannot recover material parameters for relighting. While differentiable inverse rendering-based methods have succeeded in material recovery of static objects, it is not straightforward to extend them to dynamic humans as it is computationally intensive to compute pixel-surface intersection and light visibility on deformed SDFs for inverse rendering. To solve this challenge, we propose a Hierarchical Distance Query (HDQ) algorithm to approximate the world space distances under arbitrary human poses. Specifically, we estimate coarse distances based on a parametric human model and compute fine distances by exploiting the local deformation invariance of SDF. Based on the HDQ algorithm, we leverage sphere tracing to efficiently estimate the surface intersection and light visibility. This allows us to develop the first system to recover animatable and relightable neural avatars from sparse-view (or monocular) inputs. Experiments demonstrate that our approach is able to produce superior results compared to state-of-the-art methods.</p>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<div class="container">
-			<h2 id="Robotics" class="section-h2">Robotics</h2>
+			<h2 id="Publications" class="section-h2">Robotics</h2>
 			<hr style="margin-top:0.4em">
 
 			<div class="pub-row row align-items-start">
@@ -318,6 +344,30 @@
 					</p>
 					<div id="vr-abs" class="pub-abstract">
 						<p>Recent success in legged robot locomotion is attributed to the integration of reinforcement learning and physical simulators. However, these policies often encounter challenges when deployed in real-world environments due to sim-to-real gaps, as simulators typically fail to replicate visual realism and complex real-world geometry. Moreover, the lack of realistic visual rendering limits the ability of these policies to support high-level tasks requiring RGB-based perception like ego-centric navigation. This paper presents a Real-to-Sim-to-Real framework that generates photorealistic and physically interactive "digital twin" simulation environments for visual navigation and locomotion learning. Our approach leverages 3D Gaussian Splatting (3DGS) based scene reconstruction from multi-view images and integrates these environments into simulations that support ego-centric visual perception and mesh-based physical interactions. To demonstrate its effectiveness, we train a reinforcement learning policy within the simulator to perform a visual goal-tracking task. Extensive experiments show that our framework achieves RGB-only sim-to-real policy transfer. Additionally, our framework facilitates the rapid adaptation of robot policies with effective exploration capability in complex new environments, highlighting its potential for applications in households and factories.</p>
+					</div>
+				</div>
+			</div>
+
+			<hr class="pub-extra" style="display:none">
+
+			<div class="pub-extra pub-row row align-items-start" style="display:none">
+				<div class="col-md-3">
+					<video class="pub-thumbnail img-thumbnail" title="GeCO video loading.." tabindex="-1"
+						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						src="images/geco.mp4"></video>
+				</div>
+				<div class="col-md-9">
+					<p class="pub-title">GeCO: Generative Control as Optimization</p>
+					<p class="pub-authors">Zunzhe Zhang*, Runhan Huang*, Yicheng Liu, Shaoting Zhu, <u>Linzhan Mou</u>, Hang Zhao</p>
+					<p class="pub-venue">ICLR 2026 Workshop (LLA & ReALM-GEN)</p>
+					<p class="pub-links">
+						[<a href="javascript:void(0)" onclick="display('geco-abs')">abs</a>]&nbsp;
+						[<a target="_blank" href="https://arxiv.org/abs/2603.17834">arXiv</a>]&nbsp;
+						[<a target="_blank" href="https://hrh6666.github.io/GeCO/">website</a>]&nbsp;
+						[<a target="_blank" href="https://openreview.net/forum?id=BdEz1fISBu">openreview</a>]&nbsp;
+					</p>
+					<div id="geco-abs" class="pub-abstract">
+						<p>Diffusion models and flow matching have become a cornerstone of robotic imitation learning, yet they suffer from a structural inefficiency where inference is often bound to a fixed integration schedule that is agnostic to state complexity. This paradigm forces the policy to expend the same computational budget on trivial motions as it does on complex tasks. We introduce Generative Control as Optimization (GeCO), a time-unconditional framework that transforms action synthesis from trajectory integration into iterative optimization. GeCO learns a stationary velocity field in the action-sequence space where expert behaviors form stable attractors. As a result, test-time inference becomes adaptive: it can exit early for simple states while refining longer for difficult ones. The same stationary geometry also provides an intrinsic, training-free safety signal, since the field norm at the optimized action acts as a robust out-of-distribution detector. We validate GeCO on standard simulation benchmarks and demonstrate that it scales naturally to π0-series Vision-Language-Action models. As a plug-and-play replacement for standard flow-matching heads, GeCO improves both success rate and efficiency while offering an optimization-native mechanism for safer deployment.</p>
 					</div>
 				</div>
 			</div>
