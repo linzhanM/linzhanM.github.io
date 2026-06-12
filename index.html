@@ -102,7 +102,7 @@
 				<p style="margin-top: -2px;">
 					I am a first-year CS Ph.D. student at Princeton, advised by <a href="https://www.cs.princeton.edu/~smr/">Prof. Szymon Rusinkiewicz</a>. I also collaborate closely with <a href="https://www.cs.princeton.edu/~af/">Prof.&nbsp;Adam Finkelstein</a>.
 					<br><br>
-					I work on data-driven vision, robotics and machine learning at <a href="https://pixl.engineering.princeton.edu/">Princeton ImageX Lab (PIXL)</a>. <span style="white-space: nowrap;">I am currently</span> a research intern at Meta working on world action models.
+					I work on data-driven vision, robotics and machine learning at <a href="https://pixl.engineering.princeton.edu/">Princeton ImageX Lab (PIXL)</a>. <span style="white-space: nowrap;">I am currently</span> a research intern at Meta AI working on world action models.
 					<br>
 				</p>
 				<div style="font-size: 18px; padding-top: 12px;">
@@ -141,8 +141,12 @@
 					<p class="pub-authors"><u>Linzhan Mou</u>, et al., Adam Finkelstein, Szymon Rusinkiewicz</p>
 					<p class="pub-venue">Under Review</p>
 					<p class="pub-links">
+						[<a target="_blank" href="https://linzhanm.github.io/unimate">website</a>]&nbsp;
 						[tl;dr: one generative model to animate all rigs in real time]&nbsp;
 					</p>
+					<div id="unimate-abs" class="pub-abstract">
+						<p>Recent advances in automatic rigging now deliver animation-ready 3D assets at scale, yet generating the motion to drive them remains a bottleneck. Existing learned animators are topology-constrained: they rely on category-specific templates or require per-skeleton fine-tuning and reference motions at inference. We present UniMate, a unified foundation model that synthesizes articulated motion for arbitrary skeletons from a rigged 3D asset and a text prompt, with no test-time optimization or per-skeleton retraining. UniMate relies on a topology-aware diffusion transformer, which integrates skeletal topology into attention via three mechanisms: (1) a graph-aware attention bias from pairwise joint relations and geodesic distances; (2) a spectral rotary position embedding generalizing RoPE to arbitrary kinematic trees via the graph Laplacian; and (3) a global topological conditioner attention-pooled from the rest-pose skeleton. We also curate UniML3D, 13,006 motion sequences spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid objects with unified canonicalization and text pairing. Trained on this dataset, UniMate outperforms state-of-the-art baselines in quality, generalization, and efficiency, and supports zero-shot cross-topology transfer, in-betweening, and text-guided editing.</p>
+					</div>
 				</div>
 			</div>
 
@@ -181,7 +185,7 @@
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="Let Occ Flow video loading.." tabindex="-1"
 						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/occflow.mp4"></video>
+						src="images/letoccflow.mp4"></video>
 				</div>
 				<div class="col-md-9">
 					<p class="pub-title">Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction</p>
@@ -199,7 +203,7 @@
 								src="https://img.shields.io/github/stars/eliliu2233/occ-flow?style=social"></a>
 					</p>
 					<div id="occflow-abs" class="pub-abstract">
-						<p>Accurate perception of the dynamic environment is a fundamental task for autonomous driving and robot systems. This paper introduces Let Occ Flow, the first self-supervised work for joint 3D occupancy and occupancy flow prediction using only camera inputs, eliminating the need for 3D annotations. Utilizing TPV for unified scene representation and deformable attention layers for feature aggregation, our approach incorporates a novel attention-based temporal fusion module to capture dynamic object dependencies, followed by a 3D refine module for fine-gained volumetric representation. Besides, our method extends differentiable rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmentation and optical flow cues for dynamic decomposition and motion optimization. Extensive experiments on nuScenes and KITTI datasets demonstrate the competitive performance of our approach over prior state-of-the-art methods.</p>
+						<p>Accurate perception of the dynamic environment is a fundamental task for autonomous driving and robot systems. This paper introduces Let Occ Flow, the first self-supervised work for joint 3D occupancy and occupancy flow prediction using only camera inputs, eliminating the need for 3D annotations. Utilizing TPV for unified scene representation and deformable attention layers for feature aggregation, our approach incorporates a novel attention-based temporal fusion module to capture dynamic object dependencies, followed by a 3D refine module for fine-grained volumetric representation. Besides, our method extends differentiable rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmentation and optical flow cues for dynamic decomposition and motion optimization. Extensive experiments on nuScenes and KITTI datasets demonstrate the competitive performance of our approach over prior state-of-the-art methods.</p>
 					</div>
 				</div>
 			</div>
@@ -237,7 +241,7 @@
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="Instruct 4D-to-4D video loading.." tabindex="-1"
 						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/cvpr.mp4"></video>
+						src="images/instruct-4d-to-4d.mp4"></video>
 				</div>
 				<div class="col-md-9">
 					<p class="pub-title">Instruct 4D-to-4D: Instruction-Guided 4D Scene Editing via Diffusion Priors</p>
@@ -265,7 +269,7 @@
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="Relightable Avatar video loading.." tabindex="-1"
 						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/relightable.mp4"></video>
+						src="images/relightable-avatar.mp4"></video>
 				</div>
 				<div class="col-md-9">
 					<p class="pub-title">Relightable and Animatable Neural Avatar from Sparse-View Video</p>
@@ -297,7 +301,7 @@
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="TTT-Parkour video loading.." tabindex="-1"
 						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/run_up.mp4"></video>
+						src="images/ttt-parkour.mp4"></video>
 				</div>
 				<div class="col-md-9">
 					<p class="pub-title">TTT-Parkour: Rapid Test-Time Training for Perceptive Robot Parkour</p>
@@ -325,7 +329,7 @@
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="VR-Robo video loading.." tabindex="-1"
 						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/ramp-up.mp4"></video>
+						src="images/vr-robo.mp4"></video>
 				</div>
 				<div class="col-md-9">
 					<p class="pub-title">VR-Robo: A Real-to-Sim-to-Real Framework for Visual Robot Navigation and Locomotion</p>
@@ -373,7 +377,7 @@
 			</div>
 		</div>
 
-		<!--
+		
 		<div class="container">
 			<h2 id="Experience" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Experience</h2>
 			<hr style="margin-top:0.4em">
@@ -381,25 +385,14 @@
 			<table style="width: 100%; border-collapse: collapse;">
 				<tr>
 					<td style="padding: 10px 16px 10px 0; vertical-align: middle; width: 72px;">
-						<img src="images/meta.png" alt="Meta" style="height: 60px; width: auto;">
+						<img src="images/meta-logo.png" alt="Meta" style="height: 60px; width: auto;">
 					</td>
 					<td style="padding: 10px 0; vertical-align: top; padding-top: 18px;">
 						<div style="margin-bottom: 4px; font-size: 18px; color: #141413;">
 							<strong>Meta AI</strong> &middot; Research Scientist Intern
 						</div>
 						<div style="font-size: 16px; color: #5e5d59;">
-							Summer 2026 &middot; Generative AI
-						</div>
-					</td>
-					<td style="padding: 10px 16px 10px 0; vertical-align: middle; width: 72px;">
-						<img src="images/kling.png" alt="Kling AI" style="height: 60px; width: auto;">
-					</td>
-					<td style="padding: 10px 0; vertical-align: top; padding-top: 18px;">
-						<div style="margin-bottom: 4px; font-size: 18px; color: #141413;">
-							<strong>Kling AI</strong> &middot; Research Scientist Intern
-						</div>
-						<div style="font-size: 16px; color: #5e5d59;">
-							Summer 2025 &middot; Video Generation
+							Summer 2026 &middot; Video World Models
 						</div>
 					</td>
 				</tr>
@@ -407,7 +400,7 @@
 		</div>
 
 		<br>
-		-->
+		
 
 		<div class="container">
 			<h2 id="Service" class="section-h2">Service</h2>
@@ -418,13 +411,14 @@
 		<br>
 
 		<footer style="text-align: center; padding: 24px 0; font-size: 14px; color: #5e5d59; border-top: 1px solid #e8e6dc;">
-			<p style="margin: 0;">&copy; 2025 Linzhan Mou</p>
+			<p style="margin: 0;">&copy; <span id="copyright-year"></span> Linzhan Mou</p>
 		</footer>
 
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
 			crossorigin="anonymous"></script>
 		<script src="burger.js"></script>
+		<script>document.getElementById("copyright-year").textContent = new Date().getFullYear();</script>
 
 		<script type="text/javascript">
 			var sc_project = 12925377;

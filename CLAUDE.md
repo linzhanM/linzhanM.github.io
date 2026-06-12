@@ -17,7 +17,7 @@ python3 -m http.server 8000
 
 To deploy, commit changes and push to `main` — GitHub Pages serves the branch automatically.
 
-Large binary files (`.zip`) are tracked via Git LFS (configured in `.gitattributes`).
+`.gitattributes` routes any `.zip` through Git LFS, but the repo currently tracks no binary archives — all media is committed directly (videos, images, PDFs).
 
 ## Architecture
 
@@ -29,8 +29,8 @@ Large binary files (`.zip`) are tracked via Git LFS (configured in `.gitattribut
 - `burger.js` — toggles `.is-active` on `.navbar-burger` and `#navbar-main` for the mobile hamburger menu
 - Inline JS in `index.html` — `toggle_vis(id)` shows/hides elements by CSS class; `display(id)` toggles individual abstract blocks per publication
 
-**Publications pattern**: Each publication entry is a Bootstrap `.row` with a video/image thumbnail in `.col-md-3` and details in `.col-md-8/9`. Abstract text is hidden in a `<div id="*-abs" style="display:none">` block, toggled by `onclick="display('*-abs')"`.
+**Publications pattern**: Each publication entry is a Bootstrap `.row` with a video/image thumbnail in `.col-md-3` and details in `.col-md-9`. Abstract text is hidden in a `<div id="*-abs" class="pub-abstract">` block, toggled by `onclick="display('*-abs')"`. Entries beyond the first few are marked `class="pub-extra" style="display:none"` and revealed by the "[Show more]" toggle (`toggle_vis('pub-extra')`).
 
-**`dimo/`**: A separate self-contained project page (has its own `index.html`, `css/`, `js/`, `assets/`, `img/`).
+**`dimo/`**: A separate self-contained project page for the DIMO paper. It is plain HTML + CSS only — no JavaScript. It loads Bootstrap 4 grid/components CSS locally (`dimo/css/bootstrap-4.4.1.css`) plus Academicons, Font Awesome 4, and the Jost font from CDNs. Assets live in `dimo/img/` (videos, teaser/pipeline figures, favicon) and `dimo/assets/` (the paper PDF). Note: `dimo/img/demo1–3.mp4` are currently unreferenced (left over from a removed demo carousel).
 
-**Media**: Videos and images for publications are in `images/`. Poster PDFs are also served from `images/`.
+**Media**: Publication thumbnails (videos/images) live in `images/`, each named after the work it represents (e.g. `dimo.mp4`, `letoccflow.mp4`, `ttt-parkour.mp4`, `vr-robo.mp4`, `instruct-4d-to-4d.mp4`). Company/affiliation logos use a `-logo` suffix (`meta-logo.png`, `kling-logo.png`, `princeton-logo.jpg`). Poster PDFs live in `assets/`.
