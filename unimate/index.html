@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="title" content="UniMate" />
+  <meta name="description" content="UniMate project page." />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>UniMate</title>
+  <link rel="icon" type="image/png" href="assets/princeton.png" />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800;900&amp;family=Roboto+Mono:wght@300;400;700&amp;display=swap"
+    rel="stylesheet" />
+
+  <style>
+    :root {
+      --ivory: #faf9f5;
+      --ivory-medium: #f0eee6;
+      --ivory-dark: #e8e6dc;
+      --slate-dark: #141413;
+      --slate-light: #5e5d59;
+      --accent: #d97757;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      margin: 0;
+      color: var(--slate-dark);
+      background-color: var(--ivory);
+    }
+
+    header {
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    header h1 {
+      font-size: 60px;
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin: 0 0 0.4rem;
+    }
+
+    .sub-hero {
+      font-size: clamp(20px, 3.2vw, 40px);
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--slate-dark);
+      white-space: nowrap;
+      margin: 0;
+    }
+
+    header p {
+      font-size: 1.1em;
+      color: var(--slate-light);
+      margin: 0;
+    }
+
+    .coming-soon {
+      font-family: 'Roboto Mono', monospace;
+      color: var(--slate-light);
+      font-size: 0.95em;
+      letter-spacing: 0.01em;
+      margin: 16px 0 0;
+    }
+
+    .affiliations {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 64px;
+      margin-top: 64px;
+    }
+
+    .affiliations img {
+      height: 110px;
+      width: auto;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 34px; }
+      .sub-hero { font-size: 22px; white-space: normal; }
+      .affiliations { gap: 36px; margin-top: 48px; }
+      .affiliations img { height: 76px; }
+    }
+
+    .section {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 24px 20px 64px;
+    }
+
+    .section h2 {
+      font-size: 1.75em;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 0.25em;
+    }
+
+    .section .subtitle {
+      text-align: center;
+      color: var(--slate-light);
+      margin: 0 auto 28px;
+      max-width: 640px;
+    }
+
+    /* --- Viewer layout: sidebar + canvas --- */
+    .viewer-layout {
+      display: flex;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .example-sidebar {
+      flex: 0 0 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .example-item {
+      font-family: inherit;
+      font-size: 1em;
+      font-weight: 600;
+      text-align: left;
+      padding: 14px 16px;
+      border: 1px solid var(--ivory-dark);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--slate-dark);
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s;
+    }
+
+    .example-item:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .example-item.active {
+      border-color: var(--accent);
+      background: #fdf6ee;
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+
+    .viewer-wrapper {
+      position: relative;
+      flex: 1 1 auto;
+      min-width: 0;
+      height: 560px;
+      border: 1px solid var(--ivory-dark);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--ivory-medium);
+    }
+
+    .viewer-wrapper canvas {
+      display: block;
+    }
+
+    /* lil-gui toolbar, pinned inside the viewer */
+    .viewer-wrapper .lil-gui {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 3;
+      --background-color: rgba(250, 249, 245, 0.92);
+      --title-background-color: rgba(240, 238, 230, 0.95);
+      --text-color: #141413;
+      --title-text-color: #141413;
+      --widget-color: #e8e6dc;
+      --focus-color: #d97757;
+      --font-family: 'Jost', sans-serif;
+    }
+
+    #loading-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(250, 249, 245, 0.85);
+      color: var(--slate-light);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      z-index: 2;
+    }
+
+    .spinner {
+      width: 22px;
+      height: 22px;
+      margin-right: 10px;
+      border: 3px solid var(--ivory-dark);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .viewer-hint {
+      text-align: center;
+      color: var(--slate-light);
+      font-size: 0.9em;
+      margin-top: 14px;
+    }
+
+    #drop-hint {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2em;
+      color: var(--accent);
+      background: rgba(253, 246, 238, 0.92);
+      border: 3px dashed var(--accent);
+      border-radius: 12px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    @media (max-width: 720px) {
+      .viewer-layout {
+        flex-direction: column;
+      }
+
+      .example-sidebar {
+        flex: none;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .example-item {
+        flex: 1 1 auto;
+      }
+
+      .viewer-wrapper {
+        height: 420px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>UniMate</h1>
+    <p class="sub-hero">Large Animation Foundation Model for Arbitrary Skeletons</p>
+    <p class="coming-soon">Project page coming soon.</p>
+    <div class="affiliations">
+      <img src="assets/princeton.png" alt="Princeton University" />
+      <img src="assets/mit.png" alt="Massachusetts Institute of Technology" />
+      <img src="assets/bair.png" alt="Berkeley Artificial Intelligence Research (BAIR)" />
+    </div>
+  </header>
+
+  <!-- ===== VISUALIZATION WINDOW — temporarily disabled (under development).
+       Re-enable later by removing this opening marker and the matching closing
+       marker after the module script below. ===== -->
+  <!--
+  <section class="section">
+    <h2>Interactive Examples</h2>
+    <p class="subtitle">
+      Explore our interactive 3D animation examples. Click on any example in the
+      sidebar to view the 3D animation. Toggle the skeleton and playback from the
+      controls panel; drag to rotate, scroll to zoom.
+    </p>
+
+    <div class="viewer-layout">
+      <div class="example-sidebar" id="example-sidebar"></div>
+      <div class="viewer-wrapper" id="viewer-wrapper">
+        <div id="loading-overlay"><span class="spinner"></span>Loading…</div>
+        <div id="drop-hint">Drop .fbx / .glb / .gltf to visualize</div>
+      </div>
+    </div>
+    <p class="viewer-hint">Drag to orbit &nbsp;·&nbsp; scroll to zoom &nbsp;·&nbsp; right-drag to pan</p>
+  </section>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+
+    // --- Examples: each is one window of one or more models laid out in a row.
+    //     .glb / .gltf load via GLTFLoader, .fbx via FBXLoader. ---
+    const EXAMPLES = [
+      { label: 'Flower', files: ['glbs/flower.glb'] },
+      { label: 'Garfield', files: ['glbs/garfield.glb'] },
+      { label: 'Robot', files: ['glbs/robot.glb'] },
+      { label: 'Fish', files: ['glbs/fish.glb'] },
+      { label: 'Bird', files: ['glbs/bird.glb'] },
+      { label: 'Human', files: ['glbs/human.glb'] },
+    ];
+
+    const wrapper = document.getElementById('viewer-wrapper');
+    const overlay = document.getElementById('loading-overlay');
+    const sidebar = document.getElementById('example-sidebar');
+    const LOADING_HTML = overlay.innerHTML;
+
+    // --- Toolbar state (persists across example switches) ---
+    const settings = {
+      'show model': true,
+      'show skeleton': true,
+      'pause': false,
+      'time scale': 1.0,
+    };
+
+    // --- Scene / camera / renderer ---
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf0eee6);
+
+    const camera = new THREE.PerspectiveCamera(
+      35, wrapper.clientWidth / wrapper.clientHeight, 0.01, 5000
+    );
+    camera.position.set(0, 1.4, 4);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(wrapper.clientWidth, wrapper.clientHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    wrapper.appendChild(renderer.domElement);
+
+    // --- Lights ---
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x9a9a9a, 2.2));
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.0);
+    keyLight.position.set(4, 8, 6);
+    scene.add(keyLight);
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    fillLight.position.set(-5, 3, -4);
+    scene.add(fillLight);
+
+    // --- Controls ---
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+
+    const gltfLoader = new GLTFLoader();
+    const fbxLoader = new FBXLoader();
+    const clock = new THREE.Clock();
+
+    // The active "stage" — parallel arrays, one entry per model in the window.
+    let pivots = [];       // THREE.Group wrapping each model (for ground/normalize/layout)
+    let models = [];       // each model's root object
+    let mixers = [];       // one AnimationMixer per animated model
+    let skeletons = [];    // one THREE.SkeletonHelper per model
+    let grid = null;       // shared ground grid, sized to the whole stage
+
+    const TARGET_HEIGHT = 1.0;          // normalized height, in world units (Blender TARGET_HEIGHT)
+    const VERTS_PER_MESH = 1000;        // skinned-vertex budget per mesh per sampled frame
+    const MESH_FRAME_BUDGET = 48;       // frames sampled for the mesh bbox (height/centering)
+    const ROW_STEP_MULT = 1.25;         // horizontal spacing between models, in widths
+
+    function applyTimeScale() {
+      for (const m of mixers) m.timeScale = settings['pause'] ? 0 : settings['time scale'];
+    }
+
+    const isFbxPath = (p) => /\.fbx$/i.test(p);
+
+    // Load one model (url string or object-URL) with the right loader.
+    function loadModel(url, isFbx) {
+      return new Promise((resolve, reject) => {
+        const onLoad = (res) => resolve(
+          isFbx ? { model: res, animations: res.animations, isFbx: true }
+                : { model: res.scene, animations: res.animations, isFbx: false }
+        );
+        (isFbx ? fbxLoader : gltfLoader).load(url, onLoad, undefined, reject);
+      });
+    }
+
+    // FBX import quirks: TransparencyFactor often lands as opacity 0 on opaque
+    // materials (mesh "disappears"), and a black diffuse color multiplied with an
+    // embedded texture renders flat. Repair both, and tag maps as sRGB.
+    function fixMaterials(model, isFbx) {
+      model.traverse((o) => {
+        if (!o.isMesh) return;
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        for (const m of mats) {
+          if (!m) continue;
+          if (isFbx) {
+            if (m.opacity === 0 || (m.transparent && m.opacity < 0.05)) { m.opacity = 1; m.transparent = false; }
+            if (m.map && m.color && m.color.r === 0 && m.color.g === 0 && m.color.b === 0) m.color.setRGB(1, 1, 1);
+            m.side = THREE.DoubleSide;
+          }
+          if (m.map) m.map.colorSpace = THREE.SRGBColorSpace;
+          m.needsUpdate = true;
+        }
+      });
+    }
+
+    // Port of render_mesh_skeleton_stage.py's normalize + ground steps (note: glTF is
+    // Y-up where the Blender script is Z-up, so "ground" here is min-Y):
+    //   • normalize : scale so the MESH's tallest per-frame height == TARGET_HEIGHT (step 4)
+    //   • center    : x/z centered on the MESH bounding box over all frames (recenter, step 5)
+    //   • ground    : lowest JOINT across all frames -> y = 0 (lowest_joint_z + step 5),
+    //                 skipping armature-origin root joints (head_local.length < 1e-3 guard)
+    function groundAndNormalize(pivot, model, mixer, clip) {
+      pivot.scale.setScalar(1);
+      pivot.position.set(0, 0, 0);
+      pivot.updateMatrixWorld(true);
+
+      const bones = [];
+      const skinned = [];
+      model.traverse((o) => {
+        if (o.isBone) bones.push(o);
+        else if (o.isSkinnedMesh) skinned.push(o);
+      });
+      if (!bones.length && !skinned.length) return new THREE.Vector3(1, 1, 1);
+
+      // Real joints = drop the armature-origin root (≈ Blender's head_local.length < 1e-3).
+      const isOriginRoot = (b) => !(b.parent && b.parent.isBone) && b.position.length() < 1e-3;
+      const realJoints = bones.filter((b) => !isOriginRoot(b));
+      const joints = realJoints.length ? realJoints : bones;
+
+      const gMin = new THREE.Vector3(Infinity, Infinity, Infinity);   // mesh bbox (all frames)
+      const gMax = new THREE.Vector3(-Infinity, -Infinity, -Infinity);
+      let jointMinY = Infinity;                                       // lowest joint (all frames)
+      let maxFrameHeight = 0;                                         // tallest single-frame mesh height
+      const v = new THREE.Vector3();
+      let meshOK = skinned.length > 0 && typeof skinned[0].getVertexPosition === 'function';
+
+      const sampleJoints = () => {
+        for (const b of joints) { v.setFromMatrixPosition(b.matrixWorld); if (v.y < jointMinY) jointMinY = v.y; }
+      };
+      const sampleMesh = () => {
+        let fMinY = Infinity, fMaxY = -Infinity;
+        try {
+          for (const sm of skinned) {
+            const count = sm.geometry.attributes.position.count;
+            const st = Math.max(1, Math.floor(count / VERTS_PER_MESH));
+            for (let i = 0; i < count; i += st) {
+              sm.getVertexPosition(i, v).applyMatrix4(sm.matrixWorld);
+              gMin.min(v); gMax.max(v);
+              if (v.y < fMinY) fMinY = v.y;
+              if (v.y > fMaxY) fMaxY = v.y;
+            }
+          }
+        } catch (e) { meshOK = false; return; }
+        if (fMaxY > fMinY) maxFrameHeight = Math.max(maxFrameHeight, fMaxY - fMinY);
+      };
+
+      if (mixer && clip && clip.duration > 0) {
+        const samples = Math.min(600, Math.max(2, Math.ceil(clip.duration * 30)));
+        const meshEvery = Math.max(1, Math.floor(samples / MESH_FRAME_BUDGET));
+        for (let i = 0; i < samples; i++) {
+          mixer.setTime((i / (samples - 1)) * clip.duration);
+          pivot.updateMatrixWorld(true);
+          sampleJoints();
+          if (meshOK && (i % meshEvery === 0)) sampleMesh();
+        }
+        mixer.setTime(0);
+        pivot.updateMatrixWorld(true);
+      } else {
+        pivot.updateMatrixWorld(true);
+        sampleJoints();
+        if (meshOK) sampleMesh();
+      }
+
+      // Fallback: if the mesh couldn't be measured, normalize/center on the joints instead.
+      if (!meshOK || maxFrameHeight <= 1e-6) {
+        gMin.set(Infinity, Infinity, Infinity);
+        gMax.set(-Infinity, -Infinity, -Infinity);
+        for (const b of joints) { v.setFromMatrixPosition(b.matrixWorld); gMin.min(v); gMax.max(v); }
+        maxFrameHeight = Math.max(gMax.y - gMin.y, 1e-6);
+      }
+      if (jointMinY === Infinity) jointMinY = gMin.y;
+
+      const s = TARGET_HEIGHT / maxFrameHeight;
+      const cx = (gMin.x + gMax.x) / 2;
+      const cz = (gMin.z + gMax.z) / 2;
+      pivot.scale.setScalar(s);
+      pivot.position.set(-s * cx, -s * jointMinY, -s * cz);
+      pivot.updateMatrixWorld(true);
+
+      // Normalized footprint, used to space models out in a row.
+      return new THREE.Vector3(
+        (gMax.x - gMin.x) * s, (gMax.y - gMin.y) * s, (gMax.z - gMin.z) * s
+      );
+    }
+
+    // Frame the whole stage: fit the camera to the union of all pivots, drop a ground grid.
+    function frameStage() {
+      const box = new THREE.Box3();
+      for (const pv of pivots) box.expandByObject(pv);
+      if (box.isEmpty()) return;
+
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z) || 1;
+
+      const fov = camera.fov * (Math.PI / 180);
+      let dist = (maxDim / 2) / Math.tan(fov / 2);
+      dist *= 1.5; // padding
+
+      controls.target.copy(center);
+      camera.position.set(center.x, center.y + size.y * 0.12, center.z + dist);
+      camera.near = dist / 100;
+      camera.far = dist * 100;
+      camera.updateProjectionMatrix();
+      controls.update();
+
+      // (Re)build a ground grid sized to the stage, placed under the lowest point.
+      if (grid) { scene.remove(grid); grid.geometry.dispose(); grid.material.dispose(); }
+      const gridSize = Math.max(size.x, size.z, 1) * 1.6;
+      grid = new THREE.GridHelper(gridSize, 24, 0xcfcabb, 0xe2ddcf);
+      grid.position.set(center.x, box.min.y, center.z);
+      grid.material.transparent = true;
+      grid.material.opacity = 0.6;
+      scene.add(grid);
+    }
+
+    function disposeStage() {
+      for (const mx of mixers) mx.stopAllAction();
+      for (const sk of skeletons) { scene.remove(sk); sk.dispose?.(); }
+      for (const pv of pivots) {
+        scene.remove(pv);
+        pv.traverse((c) => {
+          if (c.isMesh) {
+            c.geometry?.dispose();
+            const mats = Array.isArray(c.material) ? c.material : [c.material];
+            mats.forEach((m) => m?.dispose());
+          }
+        });
+      }
+      pivots = []; models = []; mixers = []; skeletons = [];
+    }
+
+    let loadToken = 0; // guards against overlapping async loads
+
+    function loadExample(index) {
+      const specs = EXAMPLES[index].files.map((f) => ({ url: f, isFbx: isFbxPath(f) }));
+      return loadStage(specs, index);
+    }
+
+    // specs: [{ url, isFbx }].  activeIndex: sidebar item to highlight, or null.
+    async function loadStage(specs, activeIndex) {
+      const token = ++loadToken;
+      overlay.innerHTML = LOADING_HTML;
+      overlay.style.display = 'flex';
+      [...sidebar.children].forEach((b, i) => b.classList.toggle('active', i === activeIndex));
+
+      try {
+        const loaded = await Promise.all(specs.map((s) => loadModel(s.url, s.isFbx)));
+        if (token !== loadToken) return; // a newer click superseded this load
+
+        disposeStage();
+
+        const sizes = [];
+        for (const { model, animations, isFbx } of loaded) {
+          fixMaterials(model, isFbx);
+          model.visible = settings['show model'];
+
+          // Wrap in a pivot so we can ground + normalize without touching the model's transform.
+          const pivot = new THREE.Group();
+          pivot.add(model);
+          scene.add(pivot);
+
+          const clip = (animations && animations.length) ? animations[0] : null;
+          let mixer = null;
+          if (clip) {
+            mixer = new THREE.AnimationMixer(model);
+            mixer.clipAction(clip).play();
+            mixers.push(mixer);
+          }
+
+          // Normalize to unit mesh-height + ground the lowest joint to y = 0 (Blender port).
+          sizes.push(groundAndNormalize(pivot, model, mixer, clip) || new THREE.Vector3(1, 1, 1));
+
+          const skeleton = new THREE.SkeletonHelper(model);
+          skeleton.visible = settings['show skeleton'];
+          scene.add(skeleton);
+
+          pivots.push(pivot);
+          models.push(model);
+          skeletons.push(skeleton);
+        }
+
+        // Lay the models out in a row along X, centered on the origin.
+        const stepX = Math.max(0.5, ...sizes.map((s) => s.x)) * ROW_STEP_MULT;
+        const totalX = (pivots.length - 1) * stepX;
+        pivots.forEach((pv, i) => {
+          pv.position.x += -totalX / 2 + i * stepX;
+          pv.updateMatrixWorld(true);
+        });
+
+        applyTimeScale();
+        frameStage();
+        overlay.style.display = 'none';
+      } catch (err) {
+        if (token !== loadToken) return;
+        console.error('Failed to load stage', err);
+        overlay.textContent = 'Failed to load model.';
+      }
+    }
+
+    // Load user-supplied files (drag-drop or picker) as a new stage.
+    function loadFiles(fileList) {
+      const files = [...fileList].filter((f) => /\.(fbx|glb|gltf)$/i.test(f.name));
+      if (!files.length) return;
+      const specs = files.map((f) => ({ url: URL.createObjectURL(f), isFbx: isFbxPath(f.name) }));
+      loadStage(specs, null);
+    }
+
+    // --- Toolbar (lil-gui), pinned inside the viewer ---
+    const gui = new GUI({ container: wrapper, title: 'Controls' });
+    const fVis = gui.addFolder('Visibility');
+    fVis.add(settings, 'show model').onChange((v) => models.forEach((m) => { m.visible = v; }));
+    fVis.add(settings, 'show skeleton').onChange((v) => skeletons.forEach((s) => { s.visible = v; }));
+    const fPlay = gui.addFolder('Playback');
+    fPlay.add(settings, 'pause').onChange(applyTimeScale);
+    fPlay.add(settings, 'time scale', 0, 2, 0.01).onChange(applyTimeScale);
+    fVis.open();
+    fPlay.open();
+
+    // --- Build sidebar ---
+    EXAMPLES.forEach((ex, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'example-item';
+      btn.textContent = ex.label;
+      btn.addEventListener('click', () => loadExample(i));
+      sidebar.appendChild(btn);
+    });
+
+    // --- Drag & drop .fbx / .glb / .gltf onto the viewer ---
+    const dropHint = document.getElementById('drop-hint');
+    let dragDepth = 0;
+    const showDrop = (on) => { dropHint.style.display = on ? 'flex' : 'none'; };
+    wrapper.addEventListener('dragenter', (e) => { e.preventDefault(); if (++dragDepth === 1) showDrop(true); });
+    wrapper.addEventListener('dragover', (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+    wrapper.addEventListener('dragleave', (e) => { e.preventDefault(); if (--dragDepth <= 0) { dragDepth = 0; showDrop(false); } });
+    wrapper.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dragDepth = 0; showDrop(false);
+      loadFiles(e.dataTransfer.files);
+    });
+
+    // --- Render loop ---
+    (function animate() {
+      requestAnimationFrame(animate);
+      const dt = clock.getDelta();
+      for (const m of mixers) m.update(dt);
+      controls.update();
+      renderer.render(scene, camera);
+    })();
+
+    // --- Resize ---
+    window.addEventListener('resize', () => {
+      const w = wrapper.clientWidth, h = wrapper.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    });
+
+    // --- Initial load ---
+    loadExample(0);
+  </script>
+  -->
+  <!-- ===== end VISUALIZATION WINDOW ===== -->
+</body>
+
+</html>
