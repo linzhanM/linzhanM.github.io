@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude Code (local settings only — shared config like .claude/settings.json can be committed)
+.claude/settings.local.json
+
+# Python (local dev server)
+__pycache__/
+*.pyc
+
+# Logs / temp
+*.log
