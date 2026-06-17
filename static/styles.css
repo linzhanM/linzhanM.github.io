@@ -1,44 +1,70 @@
 /* ============================================================
-   Anthropic design tokens (extracted from anthropic.com)
-   --swatch--ivory-light:   #faf9f5  (background)
-   --swatch--slate-dark:    #141413  (primary text / links)
-   --swatch--slate-light:   #5e5d59  (secondary text)
-   --swatch--slate-medium:  #3d3d3a  (medium text)
-   --swatch--clay:          #d97757  (accent only)
-   --swatch--accent:        #c6613f  (accent hover)
-   --swatch--ivory-dark:    #e8e6dc  (borders / dividers)
-   --swatch--ivory-medium:  #f0eee6  (subtle backgrounds)
-   body:  Source Serif 4 / Georgia Pro, 18px, 400, line-height 1.5, letter-spacing 0
-   links: #E77500, no underline
-   h1:    700, 2rem, letter-spacing -0.005em
-   h2:    600, 1.5rem, letter-spacing -0.005em
+   Design tokens
+   Palette built on an ivory/slate base (extracted from anthropic.com)
+   with a single Princeton-orange accent. Edit colors here, not inline.
    ============================================================ */
+:root {
+  /* Surfaces */
+  --ivory-light:   #faf9f5;  /* page background */
+  --ivory-medium:  #f0eee6;  /* subtle hover backgrounds */
+  --ivory-dark:    #e8e6dc;  /* borders / dividers */
+  --accent-bg:     #fdf6ee;  /* tinted block (abstract) background */
+
+  /* Text */
+  --text-primary:   #141413; /* headings / primary text */
+  --text-secondary: #5e5d59; /* secondary / muted text */
+
+  /* Accent (Princeton orange) */
+  --accent:       #E77500;
+  --accent-hover: #C45F00;
+
+  /* Type — family */
+  --font-serif:   'Source Serif 4', 'Georgia Pro', Georgia, serif; /* body */
+  --font-display: 'Fraunces', 'Source Serif 4', Georgia, serif;    /* name + section headers */
+
+  /* Type — scale (root = 16px) */
+  --text-xs:   0.875rem;   /* 14px — footer / fine print */
+  --text-sm:   0.9375rem;  /* 15px — email, notes, "Show more" */
+  --text-base: 1rem;       /* 16px — publication metadata */
+  --text-lg:   1.125rem;   /* 18px — body */
+  --text-xl:   1.125rem;   /* 18px — publication titles */
+  --text-h2:   1.8rem;     /* section headers */
+  --text-h1:   2.25rem;    /* name */
+
+  /* Type — weight */
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+}
 
 /* --- Base --- */
 body {
-  font-family: 'Source Serif 4', 'Georgia Pro', Georgia, serif;
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
   font-variant-numeric: lining-nums;
-  background-color: #faf9f5;
-  color: #141413;
-  font-size: 18px;
+  background-color: var(--ivory-light);
+  color: var(--text-primary);
+  font-size: var(--text-lg);
   line-height: 1.5;
   letter-spacing: 0em;
 }
 
 /* --- Headings --- */
 h1, h2, h3, h4, h5, h6 {
-  color: #141413;
-  letter-spacing: -0.005em;
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
   line-height: 1.2;
 }
 
-h1 { font-size: 2.30rem; font-weight: 700; }
-h2 { font-size: 2.0rem; font-weight: 600; }
+h1 { font-size: var(--text-h1); font-weight: var(--weight-semibold); }
+h2 { font-size: var(--text-h2); font-weight: var(--weight-semibold); }
 
 /* --- Links --- */
 a:link,
 a:visited {
-  color: #E77500;
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -50,7 +76,7 @@ a:has(> i):hover {
 }
 
 a:hover {
-  color: #C45F00;
+  color: var(--accent-hover);
   text-decoration: none;
 }
 
@@ -61,39 +87,39 @@ a:hover {
 .button:visited,
 .navbar a:link,
 .navbar a:visited {
-  color: #141413;
+  color: var(--text-primary);
   text-decoration: none;
 }
 
 .navbar a:hover {
-  color: #E77500;
+  color: var(--accent);
   text-decoration: none;
 }
 
-/* --- Section headings (offset for fixed navbar anchor jumps) --- */
+/* --- Section headings (scroll-margin keeps anchor jumps off the top edge) --- */
 .section-h2 {
-  padding-top: 90px;
-  margin-top: -80px;
+  margin-top: 10px;
   margin-bottom: 0.1em;
+  scroll-margin-top: 1.5rem;
 }
 
 /* --- Navbar --- */
 .navbar {
-  background-color: #faf9f5;
-  border-bottom: 1px solid #e8e6dc;
+  background-color: var(--ivory-light);
+  border-bottom: 1px solid var(--ivory-dark);
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
 
 a.navbar-item:focus,
 a.navbar-item:hover {
-  background-color: #f0eee6 !important;
-  color: #E77500 !important;
+  background-color: var(--ivory-medium) !important;
+  color: var(--accent) !important;
 }
 
 /* --- Dividers --- */
 hr {
-  border-color: #e8e6dc;
+  border-color: var(--ivory-dark);
   opacity: 1;
 }
 
@@ -109,9 +135,10 @@ hr {
 }
 
 .pub-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #141413;
+  font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
   margin-bottom: 4px;
   margin-top: 4px;
   line-height: 1.4;
@@ -125,43 +152,43 @@ hr {
 }
 
 .pub-authors {
-  font-size: 16px;
-  color: #5e5d59;
+  font-size: var(--text-base);
+  color: var(--text-secondary);
   margin-bottom: 4px;
 }
 
 .pub-venue {
-  font-size: 16px;
-  color: #141413;
-  font-weight: 500;
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  font-weight: var(--weight-medium);
   margin-bottom: 20px;
 }
 
 .pub-links {
-  font-size: 16px;
+  font-size: var(--text-base);
   margin-bottom: 4px;
-  color: #5e5d59;
+  color: var(--text-secondary);
 }
 
 .pub-links a:link,
 .pub-links a:visited {
-  color: #5e5d59;
+  color: var(--text-secondary);
   text-decoration: none;
 }
 
 .pub-links a:hover {
-  color: #E77500;
+  color: var(--accent);
   text-decoration: none;
 }
 
 .pub-abstract {
   display: none;
-  font-size: 16px;
-  color: #5e5d59;
-  border-left: 3px solid #E77500;
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  border-left: 3px solid var(--accent);
   padding: 8px 12px;
   margin-top: 8px;
-  background: #fdf6ee;
+  background: var(--accent-bg);
   border-radius: 0 4px 4px 0;
   line-height: 1.5;
 }
@@ -172,6 +199,6 @@ hr {
 
 /* --- Venue highlight (Highlight / Oral badges) --- */
 .venue-highlight {
-  color: #E77500;
-  font-weight: 700;
+  color: var(--accent);
+  font-weight: var(--weight-bold);
 }

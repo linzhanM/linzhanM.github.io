@@ -13,7 +13,9 @@
 		crossorigin="anonymous">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons/css/academicons.min.css">
-	<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600,0,0;9..144,700,0,0&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="static/custom-navbar.css">
 	<link rel="stylesheet" href="static/styles.css">
 
@@ -92,30 +94,30 @@
 		<div class="row">
 			<div class="col-md-3 text-center" style="padding-right: 0; padding-top: 18px;">
 				<img class="img-responsive img-rounded" src="images/profile.jpeg" alt="Linzhan Mou"
-					style="max-height: 280px; width: auto; border: 1.5px solid #e8e6dc; border-radius: 6%; box-shadow: 0 4px 16px rgba(20, 20, 19, 0.12);">
-				<p class="mt-2 mb-0 small text-muted">Photo with <a href="https://nooraovo.github.io/">Shuning</a> in 2025.</p>
+					style="max-height: 280px; width: auto; border: 1.5px solid var(--ivory-dark); border-radius: 6%; box-shadow: 0 4px 16px rgba(20, 20, 19, 0.12);">
+				<p class="mt-2 mb-0 small" style="color: var(--text-secondary);">Photo with <a href="https://nooraovo.github.io/">Shuning</a> in 2025.</p>
 			</div>
 			<div class="col-md-9" style="padding-left: 45px; padding-right: 0;">
 				<br>
 				<h1>Linzhan Mou</h1>
-				<p style="margin-top:-5px; font-size:15px; color: #5e5d59;">linzhan [at] princeton [dot] edu</p>
+				<p style="margin-top:-5px; font-size: var(--text-sm); color: var(--text-secondary);">linzhan [at] princeton [dot] edu</p>
 				<p style="margin-top: -2px;">
 					I am a first-year CS Ph.D. student at Princeton, advised by <a href="https://www.cs.princeton.edu/~smr/">Prof. Szymon Rusinkiewicz</a>. I also collaborate closely with <a href="https://www.cs.princeton.edu/~af/">Prof.&nbsp;Adam Finkelstein</a>.
 					<br><br>
 					I work on data-driven vision, robotics and machine learning at <a href="https://pixl.engineering.princeton.edu/">Princeton ImageX Lab (PIXL)</a>. <span style="white-space: nowrap;">I am currently</span> a research intern at Meta AI working on world action models.
 					<br>
 				</p>
-				<div style="font-size: 18px; padding-top: 12px;">
-					<a target="_blank" href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&amp;hl=en" style="color:#141413">
+				<div style="font-size: var(--text-lg); padding-top: 12px;">
+					<a target="_blank" href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&amp;hl=en" style="color:var(--text-primary)">
 						<i class="ai ai-google-scholar ai-lg"></i>
 					</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
-					<a target="_blank" href="https://github.com/Friedrich-M" style="color:#141413">
+					<a target="_blank" href="https://github.com/Friedrich-M" style="color:var(--text-primary)">
 						<i class="fab fa-github fa-lg"></i>
 					</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
-					<a target="_blank" href="https://twitter.com/LinzhanMou" style="color:#141413">
+					<a target="_blank" href="https://twitter.com/LinzhanMou" style="color:var(--text-primary)">
 						<i class="fab fa-twitter fa-lg"></i>
 					</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
-					<a href="mailto:linzhan@princeton.edu" style="color:#141413">
+					<a href="mailto:linzhan@princeton.edu" style="color:var(--text-primary)">
 						<i class="fas fa-envelope fa-lg"></i>
 					</a>
 				</div>
@@ -126,14 +128,14 @@
 
 		<div class="container">
 			<h2 id="Publications" class="section-h2">Publications</h2>
-			<span style="font-size: 15px; color: #5e5d59;">(* indicates equal contribution)</span>
-			&nbsp;&nbsp;<span id="showText" onclick="toggle_vis('pub-extra')" style="font-size: 15px; cursor: pointer; color: #5e5d59;">[Show more]</span>
+			<span style="font-size: var(--text-sm); color: var(--text-secondary);">(* indicates equal contribution)</span>
+			&nbsp;&nbsp;<span id="showText" onclick="toggle_vis('pub-extra')" style="font-size: var(--text-sm); cursor: pointer; color: var(--text-secondary);">[Show more]</span>
 			<hr style="margin-top:0.4em">
 
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="UniMate video loading.." tabindex="-1"
-						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/unimate.mp4" style="background-color: black;"></video>
 				</div>
 				<div class="col-md-9">
@@ -156,7 +158,7 @@
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="DIMO video loading.." tabindex="-1"
-						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/dimo.mp4"></video>
 				</div>
 				<div class="col-md-9">
@@ -185,7 +187,7 @@
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="Let Occ Flow video loading.." tabindex="-1"
-						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/letoccflow.mp4"></video>
 				</div>
 				<div class="col-md-9">
@@ -241,7 +243,7 @@
 			<div class="pub-extra pub-row row align-items-start" style="display:none">
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="Instruct 4D-to-4D video loading.." tabindex="-1"
-						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/instruct-4d-to-4d.mp4"></video>
 				</div>
 				<div class="col-md-9">
@@ -269,7 +271,7 @@
 			<div class="pub-extra pub-row row align-items-start" style="display:none">
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="Relightable Avatar video loading.." tabindex="-1"
-						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/relightable-avatar.mp4"></video>
 				</div>
 				<div class="col-md-9">
@@ -295,13 +297,13 @@
 		</div>
 
 		<div class="container">
-			<h2 id="Publications" class="section-h2">Robotics</h2>
+			<h2 id="Robotics" class="section-h2">Robotics</h2>
 			<hr style="margin-top:0.4em">
 
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="TTT-Parkour video loading.." tabindex="-1"
-						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/ttt-parkour.mp4"></video>
 				</div>
 				<div class="col-md-9">
@@ -329,7 +331,7 @@
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="VR-Robo video loading.." tabindex="-1"
-						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/vr-robo.mp4"></video>
 				</div>
 				<div class="col-md-9">
@@ -358,7 +360,7 @@
 			<div class="pub-extra pub-row row align-items-start" style="display:none">
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="GeCO video loading.." tabindex="-1"
-						preload="auto" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="images/geco.mp4"></video>
 				</div>
 				<div class="col-md-9">
@@ -380,7 +382,7 @@
 
 		
 		<div class="container">
-			<h2 id="Experience" style="padding-top: 90px; margin-top: -80px; margin-bottom: 0.1em">Experience</h2>
+			<h2 id="Experience" class="section-h2">Experience</h2>
 			<hr style="margin-top:0.4em">
 
 			<table style="width: 100%; border-collapse: collapse;">
@@ -389,10 +391,10 @@
 						<img src="images/meta-logo.png" alt="Meta" style="height: 60px; width: auto;">
 					</td>
 					<td style="padding: 10px 0; vertical-align: top; padding-top: 18px;">
-						<div style="margin-bottom: 4px; font-size: 18px; color: #141413;">
+						<div style="margin-bottom: 4px; font-size: var(--text-lg); color: var(--text-primary);">
 							<strong>Meta AI</strong> &middot; Research Scientist Intern
 						</div>
-						<div style="font-size: 16px; color: #5e5d59;">
+						<div style="font-size: var(--text-base); color: var(--text-secondary);">
 							Summer 2026 &middot; Video World Models
 						</div>
 					</td>
@@ -411,7 +413,7 @@
 
 		<br>
 
-		<footer style="text-align: center; padding: 24px 0; font-size: 14px; color: #5e5d59; border-top: 1px solid #e8e6dc;">
+		<footer style="text-align: center; padding: 24px 0; font-size: var(--text-xs); color: var(--text-secondary); border-top: 1px solid var(--ivory-dark);">
 			<p style="margin: 0;">&copy; <span id="copyright-year"></span> Linzhan Mou</p>
 		</footer>
 
