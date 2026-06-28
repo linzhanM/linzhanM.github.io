@@ -29,7 +29,7 @@
   --spectrum: linear-gradient(90deg, var(--blue), var(--violet), var(--pink));
 
   --radius: 14px;
-  --container: 1000px;
+  --container: 1020px;
   --reading: 760px;
 
   --display: "Space Grotesk", system-ui, sans-serif;
@@ -47,6 +47,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Dark behind the page so overscroll at the top never flashes white. */
+  background: var(--space);
 }
 
 body {
@@ -170,6 +172,15 @@ body::before {
     var(--space);
   color: var(--on-space);
   overflow: hidden;
+  /* Fill the first screen so the landing view is entirely dark. */
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+}
+
+.hero > .container {
+  width: 100%;
 }
 
 .hero__inner {
@@ -177,7 +188,7 @@ body::before {
   grid-template-columns: 1.2fr 0.8fr;
   gap: 40px;
   align-items: center;
-  padding: 96px 0 88px;
+  padding: 56px 0;
 }
 
 /* Enlarge the signature visually without stealing width from the copy. */
@@ -188,14 +199,18 @@ body::before {
 
 .hero__eyebrow {
   font-family: var(--mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.22em;
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--on-space-mute);
+  color: var(--on-space);
   margin: 0 0 22px;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
+  padding: 7px 14px 7px 12px;
+  border: 1px solid var(--hairline-dark);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .hero__eyebrow .dot {
@@ -204,6 +219,15 @@ body::before {
   border-radius: 50%;
   background: var(--pink);
   box-shadow: 0 0 12px var(--pink);
+}
+
+/* The "Highlight" distinction carries the accent. */
+.hero__eyebrow-hl {
+  background: linear-gradient(90deg, var(--violet), var(--pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
 }
 
 .hero__title {
@@ -405,7 +429,7 @@ body::before {
 }
 
 /* Not enough gutter for a labelled rail — hide it. */
-@media (max-width: 1440px) {
+@media (max-width: 1460px) {
   .sidenav {
     display: none;
   }
