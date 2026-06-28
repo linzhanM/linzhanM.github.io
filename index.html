@@ -19,14 +19,6 @@
 	<link rel="stylesheet" href="static/custom-navbar.css">
 	<link rel="stylesheet" href="static/styles.css">
 
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-131374046-3"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag() { dataLayer.push(arguments); }
-		gtag('js', new Date());
-		gtag('config', 'UA-131374046-3');
-	</script>
-
 	<script type="text/javascript">
 		function toggle_vis(id, textId) {
 			var e = document.getElementsByClassName(id);
@@ -40,6 +32,14 @@
 				}
 			}
 			showText.innerHTML = hidden ? "[Show less]" : "[Show more]";
+		}
+
+		function toggle_authors(id) {
+			var full = document.getElementById(id + "-authors-more");
+			var toggle = document.getElementById(id + "-authors-toggle");
+			var hidden = full.style.display === "none";
+			full.style.display = hidden ? "inline" : "none";
+			toggle.style.display = hidden ? "none" : "inline";
 		}
 
 		function display(id) {
@@ -104,7 +104,7 @@
 				<p style="margin-top: -2px;">
 					I am a first-year CS Ph.D. student at Princeton, advised by <a href="https://www.cs.princeton.edu/~smr/">Prof. Szymon Rusinkiewicz</a>. I also collaborate closely with <a href="https://www.cs.princeton.edu/~af/">Prof.&nbsp;Adam Finkelstein</a>.
 					<br><br>
-					I work on data-driven vision, robotics and machine learning at <a href="https://pixl.engineering.princeton.edu/">Princeton ImageX Lab (PIXL)</a>. <span style="white-space: nowrap;">I am currently</span> a research intern at Meta AI working on world action models.
+					I work on data-driven vision, robotics and machine learning at <a href="https://pixl.engineering.princeton.edu/">Princeton ImageX Lab (PIXL)</a>. <span style="white-space: nowrap;">I am currently</span> a research intern at Meta working on world action models.
 					<br>
 				</p>
 				<div style="font-size: var(--text-lg); padding-top: 12px;">
@@ -140,7 +140,7 @@
 				</div>
 				<div class="col-md-9">
 					<p class="pub-title">Large Animation Foundation Model for Arbitrary Skeletons</p>
-					<p class="pub-authors"><u>Linzhan Mou</u>, et al., Adam Finkelstein, Szymon Rusinkiewicz</p>
+					<p class="pub-authors"><u>Linzhan Mou</u>, <span id="unimate-authors-more" style="display:none; cursor: pointer;" onclick="toggle_authors('unimate')" title="show less">Jiahui Lei, Zhiyang Dou, Chenyue Cai, Chaoyue Song, </span><a href="javascript:void(0)" id="unimate-authors-toggle" onclick="toggle_authors('unimate')" style="color: var(--text-secondary); text-decoration: none;" title="show all authors">&middot;&middot;&middot;,&nbsp;</a>Adam Finkelstein, Szymon Rusinkiewicz</p>
 					<p class="pub-venue">Under Review</p>
 					<p class="pub-links">
 						[<a href="javascript:void(0)" onclick="display('unimate-abs')">abs</a>]&nbsp;
@@ -244,7 +244,7 @@
 			<div class="pub-extra pub-row row align-items-start" style="display:none">
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="Instruct 4D-to-4D video loading.." tabindex="-1"
-						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
+						preload="none" loop="" muted="muted" playsinline="playsinline"
 						src="images/instruct-4d-to-4d.mp4"></video>
 				</div>
 				<div class="col-md-9">
@@ -266,46 +266,17 @@
 					</div>
 				</div>
 			</div>
-
-			<hr class="pub-extra" style="display:none">
-
-			<div class="pub-extra pub-row row align-items-start" style="display:none">
-				<div class="col-md-3">
-					<video class="pub-thumbnail img-thumbnail" title="Relightable Avatar video loading.." tabindex="-1"
-						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/relightable-avatar.mp4"></video>
-				</div>
-				<div class="col-md-9">
-					<p class="pub-title">Relightable and Animatable Neural Avatar from Sparse-View Video</p>
-					<p class="pub-authors">Zhen Xu, Sida Peng, Chen Geng, <u>Linzhan Mou</u>, Zihan Yan, Jiaming Sun, Hujun Bao, Xiaowei Zhou</p>
-					<p class="pub-venue">CVPR 2024 <b><span class="venue-highlight">(Highlight)</span></b></p>
-					<p class="pub-links">
-						[<a href="javascript:void(0)" onclick="display('relightable-abs')">abs</a>]&nbsp;
-						[<a target="_blank" href="https://arxiv.org/abs/2308.07903">arXiv</a>]&nbsp;
-						[<a target="_blank" href="https://zju3dv.github.io/relightable_avatar/">website</a>]&nbsp;
-						[<a target="_blank" href="https://github.com/zju3dv/RelightableAvatar">code</a>]&nbsp;
-						[<a target="_blank" href="https://www.youtube.com/watch?v=bZaP0PXUWdc">video</a>]&nbsp;
-						[<a target="_blank" href="https://cvpr.thecvf.com/media/PosterPDFs/CVPR%202024/31220.png?t=1717317536.4682677">poster</a>]&nbsp;
-						<a class="more-link" href="https://github.com/zju3dv/RelightableAvatar" target="_blank"><img
-								alt="GitHub stars"
-								src="https://img.shields.io/github/stars/zju3dv/RelightableAvatar?style=social"></a>
-					</p>
-					<div id="relightable-abs" class="pub-abstract">
-						<p>This paper tackles the challenge of creating relightable and animatable neural avatars from sparse-view (or even monocular) videos of dynamic humans under unknown illumination. Compared to studio environments, this setting is more practical and accessible but poses an extremely challenging ill-posed problem. Previous neural human reconstruction methods are able to reconstruct animatable avatars from sparse views using deformed Signed Distance Fields (SDF) but cannot recover material parameters for relighting. While differentiable inverse rendering-based methods have succeeded in material recovery of static objects, it is not straightforward to extend them to dynamic humans as it is computationally intensive to compute pixel-surface intersection and light visibility on deformed SDFs for inverse rendering. To solve this challenge, we propose a Hierarchical Distance Query (HDQ) algorithm to approximate the world space distances under arbitrary human poses. Specifically, we estimate coarse distances based on a parametric human model and compute fine distances by exploiting the local deformation invariance of SDF. Based on the HDQ algorithm, we leverage sphere tracing to efficiently estimate the surface intersection and light visibility. This allows us to develop the first system to recover animatable and relightable neural avatars from sparse-view (or monocular) inputs. Experiments demonstrate that our approach is able to produce superior results compared to state-of-the-art methods.</p>
-					</div>
-				</div>
-			</div>
 			-->
 		</div>
 
 		<div class="container">
-			<h2 id="Robotics" class="section-h2">Robotics</h2>
+			<h2 id="Robotics" class="section-h2">Robotics & RL</h2>
 			<hr style="margin-top:0.4em">
 
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
-					<video class="pub-thumbnail img-thumbnail" title="TTT-Parkour video loading.." tabindex="-1"
-						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
+					<video class="pub-thumbnail img-thumbnail lazy-video" title="TTT-Parkour video loading.." tabindex="-1"
+						preload="none" loop="" muted="muted" playsinline="playsinline"
 						src="images/ttt-parkour.mp4"></video>
 				</div>
 				<div class="col-md-9">
@@ -332,8 +303,8 @@
 
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
-					<video class="pub-thumbnail img-thumbnail" title="VR-Robo video loading.." tabindex="-1"
-						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
+					<video class="pub-thumbnail img-thumbnail lazy-video" title="VR-Robo video loading.." tabindex="-1"
+						preload="none" loop="" muted="muted" playsinline="playsinline"
 						src="images/vr-robo.mp4"></video>
 				</div>
 				<div class="col-md-9">
@@ -353,30 +324,6 @@
 					</p>
 					<div id="vr-abs" class="pub-abstract">
 						<p>Recent success in legged robot locomotion is attributed to the integration of reinforcement learning and physical simulators. However, these policies often encounter challenges when deployed in real-world environments due to sim-to-real gaps, as simulators typically fail to replicate visual realism and complex real-world geometry. Moreover, the lack of realistic visual rendering limits the ability of these policies to support high-level tasks requiring RGB-based perception like ego-centric navigation. This paper presents a Real-to-Sim-to-Real framework that generates photorealistic and physically interactive "digital twin" simulation environments for visual navigation and locomotion learning. Our approach leverages 3D Gaussian Splatting (3DGS) based scene reconstruction from multi-view images and integrates these environments into simulations that support ego-centric visual perception and mesh-based physical interactions. To demonstrate its effectiveness, we train a reinforcement learning policy within the simulator to perform a visual goal-tracking task. Extensive experiments show that our framework achieves RGB-only sim-to-real policy transfer. Additionally, our framework facilitates the rapid adaptation of robot policies with effective exploration capability in complex new environments, highlighting its potential for applications in households and factories.</p>
-					</div>
-				</div>
-			</div>
-
-			<hr class="pub-extra" style="display:none">
-
-			<div class="pub-extra pub-row row align-items-start" style="display:none">
-				<div class="col-md-3">
-					<video class="pub-thumbnail img-thumbnail" title="GeCO video loading.." tabindex="-1"
-						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/geco.mp4"></video>
-				</div>
-				<div class="col-md-9">
-					<p class="pub-title">GeCO: Generative Control as Optimization</p>
-					<p class="pub-authors">Zunzhe Zhang*, Runhan Huang*, Yicheng Liu, Shaoting Zhu, <u>Linzhan Mou</u>, Hang Zhao</p>
-					<p class="pub-venue">ICLR 2026 Workshop (LLA & ReALM-GEN)</p>
-					<p class="pub-links">
-						[<a href="javascript:void(0)" onclick="display('geco-abs')">abs</a>]&nbsp;
-						[<a target="_blank" href="https://arxiv.org/abs/2603.17834">arXiv</a>]&nbsp;
-						[<a target="_blank" href="https://hrh6666.github.io/GeCO/">website</a>]&nbsp;
-						[<a target="_blank" href="https://openreview.net/forum?id=BdEz1fISBu">openreview</a>]&nbsp;
-					</p>
-					<div id="geco-abs" class="pub-abstract">
-						<p>Diffusion models and flow matching have become a cornerstone of robotic imitation learning, yet they suffer from a structural inefficiency where inference is often bound to a fixed integration schedule that is agnostic to state complexity. This paradigm forces the policy to expend the same computational budget on trivial motions as it does on complex tasks. We introduce Generative Control as Optimization (GeCO), a time-unconditional framework that transforms action synthesis from trajectory integration into iterative optimization. GeCO learns a stationary velocity field in the action-sequence space where expert behaviors form stable attractors. As a result, test-time inference becomes adaptive: it can exit early for simple states while refining longer for difficult ones. The same stationary geometry also provides an intrinsic, training-free safety signal, since the field norm at the optimized action acts as a robust out-of-distribution detector. We validate GeCO on standard simulation benchmarks and demonstrate that it scales naturally to π0-series Vision-Language-Action models. As a plug-and-play replacement for standard flow-matching heads, GeCO improves both success rate and efficiency while offering an optimization-native mechanism for safer deployment.</p>
 					</div>
 				</div>
 			</div>
@@ -424,6 +371,24 @@
 			crossorigin="anonymous"></script>
 		<script src="static/burger.js"></script>
 		<script>document.getElementById("copyright-year").textContent = new Date().getFullYear();</script>
+
+		<script>
+			// Lazy-play Robotics thumbnails: only fetch + play while on screen.
+			(function () {
+				var vids = document.querySelectorAll('video.lazy-video');
+				if (!('IntersectionObserver' in window)) {
+					vids.forEach(function (v) { v.play().catch(function () {}); });
+					return;
+				}
+				var io = new IntersectionObserver(function (entries) {
+					entries.forEach(function (e) {
+						if (e.isIntersecting) { e.target.play().catch(function () {}); }
+						else { e.target.pause(); }
+					});
+				}, { rootMargin: '200px 0px' });
+				vids.forEach(function (v) { io.observe(v); });
+			})();
+		</script>
 
 		<script type="text/javascript">
 			var sc_project = 12925377;

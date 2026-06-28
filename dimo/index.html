@@ -10,293 +10,349 @@
   <meta name="keywords" content="3D Motion Generation, 4D Generation" />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Linzhan Mou" />
-  <title>DIMO</title>
+  <title>DIMO &mdash; Diverse 3D Motion Generation for Arbitrary Objects</title>
 
-  <link href="img/1.png" rel="icon" type="image/png" sizes="any" />
-  <link href="css/bootstrap-4.4.1.css" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg" />
+  <link rel="icon" type="image/png" href="img/1.png" sizes="any" />
   <link href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700;800;900&amp;display=swap"
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400;1,6..72,500&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap"
     rel="stylesheet" />
-
-  <style>
-    body {
-      font-family: 'Jost';
-      font-weight: 500;
-      font-size: 1.25em;
-    }
-
-    h1 {
-      font-size: 2.25em;
-    }
-
-    h3 {
-      font-size: 1.5em;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-weight: bolder;
-    }
-
-    b {
-      font-weight: bolder;
-    }
-
-    strong {
-      font-weight: bold;
-    }
-
-    code {
-      white-space: pre-wrap;
-    }
-
-    .col-12 > h3 {
-      padding-top: 30px;
-    }
-
-    .results-section {
-      padding-bottom: 30px;
-    }
-
-    .row.sm-gutters {
-      margin: 5px;
-    }
-
-    .row.sm-gutters > .col-md-12 {
-      padding: 5px;
-    }
-
-    .zoom-element {
-      transition: transform 0.2s ease-in-out;
-    }
-
-    .zoom-element:hover {
-      transform: scale(1.25);
-    }
-
-    video,
-    iframe {
-      border-radius: 10px;
-    }
-
-    video {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-  </style>
+  <link href="css/style.css" rel="stylesheet" />
 </head>
 
 <body>
-  <!-- Cover -->
-  <section>
-    <div class="jumbotron text-center mt-0">
-      <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <h1 style="font-weight: bold">
-              <b>
-                DIMO: <span style="color: #00A2FF">Diverse 3D Motion</span> Generation
-                <br />
-                for <span style="color: #FF8495">Arbitrary Objects</span>
-              </b>
-            </h1>
-            <h4 style="color:#5a6268; font-weight: bold;">ICCV 2025 <span style="color: #d52d43">(Highlight)</span></h4>
-            <hr />
-            <a href="https://linzhanm.github.io/" target="_blank">Linzhan Mou<sup>1</sup></a>&nbsp;
-            <a href="https://jiahuilei.com/" target="_blank">Jiahui Lei<sup>1</sup><sup>x</sup></a>&nbsp;
-            <a href="https://cwchenwang.github.io/" target="_blank">Chen Wang<sup>1</sup></a>&nbsp;
-            <a href="https://lingjie0206.github.io/" target="_blank">Lingjie Liu<sup>1</sup></a>&nbsp;
+  <!-- ===================== Side navigation ===================== -->
+  <nav class="sidenav" aria-label="Section navigation">
+    <ul>
+      <li><a href="#demo"><span class="sidenav__mark"></span><span class="sidenav__label">Demo</span></a></li>
+      <li><a href="#applications"><span class="sidenav__mark"></span><span class="sidenav__label">Applications</span></a>
+      </li>
+      <li><a href="#abstract"><span class="sidenav__mark"></span><span class="sidenav__label">Abstract</span></a></li>
+      <li><a href="#method"><span class="sidenav__mark"></span><span class="sidenav__label">Method</span></a></li>
+      <li><a href="#poster"><span class="sidenav__mark"></span><span class="sidenav__label">Poster</span></a></li>
+      <li><a href="#cite"><span class="sidenav__mark"></span><span class="sidenav__label">Cite</span></a></li>
+    </ul>
+  </nav>
+
+  <!-- ===================== Hero / latent space ===================== -->
+  <header class="hero">
+    <div class="container">
+      <div class="hero__inner">
+        <div class="hero__copy">
+          <p class="hero__eyebrow"><span class="dot"></span>ICCV 2025 &middot; Highlight</p>
+
+          <h1 class="hero__title">
+            <span class="hero__name">DIMO</span>
+            <span class="word">Diverse 3D Motion</span>
+            <span class="hero__plain">Generation for</span>
+            <span class="word">Arbitrary Objects</span>
+          </h1>
+
+          <p class="hero__lede">
+            Sample diverse 3D motions for any object &mdash; from a single image, in one forward pass.
+          </p>
+
+          <p class="hero__authors">
+            <a href="https://linzhanm.github.io/" target="_blank">Linzhan Mou<sup>1</sup></a>&nbsp;&nbsp;
+            <a href="https://jiahuilei.com/" target="_blank">Jiahui Lei<sup>1,&dagger;</sup></a>&nbsp;&nbsp;
+            <a href="https://cwchenwang.github.io/" target="_blank">Chen Wang<sup>1</sup></a>&nbsp;&nbsp;
+            <a href="https://lingjie0206.github.io/" target="_blank">Lingjie Liu<sup>1</sup></a>&nbsp;&nbsp;
             <a href="https://www.cis.upenn.edu/~kostas/" target="_blank">Kostas Daniilidis<sup>1,2</sup></a>
-            <p>
-              <sup>1</sup>University of Pennsylvania&nbsp;&nbsp;&nbsp;&nbsp;
-              <sup>2</sup>Archimedes, Athena RC&nbsp;&nbsp;&nbsp;&nbsp;
-              <br />
-              <span style="color: #5a6268;"><sup>x</sup>Corresponding Author</span>
-            </p>
-            <div class="row justify-content-center">
-              <div class="column">
-                <p class="mb-5">
-                  <a class="btn btn-large btn-light" href="assets/DIMO.pdf" role="button" target="_blank">
-                    <i class="fa fa-file-pdf-o"></i>
-                    <b>Paper</b>
-                  </a>
-                </p>
-              </div>
-              <div class="column">
-                <p class="mb-5">
-                  <a class="btn btn-large btn-light" href="https://arxiv.org/pdf/2511.07409" role="button"
-                    target="_blank">
-                    <i class="ai ai-arxiv"></i>
-                    <b>arXiv</b>
-                  </a>
-                </p>
-              </div>
-              <div class="column">
-                <p class="mb-5">
-                  <a class="btn btn-large btn-light"
-                    href="https://iccv.thecvf.com/media/PosterPDFs/ICCV%202025/1183.png?t=1755853954.3028586"
-                    role="button" target="_blank">
-                    <i class="ai ai-arxiv"></i>
-                    <b>Poster</b>
-                  </a>
-                </p>
-              </div>
-              <div class="column">
-                <p class="mb-5">
-                  <a class="btn btn-large btn-light" href="https://youtu.be/CY2jTIpEN-I?si=HY_yQnwXyZh12dSF"
-                    role="button" target="_blank">
-                    <i class="fa fa-youtube-play"></i>
-                    <b>YouTube</b>
-                  </a>
-                </p>
-              </div>
-              <div class="column">
-                <p class="mb-5">
-                  <a class="btn btn-large btn-light" href="https://github.com/Friedrich-M/DIMO" role="button"
-                    target="_blank">
-                    <i class="fa fa-github"></i>
-                    <b>Code</b>
-                  </a>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Overview video -->
-  <section class="results-section">
-    <div class="container">
-      <div class="row sm-gutters">
-        <div class="col-md-12 zoom-element">
-          <div class="embed-responsive embed-responsive-16by9">
-            <iframe src="https://www.youtube.com/embed/CY2jTIpEN-I?si=gsUZK0E5-Yrt2Kn0" title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Applications -->
-  <section>
-    <div class="container">
-      <div class="row justify-content-center text-center">
-        <div class="col-md-12">
-          <b style="color: #8899a5">Applications with learned motion latent space.</b>
-        </div>
-      </div>
-      <div class="row sm-gutters">
-        <div class="col-md-12 zoom-element">
-          <video autoplay loop muted playsinline controls poster="img/spinner.svg">
-            <source src="img/interpolation.mp4" type="video/mp4" />
-          </video>
-        </div>
-      </div>
-      <div class="row sm-gutters">
-        <div class="col-md-12 zoom-element">
-          <video autoplay loop muted playsinline controls poster="img/spinner.svg">
-            <source src="img/language.mp4" type="video/mp4" />
-          </video>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Abstract -->
-  <section>
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h3>Abstract</h3>
-          <hr style="margin-top: 0px" />
-          <img src="img/teaser.png" width="100%" alt="DIMO teaser" />
-          <div style="height: 0.3em;"></div>
-          <p style="text-align: justify; text-justify: inter-word;">
-            We present DIMO, a generative approach capable of generating <b>diverse 3D motions for arbitrary objects</b>
-            from a single image. The core idea of our work is to leverage the rich priors in well-trained video models
-            to extract the common motion patterns and then embed them into a shared low-dimensional latent space.
-            Specifically, we first generate multiple videos of the same object with diverse motions. We then embed each
-            motion into a latent vector and train a shared motion decoder to learn the distribution of motions
-            represented by a structured and compact motion representation, i.e., neural key point trajectories. The
-            canonical 3D Gaussians are then driven by these key points and fused to model the geometry and appearance.
-            During inference time with learned latent space, we can <b>instantly sample diverse 3D motions in a
-              single-forward pass</b> and support interesting applications including 3D motion interpolation and
-            language-guided motion generation.
           </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Method -->
-  <section>
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h3>Method</h3>
-          <hr style="margin-top: 0px" />
-          <img src="img/pipeline.png" width="100%" alt="DIMO pipeline" />
-          <div style="height: 0.5em;"></div>
-          <p style="text-align: justify; text-justify: inter-word;">
-            Given a single-view image of any general object, DIMO first <b>distills rich motion priors</b> from video
-            models. We then represent each motion as structured neural key point trajectories. During training, we embed
-            each motion sequence into a latent code in motion latent space and <b>jointly model diverse motion
-              patterns</b> using a shared motion decoder. The decoded key point transformations are used to drive
-            canonical 3DGS for 4D optimization with only photometric losses.
+          <p class="hero__affil">
+            <sup>1</sup>University of Pennsylvania &nbsp;&middot;&nbsp;
+            <sup>2</sup>Archimedes, Athena RC
+            <br />
+            <span class="nowrap"><sup>&dagger;</sup>Corresponding Author</span>
           </p>
+
+          <nav class="links">
+            <a class="btn" href="https://arxiv.org/pdf/2511.07409" target="_blank">
+              <i class="ai ai-arxiv"></i> arXiv
+            </a>
+            <a class="btn" href="https://iccv.thecvf.com/media/PosterPDFs/ICCV%202025/1183.png?t=1755853954.3028586"
+              target="_blank">
+              <i class="fa fa-id-card-o"></i> Poster
+            </a>
+            <a class="btn" href="https://youtu.be/CY2jTIpEN-I?si=HY_yQnwXyZh12dSF" target="_blank">
+              <i class="fa fa-youtube-play"></i> YouTube
+            </a>
+            <a class="btn" href="https://github.com/Friedrich-M/DIMO" target="_blank">
+              <i class="fa fa-github"></i> Code
+            </a>
+          </nav>
         </div>
+
+        <!-- Signature: one input image, diverse keypoint trajectories
+             fanning across the blue -> violet -> pink latent spectrum. -->
+        <div class="hero__figure">
+          <svg class="field" viewBox="0 0 560 470" role="img"
+            aria-label="A single input fans out into diverse skeletal motions across a color spectrum.">
+            <!-- trajectories: one input, sampled toward diverse motions -->
+            <path class="traj" d="M70,235 C 195,165 320,95 448,72" stroke="#3B82F6" />
+            <path class="traj" d="M70,235 C 200,210 330,162 448,150" stroke="#5B7BF2" />
+            <path class="traj" d="M70,235 C 205,233 330,234 448,235" stroke="#8B5CF6" />
+            <path class="traj" d="M70,235 C 200,262 330,305 448,320" stroke="#C162BE" />
+            <path class="traj" d="M70,235 C 195,308 320,378 448,400" stroke="#FF5C8A" />
+
+            <!-- origin: the single input image -->
+            <rect class="origin" x="55" y="220" width="30" height="30" rx="7" />
+            <circle class="origin-core" cx="70" cy="235" r="3.4" />
+            <text class="field-label" x="70" y="282" text-anchor="middle">single image</text>
+            <text class="field-label" x="470" y="455" text-anchor="middle">diverse motions</text>
+
+            <!-- traveling samples (CSS/SMIL); hidden under reduced-motion -->
+            <g style="color:#3B82F6">
+              <circle class="kp kp--trail" r="5" fill="#3B82F6">
+                <animateMotion dur="5.6s" repeatCount="indefinite" begin="-0.5s"
+                  path="M70,235 C 195,165 320,95 448,72" />
+              </circle>
+              <circle class="kp kp--lead" r="4">
+                <animateMotion dur="5.6s" repeatCount="indefinite" path="M70,235 C 195,165 320,95 448,72" />
+              </circle>
+            </g>
+            <g style="color:#5B7BF2">
+              <circle class="kp kp--trail" r="5" fill="#5B7BF2">
+                <animateMotion dur="6.4s" repeatCount="indefinite" begin="-1.4s"
+                  path="M70,235 C 200,210 330,162 448,150" />
+              </circle>
+              <circle class="kp kp--lead" r="4">
+                <animateMotion dur="6.4s" repeatCount="indefinite" begin="-0.9s"
+                  path="M70,235 C 200,210 330,162 448,150" />
+              </circle>
+            </g>
+            <g style="color:#8B5CF6">
+              <circle class="kp kp--trail" r="5" fill="#8B5CF6">
+                <animateMotion dur="6.6s" repeatCount="indefinite" begin="-2.1s"
+                  path="M70,235 C 205,233 330,234 448,235" />
+              </circle>
+              <circle class="kp kp--lead" r="4">
+                <animateMotion dur="6.6s" repeatCount="indefinite" begin="-1.6s"
+                  path="M70,235 C 205,233 330,234 448,235" />
+              </circle>
+            </g>
+            <g style="color:#C162BE">
+              <circle class="kp kp--trail" r="5" fill="#C162BE">
+                <animateMotion dur="7.2s" repeatCount="indefinite" begin="-3.0s"
+                  path="M70,235 C 200,262 330,305 448,320" />
+              </circle>
+              <circle class="kp kp--lead" r="4">
+                <animateMotion dur="7.2s" repeatCount="indefinite" begin="-2.5s"
+                  path="M70,235 C 200,262 330,305 448,320" />
+              </circle>
+            </g>
+            <g style="color:#FF5C8A">
+              <circle class="kp kp--trail" r="5" fill="#FF5C8A">
+                <animateMotion dur="6.0s" repeatCount="indefinite" begin="-3.6s"
+                  path="M70,235 C 195,308 320,378 448,400" />
+              </circle>
+              <circle class="kp kp--lead" r="4">
+                <animateMotion dur="6.0s" repeatCount="indefinite" begin="-3.1s"
+                  path="M70,235 C 195,308 320,378 448,400" />
+              </circle>
+            </g>
+
+            <!-- diverse skeletal motions at the trajectory ends -->
+            <!-- S1: waving, center (470,72) -->
+            <g class="skel" style="color:#3B82F6">
+              <circle class="skel-head" cx="470" cy="46" r="5" />
+              <line class="bone" x1="470" y1="51" x2="470" y2="75" />
+              <line class="bone" x1="470" y1="54" x2="458" y2="66" />
+              <circle class="joint" cx="458" cy="66" r="2.2" />
+              <g class="limb wave" style="transform-origin:470px 54px">
+                <line class="bone" x1="470" y1="54" x2="486" y2="40" />
+                <circle class="joint" cx="486" cy="40" r="2.4" />
+              </g>
+              <line class="bone" x1="470" y1="75" x2="463" y2="102" />
+              <line class="bone" x1="470" y1="75" x2="477" y2="102" />
+              <circle class="joint" cx="463" cy="102" r="2.2" />
+              <circle class="joint" cx="477" cy="102" r="2.2" />
+            </g>
+            <!-- S2: walking, center (470,150) -->
+            <g class="skel" style="color:#5B7BF2">
+              <circle class="skel-head" cx="470" cy="124" r="5" />
+              <line class="bone" x1="470" y1="129" x2="470" y2="153" />
+              <g class="limb swingA" style="transform-origin:470px 132px">
+                <line class="bone" x1="470" y1="132" x2="459" y2="145" />
+                <circle class="joint" cx="459" cy="145" r="2.2" />
+              </g>
+              <g class="limb swingB" style="transform-origin:470px 132px">
+                <line class="bone" x1="470" y1="132" x2="481" y2="145" />
+                <circle class="joint" cx="481" cy="145" r="2.2" />
+              </g>
+              <g class="limb legB" style="transform-origin:470px 153px">
+                <line class="bone" x1="470" y1="153" x2="463" y2="180" />
+                <circle class="joint" cx="463" cy="180" r="2.2" />
+              </g>
+              <g class="limb legA" style="transform-origin:470px 153px">
+                <line class="bone" x1="470" y1="153" x2="477" y2="180" />
+                <circle class="joint" cx="477" cy="180" r="2.2" />
+              </g>
+            </g>
+            <!-- S3: kicking, center (470,235) -->
+            <g class="skel" style="color:#8B5CF6">
+              <circle class="skel-head" cx="470" cy="209" r="5" />
+              <line class="bone" x1="470" y1="214" x2="470" y2="238" />
+              <line class="bone" x1="470" y1="217" x2="460" y2="231" />
+              <circle class="joint" cx="460" cy="231" r="2.2" />
+              <line class="bone" x1="470" y1="217" x2="481" y2="229" />
+              <circle class="joint" cx="481" cy="229" r="2.2" />
+              <line class="bone" x1="470" y1="238" x2="466" y2="266" />
+              <circle class="joint" cx="466" cy="266" r="2.2" />
+              <g class="limb kick" style="transform-origin:470px 238px">
+                <line class="bone" x1="470" y1="238" x2="478" y2="266" />
+                <circle class="joint" cx="478" cy="266" r="2.2" />
+              </g>
+            </g>
+            <!-- S4: jumping, center (470,320) -->
+            <g class="skel jump" style="color:#C162BE">
+              <circle class="skel-head" cx="470" cy="294" r="5" />
+              <line class="bone" x1="470" y1="299" x2="470" y2="323" />
+              <line class="bone" x1="470" y1="302" x2="458" y2="290" />
+              <circle class="joint" cx="458" cy="290" r="2.2" />
+              <line class="bone" x1="470" y1="302" x2="482" y2="290" />
+              <circle class="joint" cx="482" cy="290" r="2.2" />
+              <line class="bone" x1="470" y1="323" x2="462" y2="346" />
+              <circle class="joint" cx="462" cy="346" r="2.2" />
+              <line class="bone" x1="470" y1="323" x2="478" y2="346" />
+              <circle class="joint" cx="478" cy="346" r="2.2" />
+            </g>
+            <!-- S5: turning, center (470,400) -->
+            <g class="skel turn" style="color:#FF5C8A; transform-origin:470px 400px">
+              <circle class="skel-head" cx="470" cy="374" r="5" />
+              <line class="bone" x1="470" y1="379" x2="470" y2="403" />
+              <line class="bone" x1="470" y1="382" x2="458" y2="394" />
+              <circle class="joint" cx="458" cy="394" r="2.2" />
+              <line class="bone" x1="470" y1="382" x2="482" y2="394" />
+              <circle class="joint" cx="482" cy="394" r="2.2" />
+              <line class="bone" x1="470" y1="403" x2="463" y2="430" />
+              <circle class="joint" cx="463" cy="430" r="2.2" />
+              <line class="bone" x1="470" y1="403" x2="477" y2="430" />
+              <circle class="joint" cx="477" cy="430" r="2.2" />
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== Demo video ===================== -->
+  <section class="section" id="demo">
+    <div class="container">
+      <p class="kicker">Demo Video</p>
+      <h2 class="section-title">Watch the video</h2>
+      <div class="media media--embed">
+        <iframe src="https://www.youtube.com/embed/CY2jTIpEN-I?si=gsUZK0E5-Yrt2Kn0" title="DIMO overview video"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       </div>
     </div>
   </section>
 
-  <!-- Poster -->
-  <section>
+  <!-- ===================== Applications ===================== -->
+  <section class="section section--alt" id="applications">
     <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h3>Poster</h3>
-          <hr style="margin-top: 0px" />
-          <img src="https://iccv.thecvf.com/media/PosterPDFs/ICCV%202025/1183.png?t=1755853954.3028586" width="100%"
-            alt="DIMO poster" />
-          <div style="height: 0.3em;"></div>
-        </div>
+      <p class="kicker">Applications</p>
+      <h2 class="section-title">A learned motion latent space</h2>
+      <div class="media">
+        <video autoplay loop muted playsinline controls poster="img/spinner.svg">
+          <source src="img/interpolation.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <p class="caption">3D motion interpolation between sampled latent codes.</p>
+      <div class="media">
+        <video autoplay loop muted playsinline controls poster="img/spinner.svg">
+          <source src="img/language.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <p class="caption">Language-guided motion generation.</p>
+    </div>
+  </section>
+
+  <!-- ===================== Abstract ===================== -->
+  <section class="section" id="abstract">
+    <div class="container">
+      <p class="kicker">Abstract</p>
+      <h2 class="section-title">Diverse motion from a single image</h2>
+      <div class="figure media">
+        <img src="img/teaser.png" alt="DIMO teaser: diverse 3D motions generated for arbitrary objects" />
+      </div>
+      <div class="prose">
+        <p>
+          We present DIMO, a generative approach capable of generating <b>diverse 3D motions for arbitrary objects</b>
+          from a single image. The core idea of our work is to leverage the rich priors in well-trained video models
+          to extract the common motion patterns and then embed them into a shared low-dimensional latent space.
+          Specifically, we first generate multiple videos of the same object with diverse motions. We then embed each
+          motion into a latent vector and train a shared motion decoder to learn the distribution of motions
+          represented by a structured and compact motion representation, i.e., neural key point trajectories. The
+          canonical 3D Gaussians are then driven by these key points and fused to model the geometry and appearance.
+          During inference time with learned latent space, we can <b>instantly sample diverse 3D motions in a
+            single-forward pass</b> and support interesting applications including 3D motion interpolation and
+          language-guided motion generation.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- Citation -->
-  <section>
+  <!-- ===================== Method ===================== -->
+  <section class="section section--alt" id="method">
     <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <br />
-          <br />
-          <h3>Citation</h3>
-          <hr style="margin-top: 0px" />
-          <pre
-            style="background-color: #e9eeef; padding: 1.5em 1.5em; border-radius: 20px; font-size: 0.75em;"><code>@inproceedings{mou2025dimo,
-  title={DIMO: Diverse 3D Motion Generation for Arbitrary Objects},
-  author={Mou, Linzhan and Lei, Jiahui and Wang, Chen and Liu, Lingjie and Daniilidis, Kostas},
-  booktitle={Proceedings of the IEEE/CVF International Conference on Computer Vision},
-  pages={14357--14368},
-  year={2025}
+      <p class="kicker">Method &middot; Pipeline</p>
+      <h2 class="section-title">Distill, embed, drive</h2>
+      <div class="figure media">
+        <img src="img/pipeline.png" alt="DIMO pipeline overview" />
+      </div>
+      <div class="prose">
+        <p>
+          Given a single-view image of any general object, DIMO first <b>distills rich motion priors</b> from video
+          models. We then represent each motion as structured neural key point trajectories. During training, we embed
+          each motion sequence into a latent code in motion latent space and <b>jointly model diverse motion
+            patterns</b> using a shared motion decoder. The decoded key point transformations are used to drive
+          canonical 3DGS for 4D optimization with only photometric losses.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Poster ===================== -->
+  <section class="section" id="poster">
+    <div class="container">
+      <p class="kicker">Poster</p>
+      <h2 class="section-title">ICCV 2025</h2>
+      <div class="figure media">
+        <img src="https://iccv.thecvf.com/media/PosterPDFs/ICCV%202025/1183.png?t=1755853954.3028586"
+          alt="DIMO ICCV 2025 poster" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Citation ===================== -->
+  <section class="section section--alt" id="cite">
+    <div class="container">
+      <p class="kicker">Cite</p>
+      <h2 class="section-title">BibTeX</h2>
+      <pre class="cite"><code>@inproceedings{mou2025dimo,
+  title     = {DIMO: Diverse 3D Motion Generation for Arbitrary Objects},
+  author    = {Mou, Linzhan and Lei, Jiahui and Wang, Chen and Liu, Lingjie and Daniilidis, Kostas},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision},
+  pages     = {14357--14368},
+  year      = {2025}
 }</code></pre>
-          <hr />
-        </div>
-      </div>
     </div>
   </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>DIMO &middot; ICCV 2025 Highlight &middot; University of Pennsylvania</p>
+    </div>
+  </footer>
+
+  <!-- Side-nav: reveal past the hero + highlight the section in view. -->
+  <script src="js/nav.js"></script>
 </body>
 
 </html>

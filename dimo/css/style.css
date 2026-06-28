@@ -1,0 +1,730 @@
+/* ============================================================
+   DIMO — Diverse 3D Motion Generation for Arbitrary Objects
+   Concept: one input → diverse trajectories sampled from a
+   continuous motion latent space (blue → violet → pink).
+   Dark "latent space" hero, light "paper" body. No JS.
+   ============================================================ */
+
+/* ---------- Design tokens ---------- */
+:root {
+  /* Dark hero */
+  --space: #0B0E14;
+  --space-2: #11151F;
+  --on-space: #F4F6FA;
+  --on-space-mute: #9AA3B2;
+  --hairline-dark: rgba(255, 255, 255, 0.12);
+
+  /* Light body */
+  --paper: #FFFFFF;
+  --paper-2: #F5F6F8;
+  --ink: #0E1320;
+  --ink-soft: #39414F;
+  --mute: #6B7280;
+  --line: #E6E8EC;
+
+  /* Latent-space spectrum */
+  --blue: #3B82F6;
+  --violet: #8B5CF6;
+  --pink: #FF5C8A;
+  --spectrum: linear-gradient(90deg, var(--blue), var(--violet), var(--pink));
+
+  --radius: 14px;
+  --container: 1000px;
+  --reading: 760px;
+
+  --display: "Space Grotesk", system-ui, sans-serif;
+  --body: "Inter", system-ui, sans-serif;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --mono: "Space Mono", ui-monospace, monospace;
+}
+
+/* ---------- Reset / base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--violet);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+::selection {
+  background: rgba(139, 92, 246, 0.22);
+}
+
+:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Spectrum hairline framing the very top of the page. */
+body::before {
+  content: "";
+  display: block;
+  height: 3px;
+  background: var(--spectrum);
+}
+
+/* ---------- Layout ---------- */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section {
+  padding: 52px 0;
+}
+
+/* Alternating tint separates sections; no border needed between them. */
+.section--alt {
+  background: var(--paper-2);
+}
+
+.prose {
+  max-width: 100%;
+}
+
+.prose p {
+  font-family: var(--serif);
+  font-size: 1.18rem;
+  line-height: 1.72;
+  color: #2B3340;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+.prose b,
+.prose strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ---------- Section headings ---------- */
+.kicker {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mute);
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kicker::before {
+  content: "";
+  width: 22px;
+  height: 2px;
+  background: var(--spectrum);
+}
+
+.section-title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.6rem, 3.2vw, 2.15rem);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin: 0 0 24px;
+}
+
+/* ============================================================
+   Hero — the latent space
+   ============================================================ */
+.hero {
+  background:
+    radial-gradient(900px 520px at 78% 12%, rgba(139, 92, 246, 0.22), transparent 60%),
+    radial-gradient(700px 480px at 96% 90%, rgba(255, 92, 138, 0.16), transparent 60%),
+    radial-gradient(700px 520px at 4% 20%, rgba(59, 130, 246, 0.16), transparent 60%),
+    var(--space);
+  color: var(--on-space);
+  overflow: hidden;
+}
+
+.hero__inner {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  align-items: center;
+  padding: 96px 0 88px;
+}
+
+/* Enlarge the signature visually without stealing width from the copy. */
+.hero__figure {
+  transform: scale(1.12);
+  transform-origin: center;
+}
+
+.hero__eyebrow {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--on-space-mute);
+  margin: 0 0 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero__eyebrow .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--pink);
+  box-shadow: 0 0 12px var(--pink);
+}
+
+.hero__title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(2.3rem, 4.4vw, 3.45rem);
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  margin: 0 0 22px;
+}
+
+/* Each phrase sits on its own line so wrapping never orphans a word. */
+.hero__title .hero__name,
+.hero__title .hero__plain,
+.hero__title .word {
+  display: block;
+}
+
+/* The project name anchors the hero as a wordmark. */
+.hero__title .hero__name {
+  font-size: 1.5em;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  margin-bottom: 0.18em;
+}
+
+/* The descriptive phrases read as a subordinate subtitle. */
+.hero__title .hero__plain,
+.hero__title .word {
+  font-size: 0.82em;
+  line-height: 1.1;
+}
+
+.hero__title .word {
+  background: var(--spectrum);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  width: fit-content;
+}
+
+/* Editorial deck: the serif reading voice introduced up front. */
+.hero__lede {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.2rem, 1.9vw, 1.5rem);
+  line-height: 1.45;
+  color: var(--on-space);
+  max-width: 34rem;
+  margin: 0 0 30px;
+  text-wrap: pretty;
+}
+
+.hero__authors {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: var(--on-space);
+  margin: 0 0 6px;
+}
+
+.hero__authors a {
+  color: var(--on-space);
+  border-bottom: 1px solid var(--hairline-dark);
+  text-decoration: none;
+  transition: border-color 0.18s ease;
+}
+
+.hero__authors a:hover {
+  border-color: var(--pink);
+}
+
+.hero__affil {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--on-space-mute);
+  line-height: 1.7;
+  margin: 0 0 30px;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+/* ============================================================
+   Side navigation — a vertical "trajectory" of section nodes
+   sitting in the left gutter. Right-anchored so the labels
+   always show yet stop with a clear gap before the content.
+   ============================================================ */
+.sidenav {
+  position: fixed;
+  top: 50%;
+  /* Right edge sits this far to the left of the content column. */
+  left: calc((100vw - var(--container)) / 2 - 72px);
+  transform: translate(-100%, -50%);
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.sidenav.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sidenav ul {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+/* The trajectory line linking the nodes. */
+.sidenav ul::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 17px;
+  bottom: 17px;
+  width: 2px;
+  background: var(--line);
+  border-radius: 2px;
+}
+
+/* Spectrum progress fill — a sample travelling down the trajectory
+   as far as the section currently in view (height set in nav.js). */
+.sidenav ul::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 17px;
+  width: 2px;
+  height: var(--nav-progress, 0px);
+  background: linear-gradient(180deg, var(--blue), var(--violet), var(--pink));
+  border-radius: 2px;
+  transition: height 0.3s ease;
+}
+
+.sidenav a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 4px 0;
+  text-decoration: none;
+}
+
+.sidenav a:hover {
+  text-decoration: none;
+}
+
+/* Section node sitting on the track. */
+.sidenav__mark {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--line);
+  box-shadow: 0 0 0 5px var(--paper);
+  transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+}
+
+.sidenav__label {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--mute);
+  white-space: nowrap;
+  transition: color 0.22s ease;
+}
+
+.sidenav a:hover .sidenav__label,
+.sidenav a:focus-visible .sidenav__label {
+  color: var(--ink);
+}
+
+.sidenav a:hover .sidenav__mark,
+.sidenav a:focus-visible .sidenav__mark {
+  border-color: var(--violet);
+}
+
+/* Active section: a glowing keypoint on the trajectory. */
+.sidenav a.is-active .sidenav__label {
+  color: var(--ink);
+}
+
+.sidenav a.is-active .sidenav__mark {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--blue), var(--pink));
+  box-shadow: 0 0 0 5px var(--paper), 0 0 12px rgba(139, 92, 246, 0.45);
+  transform: scale(1.18);
+}
+
+/* Not enough gutter for a labelled rail — hide it. */
+@media (max-width: 1440px) {
+  .sidenav {
+    display: none;
+  }
+}
+
+/* ---------- Links / buttons ---------- */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 20px;
+  border-radius: 999px;
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid var(--hairline-dark);
+  color: var(--on-space);
+  background: rgba(255, 255, 255, 0.04);
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+}
+
+.btn:hover {
+  text-decoration: none;
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.btn i {
+  font-size: 1.05em;
+}
+
+/* ============================================================
+   Signature — keypoint trajectory field
+   ============================================================ */
+.field {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.field .traj {
+  fill: none;
+  stroke-width: 1.6;
+  opacity: 0.55;
+  stroke-linecap: round;
+}
+
+.field .origin {
+  fill: none;
+  stroke: var(--on-space);
+  stroke-width: 1.8;
+  opacity: 0.85;
+}
+
+.field .origin-core {
+  fill: var(--on-space);
+}
+
+.field .field-label {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  fill: #AEB6C4;
+  text-transform: uppercase;
+}
+
+.field .kp {
+  filter: drop-shadow(0 0 6px currentColor);
+}
+
+.field .kp--lead {
+  fill: var(--on-space);
+}
+
+.field .kp--trail {
+  opacity: 0.35;
+}
+
+/* Skeletal "diverse motions" at the trajectory ends. */
+.field .bone {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+
+.field .skel-head {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+
+.field .joint {
+  fill: var(--on-space);
+}
+
+/* Pivot rotations resolve against viewBox coordinates. */
+.field .limb {
+  transform-box: view-box;
+}
+
+.field .skel.jump {
+  transform-box: view-box;
+  animation: skel-jump 1.15s ease-in-out infinite;
+}
+
+.field .skel.turn {
+  transform-box: view-box;
+  animation: skel-turn 3s ease-in-out infinite;
+}
+
+.field .kick {
+  animation: skel-kick 1.3s cubic-bezier(0.5, 0, 0.3, 1) infinite;
+}
+
+.field .wave {
+  animation: skel-wave 1.5s ease-in-out infinite;
+}
+
+.field .swingA {
+  animation: skel-swing 1s ease-in-out infinite;
+}
+
+.field .swingB {
+  animation: skel-swing 1s ease-in-out infinite reverse;
+}
+
+.field .legA {
+  animation: skel-leg 1s ease-in-out infinite;
+}
+
+.field .legB {
+  animation: skel-leg 1s ease-in-out infinite reverse;
+}
+
+@keyframes skel-wave {
+  0%, 100% { transform: rotate(6deg); }
+  50% { transform: rotate(-16deg); }
+}
+
+@keyframes skel-swing {
+  0%, 100% { transform: rotate(24deg); }
+  50% { transform: rotate(-24deg); }
+}
+
+@keyframes skel-leg {
+  0%, 100% { transform: rotate(-16deg); }
+  50% { transform: rotate(16deg); }
+}
+
+@keyframes skel-jump {
+  0%, 100% { transform: translateY(0); }
+  35% { transform: translateY(-8px); }
+  65% { transform: translateY(-2px); }
+}
+
+@keyframes skel-kick {
+  0%, 100% { transform: rotate(8deg); }
+  45% { transform: rotate(-64deg); }
+  60% { transform: rotate(-58deg); }
+}
+
+/* Flip across the vertical axis reads as the figure turning around. */
+@keyframes skel-turn {
+  0%, 12% { transform: scaleX(1); }
+  50%, 62% { transform: scaleX(-1); }
+  100% { transform: scaleX(1); }
+}
+
+/* ============================================================
+   Media (videos, figures)
+   ============================================================ */
+.media {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(14, 19, 32, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.media:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(14, 19, 32, 0.12);
+}
+
+.media + .media {
+  margin-top: 20px;
+}
+
+.media video,
+.media img {
+  width: 100%;
+  display: block;
+}
+
+.media--embed {
+  aspect-ratio: 16 / 9;
+}
+
+.media--embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.caption {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--mute);
+  margin: 18px 0 0;
+}
+
+.figure {
+  margin: 0 0 22px;
+}
+
+/* ============================================================
+   Citation
+   ============================================================ */
+.cite {
+  margin: 0;
+  background: var(--space);
+  color: var(--on-space);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  overflow-x: auto;
+  border: 1px solid var(--hairline-dark);
+}
+
+.cite code {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  line-height: 1.7;
+  white-space: pre;
+  color: var(--on-space);
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  padding: 36px 0 56px;
+  border-top: 1px solid var(--line);
+}
+
+.footer p {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--mute);
+  margin: 0;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 860px) {
+  .hero__inner {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 72px 0 64px;
+  }
+
+  .hero__figure {
+    order: 2;
+    max-width: 520px;
+    transform: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .links {
+    gap: 9px;
+  }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+}
+
+/* ============================================================
+   Reduced motion — keep the static trajectory composition,
+   drop the traveling keypoints.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .field .kp {
+    display: none;
+  }
+
+  .field .skel,
+  .field .limb {
+    animation: none !important;
+  }
+
+  .media,
+  .btn,
+  .sidenav__mark,
+  .sidenav__label {
+    transition: none;
+  }
+
+  .sidenav ul::after {
+    transition: none;
+  }
+}
