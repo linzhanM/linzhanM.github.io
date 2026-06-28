@@ -320,7 +320,7 @@ body::before {
   position: fixed;
   top: 50%;
   /* Right edge sits this far to the left of the content column. */
-  left: calc((100vw - var(--container)) / 2 - 72px);
+  left: calc((100vw - var(--container)) / 2 - 88px);
   transform: translate(-100%, -50%);
   z-index: 50;
   opacity: 0;
@@ -429,7 +429,7 @@ body::before {
 }
 
 /* Not enough gutter for a labelled rail — hide it. */
-@media (max-width: 1460px) {
+@media (max-width: 1480px) {
   .sidenav {
     display: none;
   }
