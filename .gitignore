@@ -1,9 +1,14 @@
 # macOS
 .DS_Store
+.DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
 .fseventsd
+
+# Windows
+Thumbs.db
+Desktop.ini
 
 # Editors
 .vscode/
