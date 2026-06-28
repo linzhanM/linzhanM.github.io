@@ -53,7 +53,7 @@
           </h1>
 
           <p class="hero__lede">
-            Sample diverse 3D motions for any object &mdash; from a single image, in one forward pass.
+            Distill video priors into a motion latent space, then sample diverse 3D motions &mdash; in one forward pass.
           </p>
 
           <p class="hero__authors">
@@ -87,152 +87,212 @@
           </nav>
         </div>
 
-        <!-- Signature: one input image, diverse keypoint trajectories
-             fanning across the blue -> violet -> pink latent spectrum. -->
+        <!-- Signature: a single image is encoded into the motion latent
+             space (the manifold Z), then decoded into diverse skeletal
+             motions across the blue -> violet -> pink spectrum. -->
         <div class="hero__figure">
-          <svg class="field" viewBox="0 0 560 470" role="img"
-            aria-label="A single input fans out into diverse skeletal motions across a color spectrum.">
-            <!-- trajectories: one input, sampled toward diverse motions -->
-            <path class="traj" d="M70,235 C 195,165 320,95 448,72" stroke="#3B82F6" />
-            <path class="traj" d="M70,235 C 200,210 330,162 448,150" stroke="#5B7BF2" />
-            <path class="traj" d="M70,235 C 205,233 330,234 448,235" stroke="#8B5CF6" />
-            <path class="traj" d="M70,235 C 200,262 330,305 448,320" stroke="#C162BE" />
-            <path class="traj" d="M70,235 C 195,308 320,378 448,400" stroke="#FF5C8A" />
+          <svg class="field" viewBox="0 0 620 470" role="img"
+            aria-label="A single input image is encoded into a latent-space manifold, then decoded into diverse skeletal motions.">
+            <defs>
+              <linearGradient id="manifoldFill" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#3B82F6" stop-opacity="0.30" />
+                <stop offset="0.5" stop-color="#8B5CF6" stop-opacity="0.22" />
+                <stop offset="1" stop-color="#FF5C8A" stop-opacity="0.18" />
+              </linearGradient>
+              <radialGradient id="manifoldGlow" cx="50%" cy="46%" r="62%">
+                <stop offset="0" stop-color="#8B5CF6" stop-opacity="0.34" />
+                <stop offset="0.55" stop-color="#6D5CF6" stop-opacity="0.12" />
+                <stop offset="1" stop-color="#6D5CF6" stop-opacity="0" />
+              </radialGradient>
+            </defs>
 
-            <!-- origin: the single input image -->
-            <rect class="origin" x="55" y="220" width="30" height="30" rx="7" />
-            <circle class="origin-core" cx="70" cy="235" r="3.4" />
-            <text class="field-label" x="70" y="282" text-anchor="middle">single image</text>
-            <text class="field-label" x="470" y="455" text-anchor="middle">diverse motions</text>
+            <!-- stage 1: the single input image -->
+            <rect class="origin" x="30" y="215" width="40" height="40" rx="8" />
+            <circle class="origin-core" cx="50" cy="235" r="3.6" />
+            <text class="field-label" x="50" y="288" text-anchor="middle">single image</text>
 
-            <!-- traveling samples (CSS/SMIL); hidden under reduced-motion -->
-            <g style="color:#3B82F6">
-              <circle class="kp kp--trail" r="5" fill="#3B82F6" cx="70" cy="235">
-                <animateMotion dur="5.6s" repeatCount="indefinite" begin="-2.4s"
-                  path="M0,0 C 125,-70 250,-140 378,-163" />
+            <!-- encode connector: image -> manifold -->
+            <path class="encode" d="M70,235 C 98,231 124,239 150,236" />
+
+            <!-- stage 2: the motion latent space — a learned manifold (Z) -->
+            <g class="manifold">
+              <ellipse class="manifold-glow" cx="257" cy="244" rx="158" ry="120" />
+              <path class="manifold-surface"
+                d="M168.0,173.5 L185.5,168.9 L203.0,164.7 L220.5,160.9 L238.0,158.0 L255.5,156.0 L273.0,155.0 L290.5,155.1 L308.0,156.3 L325.5,158.4 L343.0,161.3 L360.5,164.8 L378.0,168.5 L375.7,178.8 L373.3,189.3 L371.0,200.3 L368.7,211.8 L366.3,224.0 L364.0,237.0 L361.7,250.8 L359.3,265.4 L357.0,280.8 L354.7,296.7 L352.3,313.0 L350.0,329.5 L332.5,319.8 L315.0,310.7 L297.5,302.6 L280.0,296.1 L262.5,291.5 L245.0,289.0 L227.5,288.7 L210.0,290.5 L192.5,294.1 L175.0,299.3 L157.5,305.6 L140.0,312.5 L142.3,297.8 L144.7,283.3 L147.0,269.3 L149.3,255.8 L151.7,243.0 L154.0,231.0 L156.3,219.8 L158.7,209.4 L161.0,199.8 L163.3,190.7 L165.7,182.0 L168.0,173.5 Z" />
+              <!-- parametric mesh: columns (constant u) -->
+              <path class="manifold-grid" d="M168.0,173.5 L165.7,182.0 L163.3,190.7 L161.0,199.8 L158.7,209.4 L156.3,219.8 L154.0,231.0 L151.7,243.0 L149.3,255.8 L147.0,269.3 L144.7,283.3 L142.3,297.8 L140.0,312.5" />
+              <path class="manifold-grid" d="M203.0,164.7 L200.7,172.8 L198.3,181.1 L196.0,189.8 L193.7,199.2 L191.3,209.2 L189.0,220.0 L186.7,231.6 L184.3,244.1 L182.0,257.2 L179.7,270.9 L177.3,285.0 L175.0,299.3" />
+              <path class="manifold-grid" d="M238.0,158.0 L235.7,165.9 L233.3,174.1 L231.0,182.6 L228.7,191.7 L226.3,201.6 L224.0,212.2 L221.7,223.7 L219.3,235.9 L217.0,248.8 L214.7,262.4 L212.3,276.3 L210.0,290.5" />
+              <path class="manifold-grid" d="M273.0,155.0 L270.7,163.1 L268.3,171.3 L266.0,180.0 L263.7,189.3 L261.3,199.2 L259.0,210.0 L256.7,221.6 L254.3,233.9 L252.0,247.0 L249.7,260.7 L247.3,274.7 L245.0,289.0" />
+              <path class="manifold-grid" d="M308.0,156.3 L305.7,164.9 L303.3,173.6 L301.0,182.8 L298.7,192.5 L296.3,203.0 L294.0,214.2 L291.7,226.3 L289.3,239.1 L287.0,252.7 L284.7,266.8 L282.3,281.4 L280.0,296.1" />
+              <path class="manifold-grid" d="M343.0,161.3 L340.7,170.7 L338.3,180.2 L336.0,190.2 L333.7,200.7 L331.3,212.0 L329.0,224.0 L326.7,236.9 L324.3,250.5 L322.0,264.8 L319.7,279.8 L317.3,295.1 L315.0,310.7" />
+              <path class="manifold-grid" d="M378.0,168.5 L375.7,178.8 L373.3,189.3 L371.0,200.3 L368.7,211.8 L366.3,224.0 L364.0,237.0 L361.7,250.8 L359.3,265.4 L357.0,280.8 L354.7,296.7 L352.3,313.0 L350.0,329.5" />
+              <!-- parametric mesh: rows (constant v) -->
+              <path class="manifold-grid" d="M168.0,173.5 L185.5,168.9 L203.0,164.7 L220.5,160.9 L238.0,158.0 L255.5,156.0 L273.0,155.0 L290.5,155.1 L308.0,156.3 L325.5,158.4 L343.0,161.3 L360.5,164.8 L378.0,168.5" />
+              <path class="manifold-grid" d="M162.4,194.2 L179.9,189.2 L197.4,184.5 L214.9,180.5 L232.4,177.4 L249.9,175.5 L267.4,174.7 L284.9,175.4 L302.4,177.2 L319.9,180.2 L337.4,184.1 L354.9,188.7 L372.4,193.6" />
+              <path class="manifold-grid" d="M156.8,217.7 L174.3,212.2 L191.8,207.1 L209.3,202.8 L226.8,199.6 L244.3,197.6 L261.8,197.2 L279.3,198.3 L296.8,200.8 L314.3,204.7 L331.8,209.7 L349.3,215.4 L366.8,221.5" />
+              <path class="manifold-grid" d="M151.2,245.5 L168.7,239.5 L186.2,234.1 L203.7,229.4 L221.2,226.1 L238.7,224.2 L256.2,224.0 L273.7,225.5 L291.2,228.8 L308.7,233.5 L326.2,239.5 L343.7,246.4 L361.2,253.7" />
+              <path class="manifold-grid" d="M145.6,277.6 L163.1,271.2 L180.6,265.3 L198.1,260.4 L215.6,256.9 L233.1,255.1 L250.6,255.1 L268.1,257.2 L285.6,261.1 L303.1,266.7 L320.6,273.7 L338.1,281.7 L355.6,290.2" />
+              <path class="manifold-grid" d="M140.0,312.5 L157.5,305.6 L175.0,299.3 L192.5,294.1 L210.0,290.5 L227.5,288.7 L245.0,289.0 L262.5,291.5 L280.0,296.1 L297.5,302.6 L315.0,310.7 L332.5,319.8 L350.0,329.5" />
+            </g>
+
+            <!-- decode: each sampled latent on the manifold -> a diverse motion -->
+            <path class="traj" d="M260.1,170.9 C 351.3,151.5 453.8,78.1 545,63" stroke="#3B82F6" />
+            <path class="traj" d="M298.2,188.3 C 377.2,179.8 466.0,147.6 545,141" stroke="#5B7BF2" />
+            <path class="traj" d="M264.3,204.9 C 354.1,208.7 455.2,223.0 545,226" stroke="#8B5CF6" />
+            <path class="traj" d="M231.0,224.8 C 331.5,240.3 444.5,298.9 545,311" stroke="#C162BE" />
+            <path class="traj" d="M298.5,254.3 C 377.4,278.9 466.1,371.9 545,391" stroke="#FF5C8A" />
+
+            <!-- sampled latent codes sitting on the surface (decode origins) -->
+            <circle class="latent" cx="260.1" cy="170.9" r="3.6" style="animation-delay:0s" />
+            <circle class="latent" cx="298.2" cy="188.3" r="3.6" style="animation-delay:-.6s" />
+            <circle class="latent" cx="264.3" cy="204.9" r="3.6" style="animation-delay:-1.2s" />
+            <circle class="latent" cx="231.0" cy="224.8" r="3.6" style="animation-delay:-1.8s" />
+            <circle class="latent" cx="298.5" cy="254.3" r="3.6" style="animation-delay:-2.4s" />
+
+            <text class="field-label" x="250" y="356" text-anchor="middle">latent space &#119989;</text>
+            <text class="field-label field-label--decode" x="446" y="132" text-anchor="middle">decode</text>
+            <text class="field-label" x="548" y="455" text-anchor="middle">diverse motions</text>
+
+            <!-- encode sample travelling image -> manifold -->
+            <g style="color:#8B5CF6">
+              <circle class="kp kp--trail" r="5" fill="#8B5CF6" cx="70" cy="235">
+                <animateMotion dur="4.4s" repeatCount="indefinite" begin="-1.2s"
+                  path="M0,0 C 28,-4 54,4 80,1" />
               </circle>
               <circle class="kp kp--lead" r="4" cx="70" cy="235">
-                <animateMotion dur="5.6s" repeatCount="indefinite" begin="-3.0s" path="M0,0 C 125,-70 250,-140 378,-163" />
+                <animateMotion dur="4.4s" repeatCount="indefinite" begin="-1.7s" path="M0,0 C 28,-4 54,4 80,1" />
+              </circle>
+            </g>
+
+            <!-- decode samples (CSS/SMIL); hidden under reduced-motion -->
+            <g style="color:#3B82F6">
+              <circle class="kp kp--trail" r="5" fill="#3B82F6" cx="260.1" cy="170.9">
+                <animateMotion dur="5.6s" repeatCount="indefinite" begin="-2.4s"
+                  path="M0,0 C 91.2,-19.4 193.7,-92.8 284.9,-107.9" />
+              </circle>
+              <circle class="kp kp--lead" r="4" cx="260.1" cy="170.9">
+                <animateMotion dur="5.6s" repeatCount="indefinite" begin="-3.0s" path="M0,0 C 91.2,-19.4 193.7,-92.8 284.9,-107.9" />
               </circle>
             </g>
             <g style="color:#5B7BF2">
-              <circle class="kp kp--trail" r="5" fill="#5B7BF2" cx="70" cy="235">
+              <circle class="kp kp--trail" r="5" fill="#5B7BF2" cx="298.2" cy="188.3">
                 <animateMotion dur="6.4s" repeatCount="indefinite" begin="-4.6s"
-                  path="M0,0 C 130,-25 260,-73 378,-85" />
+                  path="M0,0 C 79.0,-8.5 167.8,-40.7 246.8,-47.3" />
               </circle>
-              <circle class="kp kp--lead" r="4" cx="70" cy="235">
+              <circle class="kp kp--lead" r="4" cx="298.2" cy="188.3">
                 <animateMotion dur="6.4s" repeatCount="indefinite" begin="-3.7s"
-                  path="M0,0 C 130,-25 260,-73 378,-85" />
+                  path="M0,0 C 79.0,-8.5 167.8,-40.7 246.8,-47.3" />
               </circle>
             </g>
             <g style="color:#8B5CF6">
-              <circle class="kp kp--trail" r="5" fill="#8B5CF6" cx="70" cy="235">
+              <circle class="kp kp--trail" r="5" fill="#8B5CF6" cx="264.3" cy="204.9">
                 <animateMotion dur="6.6s" repeatCount="indefinite" begin="-2.1s"
-                  path="M0,0 C 135,-2 260,-1 378,0" />
+                  path="M0,0 C 89.8,3.8 190.9,18.1 280.7,21.1" />
               </circle>
-              <circle class="kp kp--lead" r="4" cx="70" cy="235">
+              <circle class="kp kp--lead" r="4" cx="264.3" cy="204.9">
                 <animateMotion dur="6.6s" repeatCount="indefinite" begin="-1.6s"
-                  path="M0,0 C 135,-2 260,-1 378,0" />
+                  path="M0,0 C 89.8,3.8 190.9,18.1 280.7,21.1" />
               </circle>
             </g>
             <g style="color:#C162BE">
-              <circle class="kp kp--trail" r="5" fill="#C162BE" cx="70" cy="235">
+              <circle class="kp kp--trail" r="5" fill="#C162BE" cx="231.0" cy="224.8">
                 <animateMotion dur="7.2s" repeatCount="indefinite" begin="-3.0s"
-                  path="M0,0 C 130,27 260,70 378,85" />
+                  path="M0,0 C 100.5,15.5 213.5,74.1 314.0,86.2" />
               </circle>
-              <circle class="kp kp--lead" r="4" cx="70" cy="235">
+              <circle class="kp kp--lead" r="4" cx="231.0" cy="224.8">
                 <animateMotion dur="7.2s" repeatCount="indefinite" begin="-2.5s"
-                  path="M0,0 C 130,27 260,70 378,85" />
+                  path="M0,0 C 100.5,15.5 213.5,74.1 314.0,86.2" />
               </circle>
             </g>
             <g style="color:#FF5C8A">
-              <circle class="kp kp--trail" r="5" fill="#FF5C8A" cx="70" cy="235">
+              <circle class="kp kp--trail" r="5" fill="#FF5C8A" cx="298.5" cy="254.3">
                 <animateMotion dur="6.0s" repeatCount="indefinite" begin="-3.6s"
-                  path="M0,0 C 125,73 250,143 378,165" />
+                  path="M0,0 C 78.9,24.6 167.6,117.6 246.5,136.7" />
               </circle>
-              <circle class="kp kp--lead" r="4" cx="70" cy="235">
+              <circle class="kp kp--lead" r="4" cx="298.5" cy="254.3">
                 <animateMotion dur="6.0s" repeatCount="indefinite" begin="-3.1s"
-                  path="M0,0 C 125,73 250,143 378,165" />
+                  path="M0,0 C 78.9,24.6 167.6,117.6 246.5,136.7" />
               </circle>
             </g>
 
-            <!-- diverse skeletal motions at the trajectory ends -->
-            <!-- S1: waving, center (470,72) -->
+            <!-- stage 3: diverse skeletal motions at the trajectory ends -->
+            <!-- S1: waving -->
             <g class="skel" style="color:#3B82F6">
-              <circle class="skel-head" cx="470" cy="46" r="5" />
-              <line class="bone" x1="470" y1="51" x2="470" y2="75" />
-              <line class="bone" x1="470" y1="54" x2="458" y2="66" />
-              <circle class="joint" cx="458" cy="66" r="2.2" />
-              <g class="limb wave" style="transform-origin:470px 54px">
-                <line class="bone" x1="470" y1="54" x2="486" y2="40" />
-                <circle class="joint" cx="486" cy="40" r="2.4" />
+              <circle class="skel-head" cx="560.0" cy="42.1" r="6.0" />
+              <line class="bone" x1="560.0" y1="47.8" x2="560.0" y2="75.1" />
+              <line class="bone" x1="560.0" y1="51.2" x2="544.2" y2="64.9" />
+              <circle class="joint" cx="544.2" cy="64.9" r="2.6" />
+              <g class="limb wave" style="transform-origin:560.0px 51.2px">
+                <line class="bone" x1="560.0" y1="51.2" x2="581.1" y2="35.2" />
+                <circle class="joint" cx="581.1" cy="35.2" r="2.9" />
               </g>
-              <line class="bone" x1="470" y1="75" x2="463" y2="102" />
-              <line class="bone" x1="470" y1="75" x2="477" y2="102" />
-              <circle class="joint" cx="463" cy="102" r="2.2" />
-              <circle class="joint" cx="477" cy="102" r="2.2" />
+              <line class="bone" x1="560.0" y1="75.1" x2="550.8" y2="105.9" />
+              <line class="bone" x1="560.0" y1="75.1" x2="569.2" y2="105.9" />
+              <circle class="joint" cx="550.8" cy="105.9" r="2.6" />
+              <circle class="joint" cx="569.2" cy="105.9" r="2.6" />
             </g>
-            <!-- S2: walking, center (470,150) -->
+            <!-- S2: walking -->
             <g class="skel" style="color:#5B7BF2">
-              <circle class="skel-head" cx="470" cy="124" r="5" />
-              <line class="bone" x1="470" y1="129" x2="470" y2="153" />
-              <g class="limb swingA" style="transform-origin:470px 132px">
-                <line class="bone" x1="470" y1="132" x2="459" y2="145" />
-                <circle class="joint" cx="459" cy="145" r="2.2" />
+              <circle class="skel-head" cx="560.0" cy="120.1" r="6.0" />
+              <line class="bone" x1="560.0" y1="125.8" x2="560.0" y2="153.1" />
+              <g class="limb swingA" style="transform-origin:560.0px 129.2px">
+                <line class="bone" x1="560.0" y1="129.2" x2="545.5" y2="144.0" />
+                <circle class="joint" cx="545.5" cy="144.0" r="2.6" />
               </g>
-              <g class="limb swingB" style="transform-origin:470px 132px">
-                <line class="bone" x1="470" y1="132" x2="481" y2="145" />
-                <circle class="joint" cx="481" cy="145" r="2.2" />
+              <g class="limb swingB" style="transform-origin:560.0px 129.2px">
+                <line class="bone" x1="560.0" y1="129.2" x2="574.5" y2="144.0" />
+                <circle class="joint" cx="574.5" cy="144.0" r="2.6" />
               </g>
-              <g class="limb legB" style="transform-origin:470px 153px">
-                <line class="bone" x1="470" y1="153" x2="463" y2="180" />
-                <circle class="joint" cx="463" cy="180" r="2.2" />
+              <g class="limb legB" style="transform-origin:560.0px 153.1px">
+                <line class="bone" x1="560.0" y1="153.1" x2="550.8" y2="183.9" />
+                <circle class="joint" cx="550.8" cy="183.9" r="2.6" />
               </g>
-              <g class="limb legA" style="transform-origin:470px 153px">
-                <line class="bone" x1="470" y1="153" x2="477" y2="180" />
-                <circle class="joint" cx="477" cy="180" r="2.2" />
+              <g class="limb legA" style="transform-origin:560.0px 153.1px">
+                <line class="bone" x1="560.0" y1="153.1" x2="569.2" y2="183.9" />
+                <circle class="joint" cx="569.2" cy="183.9" r="2.6" />
               </g>
             </g>
-            <!-- S3: kicking, center (470,235) -->
+            <!-- S3: kicking -->
             <g class="skel" style="color:#8B5CF6">
-              <circle class="skel-head" cx="470" cy="209" r="5" />
-              <line class="bone" x1="470" y1="214" x2="470" y2="238" />
-              <line class="bone" x1="470" y1="217" x2="460" y2="231" />
-              <circle class="joint" cx="460" cy="231" r="2.2" />
-              <line class="bone" x1="470" y1="217" x2="481" y2="229" />
-              <circle class="joint" cx="481" cy="229" r="2.2" />
-              <line class="bone" x1="470" y1="238" x2="466" y2="266" />
-              <circle class="joint" cx="466" cy="266" r="2.2" />
-              <g class="limb kick" style="transform-origin:470px 238px">
-                <line class="bone" x1="470" y1="238" x2="478" y2="266" />
-                <circle class="joint" cx="478" cy="266" r="2.2" />
+              <circle class="skel-head" cx="560.0" cy="205.0" r="6.0" />
+              <line class="bone" x1="560.0" y1="210.7" x2="560.0" y2="238.1" />
+              <line class="bone" x1="560.0" y1="214.1" x2="546.8" y2="230.1" />
+              <circle class="joint" cx="546.8" cy="230.1" r="2.6" />
+              <line class="bone" x1="560.0" y1="214.1" x2="574.5" y2="227.8" />
+              <circle class="joint" cx="574.5" cy="227.8" r="2.6" />
+              <line class="bone" x1="560.0" y1="238.1" x2="554.7" y2="270.0" />
+              <circle class="joint" cx="554.7" cy="270.0" r="2.6" />
+              <g class="limb kick" style="transform-origin:560.0px 238.1px">
+                <line class="bone" x1="560.0" y1="238.1" x2="570.6" y2="270.0" />
+                <circle class="joint" cx="570.6" cy="270.0" r="2.6" />
               </g>
             </g>
-            <!-- S4: jumping, center (470,320) -->
+            <!-- S4: jumping -->
             <g class="skel jump" style="color:#C162BE">
-              <circle class="skel-head" cx="470" cy="294" r="5" />
-              <line class="bone" x1="470" y1="299" x2="470" y2="323" />
-              <line class="bone" x1="470" y1="302" x2="458" y2="290" />
-              <circle class="joint" cx="458" cy="290" r="2.2" />
-              <line class="bone" x1="470" y1="302" x2="482" y2="290" />
-              <circle class="joint" cx="482" cy="290" r="2.2" />
-              <line class="bone" x1="470" y1="323" x2="462" y2="346" />
-              <circle class="joint" cx="462" cy="346" r="2.2" />
-              <line class="bone" x1="470" y1="323" x2="478" y2="346" />
-              <circle class="joint" cx="478" cy="346" r="2.2" />
+              <circle class="skel-head" cx="560.0" cy="290.4" r="6.0" />
+              <line class="bone" x1="560.0" y1="296.1" x2="560.0" y2="323.4" />
+              <line class="bone" x1="560.0" y1="299.5" x2="544.2" y2="285.8" />
+              <circle class="joint" cx="544.2" cy="285.8" r="2.6" />
+              <line class="bone" x1="560.0" y1="299.5" x2="575.8" y2="285.8" />
+              <circle class="joint" cx="575.8" cy="285.8" r="2.6" />
+              <line class="bone" x1="560.0" y1="323.4" x2="549.4" y2="349.6" />
+              <circle class="joint" cx="549.4" cy="349.6" r="2.6" />
+              <line class="bone" x1="560.0" y1="323.4" x2="570.6" y2="349.6" />
+              <circle class="joint" cx="570.6" cy="349.6" r="2.6" />
             </g>
-            <!-- S5: turning, center (470,400) -->
-            <g class="skel turn" style="color:#FF5C8A; transform-origin:470px 400px">
-              <circle class="skel-head" cx="470" cy="374" r="5" />
-              <line class="bone" x1="470" y1="379" x2="470" y2="403" />
-              <line class="bone" x1="470" y1="382" x2="458" y2="394" />
-              <circle class="joint" cx="458" cy="394" r="2.2" />
-              <line class="bone" x1="470" y1="382" x2="482" y2="394" />
-              <circle class="joint" cx="482" cy="394" r="2.2" />
-              <line class="bone" x1="470" y1="403" x2="463" y2="430" />
-              <circle class="joint" cx="463" cy="430" r="2.2" />
-              <line class="bone" x1="470" y1="403" x2="477" y2="430" />
-              <circle class="joint" cx="477" cy="430" r="2.2" />
+            <!-- S5: turning -->
+            <g class="skel turn" style="color:#FF5C8A; transform-origin:560.0px 402.0px">
+              <circle class="skel-head" cx="560.0" cy="370.1" r="6.0" />
+              <line class="bone" x1="560.0" y1="375.8" x2="560.0" y2="403.1" />
+              <line class="bone" x1="560.0" y1="379.2" x2="544.2" y2="392.9" />
+              <circle class="joint" cx="544.2" cy="392.9" r="2.6" />
+              <line class="bone" x1="560.0" y1="379.2" x2="575.8" y2="392.9" />
+              <circle class="joint" cx="575.8" cy="392.9" r="2.6" />
+              <line class="bone" x1="560.0" y1="403.1" x2="550.8" y2="433.9" />
+              <circle class="joint" cx="550.8" cy="433.9" r="2.6" />
+              <line class="bone" x1="560.0" y1="403.1" x2="569.2" y2="433.9" />
+              <circle class="joint" cx="569.2" cy="433.9" r="2.6" />
             </g>
           </svg>
         </div>
