@@ -143,13 +143,9 @@
 					<p class="pub-authors"><u>Linzhan Mou</u>, <span id="unimate-authors-more" style="display:none; cursor: pointer;" onclick="toggle_authors('unimate')" title="show less">Jiahui Lei, Zhiyang Dou, Chenyue Cai, Chaoyue Song, </span><a href="javascript:void(0)" id="unimate-authors-toggle" onclick="toggle_authors('unimate')" style="color: var(--text-secondary); text-decoration: none;" title="show all authors">&middot;&middot;&middot;,&nbsp;</a>Adam Finkelstein, Szymon Rusinkiewicz</p>
 					<p class="pub-venue">Under Review</p>
 					<p class="pub-links">
-						[<a href="javascript:void(0)" onclick="display('unimate-abs')">abs</a>]&nbsp;
 						[<a target="_blank" href="https://linzhanm.github.io/unimate">website</a>]&nbsp;
 						[tl;dr: one model to animate all rigs in real time]&nbsp;
 					</p>
-					<div id="unimate-abs" class="pub-abstract">
-						<p>Recent advances in automatic rigging now deliver animation-ready 3D assets at scale, yet generating the motion to drive them remains a bottleneck. Existing learned animators are topology-constrained: they rely on category-specific templates or require per-skeleton fine-tuning and reference motions at inference. We present UniMate, a unified foundation model that synthesizes articulated motion for arbitrary skeletons from a rigged 3D asset and a text prompt, with no test-time optimization or per-skeleton retraining. UniMate relies on a topology-aware diffusion transformer, which integrates skeletal topology into attention via three mechanisms: (1) a graph-aware attention bias from pairwise joint relations and geodesic distances; (2) a spectral rotary position embedding generalizing RoPE to arbitrary kinematic trees via the graph Laplacian; and (3) a global topological conditioner attention-pooled from the rest-pose skeleton. We also curate UniML3D, 13,006 motion sequences spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid objects with unified canonicalization and text pairing. Trained on this dataset, UniMate outperforms state-of-the-art baselines in quality, generalization, and efficiency, and supports zero-shot cross-topology transfer, in-betweening, and text-guided editing.</p>
-					</div>
 				</div>
 			</div>
 
