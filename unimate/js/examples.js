@@ -69,16 +69,16 @@ export const EXAMPLES = [
   },
   {
     label: 'Articulated',
-    files: [{ url: 'glbs/satellite.glb', material: { roughness: 0.3, metalness: 0.7 } }, { url: 'glbs/pupper-chrome.glb', rotate: [0, -60, 0], offset: [1. , 0, -0.2],scale: 0.8 }, { url: 'glbs/lamp.glb', rotate: [0, 45, 0], scale: 0.65 }],
+    files: [{ url: 'glbs/satellite.glb', material: { roughness: 0.3, metalness: 0.7 }, rotate: [0, 45, 0] }, { url: 'glbs/pupper-chrome.glb', rotate: [0, -60, 0], offset: [1. , 0, -0.2],scale: 0.8 }, { url: 'glbs/lamp.glb', rotate: [0, 45, 0], scale: 0.65 }],
     spacing: 0.6, lighting: 2., evenGaps: true,
   },
   {
     label: 'Flower',
     files: [
       'glbs/flower.glb',
-      { url: 'glbs/piranha-plant.glb'},
+      { url: 'glbs/piranha-plant.glb', rotate: [0, 45, 0], offset: [0.0, 0, -0.2] },
     ],
-    spacing: 1.2, pad: 0.9,
+    spacing: 1.0, pad: 0.9,
   },
   {
     // Two-row diorama (front row 0 → back row 1, separated by `rowDepth`):
