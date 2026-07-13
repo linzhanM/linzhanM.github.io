@@ -1,0 +1,755 @@
+/* ============================================================================
+   UniMate — project page styles.
+
+   Built on the VideoMimic template, then trimmed to only the rules this page
+   uses. Palette tokens live in :root; fonts are Playfair Display (headings) and
+   Roboto Mono (labels/mono), over a Georgia serif body.
+
+   Sections:
+     1. Design tokens
+     2. Base (body, focus, selection)
+     3. Table of contents (fixed left rail)
+     4. Layout + hero (title, authors, affiliations, quick links)
+     5. Teaser video + figure captions
+     6. Section headings
+     7. Video galleries
+     8. Interactive 3D viewer (sidebar + canvas)
+     9. BibTeX
+    10. Footer
+    11. Responsive
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Mono:wght@300;700&display=swap');
+
+/* ── 1. Design tokens ───────────────────────────────────────────────────────── */
+:root {
+  --ivory: #faf9f5;
+  --ivory-medium: #f0eee6;
+  --ivory-dark: #e8e6dc;
+  --slate-dark: #141413;
+  --slate-light: #5e5d59;
+  --accent: #d97757;
+}
+
+/* ── 2. Base ────────────────────────────────────────────────────────────────── */
+body {
+  background-color: #fdfaf4;
+  font-family: Georgia, 'Times New Roman', serif;
+  color: #1b1b1b;
+  padding: 60px 30px;
+}
+
+html { scroll-behavior: smooth; }
+
+/* On-brand text selection. */
+::selection {
+  background: rgba(217, 119, 87, 0.28); /* --accent */
+  color: var(--slate-dark);
+}
+
+/* Visible keyboard focus (quality floor), in the accent. */
+a:focus-visible,
+button:focus-visible,
+.example-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* ── 3. Table of contents (fixed left rail, shown ≥1400px) ──────────────────── */
+/* The list is a progress rail: a hairline track whose segment lights up coral
+   beside the section you're currently reading (see the scroll-spy script). */
+.toc {
+  width: 192px;
+  font-family: 'Roboto Mono', monospace;
+  position: fixed;
+  top: 50%;                     /* vertically centered in the viewport */
+  transform: translateY(-50%);
+  max-height: 90vh;
+  overflow-y: auto;
+  display: none;                /* revealed by the media query below */
+  z-index: 1000;
+}
+
+@media (min-width: 1400px) {
+  .toc {
+    display: block;
+    left: max(30px, calc(25vw - 330px));
+  }
+}
+
+.toc h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  letter-spacing: -0.4px;
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: var(--slate-dark);
+}
+
+.toc hr {
+  border: 0;
+  height: 1px;
+  background-color: var(--ivory-dark);
+  margin-bottom: 16px;
+}
+
+.toc ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  border-left: 1.5px solid var(--ivory-dark);
+}
+
+.toc li {
+  position: relative;
+  margin-bottom: 7px;
+}
+
+/* Give each top-level section a little air above it, so its sub-items below
+   read as a group (the first item needs none). */
+.toc li:not(.toc-subsection) {
+  margin-top: 14px;
+}
+.toc li:first-child {
+  margin-top: 0;
+}
+
+.toc a {
+  display: block;
+  position: relative;
+  text-decoration: none;
+  color: var(--slate-light);
+  font-size: 14px;
+  line-height: 1.4;
+  padding: 2px 0 2px 16px;
+  transition: color 0.18s ease;
+}
+
+/* The playhead segment — fills the rail next to the active item. */
+.toc a::before {
+  content: '';
+  position: absolute;
+  left: -1.5px;
+  top: 3px;
+  bottom: 3px;
+  width: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.2s ease;
+}
+
+.toc a:hover {
+  color: var(--slate-dark);
+}
+
+.toc a.active {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.toc a.active::before {
+  transform: scaleY(1);
+}
+
+/* Subsections stay flush to the shared rail; the text is indented instead, so
+   every progress marker lines up on one track. */
+.toc-subsection {
+  margin-bottom: 5px;
+}
+.toc-subsection a {
+  font-size: 12px;
+  padding-left: 30px;
+  color: #8a887f;
+}
+.toc-subsection a.active {
+  color: var(--accent);
+}
+.toc-subsection a:hover {
+  color: var(--slate-light);
+}
+
+/* ── 4. Layout + hero ───────────────────────────────────────────────────────── */
+.main-content {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.hero-text {
+  font-size: 60px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+
+.sub-hero-text {
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 50px;
+  white-space: nowrap;
+}
+
+.authors {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+  margin-top: -32.5px;   /* pull up under the subtitle */
+  margin-bottom: 17.5px;
+  text-align: left;
+  white-space: nowrap;
+}
+.authors a {
+  color: inherit;
+  text-decoration: none;
+  text-underline-offset: 2px;
+  transition: color 0.18s ease;
+}
+.authors a:hover,
+.authors a:focus-visible {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+}
+
+/* Affiliation logos — no figure border. */
+.affiliations {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 56px;
+  margin: 24px 0 16px;
+}
+.affiliations img {
+  width: auto;
+  height: 84px;
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+}
+.affiliations img.logo-lg { height: 112px; }
+
+/* Quick links. Live links get a sliding coral underline; disabled ones read dead. */
+.quick-links {
+  text-align: center;
+  white-space: nowrap;   /* keep all links on one line */
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+.quick-links a {
+  position: relative;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+  margin: 0 8px;
+  padding: 5px 8px;
+  transition: color 0.18s ease;
+}
+.quick-links a:not(.disabled)::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.22s ease;
+}
+.quick-links a:not(.disabled):hover,
+.quick-links a:not(.disabled):focus {
+  color: var(--accent);
+  text-decoration: none;
+}
+.quick-links a:not(.disabled):hover::after,
+.quick-links a:not(.disabled):focus::after {
+  transform: scaleX(1);
+}
+.quick-links a.disabled {
+  color: #b8b4a8;
+  cursor: not-allowed;
+  text-decoration: none;
+  pointer-events: none;
+}
+
+/* ── 5. Teaser video + figure captions ──────────────────────────────────────── */
+/* Teaser video framed like a figure. */
+#teaser-video {
+  width: 100%;
+  border: 1.5px solid #000;
+  border-radius: 15px;
+  box-sizing: border-box;
+  display: block;
+}
+
+.figure-caption {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  color: var(--slate-light);
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 40px;
+  padding: 0 20px;
+}
+
+/* ── 6. Section headings ────────────────────────────────────────────────────── */
+/* Warm ink boxes: near-black (not pure #000) carries a hint of warmth on cream.
+   scroll-margin keeps a heading clear of the top edge on TOC anchor jumps. */
+.tagline {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 24px;
+  background: var(--slate-dark);
+  color: #fff;
+  display: inline-block;
+  padding: 8px 16px;
+  /* More room above (separate from prior section) than below (hug the content
+     this heading introduces). */
+  margin: 30px 0 18px;
+  scroll-margin-top: 32px;
+}
+
+.section-subtitle {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 20px;
+  background: var(--slate-dark);
+  color: #fff;
+  display: inline-block;
+  padding: 6px 14px;
+  margin: 26px 0 14px;
+  scroll-margin-top: 32px;
+}
+
+.section {
+  font-size: 20px;
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+/* ── 7. Video galleries ─────────────────────────────────────────────────────── */
+/* Full-bleed section so the scroll strip can run wider than the text column. */
+.video-gallery-section {
+  margin-bottom: 22px;
+  width: 100vw;
+  position: relative;
+  margin-left: calc((100% - 100vw) / 2);
+  box-sizing: border-box;
+}
+
+/* Scrollable track (scrollbar hidden). */
+.video-gallery-container {
+  box-sizing: border-box;
+  max-width: 1150px;
+  margin-left: auto;
+  margin-right: auto;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE and Edge */
+}
+.video-gallery-container::-webkit-scrollbar {
+  display: none;              /* Chrome, Safari, Opera */
+}
+
+/* The flex row holding the videos. */
+.video-gallery {
+  display: flex;
+  gap: 15px;
+  padding: 0 20px 10px;
+  box-sizing: border-box;
+  width: max-content;
+  margin: 0 auto;
+}
+
+.gallery-video {
+  flex: 0 0 auto;
+  height: 220px;
+  width: auto;                /* keep each clip's aspect ratio */
+  border-radius: 15px;
+  box-sizing: border-box;
+  background-color: #fdfaf4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Experiments galleries: taller videos with a bordered frame. */
+#transferGallerySection .gallery-video,
+#promptGallerySection .gallery-video,
+#motionGallerySection .gallery-video,
+#editGallerySection .gallery-video,
+#inbetweenGallerySection .gallery-video,
+#expansionGallerySection .gallery-video {
+  height: 300px;
+  border: 1.5px solid #000;
+}
+
+/* Applications show a single clip each — make it large so it fills the column. */
+#editGallerySection .gallery-video,
+#inbetweenGallerySection .gallery-video,
+#expansionGallerySection .gallery-video {
+  height: 500px;
+}
+
+/* Horizontal scroll buttons. */
+.gallery-nav {
+  background-color: rgba(40, 40, 40, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  margin: 0 5px;
+  flex-shrink: 0;
+}
+.gallery-nav:hover {
+  background-color: rgba(0, 0, 0, 1);
+}
+.gallery-nav-controls {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;         /* space between buttons and caption text */
+}
+
+/* Caption + nav-button row, centered on the content column. */
+.gallery-caption-container {
+  max-width: 960px;
+  margin: 15px auto 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.figure-caption.gallery-caption {
+  margin-top: 0;
+  margin-bottom: 0;
+  text-align: left;
+  flex-grow: 1;
+}
+
+/* ── 8. Interactive 3D viewer (sidebar + canvas) ────────────────────────────── */
+.viewer-layout {
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
+}
+
+/* The sidebar reads as a kinematic chain: a bone runs down the left gutter and
+   each item is a joint on it. Selecting a character activates its joint. */
+.example-sidebar {
+  position: relative;
+  flex: 0 0 165px;
+  height: 590px;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-left: 22px;
+}
+
+/* The bone (spine) — inset so it begins/ends at the first/last joint centers. */
+.example-sidebar::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 28px;
+  bottom: 28px;
+  width: 2px;
+  background: var(--ivory-dark);
+  border-radius: 1px;
+}
+
+.example-item {
+  position: relative;
+  flex: 1 1 0;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+  padding: 10px 11px;
+  border: 1px solid var(--ivory-dark);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--slate-dark);
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+/* The joint — a hollow node sitting on the spine. */
+.example-item::before {
+  content: '';
+  position: absolute;
+  box-sizing: border-box;
+  left: -20px;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: var(--ivory);
+  border: 2px solid var(--ivory-dark);
+  transition: background 0.2s ease, border-color 0.2s ease,
+              width 0.2s ease, height 0.2s ease, left 0.2s ease, margin-top 0.2s ease;
+}
+
+/* The bone that wires the joint to its rig — grows out on activation. */
+.example-item::after {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  width: 8px;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s ease;
+}
+
+.example-item:hover {
+  border-color: var(--slate-light);
+}
+.example-item:hover::before {
+  border-color: var(--slate-light);
+}
+
+.example-item.active {
+  border-color: var(--slate-light);
+  background: var(--ivory-medium);
+}
+
+/* Activated joint: filled coral, slightly larger. */
+.example-item.active::before {
+  width: 14px;
+  height: 14px;
+  left: -21px;
+  margin-top: -7px;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.example-item.active::after {
+  transform: scaleX(1);
+}
+
+.viewer-wrapper {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 620px;
+  border: 1.5px solid #000;
+  border-radius: 15px;
+  overflow: hidden;
+  background: var(--ivory-medium);
+}
+.viewer-wrapper canvas {
+  display: block;
+}
+
+/* lil-gui toolbar, pinned inside the viewer. */
+.viewer-wrapper .lil-gui {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  --background-color: rgba(250, 249, 245, 0.94);
+  --title-background-color: rgba(240, 238, 230, 0.96);
+  --text-color: #141413;
+  --title-text-color: #141413;
+  --widget-color: #e8e6dc;
+  --focus-color: #d97757;
+  --width: 160px;
+  --name-width: 52%;
+  --widget-height: 16px;
+  --padding: 4px;
+  --spacing: 4px;
+  font-size: 10.4px;
+  border-radius: 7px;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+#loading-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(250, 249, 245, 0.85);
+  color: var(--slate-light);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  z-index: 2;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  margin-right: 10px;
+  border: 3px solid var(--ivory-dark);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.viewer-hint {
+  font-family: 'Roboto Mono', monospace;
+  text-align: center;
+  color: var(--slate-light);
+  font-size: 14px;
+  margin-top: 14px;
+}
+
+#drop-hint {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2em;
+  color: var(--accent);
+  background: rgba(253, 246, 238, 0.92);
+  border: 3px dashed var(--accent);
+  border-radius: 15px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* ── 9. BibTeX ──────────────────────────────────────────────────────────────── */
+.bibtex-code {
+  background-color: var(--slate-dark);   /* warm ink — matches the heading boxes */
+  color: var(--ivory-dark);
+  padding: 22px 24px;
+  border-radius: 10px;
+  margin: 52px auto -40px;
+  max-width: 1000px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+.bibtex-title {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700;
+  font-size: 1.05em;
+  letter-spacing: 0.06em;
+  margin-bottom: 12px;
+  color: #fff;
+}
+.bibtex-code pre {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  margin: 0;
+}
+.bibtex-code code {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 300;
+  overflow-wrap: break-word;
+}
+
+/* ── 10. Footer ─────────────────────────────────────────────────────────────── */
+.footer {
+  font-size: 14px;
+  font-family: 'Roboto Mono', monospace;
+  color: var(--slate-light);
+  margin-top: 80px;
+  border-top: 1px solid var(--ivory-dark);
+  padding-top: 30px;
+  text-align: center;
+}
+.footer-related {
+  margin: 0 0 12px;
+  color: var(--slate-light);
+}
+.footer a {
+  color: var(--slate-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.18s ease;
+}
+.footer a:hover {
+  color: var(--accent);
+}
+
+/* ── 11. Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .sub-hero-text {
+    font-size: clamp(28px, 5vw, 40px);
+    white-space: normal;
+  }
+  .authors {
+    white-space: normal;
+  }
+  .quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 720px) {
+  .viewer-layout { flex-direction: column; }
+  .example-sidebar {
+    flex: none;
+    height: auto;
+    align-self: stretch;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding: 0 0 6px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+  }
+  .example-sidebar::before,
+  .example-item::before,
+  .example-item::after { display: none; }
+  .example-item {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+  .example-item.active { border-color: var(--accent); background: var(--ivory-medium); }
+  .viewer-wrapper { height: 420px; }
+
+  #editGallerySection .gallery-video,
+  #inbetweenGallerySection .gallery-video,
+  #expansionGallerySection .gallery-video {
+    width: calc(100vw - 40px);
+    height: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .sub-hero-text { font-size: 22px; margin-bottom: 30px; white-space: normal; }
+  .authors { white-space: normal; }
+  .affiliations { gap: 36px; }
+  .affiliations img { height: 60px; }
+  .affiliations img.logo-lg { height: 80px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .example-item,
+  .example-item::before,
+  .example-item::after { transition: none; }
+  .quick-links a:not(.disabled)::after { transition: none; }
+}
