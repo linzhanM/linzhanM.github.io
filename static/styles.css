@@ -29,6 +29,7 @@
   --text-lg:   1.125rem;   /* 18px — body */
   --text-xl:   1.125rem;   /* 18px — publication titles */
   --text-h2:   1.8rem;     /* section headers */
+  --text-h3:   1.3rem;     /* subsection headers */
   --text-h1:   2.25rem;    /* name */
 
   /* Type — weight */
@@ -60,6 +61,7 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 { font-size: var(--text-h1); font-weight: var(--weight-semibold); }
 h2 { font-size: var(--text-h2); font-weight: var(--weight-semibold); }
+h3 { font-size: var(--text-h3); font-weight: var(--weight-semibold); }
 
 /* --- Links --- */
 a:link,
@@ -103,6 +105,19 @@ a:hover {
   scroll-margin-top: 1.5rem;
 }
 
+/* Thematic sub-group label — an eyebrow, clearly subordinate to the serif h2. */
+.section-h3 {
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-secondary);
+  margin-top: 0.2em;
+  margin-bottom: 1.3em;
+  scroll-margin-top: 1.5rem;
+}
+
 /* --- Navbar --- */
 .navbar {
   background-color: var(--ivory-light);
@@ -125,13 +140,27 @@ hr {
 
 /* --- Publications --- */
 .pub-row {
-  margin-bottom: 2em;
+  margin-bottom: 2.6em;
 }
 
+/* Media thumbnails mirror the UniMate project page's gallery videos:
+   a 1.5px solid-black frame with rounded corners, a soft shadow, and a gentle hover lift. */
 .pub-thumbnail {
   width: 100%;
   object-fit: cover;
-  border-radius: 6px;
+  display: block;
+  padding: 0;                 /* override Bootstrap .img-thumbnail padding */
+  background: var(--ivory-medium);
+  border: 1.5px solid #000;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.pub-thumbnail:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(20, 20, 19, 0.12);
 }
 
 .pub-title {
