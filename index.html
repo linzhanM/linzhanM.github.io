@@ -21,28 +21,6 @@
 	<link rel="stylesheet" href="static/styles.css">
 
 	<script type="text/javascript">
-		function toggle_vis(id, textId) {
-			var e = document.getElementsByClassName(id);
-			var showText = document.getElementById(textId || "showText");
-			var hidden = e.length > 0 && e[0].style.display == "none";
-			for (var i = 0; i < e.length; i++) {
-				if (hidden) {
-					e[i].style.display = "";
-				} else {
-					e[i].style.display = "none";
-				}
-			}
-			showText.innerHTML = hidden ? "[Show less]" : "[Show more]";
-		}
-
-		function toggle_authors(id) {
-			var full = document.getElementById(id + "-authors-more");
-			var toggle = document.getElementById(id + "-authors-toggle");
-			var hidden = full.style.display === "none";
-			full.style.display = hidden ? "inline" : "none";
-			toggle.style.display = hidden ? "none" : "inline";
-		}
-
 		function display(id) {
 			var el = document.getElementById(id);
 			var computed = window.getComputedStyle(el).display;
@@ -105,7 +83,7 @@
 				<p style="margin-top: -2px;">
 					I am a first-year CS Ph.D. student at Princeton, advised by <a href="https://www.cs.princeton.edu/~smr/">Prof. Szymon Rusinkiewicz</a>. I also collaborate closely with <a href="https://www.cs.princeton.edu/~af/">Prof.&nbsp;Adam Finkelstein</a>.
 					<br><br>
-					I work on world models and robot learning at <a href="https://pixl.engineering.princeton.edu/">Princeton ImageX Lab (PIXL)</a>. <span style="white-space: nowrap;">I am currently</span> a research intern at Meta working on world action models.
+					I work on world models and robot learning at <a href="https://pixl.engineering.princeton.edu/">Princeton ImageX Lab (PIXL)</a>. <span style="white-space: nowrap;">I am currently</span> a research intern at <a href="https://ai.meta.com/">Meta</a> working on world action models.
 					<br>
 				</p>
 				<div style="font-size: var(--text-lg); padding-top: 12px;">
@@ -127,30 +105,33 @@
 
 		<br>
 
-		<!-- Publications section temporarily hidden
+		<!-- Recent Publications temporarily hidden
 		<div class="container">
-			<h2 id="Publications" class="section-h2">Publications</h2>
-			<span style="font-size: var(--text-sm); color: var(--text-secondary);">(* indicates equal contribution)</span>
-			<span id="showText" onclick="toggle_vis('pub-extra')" style="font-size: var(--text-sm); cursor: pointer; color: var(--text-secondary);">[Show more]</span>
+			<h2 id="Publications" class="section-h2">Recent Publications</h2>
 			<hr style="margin-top:0.4em">
+
+			<h3 id="Vision" class="section-h3">Vision &amp; Graphics</h3>
 
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="UniMate video loading.." tabindex="-1"
 						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="images/unimate.mp4" style="background-color: black;"></video>
+						src="images/unimate.mp4"></video>
 				</div>
 				<div class="col-md-9">
-					<p class="pub-title">Large Animation Foundation Model for Arbitrary Skeletons</p>
-					<p class="pub-authors"><u>Linzhan Mou</u>, <span id="unimate-authors-more" style="display:none; cursor: pointer;" onclick="toggle_authors('unimate')" title="show less">Jiahui Lei, Zhiyang Dou, Chenyue Cai, Chaoyue Song, </span><a href="javascript:void(0)" id="unimate-authors-toggle" onclick="toggle_authors('unimate')" style="color: var(--text-secondary); text-decoration: none;" title="show all authors">&middot;&middot;&middot;,&nbsp;</a>Adam Finkelstein, Szymon Rusinkiewicz</p>
-					<p class="pub-venue">Under Review</p>
+					<p class="pub-title">UniMate: One Unified Model to Animate Diverse Skeletons</p>
+					<p class="pub-authors"><u>Linzhan Mou</u>, Jiahui Lei, Zhiyang Dou, Chenyue Cai, Chaoyue Song, Adam Finkelstein, Szymon Rusinkiewicz</p>
+					<p class="pub-venue"></p>
 					<p class="pub-links">
-						[tl;dr: one model to animate all rigs in real time]&nbsp;
+						[<a href="javascript:void(0)" onclick="display('unimate-abs')">abs</a>]&nbsp;
+						[<a target="_blank" href="https://linzhanm.github.io/unimate">website</a>]&nbsp;
+						[tl;dr: One model to animate all rigs in real time.]&nbsp;
 					</p>
+					<div id="unimate-abs" class="pub-abstract">
+						<p>Recent advances in automatic rigging now deliver animation-ready 3D assets at scale, yet generating the motion to drive them remains a bottleneck. Existing learned animators are topology-constrained: they rely on category-specific templates or require per-skeleton fine-tuning and reference motions at inference. We present UniMate, a unified foundation model that synthesizes articulated motion for arbitrary skeletons from a rigged 3D asset and a text prompt, with no test-time optimization or per-skeleton retraining. UniMate relies on a topology-aware diffusion transformer, which integrates skeletal topology into attention via three mechanisms: (1) a graph-aware attention bias from pairwise joint relations and geodesic distances; (2) a spectral rotary position embedding generalizing RoPE to arbitrary kinematic trees via the graph Laplacian; and (3) a global topological conditioner attention-pooled from the rest-pose skeleton. We also curate UniML3D, 13,006 motion sequences spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid objects with unified canonicalization and text pairing. Trained on this dataset, UniMate outperforms state-of-the-art baselines in quality, generalization, and efficiency, and supports zero-shot cross-topology transfer, in-betweening, and text-guided editing.</p>
+					</div>
 				</div>
 			</div>
-
-			<hr>
 
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
@@ -179,8 +160,7 @@
 				</div>
 			</div>
 
-			<hr>
-
+			<template>
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
 					<video class="pub-thumbnail img-thumbnail" title="Let Occ Flow video loading.." tabindex="-1"
@@ -207,68 +187,11 @@
 					</div>
 				</div>
 			</div>
+			</template>
 
-			<hr class="pub-extra" style="display:none">
+			<hr>
 
-			<div class="pub-extra pub-row row align-items-start" style="display:none">
-				<div class="col-md-3">
-					<img class="pub-thumbnail img-thumbnail" src="images/duquant.png" alt="DuQuant">
-				</div>
-				<div class="col-md-9">
-					<p class="pub-title">DuQuant: Distributing Outliers via Dual Transformation Makes Stronger Quantized LLMs</p>
-					<p class="pub-authors">Haokun Lin*, Haobo Xu*, Yichen Wu*, Jinzhi Cui, <u>Linzhan Mou</u>, Linqi Song, Zhenan Sun, Ying Wei</p>
-					<p class="pub-venue">NeurIPS 2024 <b><span class="venue-highlight">(Oral)</span></b></p>
-					<p class="pub-links">
-						[<a href="javascript:void(0)" onclick="display('duquant-abs')">abs</a>]&nbsp;
-						[<a target="_blank" href="https://arxiv.org/abs/2406.01721">arXiv</a>]&nbsp;
-						[<a target="_blank" href="https://duquant.github.io/">website</a>]&nbsp;
-						[<a target="_blank" href="https://github.com/Hsu1023/DuQuant">code</a>]&nbsp;
-						[<a target="_blank" href="https://neurips.cc/media/neurips-2024/Slides/93727.pdf">slides</a>]&nbsp;
-						[<a target="_blank" href="https://neurips.cc/media/PosterPDFs/NeurIPS%202024/93727.png?t=1733734195.4992867">poster</a>]&nbsp;
-						<a class="more-link" href="https://github.com/Hsu1023/DuQuant" target="_blank"><img
-								alt="GitHub stars"
-								src="https://img.shields.io/github/stars/Hsu1023/DuQuant?style=social"></a>
-					</p>
-					<div id="duquant-abs" class="pub-abstract">
-						<p>Quantization of large language models (LLMs) faces significant challenges due to outlier activations. Existing methods predominantly address Normal Outliers but struggle with Massive Outliers that display significantly larger values, leading to significant performance degradation in low-bit quantization. This paper proposes DuQuant, which utilizes rotation and permutation transformations to more effectively mitigate both massive and normal outliers. DuQuant constructs a rotation matrix using specific outlier dimensions as prior knowledge to redistribute outliers to adjacent channels by block-wise rotation, and employs a zigzag permutation to balance the distribution of outliers across blocks, thereby reducing block-wise variance. An additional rotation further smooths activation patterns. DuQuant outperforms state-of-the-art baselines across various sizes and types of LLMs on multiple tasks, even with 4-bit weight-activation quantization.</p>
-					</div>
-				</div>
-			</div>
-
-			<hr class="pub-extra" style="display:none">
-
-			<div class="pub-extra pub-row row align-items-start" style="display:none">
-				<div class="col-md-3">
-					<video class="pub-thumbnail img-thumbnail" title="Instruct 4D-to-4D video loading.." tabindex="-1"
-						preload="none" loop="" muted="muted" playsinline="playsinline"
-						src="images/instruct-4d-to-4d.mp4"></video>
-				</div>
-				<div class="col-md-9">
-					<p class="pub-title">Instruct 4D-to-4D: Instruction-Guided 4D Scene Editing via Diffusion Priors</p>
-					<p class="pub-authors"><u>Linzhan Mou</u>*, Jun-Kun Chen*, Yu-Xiong Wang</p>
-					<p class="pub-venue">CVPR 2024</p>
-					<p class="pub-links">
-						[<a href="javascript:void(0)" onclick="display('i4d-abs')">abs</a>]&nbsp;
-						[<a target="_blank" href="https://arxiv.org/abs/2406.09402">arXiv</a>]&nbsp;
-						[<a target="_blank" href="https://immortalco.github.io/Instruct-4D-to-4D/">website</a>]&nbsp;
-						[<a target="_blank" href="https://github.com/Friedrich-M/Instruct-4D-to-4D">code</a>]&nbsp;
-						[<a target="_blank" href="https://cvpr.thecvf.com/media/PosterPDFs/CVPR%202024/30298.png?t=1717443013.0046797">poster</a>]&nbsp;
-						<a class="more-link" href="https://github.com/Friedrich-M/Instruct-4D-to-4D" target="_blank"><img
-								alt="GitHub stars"
-								src="https://img.shields.io/github/stars/Friedrich-M/Instruct-4D-to-4D?style=social"></a>
-					</p>
-					<div id="i4d-abs" class="pub-abstract">
-						<p>This paper proposes Instruct 4D-to-4D that achieves 4D awareness and spatial-temporal consistency for 2D diffusion models to generate high-quality instruction-guided dynamic scene editing results. Traditional applications of 2D diffusion models in dynamic scene editing often result in inconsistency, primarily due to their inherent frame-by-frame editing methodology. Addressing the complexities of extending instruction-guided editing to 4D, our key insight is to treat a 4D scene as a pseudo-3D scene, decoupled into two sub-problems: achieving temporal consistency in video editing and applying these edits to the pseudo-3D scene. Following this, we first enhance the Instruct-Pix2Pix (IP2P) model with an anchor-aware attention module for batch processing and consistent editing. Additionally, we integrate optical flow-guided appearance propagation in a sliding window fashion for more precise frame-to-frame editing and incorporate depth-based projection to manage the extensive data of pseudo-3D scenes, followed by iterative editing to achieve convergence. We extensively evaluate our approach in various scenes and editing instructions, and demonstrate that it achieves spatially and temporally consistent editing results, with significantly enhanced detail and sharpness over the prior art. Notably, Instruct 4D-to-4D is general and applicable to both monocular and challenging multi-camera scenes.</p>
-					</div>
-				</div>
-			</div>
-		</div>
-		-->
-
-		<!-- Robotics & RL section temporarily hidden
-		<div class="container">
-			<h2 id="Robotics" class="section-h2">Robotics & RL</h2>
-			<hr style="margin-top:0.4em">
+			<h3 id="Robotics" class="section-h3">Robotics &amp; RL</h3>
 
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
@@ -284,19 +207,18 @@
 						[<a href="javascript:void(0)" onclick="display('ttt-abs')">abs</a>]&nbsp;
 						[<a target="_blank" href="https://arxiv.org/abs/2602.02331">arXiv</a>]&nbsp;
 						[<a target="_blank" href="https://ttt-parkour.github.io/">website</a>]&nbsp;
-						[<a target="_blank" href="https://github.com/project-instinct/instinct_onboard">code</a>]&nbsp;
+						[<a target="_blank" href="https://github.com/project-instinct/InstinctLab">code</a>]&nbsp;
+							[<a target="_blank" href="https://github.com/project-instinct">framework</a>]&nbsp;
 						[<a target="_blank" href="https://youtu.be/ayfYpZf4N6M?si=eRQzRs3p4m3hFfSA">video</a>]&nbsp;
-						<a class="more-link" href="https://github.com/project-instinct/instinct_onboard" target="_blank"><img
+						<a class="more-link" href="https://github.com/project-instinct/InstinctLab" target="_blank"><img
 								alt="GitHub stars"
-								src="https://img.shields.io/github/stars/project-instinct/instinct_onboard?style=social"></a>
+								src="https://img.shields.io/github/stars/project-instinct/InstinctLab?style=social"></a>
 					</p>
 					<div id="ttt-abs" class="pub-abstract">
 						<p>Achieving highly dynamic humanoid parkour on unseen, complex terrains remains a challenge in robotics. Although general locomotion policies demonstrate capabilities across broad terrain distributions, they often struggle with arbitrary and highly challenging environments. To overcome this limitation, we propose a real-to-sim-to-real framework that leverages rapid test-time training (TTT) on novel terrains, significantly enhancing the robot's capability to traverse extremely difficult geometries. We adopt a two-stage end-to-end learning paradigm: a policy is first pre-trained on diverse procedurally generated terrains, followed by rapid fine-tuning on high-fidelity meshes reconstructed from real-world captures. Specifically, we develop a feed-forward, efficient, and high-fidelity geometry reconstruction pipeline using RGB-D inputs, ensuring both speed and quality during test-time training. We demonstrate that TTT-Parkour empowers humanoid robots to master complex obstacles, including wedges, stakes, boxes, trapezoids, and narrow beams. The whole pipeline of capturing, reconstructing, and test-time training requires less than 10 minutes on most tested terrains. Extensive experiments show that the policy after test-time training exhibits robust zero-shot sim-to-real transfer capability.</p>
 					</div>
 				</div>
 			</div>
-
-			<hr>
 
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
@@ -328,6 +250,7 @@
 		-->
 
 
+		<!-- Experience temporarily hidden
 		<div class="container">
 			<h2 id="Experience" class="section-h2">Experience</h2>
 			<hr style="margin-top:0.4em">
@@ -348,6 +271,7 @@
 				</tr>
 			</table>
 		</div>
+		-->
 
 		<br>
 		
