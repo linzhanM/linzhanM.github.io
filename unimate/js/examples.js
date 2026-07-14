@@ -9,6 +9,9 @@
 //   label     sidebar button text.
 //   files     array of file entries (see below), laid out left→right in a row.
 //   spacing   row step multiplier (gap between models, in widths). Default 1.15.
+//   rowSpacing per-row spacing override, keyed by row index (e.g. { 0: 0.9, 1: 1.1 }).
+//             Rows not listed fall back to `spacing` — use when two rows have
+//             different member counts/widths and shouldn't share one spacing.
 //   scale     multiplies EVERY model's normalized size in this stage (e.g. 0.6
 //             shrinks stocky quadrupeds so they don't read oversized next to bipeds).
 //   pad       camera zoom-out margin (>1 pulls the camera back). Default 1.0.
@@ -103,17 +106,18 @@ export const EXAMPLES = [
   {
     label: 'Humanoid Robot',
     files: [
-      // Row 0 (front): gundams (left & right nudged inward toward the center kick).
-      { url: 'glbs/gundam-crouch.glb', scale: 0.8, offset: [0.1, 0, 0] },
+      // Row 0 (front): four gundams, matching the four robots behind.
+      { url: 'glbs/gundam-crouch.glb', scale: 0.8 },
       { url: 'glbs/gundam-kick.glb', scale: 0.8 },
-      { url: 'glbs/gundam-dance.glb', scale: 0.8, offset: [-0.1, 0, 0] },
+      { url: 'glbs/gundam-jump.glb', scale: 0.8 },
+      { url: 'glbs/gundam-dance.glb', scale: 0.8 },
       // Row 1 (back): robots.
       { url: 'glbs/robot-walk.glb', row: 1 },
       { url: 'glbs/robot-jump.glb', row: 1 },
       { url: 'glbs/robot-rotate.glb', row: 1 },
       { url: 'glbs/robot-kick.glb', row: 1 },
     ],
-    spacing: 1.0, pad: 1.1, rowDepth: 1.8,
+    rowSpacing: { 0: 0.8, 1: 1.1 }, pad: 1.1, rowDepth: 1.8,
   },
   {
     label: 'Quadruped Robot',

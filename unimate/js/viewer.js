@@ -518,7 +518,7 @@ function disposeStage() {
 // row N back along −Z so multiple rows read as a front-to-back diorama. Models with
 // `behind`/`above` are excluded — they anchor to another model later, so they must
 // not shift a row's centering.
-function layoutRows(specs, sizes, spacing, evenGaps, rowDepth = 2.6) {
+function layoutRows(specs, sizes, spacing, evenGaps, rowDepth = 2.6, rowSpacing = null) {
   const members = pivots.map((_, i) => i).filter((i) => !specs[i].behind && !specs[i].above);
 
   // Group members by their row index (default 0 = front).
@@ -530,7 +530,10 @@ function layoutRows(specs, sizes, spacing, evenGaps, rowDepth = 2.6) {
   }
 
   for (const [r, rowIdx] of byRow) {
-    placeAlongX(rowIdx, sizes, spacing, evenGaps);
+    // `rowSpacing[r]` (if given) overrides the stage `spacing` for this row only,
+    // so rows with different member counts/widths can be spaced independently.
+    const sp = (rowSpacing && rowSpacing[r] != null) ? rowSpacing[r] : spacing;
+    placeAlongX(rowIdx, sizes, sp, evenGaps);
     if (r) rowIdx.forEach((i) => { pivots[i].position.z += -r * rowDepth; pivots[i].updateMatrixWorld(true); });
   }
 }
@@ -665,14 +668,14 @@ function loadExample(index) {
     };
   });
   return loadStage(specs, index, {
-    scale: ex.scale, spacing: ex.spacing, pad: ex.pad, lighting: ex.lighting,
+    scale: ex.scale, spacing: ex.spacing, rowSpacing: ex.rowSpacing, pad: ex.pad, lighting: ex.lighting,
     evenGaps: ex.evenGaps, sizeBy: ex.sizeBy, stagger: ex.stagger, rowDepth: ex.rowDepth,
     stageShift: ex.stageShift,
   });
 }
 
 // specs: [{ url, isFbx, material, ... }].  activeIndex: sidebar item to highlight, or null.
-// opts: { scale, spacing, pad, lighting, evenGaps, sizeBy, stagger, rowDepth, stageShift } — see examples.js.
+// opts: { scale, spacing, rowSpacing, pad, lighting, evenGaps, sizeBy, stagger, rowDepth, stageShift } — see examples.js.
 async function loadStage(specs, activeIndex, opts = {}) {
   const token = ++loadToken;
   overlay.innerHTML = LOADING_HTML;
@@ -730,7 +733,7 @@ async function loadStage(specs, activeIndex, opts = {}) {
 
     // Position the stage: rows → stagger → behind → above → offsets → whole-stage shift.
     activeShift = opts.stageShift || [0, 0, 0];
-    layoutRows(specs, sizes, opts.spacing, opts.evenGaps, opts.rowDepth);
+    layoutRows(specs, sizes, opts.spacing, opts.evenGaps, opts.rowDepth, opts.rowSpacing);
     applyStagger(opts.stagger);
     placeBehind(specs);
     placeAbove(specs);
