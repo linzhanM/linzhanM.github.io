@@ -66,7 +66,7 @@ export const EXAMPLES = [
       { url: 'glbs/mixamo-flip.glb', material: MIXAMO },
       'glbs/ironman-walk.glb',
     ],
-    pad: 1.12,
+    pad: 1.15, spacing: 0.96
   },
   {
     label: 'Articulated',
