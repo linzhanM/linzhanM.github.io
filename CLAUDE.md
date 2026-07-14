@@ -24,8 +24,8 @@ To deploy, commit changes and push to `main` — GitHub Pages serves the branch 
 ```
 index.html              Main homepage (the only page with publication content)
 static/                 Front-end assets for the homepage (CSS + JS)
-images/                 Homepage media: publication thumbnails, logos, profile photo
-assets/                 Homepage poster PDFs
+assets/images/          Homepage media: publication thumbnails, logos, profile photo
+assets/pdf/             Homepage poster PDFs and CV
 dimo/                   Self-contained DIMO project page
 unimate/                Self-contained UniMate project page
 ```
@@ -40,9 +40,9 @@ unimate/                Self-contained UniMate project page
 - `static/burger.js` — toggles `.is-active` on `.navbar-burger` and `#navbar-main` for the mobile hamburger menu
 - Inline JS in `index.html` — `display(id)` toggles a publication's abstract block; an `IntersectionObserver` lazy-plays the Robotics `video.lazy-video` thumbnails (which set `preload="none"`) only while on screen; a one-liner fills the footer copyright year. StatCounter analytics load at the end of `<body>`.
 
-**Publications pattern**: Publications live under `#Publications` ("Recent Publications"), split into `.section-h3` subsections — "Vision & Graphics" and "Robotics & RL". Each entry is a `.pub-row.row`: a video/image thumbnail in `.col-md-3` and details (`.pub-title` / `.pub-authors` / `.pub-venue` / `.pub-links`) in `.col-md-9`. Abstract text is hidden in a `<div id="*-abs" class="pub-abstract">` block, toggled by `onclick="display('*-abs')"`. Robotics thumbnails additionally carry `class="lazy-video"` with `preload="none"` so they only fetch and play when scrolled into view. `#Experience` and `#Service` sections follow the publications. One entry ("Let Occ Flow") is kept commented out in the markup, and its `images/letoccflow.mp4` stays in the repo for when it is restored.
+**Publications pattern**: Publications live under `#Publications` ("Recent Publications"), split into `.section-h3` subsections — "Vision & Graphics" and "Robotics & RL". Each entry is a `.pub-row.row`: a video/image thumbnail in `.col-md-3` and details (`.pub-title` / `.pub-authors` / `.pub-venue` / `.pub-links`) in `.col-md-9`. Abstract text is hidden in a `<div id="*-abs" class="pub-abstract">` block, toggled by `onclick="display('*-abs')"`. Robotics thumbnails additionally carry `class="lazy-video"` with `preload="none"` so they only fetch and play when scrolled into view. `#Experience` and `#Service` sections follow the publications. One entry ("Let Occ Flow") is kept commented out in the markup, and its `assets/images/letoccflow.mp4` stays in the repo for when it is restored.
 
-**Homepage media**: Publication thumbnails (videos/images) live in `images/`, each named after the work it represents (e.g. `dimo.mp4`, `unimate.mp4`, `ttt-parkour.mp4`, `vr-robo.mp4`). Affiliation/company logos carry a `-logo` suffix (`meta-logo.png`); `princeton-logo.jpg` doubles as the favicon. Poster PDFs live in `assets/`.
+**Homepage media**: Publication thumbnails (videos/images) live in `assets/images/`, each named after the work it represents (e.g. `dimo.mp4`, `unimate.mp4`, `ttt-parkour.mp4`, `vr-robo.mp4`). Affiliation/company logos carry a `-logo` suffix (`meta-logo.png`); `princeton-logo.jpg` doubles as the favicon. Poster PDFs and the CV live in `assets/pdf/`.
 
 **`dimo/`**: Self-contained, custom-designed project page for the DIMO paper — no Bootstrap, no shared assets. All styling is in `dimo/css/style.css` (design tokens at `:root`); markup is in `dimo/index.html`; the only script is `dimo/js/nav.js`. Loads Academicons, Font Awesome 4, and the Space Grotesk / Inter / Space Mono fonts from CDNs. Assets live in `dimo/img/` (videos, teaser/pipeline figures, `favicon.svg`) and `dimo/assets/` (the paper PDF).
   - **Design system**: a dark "latent-space" hero over a light "paper" body, with a reserved blue→violet→pink spectrum (`--spectrum`) used only on the title, the active nav node, the nav progress fill, and `favicon.svg`. Sections (`#demo`, `#applications`, `#abstract`, `#method`, `#poster`, `#cite`) alternate white / `--paper-2` tint for separation (no borders). Each section header is a mono `.kicker` + a `.section-title`.
