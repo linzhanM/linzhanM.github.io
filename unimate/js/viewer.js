@@ -54,7 +54,6 @@ let shadowPlane = null; // transparent shadow-catcher over the floor
 
 let loadToken = 0;     // guards against overlapping async loads
 let activePad = 1.15;  // camera padding of the current example (so Reset view keeps it)
-let activeFloorY = 0;  // vertical nudge of the floor for the current example
 let activeShift = [0, 0, 0]; // whole-diorama pan held OUT of auto-framing (e.g. [-1,0,0] slides left)
 
 // Tuning constants.
@@ -264,7 +263,7 @@ function applyMaterialOverride(model, mat) {
 //   • ground    : lowest JOINT across all frames -> y = 0 (lowest_joint_z + step 5),
 //                 skipping armature-origin root joints (head_local.length < 1e-3 guard)
 // groundToMesh: ground the lowest MESH vertex instead of the lowest joint — for rigs
-//   (e.g. the fish) whose spine joints sit well above the belly, so joint-grounding
+//   (e.g. gyarados) whose spine joints sit well above the belly, so joint-grounding
 //   leaves the body floating above the grid.
 // sizeBy: 'height' (default) scales so the tallest per-frame height == TARGET_HEIGHT;
 //   'maxdim' scales by the largest per-frame bounding-box dimension instead. Use 'maxdim'
@@ -461,10 +460,10 @@ function frameStage(pad = 1.0) {
     new THREE.PlaneGeometry(gridSize, gridSize),
     // Unlit (like the old line grid) so the floor tone stays constant regardless of
     // the per-window lighting multiplier.
-    new THREE.MeshBasicMaterial({ map: checkerTex, transparent: true, opacity: 0.75, side: THREE.DoubleSide })
+    new THREE.MeshBasicMaterial({ map: checkerTex, transparent: true, opacity: 0.6, side: THREE.DoubleSide })
   );
   grid.rotation.x = -Math.PI / 2;
-  grid.position.set(tx, box.min.y + activeFloorY, tz); // natural center, so the floor stays put
+  grid.position.set(tx, 0, tz); // floor is a FIXED datum at world y = 0; each model is grounded to it
   scene.add(grid);
 
   // Transparent shadow catcher laid just over the checker floor: ShadowMaterial
@@ -472,10 +471,10 @@ function frameStage(pad = 1.0) {
   if (shadowPlane) { scene.remove(shadowPlane); shadowPlane.geometry.dispose(); shadowPlane.material.dispose(); }
   shadowPlane = new THREE.Mesh(
     new THREE.PlaneGeometry(gridSize, gridSize),
-    new THREE.ShadowMaterial({ opacity: 0.3 })
+    new THREE.ShadowMaterial({ opacity: 0.25 })
   );
   shadowPlane.rotation.x = -Math.PI / 2;
-  shadowPlane.position.set(tx, box.min.y + activeFloorY + 0.001, tz); // hair above the floor (no z-fight)
+  shadowPlane.position.set(tx, 0.001, tz); // hair above the fixed floor (no z-fight)
   shadowPlane.receiveShadow = true;
   shadowPlane.visible = settings['shadow'];
   scene.add(shadowPlane);
@@ -484,7 +483,7 @@ function frameStage(pad = 1.0) {
   // center and size the frustum to the footprint so shadows stay crisp. A wider
   // frustum over the same map would blur/blockify them.
   const extent = Math.max(size.x, size.y, size.z, MIN_FRAME_WIDTH) + shiftMag;
-  keyLight.target.position.set(tx, box.min.y, tz);
+  keyLight.target.position.set(tx, 0, tz); // aim at the fixed floor (y = 0)
   keyLight.target.updateMatrixWorld();
   const sc = keyLight.shadow.camera;
   sc.left = -extent; sc.right = extent; sc.top = extent; sc.bottom = -extent;
@@ -543,7 +542,7 @@ function placeAlongX(rowIdx, sizes, spacing, evenGaps) {
 
   if (evenGaps) {
     // Even *visual* gaps: place each model edge-to-edge with a constant gap, so a
-    // wide model (e.g. the fish) doesn't crowd its neighbor while a narrow one leaves
+    // wide model (e.g. gyarados) doesn't crowd its neighbor while a narrow one leaves
     // a big hole. Gap = widest footprint * (spacing - 1).
     const widths = rowIdx.map((i) => Math.max(0.3, sizes[i].x));
     const gap = Math.max(...widths) * (sp - 1);
@@ -667,13 +666,13 @@ function loadExample(index) {
   });
   return loadStage(specs, index, {
     scale: ex.scale, spacing: ex.spacing, pad: ex.pad, lighting: ex.lighting,
-    evenGaps: ex.evenGaps, sizeBy: ex.sizeBy, stagger: ex.stagger, rowDepth: ex.rowDepth, floorOffset: ex.floorOffset,
+    evenGaps: ex.evenGaps, sizeBy: ex.sizeBy, stagger: ex.stagger, rowDepth: ex.rowDepth,
     stageShift: ex.stageShift,
   });
 }
 
 // specs: [{ url, isFbx, material, ... }].  activeIndex: sidebar item to highlight, or null.
-// opts: { scale, spacing, pad, lighting, evenGaps, sizeBy, stagger, rowDepth, floorOffset, stageShift } — see examples.js.
+// opts: { scale, spacing, pad, lighting, evenGaps, sizeBy, stagger, rowDepth, stageShift } — see examples.js.
 async function loadStage(specs, activeIndex, opts = {}) {
   const token = ++loadToken;
   overlay.innerHTML = LOADING_HTML;
@@ -742,7 +741,6 @@ async function loadStage(specs, activeIndex, opts = {}) {
     applyWireframe();
     applyLighting(opts.lighting || 1);
     activePad = opts.pad || 1.0;
-    activeFloorY = opts.floorOffset || 0;
     frameStage(activePad);
     overlay.style.display = 'none';
   } catch (err) {

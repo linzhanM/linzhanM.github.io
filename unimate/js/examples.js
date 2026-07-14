@@ -21,8 +21,6 @@
 //   stagger   peak depth offset: pushes alternating row models forward/back along Z
 //             so the row zig-zags instead of sitting on one straight line.
 //   rowDepth  Z gap between rows when files use `row` (default 2.6). Bigger = deeper.
-//   floorOffset raise (+) or lower (−) the checker floor + shadow catcher, in
-//             normalized units, relative to the stage's lowest point (default 0).
 //   stageShift [x, y, z] slide the WHOLE group of objects off-center within the frame,
 //             while the camera + floor stay locked on the ground center (the objects
 //             move across a stationary floor; the viewpoint never pans). Held out of
@@ -39,7 +37,7 @@
 //     row          which front-to-back row this model sits in (0 = front, default).
 //                  Each row is centered on X and pushed back by `rowDepth` per step.
 //     groundToMesh ground the lowest MESH vertex instead of the lowest joint — for
-//                  rigs (e.g. the fish) whose spine joints float above the belly.
+//                  rigs (e.g. gyarados) whose spine joints float above the belly.
 //     groundFrame  ground on a SINGLE frame (normalized 0..1) rather than the lowest
 //                  point across all frames — use when a limb/tail dips below the feet
 //                  mid-clip and floats the body (e.g. stego-attack → groundFrame: 0).
@@ -65,11 +63,11 @@ export const EXAMPLES = [
       { url: 'glbs/mixamo-flip.glb', material: MIXAMO },
       'glbs/ironman-walk.glb',
     ],
-    pad: 1.12, floorOffset: 0.04,
+    pad: 1.12,
   },
   {
     label: 'Articulated',
-    files: [{ url: 'glbs/satellite.glb', material: { roughness: 0.3, metalness: 0.7 }, rotate: [0, 45, 0] }, { url: 'glbs/pupper-chrome.glb', rotate: [0, -60, 0], offset: [1. , 0, -0.2],scale: 0.8 }, { url: 'glbs/lamp.glb', rotate: [0, 45, 0], scale: 0.65 }],
+    files: [{ url: 'glbs/satellite.glb', material: { roughness: 0.3, metalness: 0.7 }, rotate: [0, 30, 0], groundFrame: 1, groundToMesh: true }, { url: 'glbs/robot-arm.glb', rotate: [0, -60, 0], offset: [1. , 0, -0.2],scale: 0.8 }, { url: 'glbs/lamp.glb', rotate: [0, 45, 0], scale: 0.65 }],
     spacing: 0.6, lighting: 2., evenGaps: true,
   },
   {
@@ -82,25 +80,25 @@ export const EXAMPLES = [
   },
   {
     // Two-row diorama (front row 0 → back row 1, separated by `rowDepth`):
-    //   Row 0 (front, ground):  fish · jellyfish              + a bird hovering above.
+    //   Row 0 (front, ground):  gyarados · jellyfish          + a bird hovering above.
     //   Row 1 (back,  ground):  monster · stego               + two dragons above.
     // Flyers use `above: [index, height]` to sit over a specific ground model.
     label: 'Zoo',
     files: [
       // Row 0 (front, ground). Whole front row nudged left (−x).
-      { url: 'glbs/fish.glb', groundToMesh: true, scale: 1.25, offset: [-0.6, 0, 1.0] },    // 0
+      { url: 'glbs/gyarados.glb', groundToMesh: true, scale: 1.25, offset: [-0.6, 0, 1.0] },    // 0
       { url: 'glbs/jellyfish.glb', offset: [-0.6, 0, 1.0] },          // 1
       // Row 1 (back, ground).
-      { url: 'glbs/monster.glb', row: 1, scale: 1.3, material: { roughness: 0.8, emissiveIntensity: 0.8 }, rotate: [0, 90, 0], groundToMesh: true, offset: [-0.5, -0.3, 0] },    // 2  yaw to profile; ground the claws (lowest mesh vertex); nudged left, dropped 0.2 on Y
-      { url: 'glbs/stego-attack.glb', row: 1, material: { roughness: 0.6, emissiveIntensity: 0.8 }, scale: 1.8, groundFrame: 0, offset: [0., -0.1, 0] }, // 3  ground on the neutral stance (feet down, not the swinging tail); nudged right
+      { url: 'glbs/monster.glb', row: 1, scale: 1.3, material: { roughness: 0.8, emissiveIntensity: 0.8 }, rotate: [0, 90, 0], offset: [-0.5, -0.15, 0] },    // 2  yaw to profile; nudged left; sunk slightly into the ground
+      { url: 'glbs/stego-attack.glb', row: 1, material: { roughness: 0.6, emissiveIntensity: 0.8 }, scale: 1.8, groundFrame: 0, offset: [0., 0, 0] }, // 3  ground on the neutral stance (feet down, not the swinging tail)
       // Flyers.
       { url: 'glbs/bird.glb', scale: 0.7, above: [2, 1.4], offset: [1.5, 0, 1.0] }, // 4  hovering at back-row center (between the two dragons); nudged forward (+z)
       { url: 'glbs/dragon-fire.glb', material: { roughness: 0.8, emissiveIntensity: 0.8 }, scale: 2.0, above: [2, 1.5], offset: [0, 0, 1.0] }, // 5  above monster; nudged forward (+z)
       { url: 'glbs/dragon.glb', material: { roughness: 0.3, emissiveIntensity: 0.8 }, scale: 2.0, above: [3, 1.5], offset: [-1.0, 0, 12] },      // 6  above stego; nudged forward (+z)
-      { url: 'glbs/whale.glb', groundToMesh: true, rotate: [0, 180, 0], scale: 0.8, offset: [-0.6, 0.3, 1.0] }, // 7  row 0 (front), lifted slightly off the ground; nudged left (−x)
-      { url: 'glbs/chicken.glb', scale: 0.7, material: { roughness: 0.6, emissiveIntensity: 0.8 }, above: [2, 0], offset: [1.5, -0.2, 0] }, // 8  on the ground directly below the bird (same anchor/offset as index 4)
+      { url: 'glbs/whale.glb', rotate: [0, 180, 0], scale: 0.8, offset: [-0.6, 0.3, 1.0] }, // 7  row 0 (front), lifted slightly off the ground; nudged left (−x)
+      { url: 'glbs/chicken.glb', scale: 0.7, material: { roughness: 0.6, emissiveIntensity: 0.8 }, above: [2, 0], offset: [1.5, 0, 0] }, // 8  on the ground directly below the bird (same anchor/offset as index 4)
     ],
-    spacing: 1.05, pad: 1.05, evenGaps: true, rowDepth: 2.8, floorOffset: 0.7, stageShift: [-0.3, 0, 0],
+    spacing: 1.05, pad: 1.05, evenGaps: true, rowDepth: 2.8, stageShift: [-0.3, 0, 0],
   },
   {
     label: 'Humanoid Robot',
@@ -130,20 +128,20 @@ export const EXAMPLES = [
   {
     label: 'Eagle',
     files: [
-      { url: 'glbs/eagle-takeoff.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 } },
-      { url: 'glbs/eagle-strike.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 } },
-      { url: 'glbs/eagle-landing.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 } },
+      { url: 'glbs/eagle-takeoff.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 0.4, 0] },
+      { url: 'glbs/eagle-strike.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 1.0, 0] },
+      { url: 'glbs/eagle-landing.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 0.4, 0] },
     ],
     sizeBy: 'maxdim', spacing: 1.15, evenGaps: true, lighting: 6.0,
   },
   {
     label: 'Shark',
     files: [
-      { url: 'glbs/jaws-swimright.glb'},
-      { url: 'glbs/jaws-biteleft.glb'},
-      { url: 'glbs/jaws-swim180.glb'},
+      { url: 'glbs/jaws-swimright.glb', offset: [0, 0.4, 0] },
+      { url: 'glbs/jaws-biteleft.glb', offset: [0, 0.4, 0] },
+      { url: 'glbs/jaws-swim180.glb', offset: [-0.4, 0.4, 0] },
     ],
-    sizeBy: 'maxdim', spacing: 1.0, evenGaps: true, lighting: 6.0, floorOffset: -0.2,
+    sizeBy: 'maxdim', spacing: 1.0, evenGaps: true, lighting: 6.0, pad: 1.12,
   },
   {
     label: 'Michelle',
