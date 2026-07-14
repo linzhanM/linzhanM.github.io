@@ -106,7 +106,7 @@ export const EXAMPLES = [
       // Row 0 (front): gundams (left & right nudged inward toward the center kick).
       { url: 'glbs/gundam-crouch.glb', scale: 0.8, offset: [0.1, 0, 0] },
       { url: 'glbs/gundam-kick.glb', scale: 0.8 },
-      { url: 'glbs/gundam-jump.glb', scale: 0.8, offset: [-0.1, 0, 0] },
+      { url: 'glbs/gundam-dance.glb', scale: 0.8, offset: [-0.1, 0, 0] },
       // Row 1 (back): robots.
       { url: 'glbs/robot-walk.glb', row: 1 },
       { url: 'glbs/robot-jump.glb', row: 1 },
