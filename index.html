@@ -83,7 +83,7 @@
 				<p style="margin-top: -2px;">
 					I am a first-year CS Ph.D. student at Princeton, advised by <a href="https://www.cs.princeton.edu/~smr/">Prof. Szymon Rusinkiewicz</a>. I also collaborate closely with <a href="https://www.cs.princeton.edu/~af/">Prof.&nbsp;Adam Finkelstein</a>.
 					<br><br>
-					I work on world models and robot learning at <a href="https://pixl.engineering.princeton.edu/">Princeton ImageX Lab (PIXL)</a>. <span style="white-space: nowrap;">I am currently</span> a research intern at <a href="https://ai.meta.com/">Meta</a> working on world action models.
+					I work on world models and robot learning at <a href="https://pixl.engineering.princeton.edu/">Princeton ImageX Lab (PIXL)</a>. <span style="white-space: nowrap;">I am currently</span> a research intern at Meta working on world action models.
 					<br>
 				</p>
 				<div style="font-size: var(--text-lg); padding-top: 12px;">
@@ -105,7 +105,6 @@
 
 		<br>
 
-		<!-- Recent Publications temporarily hidden
 		<div class="container">
 			<h2 id="Publications" class="section-h2">Recent Publications</h2>
 			<hr style="margin-top:0.4em">
@@ -121,11 +120,13 @@
 				<div class="col-md-9">
 					<p class="pub-title">UniMate: One Unified Model to Animate Diverse Skeletons</p>
 					<p class="pub-authors"><u>Linzhan Mou</u>, Jiahui Lei, Zhiyang Dou, Chenyue Cai, Chaoyue Song, Adam Finkelstein, Szymon Rusinkiewicz</p>
-					<p class="pub-venue"></p>
+					<p class="pub-venue">SIGGRAPH Asia 2026</p>
 					<p class="pub-links">
 						[<a href="javascript:void(0)" onclick="display('unimate-abs')">abs</a>]&nbsp;
+						[<a target="_blank" href="">arXiv</a>]&nbsp;
 						[<a target="_blank" href="https://linzhanm.github.io/unimate">website</a>]&nbsp;
-						[tl;dr: One model to animate all rigs in real time.]&nbsp;
+						[<a target="_blank" href="">code</a>]&nbsp;
+						(Conditionally Accepted)&nbsp;
 					</p>
 					<div id="unimate-abs" class="pub-abstract">
 						<p>Recent advances in automatic rigging now deliver animation-ready 3D assets at scale, yet generating the motion to drive them remains a bottleneck. Existing learned animators are topology-constrained: they rely on category-specific templates or require per-skeleton fine-tuning and reference motions at inference. We present UniMate, a unified foundation model that synthesizes articulated motion for arbitrary skeletons from a rigged 3D asset and a text prompt, with no test-time optimization or per-skeleton retraining. UniMate relies on a topology-aware diffusion transformer, which integrates skeletal topology into attention via three mechanisms: (1) a graph-aware attention bias from pairwise joint relations and geodesic distances; (2) a spectral rotary position embedding generalizing RoPE to arbitrary kinematic trees via the graph Laplacian; and (3) a global topological conditioner attention-pooled from the rest-pose skeleton. We also curate UniML3D, 13,006 motion sequences spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid objects with unified canonicalization and text pairing. Trained on this dataset, UniMate outperforms state-of-the-art baselines in quality, generalization, and efficiency, and supports zero-shot cross-topology transfer, in-betweening, and text-guided editing.</p>
@@ -247,10 +248,8 @@
 				</div>
 			</div>
 		</div>
-		-->
 
 
-		<!-- Experience temporarily hidden
 		<div class="container">
 			<h2 id="Experience" class="section-h2">Experience</h2>
 			<hr style="margin-top:0.4em">
@@ -265,13 +264,12 @@
 							<strong>Meta AI</strong> &middot; Research Scientist Intern
 						</div>
 						<div style="font-size: var(--text-base); color: var(--text-secondary);">
-							Summer 2026 &middot; Video World Models
+							Summer 2026 &middot; Video Action Models
 						</div>
 					</td>
 				</tr>
 			</table>
 		</div>
-		-->
 
 		<br>
 		
@@ -279,7 +277,7 @@
 		<div class="container">
 			<h2 id="Service" class="section-h2">Service</h2>
 			<hr style="margin-top:0.4em">
-			<p>Reviewer: CVPR, ICCV, ECCV, NeurIPS, NeurIPS D&B Track, ICLR, SIGGRAPH (Asia), Eurographics, RA-L, ICRA, TVCG</p>
+			<p>Reviewer: CVPR, ICCV, ECCV, NeurIPS, NeurIPS D&B Track, ICLR, COLM, SIGGRAPH (Asia), Eurographics, RA-L, ICRA, TVCG</p>
 		</div>
 
 		<br>

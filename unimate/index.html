@@ -33,6 +33,7 @@
   </div>
 
   <div class="main-content">
+    <div class="venue-line"><span class="venue">SIGGRAPH Asia 2026</span></div>
     <div class="hero-text">UniMate</div>
     <div class="sub-hero-text">One Unified Model to Animate Diverse Skeletons</div>
 
@@ -230,11 +231,12 @@
 
     <div class="bibtex-code">
       <div class="bibtex-title">BibTeX</div>
-      <pre><code>@article{mou2026unimate,
-  title   = {UniMate: One Unified Model to Animate Diverse Skeletons},
-  author  = {Mou, Linzhan and Lei, Jiahui and Dou, Zhiyang and Cai, Chenyue and
-             Song, Chaoyue and Finkelstein, Adam and Rusinkiewicz, Szymon},
-  year    = {2026}
+      <pre><code>@inproceedings{mou2026unimate,
+  title     = {UniMate: One Unified Model to Animate Diverse Skeletons},
+  author    = {Mou, Linzhan and Lei, Jiahui and Dou, Zhiyang and Cai, Chenyue and
+               Song, Chaoyue and Finkelstein, Adam and Rusinkiewicz, Szymon},
+  booktitle = {SIGGRAPH Asia 2026 Conference Papers},
+  year      = {2026}
 }</code></pre>
     </div>
 
@@ -265,6 +267,8 @@
   <!-- Experiments gallery: horizontal scroll buttons (VideoMimic pattern). -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
       // Only galleries with enough videos to overflow keep scroll buttons.
       const galleries = [
         {
@@ -290,14 +294,59 @@
         const rightBtn = document.getElementById(cfg.scrollRightBtnId);
         if (!(container && inner && leftBtn && rightBtn)) return;
 
-        const scrollAmount = (inner.firstElementChild?.offsetWidth || 300) + 15; // 15 = gallery gap
-        leftBtn.addEventListener('click', () => container.scrollBy({ left: -scrollAmount, behavior: 'smooth' }));
-        rightBtn.addEventListener('click', () => container.scrollBy({ left: scrollAmount, behavior: 'smooth' }));
+        const items = [...inner.querySelectorAll('.gallery-video')];
+        if (!items.length) return;
+
+        // Do not cache a video's width here: at DOMContentLoaded its intrinsic
+        // dimensions may not be known yet, so width:auto can briefly measure as
+        // only a few pixels. Navigate to the live position of a specific item
+        // instead, which also handles galleries whose videos have different widths.
+        let targetIndex = 0;
+        let programmaticScroll = false;
+        let scrollTimer;
+
+        const nearestItemIndex = () => {
+          const viewportCenter = container.scrollLeft + container.clientWidth / 2;
+          let nearest = 0;
+          let nearestDistance = Infinity;
+          items.forEach((item, index) => {
+            const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+            const distance = Math.abs(itemCenter - viewportCenter);
+            if (distance < nearestDistance) {
+              nearest = index;
+              nearestDistance = distance;
+            }
+          });
+          return nearest;
+        };
+
+        const showItem = (index) => {
+          targetIndex = Math.max(0, Math.min(items.length - 1, index));
+          const item = items[targetIndex];
+          const maxScroll = container.scrollWidth - container.clientWidth;
+          const centeredLeft = item.offsetLeft - (container.clientWidth - item.offsetWidth) / 2;
+          programmaticScroll = true;
+          container.scrollTo({
+            left: Math.max(0, Math.min(maxScroll, centeredLeft)),
+            behavior: reduceMotion ? 'auto' : 'smooth'
+          });
+          window.clearTimeout(scrollTimer);
+          scrollTimer = window.setTimeout(() => { programmaticScroll = false; }, 500);
+        };
+
+        // Establish the initial item after layout, then keep an explicit target
+        // so rapid clicks during a smooth scroll advance rather than reselecting
+        // the item that is still visually nearest.
+        requestAnimationFrame(() => { targetIndex = nearestItemIndex(); });
+        leftBtn.addEventListener('click', () => showItem(targetIndex - 1));
+        rightBtn.addEventListener('click', () => showItem(targetIndex + 1));
+        container.addEventListener('scroll', () => {
+          if (!programmaticScroll) targetIndex = nearestItemIndex();
+        }, { passive: true });
       });
 
       // Load and play only videos that are actually visible. Off-screen clips
       // pause immediately, avoiding simultaneous downloads and decoding work.
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const videoObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           const video = entry.target;
