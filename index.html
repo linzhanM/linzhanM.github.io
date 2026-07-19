@@ -17,8 +17,9 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600,0,0;9..144,700,0,0&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="static/custom-navbar.css">
-	<link rel="stylesheet" href="static/styles.css">
+	<!-- ?v= busts the CDN/browser cache; bump it when editing these files. -->
+	<link rel="stylesheet" href="static/custom-navbar.css?v=21">
+	<link rel="stylesheet" href="static/styles.css?v=21">
 
 	<script type="text/javascript">
 		function display(id) {
@@ -36,96 +37,83 @@
 </head>
 
 <body>
-	<nav class="navbar" role="navigation">
-		<div class="navbar-brand">
-			<a class="navbar-item" href="/">
-				<img src="assets/images/princeton-logo.jpg" alt="Princeton University" style="height: 1.4rem; width: auto; margin-right: 0.5rem; border-radius: 2px; vertical-align: middle;">
-				<strong>Linzhan Mou</strong>
-			</a>
-			<div class="navbar-burger" data-target="navbar-main">
-				<span></span>
-				<span></span>
-				<span></span>
+	<nav class="navbar" role="navigation" aria-label="Main">
+		<!-- Full-bleed: brand pinned left, section index pushed right. -->
+		<div class="navbar-inner">
+			<div class="navbar-brand">
+				<a class="brand-link" href="/">
+					<img src="assets/images/princeton-logo.jpg" alt="" aria-hidden="true">
+					<strong>Linzhan Mou</strong>
+				</a>
+				<button class="navbar-burger" type="button" aria-label="Menu" aria-expanded="false"
+					aria-controls="navbar-main">
+					<span></span>
+					<span></span>
+					<span></span>
+				</button>
 			</div>
-		</div>
-		<div class="navbar-menu" id="navbar-main">
-			<div class="navbar-end">
-				<div class="navbar-item">
-					<a target="_blank" href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&hl=en"
-						class="button is-white">
-						<i class="ai ai-google-scholar ai-lg" aria-hidden="true"></i>
-					</a>
-					<a target="_blank" href="https://github.com/Friedrich-M" class="button is-white">
-						<i class="fab fa-github fa-lg" aria-hidden="true"></i>
-					</a>
-					<a target="_blank" href="https://twitter.com/LinzhanMou" class="button is-white">
-						<i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
-					</a>
-					<a href="mailto:linzhan@princeton.edu" class="button is-white">
-						<i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
-					</a>
+			<div class="navbar-menu" id="navbar-main">
+				<!-- Section index. The keypoint rides the rail to mark where you are. -->
+				<div class="navbar-sections">
+					<a class="nav-section" href="#Publications">Research</a>
+					<a class="nav-section" href="#Experience">Experience</a>
+					<span class="nav-keypoint" aria-hidden="true"></span>
 				</div>
 			</div>
 		</div>
 	</nav>
 
-	<div class="container" style="padding-top: 16px; padding-bottom: 10px;">
+	<div class="container hero">
 		<div class="row">
-			<div class="col-md-3 text-center" style="padding-right: 0; padding-top: 18px;">
-				<img class="img-responsive img-rounded" src="assets/images/profile.jpeg" alt="Linzhan Mou"
-					style="max-height: 280px; width: auto; border: 1.5px solid var(--ivory-dark); border-radius: 6%; box-shadow: 0 4px 16px rgba(20, 20, 19, 0.12);">
-				<p class="mt-2 mb-0 small" style="color: var(--text-secondary);">Photo with <a href="https://nooraovo.github.io/">Shuning</a> in 2025.</p>
+			<div class="col-md-3 text-center hero-photo-col">
+				<img class="hero-photo" src="assets/images/profile.jpeg" alt="Linzhan Mou">
+				<p class="hero-caption">Photo with <a href="https://nooraovo.github.io/">Shuning</a> in 2025.</p>
 			</div>
-			<div class="col-md-9" style="padding-left: 45px; padding-right: 0;">
-				<br>
+			<div class="col-md-9 hero-body">
 				<h1>Linzhan Mou</h1>
-				<p style="margin-top:-5px; font-size: var(--text-sm); color: var(--text-secondary);">linzhan [at] &#123;princeton [dot] edu, meta [dot] com&#125;</p>
-				<p style="margin-top: -2px;">
+				<p class="hero-email">linzhan [at] &#123;princeton [dot] edu, meta [dot] com&#125;</p>
+				<p class="hero-bio">
 					I am a first-year CS Ph.D. student at Princeton, advised by <a href="https://www.cs.princeton.edu/~smr/">Prof. Szymon Rusinkiewicz</a>. I also collaborate closely with <a href="https://www.cs.princeton.edu/~af/">Prof.&nbsp;Adam Finkelstein</a>.
-					<br><br>
-					I work on world models and robot learning at <a href="https://pixl.engineering.princeton.edu/">Princeton ImageX Lab (PIXL)</a>. <span style="white-space: nowrap;">I am currently</span> a research intern at Meta working on world action models.
-					<br>
 				</p>
-				<div style="font-size: var(--text-lg); padding-top: 12px;">
-					<a target="_blank" href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&amp;hl=en" style="color:var(--text-primary)">
-						<i class="ai ai-google-scholar ai-lg"></i>
+				<p class="hero-bio">
+					I work on world models and robot learning at <a href="https://pixl.engineering.princeton.edu/">Princeton ImageX Lab (PIXL)</a>. <span class="nowrap">I am currently</span> a research intern at Meta working on world action models.
+				</p>
+				<div class="hero-links">
+					<a target="_blank" href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&amp;hl=en" aria-label="Google Scholar">
+						<i class="ai ai-google-scholar ai-lg" aria-hidden="true"></i>
 					</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
-					<a target="_blank" href="https://github.com/Friedrich-M" style="color:var(--text-primary)">
-						<i class="fab fa-github fa-lg"></i>
+					<a target="_blank" href="https://github.com/Friedrich-M" aria-label="GitHub">
+						<i class="fab fa-github fa-lg" aria-hidden="true"></i>
 					</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
-					<a target="_blank" href="https://twitter.com/LinzhanMou" style="color:var(--text-primary)">
-						<i class="fab fa-twitter fa-lg"></i>
+					<a target="_blank" href="https://twitter.com/LinzhanMou" aria-label="Twitter">
+						<i class="fab fa-twitter fa-lg" aria-hidden="true"></i>
 					</a>&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;
-					<a href="mailto:linzhan@princeton.edu" style="color:var(--text-primary)">
-						<i class="fas fa-envelope fa-lg"></i>
+					<a href="mailto:linzhan@princeton.edu" aria-label="Email">
+						<i class="fas fa-envelope fa-lg" aria-hidden="true"></i>
 					</a>
 				</div>
 			</div>
 		</div>
 
-		<br>
-
-		<div class="container">
-			<h2 id="Publications" class="section-h2">Recent Publications</h2>
-			<hr style="margin-top:0.4em">
+		<section class="container page-section">
+			<h2 id="Publications" class="section-h2">Recent Research</h2>
+			<hr>
 
 			<h3 id="Vision" class="section-h3">Vision &amp; Graphics</h3>
 
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
-					<video class="pub-thumbnail img-thumbnail" title="UniMate video loading.." tabindex="-1"
+					<video class="pub-thumbnail img-thumbnail lazy-video" title="UniMate video loading.." tabindex="-1"
 						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="assets/images/unimate.mp4"></video>
 				</div>
 				<div class="col-md-9">
 					<p class="pub-title">UniMate: One Unified Model to Animate Diverse Skeletons</p>
 					<p class="pub-authors"><u>Linzhan Mou</u>, Jiahui Lei, Zhiyang Dou, Chenyue Cai, Chaoyue Song, Adam Finkelstein, Szymon Rusinkiewicz</p>
-					<p class="pub-venue">SIGGRAPH Asia 2026</b></p>
+					<p class="pub-venue">SIGGRAPH Asia 2026</p>
 					<p class="pub-links">
 						[<a href="javascript:void(0)" onclick="display('unimate-abs')">abs</a>]&nbsp;
-						[<a target="_blank" href="">arXiv</a>]&nbsp;
 						[<a target="_blank" href="https://linzhanm.github.io/unimate">website</a>]&nbsp;
-						[<a target="_blank" href="">code</a>]&nbsp;
 						(Conditionally Accepted)&nbsp;
 					</p>
 					<div id="unimate-abs" class="pub-abstract">
@@ -136,7 +124,7 @@
 
 			<div class="pub-row row align-items-start">
 				<div class="col-md-3">
-					<video class="pub-thumbnail img-thumbnail" title="DIMO video loading.." tabindex="-1"
+					<video class="pub-thumbnail img-thumbnail lazy-video" title="DIMO video loading.." tabindex="-1"
 						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
 						src="assets/images/dimo.mp4"></video>
 				</div>
@@ -209,7 +197,7 @@
 						[<a target="_blank" href="https://arxiv.org/abs/2602.02331">arXiv</a>]&nbsp;
 						[<a target="_blank" href="https://ttt-parkour.github.io/">website</a>]&nbsp;
 						[<a target="_blank" href="https://github.com/project-instinct/InstinctLab">code</a>]&nbsp;
-							[<a target="_blank" href="https://github.com/project-instinct">framework</a>]&nbsp;
+						[<a target="_blank" href="https://github.com/project-instinct">framework</a>]&nbsp;
 						[<a target="_blank" href="https://youtu.be/ayfYpZf4N6M?si=eRQzRs3p4m3hFfSA">video</a>]&nbsp;
 						<a class="more-link" href="https://github.com/project-instinct/InstinctLab" target="_blank"><img
 								alt="GitHub stars"
@@ -247,49 +235,32 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</section>
 
-
-		<div class="container">
+		<section class="container page-section">
 			<h2 id="Experience" class="section-h2">Experience</h2>
-			<hr style="margin-top:0.4em">
+			<hr>
 
-			<table style="width: 100%; border-collapse: collapse;">
-				<tr>
-					<td style="padding: 10px 16px 10px 0; vertical-align: middle; width: 72px;">
-						<img src="assets/images/meta-logo.png" alt="Meta" style="height: 60px; width: auto;">
-					</td>
-					<td style="padding: 10px 0; vertical-align: top; padding-top: 18px;">
-						<div style="margin-bottom: 4px; font-size: var(--text-lg); color: var(--text-primary);">
-							<strong>Meta AI</strong> &middot; Research Scientist Intern
-						</div>
-						<div style="font-size: var(--text-base); color: var(--text-secondary);">
-							Summer 2026 &middot; Video Action Models
-						</div>
-					</td>
-				</tr>
-			</table>
-		</div>
+			<div class="exp-item">
+				<img class="exp-logo" src="assets/images/meta-logo.png" alt="Meta">
+				<div>
+					<div class="exp-role"><strong>Meta AI</strong> &middot; Research Scientist Intern</div>
+					<div class="exp-meta">Summer 2026 &middot; Video Action Models</div>
+				</div>
+			</div>
+		</section>
 
-		<br>
-		
-
-		<div class="container">
+		<section class="container page-section">
 			<h2 id="Service" class="section-h2">Service</h2>
-			<hr style="margin-top:0.4em">
+			<hr>
 			<p>Reviewer: CVPR, ICCV, ECCV, NeurIPS, NeurIPS D&B Track, ICLR, COLM, SIGGRAPH (Asia), Eurographics, RA-L, ICRA, TVCG</p>
-		</div>
+		</section>
 
-		<br>
-
-		<footer style="text-align: center; padding: 24px 0; font-size: var(--text-xs); color: var(--text-secondary); border-top: 1px solid var(--ivory-dark);">
-			<p style="margin: 0;">&copy; <span id="copyright-year"></span> Linzhan Mou</p>
+		<footer class="site-footer">
+			<p>&copy; <span id="copyright-year"></span> Linzhan Mou</p>
 		</footer>
 
-		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" crossorigin="anonymous"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
-			crossorigin="anonymous"></script>
-		<script src="static/burger.js"></script>
+		<script src="static/nav.js?v=21"></script>
 		<script>document.getElementById("copyright-year").textContent = new Date().getFullYear();</script>
 
 		<script>
@@ -323,6 +294,7 @@
 						alt="Web Analytics Made Easy - Statcounter" referrerPolicy="no-referrer-when-downgrade"></a>
 			</div>
 		</noscript>
+	</div>
 </body>
 
 </html>

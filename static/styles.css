@@ -28,7 +28,7 @@
   --text-base: 1rem;       /* 16px — publication metadata */
   --text-lg:   1.125rem;   /* 18px — body */
   --text-xl:   1.125rem;   /* 18px — publication titles */
-  --text-h2:   1.8rem;     /* section headers */
+  --text-h2:   1.7rem;     /* section headers */
   --text-h3:   1.3rem;     /* subsection headers */
   --text-h1:   2.25rem;    /* name */
 
@@ -40,6 +40,10 @@
 }
 
 /* --- Base --- */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
 body {
   font-family: var(--font-serif);
   font-optical-sizing: auto;
@@ -82,27 +86,15 @@ a:hover {
   text-decoration: none;
 }
 
-/* Nav / icon buttons: no underline */
-.navbar-item:link,
-.navbar-item:visited,
-.button:link,
-.button:visited,
-.navbar a:link,
-.navbar a:visited {
-  color: var(--text-primary);
-  text-decoration: none;
+.nowrap {
+  white-space: nowrap;
 }
 
-.navbar a:hover {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-/* --- Section headings (scroll-margin keeps anchor jumps off the top edge) --- */
+/* --- Section headings (scroll-margin clears the sticky navbar on anchor jumps) --- */
 .section-h2 {
   margin-top: 10px;
   margin-bottom: 0.1em;
-  scroll-margin-top: 1.5rem;
+  scroll-margin-top: 5rem;
 }
 
 /* Thematic sub-group label — an eyebrow, clearly subordinate to the serif h2. */
@@ -115,21 +107,131 @@ a:hover {
   color: var(--text-secondary);
   margin-top: 0.2em;
   margin-bottom: 1.3em;
-  scroll-margin-top: 1.5rem;
+  scroll-margin-top: 5rem;
 }
 
-/* --- Navbar --- */
-.navbar {
-  background-color: var(--ivory-light);
-  border-bottom: 1px solid var(--ivory-dark);
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+/* Navbar chrome lives entirely in custom-navbar.css — this file loads after it,
+   so rules here would silently win. Keep it that way. */
+
+/* --- Hero --- */
+/* 2.125rem = 34px below the navbar, matching the pre-refactor spacing. */
+.hero {
+  padding-top: 2.125rem;
+  padding-bottom: 1.25rem;
 }
 
-a.navbar-item:focus,
-a.navbar-item:hover {
-  background-color: var(--ivory-medium) !important;
-  color: var(--accent) !important;
+.hero-photo-col {
+  padding-right: 0;
+  padding-top: 0;
+}
+
+.hero-photo {
+  max-height: 280px;
+  max-width: 100%;
+  width: auto;
+  border: 1.5px solid var(--ivory-dark);
+  border-radius: 6%;
+  box-shadow: 0 4px 16px rgba(20, 20, 19, 0.12);
+}
+
+.hero-caption {
+  margin: 0.5rem 0 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* 0.5625rem = 9px, putting the name that far below the photo's top edge —
+   the same offset the pre-refactor layout had. */
+.hero-body {
+  padding-left: 45px;
+  padding-right: 0;
+  padding-top: 0.5625rem;
+}
+
+.hero-email {
+  margin-top: -5px;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.hero-bio {
+  margin-bottom: 1.6rem;
+}
+
+.hero-bio:last-of-type {
+  margin-bottom: 0;
+}
+
+.hero-links {
+  font-size: var(--text-lg);
+  padding-top: 1.75rem;
+}
+
+/* Icon row: inherit the body colour, accent only on hover. */
+.hero-links a:link,
+.hero-links a:visited {
+  color: var(--text-primary);
+}
+
+.hero-links a:hover {
+  color: var(--accent);
+}
+
+/* Narrow screens: the photo stacks above the text, so the gutter is dead space. */
+@media screen and (max-width: 767px) {
+  .hero-body {
+    padding-left: 0;
+    padding-top: 1rem;
+  }
+}
+
+/* --- Sections --- */
+.page-section {
+  margin-top: 2.25rem;
+}
+
+/* Every section header is followed by its rule; no need to say so inline. */
+.section-h2 + hr {
+  margin-top: 0.4em;
+}
+
+/* --- Experience --- */
+.exp-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 12px 0;
+}
+
+.exp-logo {
+  height: 60px;
+  width: auto;
+  flex-shrink: 0;
+}
+
+.exp-role {
+  margin-bottom: 4px;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+}
+
+.exp-meta {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+}
+
+/* --- Footer --- */
+.site-footer {
+  margin-top: 2.25rem;
+  padding: 24px 0;
+  text-align: center;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  border-top: 1px solid var(--ivory-dark);
+}
+
+.site-footer p {
+  margin: 0;
 }
 
 /* --- Dividers --- */
@@ -141,6 +243,17 @@ hr {
 /* --- Publications --- */
 .pub-row {
   margin-bottom: 2.6em;
+}
+
+/* Subsection divider: the row that ends a subsection needs less trailing space
+   than rows stacking against each other, so the rule sits evenly between the
+   two groups instead of crowding the heading below it. */
+.pub-row:has(+ hr) {
+  margin-bottom: 1.1em;
+}
+
+.pub-row + hr {
+  margin-bottom: 1em;
 }
 
 /* Media thumbnails mirror the UniMate project page's gallery videos:
