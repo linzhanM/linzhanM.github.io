@@ -10,31 +10,59 @@
   --ivory-dark:    #e8e6dc;  /* borders / dividers */
   --accent-bg:     #fdf6ee;  /* tinted block (abstract) background */
 
-  /* Text */
-  --text-primary:   #141413; /* headings / primary text */
-  --text-secondary: #5e5d59; /* secondary / muted text */
+  /* Text — four tiers of ink, all >=4.5:1 on --ivory-light (WCAG AA).
+     primary = what you read, secondary = context, tertiary = chrome. */
+  --text-primary:   #141413; /* headings, titles, venues        16.9:1 */
+  --text-secondary: #5e5d59; /* authors, bios, abstracts         6.1:1 */
+  --text-tertiary:  #6f6d66; /* captions, footer, [] punctuation 4.8:1 */
 
-  /* Accent (Princeton orange) */
-  --accent:       #E77500;
-  --accent-hover: #C45F00;
+  /* Surfaces — radius. Two steps, both fixed px. Percentages resolve against
+     the box, so on anything non-square they round to an ellipse that changes
+     shape with the element: .hero-photo's old 6% came out ~16x17px, twice as
+     round as the 8px thumbnails it was meant to match. A circle (the nav
+     keypoint) is a shape, not a step on this scale, and stays 50%. */
+  --radius-sm: 3px;  /* small chrome: the brand mark, focus rings */
+  --radius-md: 8px;  /* anything holding content: media plates, panels */
 
-  /* Type — family */
+  /* Surfaces — elevation. Two layers each. A single wide blur reads as a soft
+     blob floating over the page; a tight contact shadow at the edge plus a
+     diffuse ambient one reads as an object set *onto* paper. Both layers grow
+     on the lift, which is what makes the hover feel like the plate rising
+     rather than its blur changing. */
+  --shadow-plate: 0 1px 2px rgba(20, 20, 19, 0.05), 0 4px 14px rgba(20, 20, 19, 0.09);
+  --shadow-lift:  0 2px 4px rgba(20, 20, 19, 0.06), 0 14px 30px rgba(20, 20, 19, 0.12);
+
+  /* Accent (Princeton orange). Geometry only — rules, borders, the nav
+     keypoint, the underline beneath a link. Never the colour of running text:
+     orange dark enough to pass AA on ivory is orange gone brown, so links
+     carry their meaning in an accent rule and keep primary ink for the glyphs.
+     Used as a shape, the colour stays the true Princeton orange. */
+  --accent: #E77500;
+
+  /* Type — family. --font-display is for the name and the section headers;
+     --font-serif carries the prose (bio, authors, venues, abstracts, footer).
+     Paper titles are the third voice and are set in Palatino locally, on
+     .pub-title — see the note there. Keep new elements on these two tokens
+     rather than reaching for a fourth face. */
   --font-serif:   'Source Serif 4', 'Georgia Pro', Georgia, serif; /* body */
   --font-display: 'Fraunces', 'Source Serif 4', Georgia, serif;    /* name + section headers */
 
-  /* Type — scale (root = 16px) */
+  /* Type — scale (root = 16px). --text-xl matches --text-lg by intent: a paper
+     title outranks the prose around it through the Palatino face and the
+     semibold weight, not through size. */
   --text-xs:   0.875rem;   /* 14px — footer / fine print */
-  --text-sm:   0.9375rem;  /* 15px — email, notes, "Show more" */
+  --text-sm:   0.9375rem;  /* 15px — email, captions */
   --text-base: 1rem;       /* 16px — publication metadata */
   --text-lg:   1.125rem;   /* 18px — body */
   --text-xl:   1.125rem;   /* 18px — publication titles */
-  --text-h2:   1.7rem;     /* section headers */
-  --text-h3:   1.3rem;     /* subsection headers */
-  --text-h1:   2.25rem;    /* name */
+  --text-h2:   1.7rem;     /* 27px — section headers */
+  --text-h3:   1.3rem;     /* 21px — subsection headers */
+  --text-h1:   2.25rem;    /* 36px — name */
 
-  /* Type — weight */
+  /* Type — weight. Only these three are loaded; a 500 here rendered as 400
+     while claiming to be medium, so it is not a token. Check the Google Fonts
+     URL in index.html before introducing a new weight. */
   --weight-regular:  400;
-  --weight-medium:   500;
   --weight-semibold: 600;
   --weight-bold:     700;
 }
@@ -51,27 +79,43 @@ body {
   background-color: var(--ivory-light);
   color: var(--text-primary);
   font-size: var(--text-lg);
-  line-height: 1.5;
-  letter-spacing: 0em;
+  /* 1.5 is a UI leading; an 18px serif measure this wide reads better at 1.6. */
+  line-height: 1.6;
+}
+
+/* Prose only — keeps the last line of a paragraph from stranding one word.
+   Ignored where unsupported, so nothing depends on it. */
+p {
+  text-wrap: pretty;
 }
 
 /* --- Headings --- */
+/* Tracking scales with size: the larger the setting, the more the counters
+   open up, so the big display sizes want to be pulled tighter than the small. */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   color: var(--text-primary);
-  letter-spacing: -0.01em;
   line-height: 1.2;
+  text-wrap: balance;
 }
 
-h1 { font-size: var(--text-h1); font-weight: var(--weight-semibold); }
-h2 { font-size: var(--text-h2); font-weight: var(--weight-semibold); }
-h3 { font-size: var(--text-h3); font-weight: var(--weight-semibold); }
+h1 { font-size: var(--text-h1); font-weight: var(--weight-semibold); letter-spacing: -0.025em; }
+h2 { font-size: var(--text-h2); font-weight: var(--weight-semibold); letter-spacing: -0.015em; }
+h3 { font-size: var(--text-h3); font-weight: var(--weight-semibold); letter-spacing: -0.01em; }
 
 /* --- Links --- */
+/* Ink text, accent rule. The orange sits under the word rather than in it,
+   which keeps the hue vivid and the text at 16.9:1. skip-ink is on here so the
+   rule breaks around descenders and reads as an underline — the opposite of
+   the unbroken mark under the author's own name in .pub-authors u. */
 a:link,
 a:visited {
-  color: var(--accent);
-  text-decoration: none;
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  transition: text-decoration-thickness 120ms ease-out;
 }
 
 /* Icon-only links: no underline */
@@ -81,9 +125,11 @@ a:has(> i):hover {
   text-decoration: none;
 }
 
+/* Hover thickens the rule instead of recolouring the word: the text stays
+   readable through the interaction, and the accent does the acknowledging. */
 a:hover {
-  color: var(--accent-hover);
-  text-decoration: none;
+  color: var(--text-primary);
+  text-decoration-thickness: 2px;
 }
 
 .nowrap {
@@ -115,9 +161,11 @@ a:hover {
 
 /* --- Hero --- */
 /* 2.125rem = 34px below the navbar, matching the pre-refactor spacing. */
+/* No bottom padding: the first section's margin-top already sets that gap,
+   and stacking both put 56px between the photo caption and "Recent Research". */
 .hero {
   padding-top: 2.125rem;
-  padding-bottom: 1.25rem;
+  padding-bottom: 0;
 }
 
 .hero-photo-col {
@@ -129,22 +177,26 @@ a:hover {
   max-height: 280px;
   max-width: 100%;
   width: auto;
-  border: 1.5px solid var(--ivory-dark);
-  border-radius: 6%;
-  box-shadow: 0 4px 16px rgba(20, 20, 19, 0.12);
+  border: 1px solid var(--ivory-dark);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-plate);
 }
 
 .hero-caption {
   margin: 0.5rem 0 0;
   font-size: var(--text-sm);
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
 }
 
 /* 0.5625rem = 9px, putting the name that far below the photo's top edge —
    the same offset the pre-refactor layout had. */
+/* 45px is the gutter from the photo. The right padding stays at Bootstrap's
+   15px: a column's padding is what cancels .row's -15px margins, so zeroing it
+   pushes the text past the container edge — invisible on a centred desktop
+   container, but flush against the glass on a phone. */
 .hero-body {
   padding-left: 45px;
-  padding-right: 0;
+  padding-right: 15px;
   padding-top: 0.5625rem;
 }
 
@@ -177,17 +229,44 @@ a:hover {
   color: var(--accent);
 }
 
-/* Narrow screens: the photo stacks above the text, so the gutter is dead space. */
+/* Narrow screens: the photo stacks above the text, so the 45px side gutter is
+   dead space — but it drops to the standard column padding, not to zero, or
+   the hero bleeds off both edges while every section below stays inset. */
 @media screen and (max-width: 767px) {
+  /* One gutter for the whole page. 15px is Bootstrap's default and too tight
+     for an 18px serif at arm's length; the columns inside still supply their
+     own 15px, so text lands 20px off each edge. */
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
   .hero-body {
-    padding-left: 0;
+    padding-left: 15px;
     padding-top: 1rem;
+  }
+
+  .hero-photo-col {
+    padding-right: 15px;
+  }
+
+  /* Stacked columns get no vertical gap from the grid, so the thumbnail would
+     sit on the title with only the title's own 4px above it. */
+  .pub-row .col-md-3 {
+    margin-bottom: 1rem;
   }
 }
 
 /* --- Sections --- */
 .page-section {
   margin-top: 2.25rem;
+}
+
+/* The full rhythm is for section-against-section, where the previous section
+   ends in dense content. The hero ends in a short caption with the photo
+   column's slack above it, so it needs less on top of that, not more. */
+.hero + .page-section {
+  margin-top: 1.75rem;
 }
 
 /* Every section header is followed by its rule; no need to say so inline. */
@@ -226,7 +305,7 @@ a:hover {
   padding: 24px 0;
   text-align: center;
   font-size: var(--text-xs);
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   border-top: 1px solid var(--ivory-dark);
 }
 
@@ -256,26 +335,46 @@ hr {
   margin-bottom: 1em;
 }
 
-/* Media thumbnails mirror the UniMate project page's gallery videos:
-   a 1.5px solid-black frame with rounded corners, a soft shadow, and a gentle hover lift. */
+/* One frame for every piece of media on the page: the same hairline, tint and
+   warm-ink shadow as .hero-photo, so the thumbnails and the profile photo read
+   as the same object. These were a #000 hairline over a cold rgba(0,0,0,.15)
+   shadow — the only pure black on an ivory page whose darkest ink is #141413,
+   and heaviest exactly when a video hadn't loaded yet and the frame stood empty.
+   The shadow already turned warm on hover; now it starts that way. */
 .pub-thumbnail {
   width: 100%;
   object-fit: cover;
   display: block;
   padding: 0;                 /* override Bootstrap .img-thumbnail padding */
   background: var(--ivory-medium);
-  border: 1.5px solid #000;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--ivory-dark);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-plate);
   overflow: hidden;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .pub-thumbnail:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 32px rgba(20, 20, 19, 0.12);
+  box-shadow: var(--shadow-lift);
 }
 
+/* The lift is decoration; the shadow still marks the hover without it. */
+@media (prefers-reduced-motion: reduce) {
+  .pub-thumbnail {
+    transition: box-shadow 0.25s ease;
+  }
+
+  .pub-thumbnail:hover {
+    transform: none;
+  }
+}
+
+/* Palatino, deliberately its own voice — distinct from both the Fraunces
+   landmarks and the Source Serif prose. It is the one face here that is never
+   downloaded, so it renders as Palatino on macOS, Palatino Linotype on Windows,
+   and falls through to Georgia (~15% wider) elsewhere; the rules below are
+   sized so the line still sits correctly under any of the three. */
 .pub-title {
   font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
   font-size: var(--text-xl);
@@ -284,6 +383,7 @@ hr {
   margin-bottom: 4px;
   margin-top: 4px;
   line-height: 1.4;
+  text-wrap: balance;
   text-decoration: none;
 }
 
@@ -296,6 +396,7 @@ hr {
 .pub-authors {
   font-size: 0.975rem; /* 15.6px — a hair under the other metadata */
   color: var(--text-secondary);
+  line-height: 1.5;
   margin-bottom: 4px;
 }
 
@@ -313,17 +414,22 @@ hr {
   text-underline-offset: 0.18em;
 }
 
+/* Semibold, not the old phantom 500 — the venue is the credibility line, and
+   this is the weight that was actually rendering everywhere else on the page. */
 .pub-venue {
   font-size: var(--text-base);
   color: var(--text-primary);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-semibold);
   margin-bottom: 20px;
 }
 
+/* The [ ] punctuation is chrome, so it drops a tier; the link labels inside
+   stay at secondary. Same trick as the row above — the target reads darker
+   than its own brackets, which is what tells you where to click. */
 .pub-links {
   font-size: var(--text-base);
   margin-bottom: 4px;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
 }
 
 .pub-links a:link,
@@ -345,8 +451,9 @@ hr {
   padding: 8px 12px;
   margin-top: 8px;
   background: var(--accent-bg);
-  border-radius: 0 4px 4px 0;
-  line-height: 1.5;
+  /* Square against the accent rule, rounded on the three free sides. */
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  line-height: 1.6;
 }
 
 .pub-abstract p {

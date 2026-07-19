@@ -18,8 +18,8 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600,0,0;9..144,700,0,0&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
 	<!-- ?v= busts the CDN/browser cache; bump it when editing these files. -->
-	<link rel="stylesheet" href="static/custom-navbar.css?v=21">
-	<link rel="stylesheet" href="static/styles.css?v=21">
+	<link rel="stylesheet" href="static/custom-navbar.css?v=33">
+	<link rel="stylesheet" href="static/styles.css?v=33">
 
 	<script type="text/javascript">
 		function display(id) {
@@ -94,207 +94,207 @@
 				</div>
 			</div>
 		</div>
-
-		<section class="container page-section">
-			<h2 id="Publications" class="section-h2">Recent Research</h2>
-			<hr>
-
-			<h3 id="Vision" class="section-h3">Vision &amp; Graphics</h3>
-
-			<div class="pub-row row align-items-start">
-				<div class="col-md-3">
-					<video class="pub-thumbnail img-thumbnail lazy-video" title="UniMate video loading.." tabindex="-1"
-						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="assets/images/unimate.mp4"></video>
-				</div>
-				<div class="col-md-9">
-					<p class="pub-title">UniMate: One Unified Model to Animate Diverse Skeletons</p>
-					<p class="pub-authors"><u>Linzhan Mou</u>, Jiahui Lei, Zhiyang Dou, Chenyue Cai, Chaoyue Song, Adam Finkelstein, Szymon Rusinkiewicz</p>
-					<p class="pub-venue">SIGGRAPH Asia 2026</p>
-					<p class="pub-links">
-						[<a href="javascript:void(0)" onclick="display('unimate-abs')">abs</a>]&nbsp;
-						[<a target="_blank" href="https://linzhanm.github.io/unimate">website</a>]&nbsp;
-						(Conditionally Accepted)&nbsp;
-					</p>
-					<div id="unimate-abs" class="pub-abstract">
-						<p>Recent advances in automatic rigging now deliver animation-ready 3D assets at scale, yet generating the motion to drive them remains a bottleneck. Existing learned animators are topology-constrained: they rely on category-specific templates or require per-skeleton fine-tuning and reference motions at inference. We present UniMate, a unified foundation model that synthesizes articulated motion for arbitrary skeletons from a rigged 3D asset and a text prompt, with no test-time optimization or per-skeleton retraining. UniMate relies on a topology-aware diffusion transformer, which integrates skeletal topology into attention via three mechanisms: (1) a graph-aware attention bias from pairwise joint relations and geodesic distances; (2) a spectral rotary position embedding generalizing RoPE to arbitrary kinematic trees via the graph Laplacian; and (3) a global topological conditioner attention-pooled from the rest-pose skeleton. We also curate UniML3D, 13,006 motion sequences spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid objects with unified canonicalization and text pairing. Trained on this dataset, UniMate outperforms state-of-the-art baselines in quality, generalization, and efficiency, and supports zero-shot cross-topology transfer, in-betweening, and text-guided editing.</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="pub-row row align-items-start">
-				<div class="col-md-3">
-					<video class="pub-thumbnail img-thumbnail lazy-video" title="DIMO video loading.." tabindex="-1"
-						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="assets/images/dimo.mp4"></video>
-				</div>
-				<div class="col-md-9">
-					<p class="pub-title">DIMO: Diverse 3D Motion Generation for Arbitrary Objects</p>
-					<p class="pub-authors"><u>Linzhan Mou</u>, Jiahui Lei, Chen Wang, Lingjie Liu, Kostas Daniilidis</p>
-					<p class="pub-venue">ICCV 2025 <b><span class="venue-highlight">(Highlight)</span></b></p>
-					<p class="pub-links">
-						[<a href="javascript:void(0)" onclick="display('dimo-abs')">abs</a>]&nbsp;
-						[<a target="_blank" href="https://arxiv.org/abs/2511.07409">arXiv</a>]&nbsp;
-						[<a target="_blank" href="https://linzhanm.github.io/dimo">website</a>]&nbsp;
-						[<a target="_blank" href="https://github.com/Friedrich-M/DIMO">code</a>]&nbsp;
-						[<a target="_blank" href="https://www.youtube.com/watch?v=CY2jTIpEN-I">video</a>]&nbsp;
-						[<a target="_blank" href="https://iccv.thecvf.com/media/PosterPDFs/ICCV%202025/1183.png?t=1755853954.3028586">poster</a>]&nbsp;
-						<a class="more-link" href="https://github.com/Friedrich-M/DIMO" target="_blank"><img
-								alt="GitHub stars"
-								src="https://img.shields.io/github/stars/Friedrich-M/DIMO?style=social"></a>
-					</p>
-					<div id="dimo-abs" class="pub-abstract">
-						<p>We present DIMO, a generative approach capable of generating diverse 3D motions for arbitrary objects from a single image. The core idea of our work is to leverage the rich priors in well-trained video models to extract the common motion patterns and then embed them into a shared low-dimensional latent space. Specifically, we first generate multiple videos of the same object with diverse motions. We then embed each motion into a latent vector and train a shared motion decoder to learn the distribution of motions represented by a structured and compact motion representation, i.e., neural key point trajectories. The canonical 3D Gaussians are then driven by these key points and fused to model the geometry and appearance. During inference time with learned latent space, we can instantly sample diverse 3D motions in a single-forward pass and support several interesting applications including 3D motion interpolation and language-guided motion generation.</p>
-					</div>
-				</div>
-			</div>
-
-			<template>
-			<div class="pub-row row align-items-start">
-				<div class="col-md-3">
-					<video class="pub-thumbnail img-thumbnail" title="Let Occ Flow video loading.." tabindex="-1"
-						preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
-						src="assets/images/letoccflow.mp4"></video>
-				</div>
-				<div class="col-md-9">
-					<p class="pub-title">Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction</p>
-					<p class="pub-authors"><u>Linzhan Mou</u>*, Yili Liu*, Xuan Yu, Chenrui Han, Sitong Mao, Rong Xiong, Yue Wang</p>
-					<p class="pub-venue">CoRL 2024</p>
-					<p class="pub-links">
-						[<a href="javascript:void(0)" onclick="display('occflow-abs')">abs</a>]&nbsp;
-						[<a target="_blank" href="https://arxiv.org/abs/2407.07587">arXiv</a>]&nbsp;
-						[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/">website</a>]&nbsp;
-						[<a target="_blank" href="https://github.com/eliliu2233/occ-flow">code</a>]&nbsp;
-						[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/static/videos/letoccflow.mp4">video</a>]&nbsp;
-						[<a target="_blank" href="./assets/pdf/letoccflow-poster.pdf">poster</a>]&nbsp;
-						<a class="more-link" href="https://github.com/eliliu2233/occ-flow" target="_blank"><img
-								alt="GitHub stars"
-								src="https://img.shields.io/github/stars/eliliu2233/occ-flow?style=social"></a>
-					</p>
-					<div id="occflow-abs" class="pub-abstract">
-						<p>Accurate perception of the dynamic environment is a fundamental task for autonomous driving and robot systems. This paper introduces Let Occ Flow, the first self-supervised work for joint 3D occupancy and occupancy flow prediction using only camera inputs, eliminating the need for 3D annotations. Utilizing TPV for unified scene representation and deformable attention layers for feature aggregation, our approach incorporates a novel attention-based temporal fusion module to capture dynamic object dependencies, followed by a 3D refine module for fine-grained volumetric representation. Besides, our method extends differentiable rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmentation and optical flow cues for dynamic decomposition and motion optimization. Extensive experiments on nuScenes and KITTI datasets demonstrate the competitive performance of our approach over prior state-of-the-art methods.</p>
-					</div>
-				</div>
-			</div>
-			</template>
-
-			<hr>
-
-			<h3 id="Robotics" class="section-h3">Robotics &amp; RL</h3>
-
-			<div class="pub-row row align-items-start">
-				<div class="col-md-3">
-					<video class="pub-thumbnail img-thumbnail lazy-video" title="TTT-Parkour video loading.." tabindex="-1"
-						preload="none" loop="" muted="muted" playsinline="playsinline"
-						src="assets/images/ttt-parkour.mp4"></video>
-				</div>
-				<div class="col-md-9">
-					<p class="pub-title">TTT-Parkour: Rapid Test-Time Training for Perceptive Robot Parkour</p>
-					<p class="pub-authors">Shaoting Zhu*, Baijun Ye*, Jiaxuan Wang, Ziwen Zhuang, <u>Linzhan Mou</u>, Runhan Huang, Hang Zhao</p>
-					<p class="pub-venue">arXiv 2026</p>
-					<p class="pub-links">
-						[<a href="javascript:void(0)" onclick="display('ttt-abs')">abs</a>]&nbsp;
-						[<a target="_blank" href="https://arxiv.org/abs/2602.02331">arXiv</a>]&nbsp;
-						[<a target="_blank" href="https://ttt-parkour.github.io/">website</a>]&nbsp;
-						[<a target="_blank" href="https://github.com/project-instinct/InstinctLab">code</a>]&nbsp;
-						[<a target="_blank" href="https://github.com/project-instinct">framework</a>]&nbsp;
-						[<a target="_blank" href="https://youtu.be/ayfYpZf4N6M?si=eRQzRs3p4m3hFfSA">video</a>]&nbsp;
-						<a class="more-link" href="https://github.com/project-instinct/InstinctLab" target="_blank"><img
-								alt="GitHub stars"
-								src="https://img.shields.io/github/stars/project-instinct/InstinctLab?style=social"></a>
-					</p>
-					<div id="ttt-abs" class="pub-abstract">
-						<p>Achieving highly dynamic humanoid parkour on unseen, complex terrains remains a challenge in robotics. Although general locomotion policies demonstrate capabilities across broad terrain distributions, they often struggle with arbitrary and highly challenging environments. To overcome this limitation, we propose a real-to-sim-to-real framework that leverages rapid test-time training (TTT) on novel terrains, significantly enhancing the robot's capability to traverse extremely difficult geometries. We adopt a two-stage end-to-end learning paradigm: a policy is first pre-trained on diverse procedurally generated terrains, followed by rapid fine-tuning on high-fidelity meshes reconstructed from real-world captures. Specifically, we develop a feed-forward, efficient, and high-fidelity geometry reconstruction pipeline using RGB-D inputs, ensuring both speed and quality during test-time training. We demonstrate that TTT-Parkour empowers humanoid robots to master complex obstacles, including wedges, stakes, boxes, trapezoids, and narrow beams. The whole pipeline of capturing, reconstructing, and test-time training requires less than 10 minutes on most tested terrains. Extensive experiments show that the policy after test-time training exhibits robust zero-shot sim-to-real transfer capability.</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="pub-row row align-items-start">
-				<div class="col-md-3">
-					<video class="pub-thumbnail img-thumbnail lazy-video" title="VR-Robo video loading.." tabindex="-1"
-						preload="none" loop="" muted="muted" playsinline="playsinline"
-						src="assets/images/vr-robo.mp4"></video>
-				</div>
-				<div class="col-md-9">
-					<p class="pub-title">VR-Robo: A Real-to-Sim-to-Real Framework for Visual Robot Navigation and Locomotion</p>
-					<p class="pub-authors">Shaoting Zhu*, <u>Linzhan Mou</u>*, Derun Li, Baijun Ye, Runhan Huang, Hang Zhao</p>
-					<p class="pub-venue">RA-L 2025</p>
-					<p class="pub-links">
-						[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
-						[<a target="_blank" href="https://arxiv.org/abs/2502.01536">arXiv</a>]&nbsp;
-						[<a target="_blank" href="https://vr-robo.github.io/">website</a>]&nbsp;
-						[<a target="_blank" href="https://github.com/zst1406217/VR-Robo">code</a>]&nbsp;
-						[<a target="_blank" href="https://www.youtube.com/watch?v=W-G_-H7X0Pw">video</a>]&nbsp;
-						[<a target="_blank" href="./assets/pdf/vrrobo-poster.pdf">poster</a>]&nbsp;
-						<a class="more-link" href="https://github.com/zst1406217/VR-Robo" target="_blank"><img
-								alt="GitHub stars"
-								src="https://img.shields.io/github/stars/zst1406217/VR-Robo?style=social"></a>
-					</p>
-					<div id="vr-abs" class="pub-abstract">
-						<p>Recent success in legged robot locomotion is attributed to the integration of reinforcement learning and physical simulators. However, these policies often encounter challenges when deployed in real-world environments due to sim-to-real gaps, as simulators typically fail to replicate visual realism and complex real-world geometry. Moreover, the lack of realistic visual rendering limits the ability of these policies to support high-level tasks requiring RGB-based perception like ego-centric navigation. This paper presents a Real-to-Sim-to-Real framework that generates photorealistic and physically interactive "digital twin" simulation environments for visual navigation and locomotion learning. Our approach leverages 3D Gaussian Splatting (3DGS) based scene reconstruction from multi-view images and integrates these environments into simulations that support ego-centric visual perception and mesh-based physical interactions. To demonstrate its effectiveness, we train a reinforcement learning policy within the simulator to perform a visual goal-tracking task. Extensive experiments show that our framework achieves RGB-only sim-to-real policy transfer. Additionally, our framework facilitates the rapid adaptation of robot policies with effective exploration capability in complex new environments, highlighting its potential for applications in households and factories.</p>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<section class="container page-section">
-			<h2 id="Experience" class="section-h2">Experience</h2>
-			<hr>
-
-			<div class="exp-item">
-				<img class="exp-logo" src="assets/images/meta-logo.png" alt="Meta">
-				<div>
-					<div class="exp-role"><strong>Meta AI</strong> &middot; Research Scientist Intern</div>
-					<div class="exp-meta">Summer 2026 &middot; Video Action Models</div>
-				</div>
-			</div>
-		</section>
-
-		<section class="container page-section">
-			<h2 id="Service" class="section-h2">Service</h2>
-			<hr>
-			<p>Reviewer: CVPR, ICCV, ECCV, NeurIPS, NeurIPS D&B Track, ICLR, COLM, SIGGRAPH (Asia), Eurographics, RA-L, ICRA, TVCG</p>
-		</section>
-
-		<footer class="site-footer">
-			<p>&copy; <span id="copyright-year"></span> Linzhan Mou</p>
-		</footer>
-
-		<script src="static/nav.js?v=21"></script>
-		<script>document.getElementById("copyright-year").textContent = new Date().getFullYear();</script>
-
-		<script>
-			// Lazy-play Robotics thumbnails: only fetch + play while on screen.
-			(function () {
-				var vids = document.querySelectorAll('video.lazy-video');
-				if (!('IntersectionObserver' in window)) {
-					vids.forEach(function (v) { v.play().catch(function () {}); });
-					return;
-				}
-				var io = new IntersectionObserver(function (entries) {
-					entries.forEach(function (e) {
-						if (e.isIntersecting) { e.target.play().catch(function () {}); }
-						else { e.target.pause(); }
-					});
-				}, { rootMargin: '200px 0px' });
-				vids.forEach(function (v) { io.observe(v); });
-			})();
-		</script>
-
-		<script type="text/javascript">
-			var sc_project = 12925377;
-			var sc_invisible = 1;
-			var sc_security = "43deea45";
-		</script>
-		<script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
-		<noscript>
-			<div class="statcounter"><a title="Web Analytics Made Easy - Statcounter" href="https://statcounter.com/"
-					target="_blank"><img class="statcounter"
-						src="https://c.statcounter.com/12925377/0/43deea45/1/"
-						alt="Web Analytics Made Easy - Statcounter" referrerPolicy="no-referrer-when-downgrade"></a>
-			</div>
-		</noscript>
 	</div>
+
+	<section class="container page-section">
+		<h2 id="Publications" class="section-h2">Recent Research</h2>
+		<hr>
+
+		<h3 id="Vision" class="section-h3">Vision &amp; Graphics</h3>
+
+		<div class="pub-row row align-items-start">
+			<div class="col-md-3">
+				<video class="pub-thumbnail img-thumbnail lazy-video" title="UniMate video loading.." tabindex="-1"
+					preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
+					src="assets/images/unimate.mp4"></video>
+			</div>
+			<div class="col-md-9">
+				<p class="pub-title">UniMate: One Unified Model to Animate Diverse Skeletons</p>
+				<p class="pub-authors"><u>Linzhan Mou</u>, Jiahui Lei, Zhiyang Dou, Chenyue Cai, Chaoyue Song, Adam Finkelstein, Szymon Rusinkiewicz</p>
+				<p class="pub-venue">SIGGRAPH Asia 2026</p>
+				<p class="pub-links">
+					[<a href="javascript:void(0)" onclick="display('unimate-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://linzhanm.github.io/unimate">website</a>]&nbsp;
+					(Conditionally Accepted)&nbsp;
+				</p>
+				<div id="unimate-abs" class="pub-abstract">
+					<p>Recent advances in automatic rigging now deliver animation-ready 3D assets at scale, yet generating the motion to drive them remains a bottleneck. Existing learned animators are topology-constrained: they rely on category-specific templates or require per-skeleton fine-tuning and reference motions at inference. We present UniMate, a unified foundation model that synthesizes articulated motion for arbitrary skeletons from a rigged 3D asset and a text prompt, with no test-time optimization or per-skeleton retraining. UniMate relies on a topology-aware diffusion transformer, which integrates skeletal topology into attention via three mechanisms: (1) a graph-aware attention bias from pairwise joint relations and geodesic distances; (2) a spectral rotary position embedding generalizing RoPE to arbitrary kinematic trees via the graph Laplacian; and (3) a global topological conditioner attention-pooled from the rest-pose skeleton. We also curate UniML3D, 13,006 motion sequences spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid objects with unified canonicalization and text pairing. Trained on this dataset, UniMate outperforms state-of-the-art baselines in quality, generalization, and efficiency, and supports zero-shot cross-topology transfer, in-betweening, and text-guided editing.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="pub-row row align-items-start">
+			<div class="col-md-3">
+				<video class="pub-thumbnail img-thumbnail lazy-video" title="DIMO video loading.." tabindex="-1"
+					preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
+					src="assets/images/dimo.mp4"></video>
+			</div>
+			<div class="col-md-9">
+				<p class="pub-title">DIMO: Diverse 3D Motion Generation for Arbitrary Objects</p>
+				<p class="pub-authors"><u>Linzhan Mou</u>, Jiahui Lei, Chen Wang, Lingjie Liu, Kostas Daniilidis</p>
+				<p class="pub-venue">ICCV 2025 <b><span class="venue-highlight">(Highlight)</span></b></p>
+				<p class="pub-links">
+					[<a href="javascript:void(0)" onclick="display('dimo-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2511.07409">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://linzhanm.github.io/dimo">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/Friedrich-M/DIMO">code</a>]&nbsp;
+					[<a target="_blank" href="https://www.youtube.com/watch?v=CY2jTIpEN-I">video</a>]&nbsp;
+					[<a target="_blank" href="https://iccv.thecvf.com/media/PosterPDFs/ICCV%202025/1183.png?t=1755853954.3028586">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/Friedrich-M/DIMO" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/Friedrich-M/DIMO?style=social"></a>
+				</p>
+				<div id="dimo-abs" class="pub-abstract">
+					<p>We present DIMO, a generative approach capable of generating diverse 3D motions for arbitrary objects from a single image. The core idea of our work is to leverage the rich priors in well-trained video models to extract the common motion patterns and then embed them into a shared low-dimensional latent space. Specifically, we first generate multiple videos of the same object with diverse motions. We then embed each motion into a latent vector and train a shared motion decoder to learn the distribution of motions represented by a structured and compact motion representation, i.e., neural key point trajectories. The canonical 3D Gaussians are then driven by these key points and fused to model the geometry and appearance. During inference time with learned latent space, we can instantly sample diverse 3D motions in a single-forward pass and support several interesting applications including 3D motion interpolation and language-guided motion generation.</p>
+				</div>
+			</div>
+		</div>
+
+		<template>
+		<div class="pub-row row align-items-start">
+			<div class="col-md-3">
+				<video class="pub-thumbnail img-thumbnail" title="Let Occ Flow video loading.." tabindex="-1"
+					preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
+					src="assets/images/letoccflow.mp4"></video>
+			</div>
+			<div class="col-md-9">
+				<p class="pub-title">Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction</p>
+				<p class="pub-authors"><u>Linzhan Mou</u>*, Yili Liu*, Xuan Yu, Chenrui Han, Sitong Mao, Rong Xiong, Yue Wang</p>
+				<p class="pub-venue">CoRL 2024</p>
+				<p class="pub-links">
+					[<a href="javascript:void(0)" onclick="display('occflow-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2407.07587">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/eliliu2233/occ-flow">code</a>]&nbsp;
+					[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/static/videos/letoccflow.mp4">video</a>]&nbsp;
+					[<a target="_blank" href="./assets/pdf/letoccflow-poster.pdf">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/eliliu2233/occ-flow" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/eliliu2233/occ-flow?style=social"></a>
+				</p>
+				<div id="occflow-abs" class="pub-abstract">
+					<p>Accurate perception of the dynamic environment is a fundamental task for autonomous driving and robot systems. This paper introduces Let Occ Flow, the first self-supervised work for joint 3D occupancy and occupancy flow prediction using only camera inputs, eliminating the need for 3D annotations. Utilizing TPV for unified scene representation and deformable attention layers for feature aggregation, our approach incorporates a novel attention-based temporal fusion module to capture dynamic object dependencies, followed by a 3D refine module for fine-grained volumetric representation. Besides, our method extends differentiable rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmentation and optical flow cues for dynamic decomposition and motion optimization. Extensive experiments on nuScenes and KITTI datasets demonstrate the competitive performance of our approach over prior state-of-the-art methods.</p>
+				</div>
+			</div>
+		</div>
+		</template>
+
+		<hr>
+
+		<h3 id="Robotics" class="section-h3">Robotics &amp; RL</h3>
+
+		<div class="pub-row row align-items-start">
+			<div class="col-md-3">
+				<video class="pub-thumbnail img-thumbnail lazy-video" title="TTT-Parkour video loading.." tabindex="-1"
+					preload="none" loop="" muted="muted" playsinline="playsinline"
+					src="assets/images/ttt-parkour.mp4"></video>
+			</div>
+			<div class="col-md-9">
+				<p class="pub-title">TTT-Parkour: Rapid Test-Time Training for Perceptive Robot Parkour</p>
+				<p class="pub-authors">Shaoting Zhu*, Baijun Ye*, Jiaxuan Wang, Ziwen Zhuang, <u>Linzhan Mou</u>, Runhan Huang, Hang Zhao</p>
+				<p class="pub-venue">arXiv 2026</p>
+				<p class="pub-links">
+					[<a href="javascript:void(0)" onclick="display('ttt-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2602.02331">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://ttt-parkour.github.io/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/project-instinct/InstinctLab">code</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/project-instinct">framework</a>]&nbsp;
+					[<a target="_blank" href="https://youtu.be/ayfYpZf4N6M?si=eRQzRs3p4m3hFfSA">video</a>]&nbsp;
+					<a class="more-link" href="https://github.com/project-instinct/InstinctLab" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/project-instinct/InstinctLab?style=social"></a>
+				</p>
+				<div id="ttt-abs" class="pub-abstract">
+					<p>Achieving highly dynamic humanoid parkour on unseen, complex terrains remains a challenge in robotics. Although general locomotion policies demonstrate capabilities across broad terrain distributions, they often struggle with arbitrary and highly challenging environments. To overcome this limitation, we propose a real-to-sim-to-real framework that leverages rapid test-time training (TTT) on novel terrains, significantly enhancing the robot's capability to traverse extremely difficult geometries. We adopt a two-stage end-to-end learning paradigm: a policy is first pre-trained on diverse procedurally generated terrains, followed by rapid fine-tuning on high-fidelity meshes reconstructed from real-world captures. Specifically, we develop a feed-forward, efficient, and high-fidelity geometry reconstruction pipeline using RGB-D inputs, ensuring both speed and quality during test-time training. We demonstrate that TTT-Parkour empowers humanoid robots to master complex obstacles, including wedges, stakes, boxes, trapezoids, and narrow beams. The whole pipeline of capturing, reconstructing, and test-time training requires less than 10 minutes on most tested terrains. Extensive experiments show that the policy after test-time training exhibits robust zero-shot sim-to-real transfer capability.</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="pub-row row align-items-start">
+			<div class="col-md-3">
+				<video class="pub-thumbnail img-thumbnail lazy-video" title="VR-Robo video loading.." tabindex="-1"
+					preload="none" loop="" muted="muted" playsinline="playsinline"
+					src="assets/images/vr-robo.mp4"></video>
+			</div>
+			<div class="col-md-9">
+				<p class="pub-title">VR-Robo: A Real-to-Sim-to-Real Framework for Visual Robot Navigation and Locomotion</p>
+				<p class="pub-authors">Shaoting Zhu*, <u>Linzhan Mou</u>*, Derun Li, Baijun Ye, Runhan Huang, Hang Zhao</p>
+				<p class="pub-venue">RA-L 2025</p>
+				<p class="pub-links">
+					[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2502.01536">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://vr-robo.github.io/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/zst1406217/VR-Robo">code</a>]&nbsp;
+					[<a target="_blank" href="https://www.youtube.com/watch?v=W-G_-H7X0Pw">video</a>]&nbsp;
+					[<a target="_blank" href="./assets/pdf/vrrobo-poster.pdf">poster</a>]&nbsp;
+					<a class="more-link" href="https://github.com/zst1406217/VR-Robo" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/zst1406217/VR-Robo?style=social"></a>
+				</p>
+				<div id="vr-abs" class="pub-abstract">
+					<p>Recent success in legged robot locomotion is attributed to the integration of reinforcement learning and physical simulators. However, these policies often encounter challenges when deployed in real-world environments due to sim-to-real gaps, as simulators typically fail to replicate visual realism and complex real-world geometry. Moreover, the lack of realistic visual rendering limits the ability of these policies to support high-level tasks requiring RGB-based perception like ego-centric navigation. This paper presents a Real-to-Sim-to-Real framework that generates photorealistic and physically interactive "digital twin" simulation environments for visual navigation and locomotion learning. Our approach leverages 3D Gaussian Splatting (3DGS) based scene reconstruction from multi-view images and integrates these environments into simulations that support ego-centric visual perception and mesh-based physical interactions. To demonstrate its effectiveness, we train a reinforcement learning policy within the simulator to perform a visual goal-tracking task. Extensive experiments show that our framework achieves RGB-only sim-to-real policy transfer. Additionally, our framework facilitates the rapid adaptation of robot policies with effective exploration capability in complex new environments, highlighting its potential for applications in households and factories.</p>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="container page-section">
+		<h2 id="Experience" class="section-h2">Experience</h2>
+		<hr>
+
+		<div class="exp-item">
+			<img class="exp-logo" src="assets/images/meta-logo.png" alt="Meta">
+			<div>
+				<div class="exp-role"><strong>Meta AI</strong> &middot; Research Scientist Intern</div>
+				<div class="exp-meta">Summer 2026 &middot; Video Action Models</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="container page-section">
+		<h2 id="Service" class="section-h2">Service</h2>
+		<hr>
+		<p>Reviewer: CVPR, ICCV, ECCV, NeurIPS, NeurIPS D&B Track, ICLR, COLM, SIGGRAPH (Asia), Eurographics, RA-L, ICRA, TVCG</p>
+	</section>
+
+	<footer class="site-footer">
+		<p>&copy; <span id="copyright-year"></span> Linzhan Mou</p>
+	</footer>
+
+	<script src="static/nav.js?v=33"></script>
+	<script>document.getElementById("copyright-year").textContent = new Date().getFullYear();</script>
+
+	<script>
+		// Lazy-play Robotics thumbnails: only fetch + play while on screen.
+		(function () {
+			var vids = document.querySelectorAll('video.lazy-video');
+			if (!('IntersectionObserver' in window)) {
+				vids.forEach(function (v) { v.play().catch(function () {}); });
+				return;
+			}
+			var io = new IntersectionObserver(function (entries) {
+				entries.forEach(function (e) {
+					if (e.isIntersecting) { e.target.play().catch(function () {}); }
+					else { e.target.pause(); }
+				});
+			}, { rootMargin: '200px 0px' });
+			vids.forEach(function (v) { io.observe(v); });
+		})();
+	</script>
+
+	<script type="text/javascript">
+		var sc_project = 12925377;
+		var sc_invisible = 1;
+		var sc_security = "43deea45";
+	</script>
+	<script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+	<noscript>
+		<div class="statcounter"><a title="Web Analytics Made Easy - Statcounter" href="https://statcounter.com/"
+				target="_blank"><img class="statcounter"
+					src="https://c.statcounter.com/12925377/0/43deea45/1/"
+					alt="Web Analytics Made Easy - Statcounter" referrerPolicy="no-referrer-when-downgrade"></a>
+		</div>
+	</noscript>
 </body>
 
 </html>
