@@ -20,6 +20,9 @@ Desktop.ini
 # Claude Code (local settings only — shared config like .claude/settings.json can be committed)
 .claude/settings.local.json
 
+# Codex guidance, kept local (CLAUDE.md is committed)
+AGENTS.md
+
 # Python (local dev server)
 __pycache__/
 *.pyc
