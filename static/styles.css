@@ -16,13 +16,14 @@
   --text-secondary: #5e5d59; /* authors, bios, abstracts         6.1:1 */
   --text-tertiary:  #6f6d66; /* captions, footer, [] punctuation 4.8:1 */
 
-  /* Surfaces — radius. Two steps, both fixed px. Percentages resolve against
+  /* Surfaces — radius. Three steps, all fixed px. Percentages resolve against
      the box, so on anything non-square they round to an ellipse that changes
      shape with the element: .hero-photo's old 6% came out ~16x17px, twice as
      round as the 8px thumbnails it was meant to match. A circle (the nav
      keypoint) is a shape, not a step on this scale, and stays 50%. */
   --radius-sm: 3px;  /* small chrome: the brand mark, focus rings */
   --radius-md: 8px;  /* anything holding content: media plates, panels */
+  --radius-lg: 16px; /* the portrait only — see .hero-photo */
 
   /* Surfaces — elevation. Two layers each. A single wide blur reads as a soft
      blob floating over the page; a tight contact shadow at the edge plus a
@@ -173,12 +174,17 @@ a:hover {
   padding-top: 0;
 }
 
+/* The portrait takes --radius-lg rather than the thumbnails' --radius-md: it
+   is a photograph of a person, not a media plate, and at 280px tall the 8px
+   step reads as a barely-softened rectangle. 16px is the largest corner that
+   still leaves the frame square-shouldered — past ~20px the crop starts
+   clipping into the shoulders and it reads as a UI avatar. */
 .hero-photo {
   max-height: 280px;
   max-width: 100%;
   width: auto;
   border: 1px solid var(--ivory-dark);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-plate);
 }
 
