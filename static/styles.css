@@ -186,6 +186,20 @@ hr {
   margin-bottom: 4px;
 }
 
+/* Own name in author lists. Marked, not linked: the text stays slate so it
+   never reads as clickable (orange = link elsewhere on the page); a solid
+   accent rule underneath does the identifying. skip-ink is off so the rule
+   runs unbroken under descenders, reading as a mark rather than an underline. */
+.pub-authors u {
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  text-decoration-line: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 0.18em;
+}
+
 .pub-venue {
   font-size: var(--text-base);
   color: var(--text-primary);
