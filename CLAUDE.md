@@ -22,25 +22,40 @@ To deploy, commit changes and push to `main` — GitHub Pages serves the branch 
 ## Layout
 
 ```
-index.html              Main homepage (the only page with publication content)
-static/                 Front-end assets for the homepage (CSS + JS)
-assets/images/          Homepage media: publication thumbnails, logos, profile photo
-assets/pdf/             Homepage poster PDFs and CV
-dimo/                   Self-contained DIMO project page
-unimate/                Self-contained UniMate project page
+index.html                  Homepage — the only page with publication content
+static/styles.css           Design tokens + all page styles (hero, sections, pubs, footer)
+static/custom-navbar.css    Navbar chrome only
+static/nav.js               Navbar behaviour: burger toggle + section keypoint
+assets/images/              Homepage media: publication thumbnails, logos, profile photo
+assets/pdf/                 Homepage poster PDFs and CV
+dimo/                       Self-contained DIMO project page
+unimate/                    Self-contained UniMate project page
+robots.txt, sitemap.xml     Search-engine metadata (sitemap lists / and /dimo/)
 ```
+
+The homepage renders top to bottom as: `<nav>` → `.hero` (photo + bio) → three
+`<section class="container page-section">` blocks (`#Publications`, `#Experience`,
+`#Service`) → `.site-footer`.
 
 ## Architecture
 
 **Single page**: All homepage content lives in `index.html`. There is no templating, routing, or JavaScript framework. The two project pages (`dimo/`, `unimate/`) are independent and share nothing with the homepage or each other.
 
-**CSS hybrid** (homepage): Two local stylesheets layered on a CDN-loaded Bootstrap 4 grid. `static/custom-navbar.css` is a minimal Bulma-derived navbar, trimmed to only the rules this navbar actually uses (the mobile burger toggle and the ≥1024px flex layout). `static/styles.css` holds the design system: a `:root` block of design tokens (ivory/slate surfaces with a Princeton-orange accent `#E77500`, a type scale, weights), base typography, and all publication styles. Fonts are Fraunces (display — name and section headers) and Source Serif 4 (body), from Google Fonts; `.pub-title` overrides to Palatino Linotype. Other CDN assets: Font Awesome 5, Academicons, and GitHub `buttons.js`.
+**CSS hybrid** (homepage): Two local stylesheets layered on a CDN-loaded Bootstrap 4 **CSS** grid (no Bootstrap/jQuery JS — the page loads none). `static/custom-navbar.css` owns *all* navbar chrome: the sticky bar, the mobile burger, the ≥1024px flex layout, the `.nav-section` eyebrow labels, and the `.nav-keypoint` accent dot. `static/styles.css` holds the design system: a `:root` block of design tokens (ivory/slate surfaces with a Princeton-orange accent `#E77500`, a type scale, weights), base typography, and the hero / section / publication / experience / footer styles. Fonts are Fraunces (display — name and section headers) and Source Serif 4 (body), from Google Fonts; `.pub-title` overrides to Palatino Linotype. Other CDN assets: Font Awesome 5, Academicons, and GitHub `buttons.js`.
+
+Two rules to keep in mind when editing CSS here:
+- `styles.css` loads **after** `custom-navbar.css`, so a `.navbar` rule placed in `styles.css` silently wins. Keep navbar rules in `custom-navbar.css`.
+- Bootstrap defines `.navbar` as `display: flex` with `padding: 0.5rem 1rem`; `custom-navbar.css` zeroes that padding and gives `.navbar-inner` `width: 100%` so it doesn't collapse to its content. Don't remove either without re-checking the layout.
+
+**Cache busting**: the local `<link>`/`<script>` tags in `index.html` carry a `?v=N` query. GitHub Pages caches aggressively — **bump `N` whenever you edit `styles.css`, `custom-navbar.css`, or `nav.js`**, or returning visitors keep the old file.
+
+**Styling convention** (homepage): `index.html` carries **no inline `style=` attributes and no `<br>` spacers** — every rule lives in `styles.css` behind a named class (`.hero*`, `.page-section`, `.exp-*`, `.site-footer`). Keep it that way. Sections are `<section class="container page-section">`: the Bootstrap `.container` is required, because `.row` uses −15px side margins that need the container's padding to cancel them.
 
 **JavaScript** (homepage):
-- `static/burger.js` — toggles `.is-active` on `.navbar-burger` and `#navbar-main` for the mobile hamburger menu
+- `static/nav.js` — toggles `.is-active` on `.navbar-burger` / `#navbar-main` for the mobile menu, and drives the navbar keypoint: on scroll it finds the current section and writes `--kp-x` / `--kp-o` onto `.navbar-sections` (easing stays in CSS). Nav links are plain anchors, so navigation degrades without JS.
 - Inline JS in `index.html` — `display(id)` toggles a publication's abstract block; an `IntersectionObserver` lazy-plays the Robotics `video.lazy-video` thumbnails (which set `preload="none"`) only while on screen; a one-liner fills the footer copyright year. StatCounter analytics load at the end of `<body>`.
 
-**Publications pattern**: Publications live under `#Publications` ("Recent Publications"), split into `.section-h3` subsections — "Vision & Graphics" and "Robotics & RL". Each entry is a `.pub-row.row`: a video/image thumbnail in `.col-md-3` and details (`.pub-title` / `.pub-authors` / `.pub-venue` / `.pub-links`) in `.col-md-9`. Abstract text is hidden in a `<div id="*-abs" class="pub-abstract">` block, toggled by `onclick="display('*-abs')"`. Robotics thumbnails additionally carry `class="lazy-video"` with `preload="none"` so they only fetch and play when scrolled into view. **Currently the entire "Recent Publications" and "Experience" blocks are wrapped in HTML comments ("temporarily hidden"), so only `#Service` renders live** — the markup (and all its media) is kept intact for when it is restored. Within the commented Publications block, "Let Occ Flow" is further isolated in a `<template>`, and its `assets/images/letoccflow.mp4` likewise stays in the repo.
+**Publications pattern**: Publications live under `#Publications` (headed "Recent Research"; the `id` is still `Publications` and the navbar links to it), split into `.section-h3` subsections — "Vision & Graphics" and "Robotics & RL". Each entry is a `.pub-row.row`: a video/image thumbnail in `.col-md-3` and details (`.pub-title` / `.pub-authors` / `.pub-venue` / `.pub-links`) in `.col-md-9`. Abstract text is hidden in a `<div id="*-abs" class="pub-abstract">` block, toggled by `onclick="display('*-abs')"`. All four live thumbnails carry `class="lazy-video"`, so `nav.js`'s sibling observer in `index.html` plays them only while on screen; the Robotics pair additionally sets `preload="none"` so they don't fetch until then, while the two above the fold keep `preload="metadata"` and `autoplay`. "Let Occ Flow" is isolated in a `<template>` (present in the DOM but never rendered); its `assets/images/letoccflow.mp4` stays in the repo.
 
 **Homepage media**: Publication thumbnails (videos/images) live in `assets/images/`, each named after the work it represents (e.g. `dimo.mp4`, `unimate.mp4`, `ttt-parkour.mp4`, `vr-robo.mp4`). Affiliation/company logos carry a `-logo` suffix (`meta-logo.png`); `princeton-logo.jpg` doubles as the favicon. Poster PDFs and the CV live in `assets/pdf/`.
 
