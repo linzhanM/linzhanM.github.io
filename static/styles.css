@@ -181,7 +181,7 @@ hr {
 }
 
 .pub-authors {
-  font-size: var(--text-base);
+  font-size: 0.975rem; /* 15.6px — a hair under the other metadata */
   color: var(--text-secondary);
   margin-bottom: 4px;
 }

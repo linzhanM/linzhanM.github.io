@@ -235,6 +235,31 @@ button:focus-visible,
 }
 .affiliations img.logo-lg { height: 112px; }
 
+/* Venue — a postmark-sized ink stamp, set as an eyebrow above the title.
+   Deliberately the same warm-ink device as .tagline / .section-subtitle rather
+   than a new one, and deliberately *not* accent-colored: coral is reserved on
+   this page for interactive state (link hover, focus, active TOC, selection),
+   so a static line must not claim it. Flush left so it shares the hero's
+   alignment spine with .hero-text / .sub-hero-text / .authors — centered under
+   the logo cluster it just floated between two blocks with nothing to anchor to. */
+.venue-line {
+  margin-bottom: 14px;
+}
+.venue {
+  display: inline-block;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  /* Small mono caps need air between letters to stay legible as a solid block. */
+  letter-spacing: 0.08em;
+  line-height: 1;
+  background: var(--slate-dark);
+  color: #fff;
+  /* Right padding is short by the tracking amount: letter-spacing appends a
+     trailing gap after the final glyph, so equal padding reads off-center. */
+  padding: 7px 12px 6px 13px;
+}
+
 /* Quick links. Live links get a sliding coral underline; disabled ones read dead. */
 .quick-links {
   text-align: center;
