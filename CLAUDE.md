@@ -17,7 +17,7 @@ python3 -m http.server 8000
 
 To deploy, commit changes and push to `main` — GitHub Pages serves the branch automatically.
 
-`.gitattributes` routes any `.zip` through Git LFS, but the repo tracks no binary archives — all media is committed directly (videos, images, PDFs, `.glb` models).
+There is no Git LFS setup and no `.gitattributes` — all media is committed directly (videos, images, PDFs, `.glb` models).
 
 ## Layout
 
@@ -26,8 +26,9 @@ index.html                  Homepage — the only page with publication content
 static/styles.css           Design tokens + all page styles (hero, sections, pubs, footer)
 static/custom-navbar.css    Navbar chrome only
 static/nav.js               Navbar behaviour: burger toggle + section keypoint
-assets/images/              Homepage media: publication thumbnails, logos, profile photo
-assets/pdf/                 Homepage poster PDFs and CV
+static/resume.css           Resume-page styles only (loaded by resume/index.html)
+assets/                     Flat — all homepage media: thumbnails, logos, profile photo, poster PDFs
+resume/                     Resume page (/resume/) + CV_Linzhan_Intern.pdf
 dimo/                       Self-contained DIMO project page
 unimate/                    Self-contained UniMate project page
 robots.txt, sitemap.xml     Search-engine metadata (sitemap lists / and /dimo/)
@@ -55,9 +56,9 @@ Two rules to keep in mind when editing CSS here:
 - `static/nav.js` — toggles `.is-active` on `.navbar-burger` / `#navbar-main` for the mobile menu, and drives the navbar keypoint: on scroll it finds the current section and writes `--kp-x` / `--kp-o` onto `.navbar-sections` (easing stays in CSS). Nav links are plain anchors, so navigation degrades without JS.
 - Inline JS in `index.html` — `display(id)` toggles a publication's abstract block; an `IntersectionObserver` lazy-plays the Robotics `video.lazy-video` thumbnails (which set `preload="none"`) only while on screen; a one-liner fills the footer copyright year. StatCounter analytics load at the end of `<body>`.
 
-**Publications pattern**: Publications live under `#Publications` (headed "Recent Research"; the `id` is still `Publications` and the navbar links to it), split into `.section-h3` subsections — "Vision & Graphics" and "Robotics & RL". Each entry is a `.pub-row.row`: a video/image thumbnail in `.col-md-3` and details (`.pub-title` / `.pub-authors` / `.pub-venue` / `.pub-links`) in `.col-md-9`. Abstract text is hidden in a `<div id="*-abs" class="pub-abstract">` block, toggled by `onclick="display('*-abs')"`. All four live thumbnails carry `class="lazy-video"`, so `nav.js`'s sibling observer in `index.html` plays them only while on screen; the Robotics pair additionally sets `preload="none"` so they don't fetch until then, while the two above the fold keep `preload="metadata"` and `autoplay`. "Let Occ Flow" is isolated in a `<template>` (present in the DOM but never rendered); its `assets/images/letoccflow.mp4` stays in the repo.
+**Publications pattern**: Publications live under `#Publications` (headed "Recent Research"; the `id` is still `Publications` and the navbar links to it), split into `.section-h3` subsections — "Vision & Graphics" and "Robotics & RL". Each entry is a `.pub-row.row`: a video/image thumbnail in `.col-md-3` and details (`.pub-title` / `.pub-authors` / `.pub-venue` / `.pub-links`) in `.col-md-9`. Abstract text is hidden in a `<div id="*-abs" class="pub-abstract">` block, toggled by `onclick="display('*-abs')"`. All four live thumbnails carry `class="lazy-video"`, so `nav.js`'s sibling observer in `index.html` plays them only while on screen; the Robotics pair additionally sets `preload="none"` so they don't fetch until then, while the two above the fold keep `preload="metadata"` and `autoplay`. "Let Occ Flow" is isolated in a `<template>` (present in the DOM but never rendered); its `assets/letoccflow.mp4` stays in the repo.
 
-**Homepage media**: Publication thumbnails (videos/images) live in `assets/images/`, each named after the work it represents (e.g. `dimo.mp4`, `unimate.mp4`, `ttt-parkour.mp4`, `vr-robo.mp4`). Affiliation/company logos carry a `-logo` suffix (`meta-logo.png`); `princeton-logo.jpg` doubles as the favicon. Poster PDFs and the CV live in `assets/pdf/`.
+**Homepage media**: Publication thumbnails (videos/images) live flat in `assets/`, each named after the work it represents (e.g. `dimo.mp4`, `unimate.mp4`, `ttt-parkour.mp4`, `vr-robo.mp4`). Affiliation/company logos carry a `-logo` suffix (`meta-logo.png`); `princeton-logo.jpg` doubles as the favicon. Poster PDFs sit alongside them in `assets/`; the CV lives in `resume/`.
 
 **`dimo/`**: Self-contained, custom-designed project page for the DIMO paper — no Bootstrap, no shared assets. All styling is in `dimo/css/style.css` (design tokens at `:root`); markup is in `dimo/index.html`; the only script is `dimo/js/nav.js`. Loads Academicons, Font Awesome 4, and the Inter / Newsreader / Space Grotesk / Space Mono fonts from CDNs. All media and assets live flat under `dimo/assets/` — `teaser.png`, `pipeline.png`, `interpolation.mp4`, `language.mp4`, `spinner.svg`, `favicon.svg` (there is no `dimo/img/` dir and no paper PDF in the repo; the poster link points off-site).
   - **Design system**: a dark "latent-space" hero over a light "paper" body, with a reserved blue→violet→pink spectrum (`--spectrum`) used only on the title, the active nav node, the nav progress fill, and `favicon.svg`. Sections (`#demo`, `#applications`, `#abstract`, `#method`, `#poster`, `#cite`) alternate white / `--paper-2` tint for separation (no borders). Each section header is a mono `.kicker` + a `.section-title`.

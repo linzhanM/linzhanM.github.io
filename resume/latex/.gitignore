@@ -1,0 +1,8 @@
+# latexmk intermediates — build.sh deletes these, this is a safety net
+# for interrupted builds.
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.pdf
