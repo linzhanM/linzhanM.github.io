@@ -1,0 +1,308 @@
+/* Resume page only. Loads after styles.css and reuses its tokens and base
+   typography; what it adds is the document layer the homepage has no use for —
+   the masthead, the two-sided entry row, the section rules, and the print sheet.
+
+   Type, and why it is not the homepage's: three serif voices were doing two
+   jobs here — Fraunces on the section headers, Fraunces again on the entry
+   titles, Palatino on the paper titles. This page now spends each face once:
+
+     Fraunces (display)  the name, and nothing else on the page
+     Source Serif        section labels, institutions, roles, prose
+     Palatino            publication titles only
+
+   So the two 18px semibold lines that look alike are telling you something
+   true: Source Serif names a place you were, Palatino names a work you made.
+
+   Measure: not the usual prose measure. The rows are two-sided — role on the
+   left, dates on the right — and the source PDF fits each on one line. At 47rem
+   the longest ("Graduate Research Assistant · Advisors: …") wrapped and pushed
+   its date onto a line of its own, which reads as a different entry. 60rem is
+   what that row needs, and it stays inside Bootstrap's 1140px container. */
+.resume-page {
+  max-width: 60rem;
+  margin: 0 auto;
+}
+
+/* --- Navbar --- */
+/* The one exception to "navbar rules live in custom-navbar.css": these aren't
+   navbar chrome, they're this page opting out of it. custom-navbar.css builds a
+   burger-plus-rail nav that only turns .navbar-inner into a flex row at >=1024px
+   (below that the burger stacks the menu). This page has a single link and no
+   burger, so the row has to hold at every width, and the link takes the right
+   edge the rail would have had. Only resume/index.html loads this file. */
+.navbar-inner {
+  display: flex;
+  align-items: center;
+}
+
+/* width:auto undoes the `width: 100%` custom-navbar.css gives .nav-section
+   under 1024px — that is for labels stacked in the opened burger menu, and here
+   it made the link fill the row so margin-left:auto had no free space left to
+   push against, parking "Home" against the brand. */
+.resume-home {
+  width: auto;
+  margin-left: auto;
+}
+
+/* --- Masthead --- */
+/* The page's first entry, not a title above the page: name left, where to find
+   it right, on one shared baseline — the same two-sided row every degree and
+   position below is set in. A centred masthead over a left-aligned document was
+   two axes doing the work of one. Baseline (not centre) alignment is what makes
+   the 36px name and the 15px links read as one line rather than two stacked
+   boxes. No bottom rule: the first section's own top rule closes it. */
+.resume-masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-top: 3.25rem;
+  padding-bottom: 2rem;
+}
+
+.resume-masthead h1 {
+  margin: 0;
+}
+
+/* The masthead's right-hand side, so it takes the aside's size and ink rather
+   than the body's. Separators drop one tier below the links they divide — the
+   same relationship .pub-links has with its brackets. The mark is "·", matching
+   the one already separating the clauses inside every .resume-what below;
+   the old "|" was a heavier rule than anything else on the page. */
+.resume-contact {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  text-align: right;
+}
+
+/* nowrap so a narrow screen never breaks a single address across two lines —
+   the line breaks between items instead. */
+.resume-contact a:link,
+.resume-contact a:visited {
+  color: var(--text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.resume-contact a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.16em;
+}
+
+.resume-sep {
+  margin: 0 0.5em;
+}
+
+/* --- Sections --- */
+/* A hairline opens each section instead of an <hr> closing each header: one
+   element fewer, and the rule lands where the meaning changes rather than
+   between a header and the entries it already belongs to. */
+.resume-page .page-section {
+  margin-top: 0;
+  padding: 1.6rem 0 2rem;
+  border-top: 1px solid var(--ivory-dark);
+}
+
+/* Section headers are wayfinding, not content. At 27px display they outranked
+   the institutions underneath — inverted, for a document you scan by employer
+   and school. Demoted to the eyebrow this site already speaks in (.section-h3,
+   .nav-section): uppercase, tracked, one size below the body. */
+.resume-page .section-h2 {
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin: 0 0 1.15rem;
+}
+
+/* --- Entries --- */
+.resume-entry,
+.resume-pub {
+  margin-bottom: 1.35rem;
+}
+
+.resume-entry:last-child,
+.resume-pub:last-child {
+  margin-bottom: 0;
+}
+
+/* Title left, place/date right — the row this whole page is built from.
+   baseline alignment keeps the date sitting on the title's line even though the
+   two sides run at different sizes. */
+.resume-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.resume-row + .resume-row {
+  margin-top: 0.15rem;
+}
+
+/* Institutions: Source Serif, not the display face. See the type note at the
+   top — Fraunces is spent on the name. It also sets narrower than Fraunces at
+   the same size, which buys the two-sided rows a little more room before they
+   wrap. */
+.resume-where {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+
+/* Role / degree line: italic, one tier down, as the PDF sets it. */
+.resume-what {
+  font-style: italic;
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+}
+
+/* Right rail — city on the title row, dates on the role row. Never wraps:
+   "Aug. 2025 – Present" broken across two lines reads as two dates. */
+.resume-aside {
+  flex-shrink: 0;
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+/* Detail bullets. Dashes rather than discs, matching the PDF and leaving the
+   page without a single filled dot of decoration. */
+.resume-bullets {
+  margin: 0.4rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resume-bullets li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  margin-bottom: 0.2rem;
+}
+
+.resume-bullets li::before {
+  content: "–";
+  position: absolute;
+  left: 0;
+  color: var(--text-tertiary);
+}
+
+/* --- Publications --- */
+/* Reuses .pub-title / .pub-authors / .pub-links from styles.css, Palatino and
+   all — these are the same papers the homepage sets that way, and holding the
+   face across both pages is worth more than flattening it here. Only the
+   spacing changes: those rules are tuned for a row with a video thumbnail
+   beside them, and here the entries stack directly on one another. */
+.resume-pub .pub-title {
+  margin-top: 0;
+}
+
+.resume-pub .pub-venue {
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  color: var(--text-secondary);
+  margin-bottom: 0.2rem;
+}
+
+/* --- Flat lists (awards, service) --- */
+.resume-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.resume-list > li {
+  margin-bottom: 0.5rem;
+}
+
+.resume-list > li:last-child {
+  margin-bottom: 0;
+}
+
+.resume-item-name {
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+}
+
+.resume-note {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+}
+
+/* --- Narrow --- */
+/* Under 768px the container is 540px or less, which the name and the contact
+   line can no longer share. The masthead stacks and both sides go left — the
+   contact line stays the aside, it just sits under the name. */
+@media screen and (max-width: 767px) {
+  .resume-masthead {
+    display: block;
+    padding-top: 2.5rem;
+  }
+
+  .resume-contact {
+    margin-top: 0.6rem;
+    text-align: left;
+  }
+}
+
+/* Phones: the right rail has nowhere to go on a 320px line, so the row stops
+   being a row and the place/date sits under its title. */
+@media screen and (max-width: 575px) {
+  .resume-row {
+    display: block;
+  }
+
+  .resume-aside {
+    display: block;
+    white-space: normal;
+  }
+}
+
+/* --- Print --- */
+/* Cmd-P on this page should produce the resume, not a screenshot of a website:
+   drop the chrome, flatten the tinted background, and keep entries whole across
+   page breaks. The section rules stay — they are the document's structure, not
+   its decoration. */
+@media print {
+  .navbar,
+  .site-footer {
+    display: none;
+  }
+
+  body {
+    background: #fff;
+    font-size: 10.5pt;
+    line-height: 1.4;
+  }
+
+  .resume-page {
+    max-width: none;
+  }
+
+  .resume-masthead {
+    padding-top: 0;
+    padding-bottom: 1.2rem;
+  }
+
+  .resume-page .page-section {
+    padding: 1rem 0 1.2rem;
+  }
+
+  .resume-entry,
+  .resume-pub,
+  .resume-list > li {
+    break-inside: avoid;
+  }
+
+  a:link,
+  a:visited {
+    text-decoration: none;
+  }
+}
