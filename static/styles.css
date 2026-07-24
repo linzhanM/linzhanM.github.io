@@ -164,9 +164,11 @@ a:hover {
 /* 2.125rem = 34px below the navbar, matching the pre-refactor spacing. */
 /* No bottom padding: the first section's margin-top already sets that gap,
    and stacking both put 56px between the photo caption and "Recent Research". */
+/* Also the #About anchor target — scroll-margin clears the sticky navbar. */
 .hero {
   padding-top: 2.125rem;
   padding-bottom: 0;
+  scroll-margin-top: 5rem;
 }
 
 .hero-photo-col {
@@ -332,13 +334,18 @@ hr {
 
 /* Subsection divider: the row that ends a subsection needs less trailing space
    than rows stacking against each other, so the rule sits evenly between the
-   two groups instead of crowding the heading below it. */
-.pub-row:has(+ hr) {
-  margin-bottom: 1.1em;
+   two groups instead of crowding the heading below it.
+   The shelved "Let Occ Flow" <template> renders nothing but is still an element,
+   so sibling combinators see it — both selectors have to step over it, or the
+   last Vision row falls back to the full 2.6em gap. */
+.pub-row:has(+ hr),
+.pub-row:has(+ template + hr) {
+  margin-bottom: 1.9em;
 }
 
-.pub-row + hr {
-  margin-bottom: 1em;
+.pub-row + hr,
+.pub-row + template + hr {
+  margin-bottom: 1.4em;
 }
 
 /* One frame for every piece of media on the page: the same hairline, tint and
