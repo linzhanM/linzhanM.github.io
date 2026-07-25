@@ -29,6 +29,9 @@
   --slate-dark: #141413;
   --slate-light: #5e5d59;
   --accent: #d97757;
+  /* Quiet grey for quick links that aren't live yet — shared by the dead
+     placeholders and the "coming soon" ones, so they stay in sync. */
+  --link-muted: #b8b4a8;
 }
 
 /* ── 2. Base ────────────────────────────────────────────────────────────────── */
@@ -300,10 +303,17 @@ button:focus-visible,
   transform: scaleX(1);
 }
 .quick-links a.disabled {
-  color: #b8b4a8;
+  color: var(--link-muted);
   cursor: not-allowed;
   text-decoration: none;
   pointer-events: none;
+}
+
+/* "Coming soon" sits at the same grey as the dead placeholders, but stays live:
+   it is not .disabled, so the coral hover and sliding underline above still fire
+   and the link keeps its affordance despite the quiet resting colour. */
+.quick-links a.pending {
+  color: var(--link-muted);
 }
 
 /* ── 5. Teaser video + figure captions ──────────────────────────────────────── */
@@ -408,6 +418,7 @@ button:focus-visible,
 #transferGallerySection .gallery-video,
 #promptGallerySection .gallery-video,
 #motionGallerySection .gallery-video,
+#demoGallerySection .gallery-video,
 #editGallerySection .gallery-video,
 #inbetweenGallerySection .gallery-video,
 #expansionGallerySection .gallery-video {
@@ -420,6 +431,16 @@ button:focus-visible,
 #inbetweenGallerySection .gallery-video,
 #expansionGallerySection .gallery-video {
   height: 500px;
+}
+
+/* The overview clips sit between the two sizes: taller than an experiment strip
+   because each is a 2x3 grid whose prompt text is baked into the frame and needs
+   the pixels, but not application-size — at 500px a single clip ran 875px wide
+   and read as the biggest thing in Experiments, outweighing the studies it is
+   only meant to introduce. 400px (~698px wide) is the smallest size that keeps
+   the baked-in prompts legible. Don't go lower without checking that text. */
+#demoGallerySection .gallery-video {
+  height: 400px;
 }
 
 /* Horizontal scroll buttons. */

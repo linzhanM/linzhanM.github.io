@@ -27,6 +27,7 @@
       <li><a href="#examples">Interactive Examples</a></li>
       <li><a href="#abstract">Abstract</a></li>
       <li><a href="#experiments">Experiments</a></li>
+      <li class="toc-subsection"><a href="#diverse-skeletons-prompts">Diverse Skeletons, Diverse Prompts</a></li>
       <li class="toc-subsection"><a href="#one-prompt-diverse-skeletons">One Prompt, Diverse Skeletons</a></li>
       <li class="toc-subsection"><a href="#diverse-prompts">One Skeleton, Diverse Prompts</a></li>
       <li class="toc-subsection"><a href="#diverse-motions">One Skeleton, One Prompt, Diverse Motions</a></li>
@@ -61,12 +62,12 @@
     <!-- TODO: add real hrefs and drop class="disabled" once links are live. -->
     <div class="quick-links">
       <a class="disabled" href="#" aria-disabled="true">[arXiv]</a>
-      <a href="https://github.com/Friedrich-M/UniMate" target="_blank" rel="noopener">[Code (coming soon)]</a>
+      <a class="pending" href="https://github.com/Friedrich-M/UniMate" target="_blank" rel="noopener">[Code (coming soon)]</a>
       <a class="disabled" href="#" aria-disabled="true">[Dataset]</a>
       <a class="disabled" href="#" aria-disabled="true">[Twitter]</a>
     </div>
 
-    <video id="teaser-video" src="assets/demo.mp4" poster="assets/posters/demo.jpg"
+    <video id="teaser-video" src="assets/teaser.mp4" poster="assets/posters/teaser.jpg"
       width="100%" preload="none" muted playsinline loop></video>
     <p class="figure-caption">
       Given a rigged 3D asset and a text prompt, UniMate generates animations for
@@ -114,11 +115,42 @@
 
     <div><div class="tagline" id="experiments">Experiments.</div></div>
 
+    <!-- Breadth first: these three clips are each a 2x3 grid of prompt + result panels
+         spanning categories, so they carry the section's claim, and §2-4 below decompose
+         it by holding one factor fixed at a time. Styled and numbered exactly like its
+         siblings — two attempts to mark it as a lead-in instead (an outlined box, then
+         no number) both read as broken rather than as a different rank.
+         Its clips run taller than an experiment strip (see #demoGallerySection in
+         style.css): at 300px the prompt text baked into the grid is unreadable. -->
+    <div class="section-subtitle" id="diverse-skeletons-prompts">1. Diverse Skeletons, Diverse Prompts.</div>
+
+    <div class="video-gallery-section" id="demoGallerySection">
+      <div class="video-gallery-container">
+        <div class="video-gallery" id="videoGalleryDemo">
+          <video class="gallery-video" src="assets/diverse-1.mp4" poster="assets/posters/diverse-1.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/diverse-2.mp4" poster="assets/posters/diverse-2.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/diverse-3.mp4" poster="assets/posters/diverse-3.jpg" preload="none" muted playsinline loop></video>
+        </div>
+      </div>
+      <div class="gallery-caption-container">
+        <div class="gallery-nav-controls">
+          <button class="gallery-nav left" id="scrollLeftBtnDemo">&lt;</button>
+          <button class="gallery-nav right" id="scrollRightBtnDemo">&gt;</button>
+        </div>
+        <p class="figure-caption gallery-caption">
+          <b>Diverse skeletons, diverse prompts.</b> One model, no per-skeleton
+          retraining: animals, plants, humanoids, robots, and everyday rigged objects,
+          each animated from the prompt shown above its panel. The three studies below
+          hold one factor fixed at a time.
+        </p>
+      </div>
+    </div>
+
     <!-- Motion Transfer (UniMate paper, "Motion Transfer Across Topologies" / Fig. 11).
          VideoMimic "Real-world Demo" gallery pattern: a horizontal .video-gallery row
          with nav buttons + a single bold-lead caption. To add another example, drop
          the file in assets/ and add another <video class="gallery-video"> below. -->
-    <div class="section-subtitle" id="one-prompt-diverse-skeletons">1. One Prompt, Diverse Skeletons.</div>
+    <div class="section-subtitle" id="one-prompt-diverse-skeletons">2. One Prompt, Diverse Skeletons.</div>
 
     <div class="video-gallery-section" id="transferGallerySection">
       <div class="video-gallery-container">
@@ -136,14 +168,14 @@
     </div>
 
     <!-- One Skeleton, Diverse Prompts (UniMate paper, Fig. 7). Same gallery pattern. -->
-    <div class="section-subtitle" id="diverse-prompts">2. One Skeleton, Diverse Prompts.</div>
+    <div class="section-subtitle" id="diverse-prompts">3. One Skeleton, Diverse Prompts.</div>
 
     <div class="video-gallery-section" id="promptGallerySection">
       <div class="video-gallery-container">
         <div class="video-gallery" id="videoGalleryPrompt">
+          <video class="gallery-video" src="assets/prompt-bighero.mp4" poster="assets/posters/prompt-bighero.jpg" preload="none" muted playsinline loop></video>
           <video class="gallery-video" src="assets/prompt-eagle.mp4" poster="assets/posters/prompt-eagle.jpg" preload="none" muted playsinline loop></video>
           <video class="gallery-video" src="assets/prompt-shark.mp4" poster="assets/posters/prompt-shark.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/prompt-bighero.mp4" poster="assets/posters/prompt-bighero.jpg" preload="none" muted playsinline loop></video>
         </div>
       </div>
       <div class="gallery-caption-container">
@@ -159,7 +191,7 @@
     </div>
 
     <!-- One Skeleton, One Prompt, Diverse Motions (UniMate paper, Fig. 8). Same gallery pattern. -->
-    <div class="section-subtitle" id="diverse-motions">3. One Skeleton, One Prompt, Diverse Motions.</div>
+    <div class="section-subtitle" id="diverse-motions">4. One Skeleton, One Prompt, Diverse Motions.</div>
 
     <div class="video-gallery-section" id="motionGallerySection">
       <div class="video-gallery-container">
@@ -275,7 +307,14 @@
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       // Only galleries with enough videos to overflow keep scroll buttons.
+      // Listed in DOM order.
       const galleries = [
+        {
+          sectionId: 'demoGallerySection',
+          galleryInnerId: 'videoGalleryDemo',
+          scrollLeftBtnId: 'scrollLeftBtnDemo',
+          scrollRightBtnId: 'scrollRightBtnDemo'
+        },
         {
           sectionId: 'promptGallerySection',
           galleryInnerId: 'videoGalleryPrompt',
@@ -310,12 +349,22 @@
         let programmaticScroll = false;
         let scrollTimer;
 
+        // Position of an item inside the container's scrollable content. Measure
+        // it from the rects, not offsetLeft: the videos' offsetParent is the
+        // position:relative .video-gallery-section, which is 100vw wide, while the
+        // scroller below it is capped and centered — so offsetLeft carries the side
+        // gutter and every target overshoots by it.
+        const itemLeft = (item) =>
+          item.getBoundingClientRect().left
+          - container.getBoundingClientRect().left
+          + container.scrollLeft;
+
         const nearestItemIndex = () => {
           const viewportCenter = container.scrollLeft + container.clientWidth / 2;
           let nearest = 0;
           let nearestDistance = Infinity;
           items.forEach((item, index) => {
-            const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+            const itemCenter = itemLeft(item) + item.offsetWidth / 2;
             const distance = Math.abs(itemCenter - viewportCenter);
             if (distance < nearestDistance) {
               nearest = index;
@@ -329,7 +378,7 @@
           targetIndex = Math.max(0, Math.min(items.length - 1, index));
           const item = items[targetIndex];
           const maxScroll = container.scrollWidth - container.clientWidth;
-          const centeredLeft = item.offsetLeft - (container.clientWidth - item.offsetWidth) / 2;
+          const centeredLeft = itemLeft(item) - (container.clientWidth - item.offsetWidth) / 2;
           programmaticScroll = true;
           container.scrollTo({
             left: Math.max(0, Math.min(maxScroll, centeredLeft)),
