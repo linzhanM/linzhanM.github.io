@@ -847,9 +847,43 @@ button:focus-visible,
     justify-content: center;
     white-space: normal;
   }
+
+  /* The two tallest galleries outrun the viewport well before the phone
+     breakpoint below: a §1 overview clip is 698px wide and an Applications clip
+     873px, so on a tablet in portrait they are already clipped. min() shrinks
+     them to fit and can never enlarge them, so every width above the crossover
+     keeps the tuned size exactly. The fractional px values are the widths those
+     tuned heights already render at, to the sub-pixel: 400 and 500 are
+     border-box, so it is (height - 3px of border) x 1.75 + 3, not height x 1.75.
+     Rounding them to whole pixels shifts the page a pixel at widths where
+     nothing should move at all, which is the one thing this rule must not do.
+     Recompute both if either height changes.
+     The experiment strips (523px) fit this whole band and are left alone. */
+  #demoGallerySection .gallery-video {
+    width: min(697.75px, calc(100vw - 40px));
+    height: auto;
+  }
+  #editGallerySection .gallery-video,
+  #inbetweenGallerySection .gallery-video,
+  #expansionGallerySection .gallery-video {
+    width: min(872.75px, calc(100vw - 40px));
+    height: auto;
+  }
 }
 
 @media (max-width: 720px) {
+  /* 20px, not the desktop 30px, for two reasons: 30px of gutter on a 390px
+     screen spends 15% of the width on nothing, and — the reason it is exactly
+     20 — the full-bleed galleries below resolve to `100vw - 40px`, so at a 20px
+     gutter the clips land flush with the text column instead of near it. This
+     breakpoint and that width are one decision; keep them in step.
+     `margin: 0` is what makes that true. The file never resets the UA's 8px
+     body margin, so the real gutter is padding + 8 — which is invisible on
+     desktop but here left the text column 8px inside the clips, the two
+     measures missing each other by just enough to look like a mistake. Reset
+     on phones only; the desktop 30px + 8px is left exactly as it was. */
+  body { margin: 0; padding: 40px 20px; }
+
   .viewer-layout { flex-direction: column; }
   .example-sidebar {
     flex: none;
@@ -874,6 +908,26 @@ button:focus-visible,
   .example-item.active { border-color: var(--accent); background: var(--ivory-medium); }
   .viewer-wrapper { height: 420px; }
 
+  /* Every gallery, not just Applications. The clip sizes above are all fixed
+     HEIGHTS, so on a phone width follows the 1.75:1 aspect and runs off-screen —
+     698px for a §1 overview clip, 523px for an experiment strip, against a text
+     column of 350px. Nothing on the page then shares a measure, which is what
+     reads as "unscaled" on mobile: the videos are simply not in the same layout
+     as the prose. Driving width instead (and letting height follow) puts every
+     clip flush with the text column — see the body padding at the top of this
+     block, set to 20px precisely so `100vw - 40px` lands on the same edges.
+     The cost is real and deliberate: at 350px wide the prompt text baked into
+     the §1 grids is too small to read, which is exactly what the 400px height
+     was tuned to preserve. It cannot be preserved here — a 2x3 grid of labelled
+     panels does not fit a phone at any legible scale — and a clip you can only
+     see half of doesn't preserve it either. Desktop keeps the tuned sizes.
+     Spelled out per section id rather than as a bare `.gallery-video`: a media
+     query adds no specificity, so one class would lose to the `#xGallerySection
+     .gallery-video` heights above. Add a gallery here when you add one there. */
+  #demoGallerySection .gallery-video,
+  #transferGallerySection .gallery-video,
+  #promptGallerySection .gallery-video,
+  #motionGallerySection .gallery-video,
   #editGallerySection .gallery-video,
   #inbetweenGallerySection .gallery-video,
   #expansionGallerySection .gallery-video {
@@ -882,12 +936,89 @@ button:focus-visible,
   }
 }
 
+/* Phones. Everything below is a translation of a desktop device to a ~350px
+   column, not a different design: the ink plates, the trailing hairline, the
+   left-aligned hero spine and the centred logo/link cluster all survive — they
+   are just re-proportioned for a 350px measure, a third of the 960px column
+   they were set for. Nothing here applies above 600px; desktop is untouched. */
 @media (max-width: 600px) {
+  /* 60px is a desktop display size; at this width it is a third of the screen
+     and crowds the subtitle under it. */
+  .hero-text { font-size: 44px; }
   .sub-hero-text { font-size: 22px; margin-bottom: 30px; white-space: normal; }
   .authors { white-space: normal; }
-  .affiliations { gap: 36px; }
+
+  /* The three logos measure 267px side by side, so at the desktop 56px gap —
+     or the 36px this used to carry — they wrapped 2 + 1 and the cluster stood
+     176px tall, a third of the first screen spent on wordmarks. 22px is the
+     widest gap that still keeps them on one row, so they read as one line of
+     institutions rather than a stack. */
+  .affiliations { gap: 22px; margin: 20px 0 14px; }
   .affiliations img { height: 60px; }
   .affiliations img.logo-lg { height: 80px; }
+
+  /* The four links ran to three lines — [arXiv] alone, then [Code (coming
+     soon)] alone — which read as a list of four separate things rather than one
+     row of links. 18px overshoots the column by 6px; 16px fits two per line. */
+  .quick-links a {
+    font-size: 16px;
+    margin: 0 5px;
+  }
+
+  /* Headings. The plate is a label, not a banner: at 24px/20px these wrapped
+     and became full-width slabs of solid ink — 334x65 for a rank-2 heading on a
+     350px column, the heaviest object on the page and heavier than the videos
+     they introduce. Shrinking the type restores the intended reading at this
+     width, and for rank 1 it restores the device outright: the hairline can
+     only trail from the plate to the column edge if the plate leaves room for
+     it, so a smaller plate makes that section rule MORE visible here, not less.
+     Ranks stay 3px apart and keep the rule/no-rule distinction. */
+  .tagline {
+    font-size: 17px;
+    gap: 12px;
+    /* Same logic as the desktop 56px: it must clear .figure-caption's 40px
+       bottom margin, which does not shrink here, or the collapse leaves the
+       section breaks ragged. 44 is the smaller value that still wins. */
+    margin: 44px 0 14px;
+  }
+  .tagline > span { padding: 6px 12px 6px 13px; }
+  .section-subtitle {
+    font-size: 14px;
+    padding: 6px 12px;
+    margin: 24px 0 12px;
+  }
+
+  /* Body copy. 20px on a 350px column runs ~33 characters to the line; 18px
+     buys back four or five and reads less like large print. */
+  .section { font-size: 18px; line-height: 1.65; }
+
+  /* Captions lose their 20px inset. On desktop it holds the caption inside the
+     wider figure; here the figure IS the column, so the inset only pushed the
+     caption out of alignment with the video above it. */
+  .figure-caption { padding: 0; }
+
+  /* Caption row stacks. Side by side, the buttons took 90px of a 350px row and
+     left the caption a 245px ragged strip set against a full-width video —
+     the one place on the phone where two different measures sat touching. */
+  .gallery-caption-container {
+    flex-direction: column;
+    /* stretch, not the row layout's flex-start: once this is a column, the
+       cross axis is horizontal, and flex-start would size the caption to its
+       own text. Long captions clamp to the column and look right by accident;
+       a short one would sit in a narrow box under a full-width video. */
+    align-items: stretch;
+  }
+  .gallery-nav-controls {
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+  /* 35px is under the 44px minimum touch target, and these are the only
+     controls on the page a thumb has to hit. */
+  .gallery-nav {
+    width: 44px;
+    height: 44px;
+    margin: 0 10px 0 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
