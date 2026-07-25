@@ -32,6 +32,10 @@
   /* Quiet grey for quick links that aren't live yet — shared by the dead
      placeholders and the "coming soon" ones, so they stay in sync. */
   --link-muted: #b8b4a8;
+  /* Hairline for structural rules. Tinted ink rather than --ivory-dark, which
+     is a *surface* tone: at 1px on cream it disappears, and the rule beside a
+     solid ink plate has to register as a line. */
+  --rule: rgba(20, 20, 19, 0.18);
 }
 
 /* ── 2. Base ────────────────────────────────────────────────────────────────── */
@@ -72,6 +76,7 @@ button:focus-visible,
   overflow-y: auto;
   display: none;                /* revealed by the media query below */
   z-index: 1000;
+  transition: opacity 0.2s ease;
 }
 
 @media (min-width: 1400px) {
@@ -81,9 +86,24 @@ button:focus-visible,
   }
 }
 
-.toc h3 {
+/* Set while a full-bleed gallery is running under the rail; see the collision
+   watcher in index.html for when that happens. Opacity rather than display or
+   visibility, so the element keeps its box and the watcher can go on measuring
+   it while hidden. */
+.toc.is-eclipsed {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Deliberately not a heading element: this labels a navigation rail, it is not
+   a section of the document. As an <h3> it was the page's first heading and
+   sat above every <h2>, which inverts the outline a screen reader reads out.
+   font-weight is therefore explicit — it used to come free from the h3 UA
+   default, and a plain <div> would drop to regular. */
+.toc-title {
   font-family: 'Playfair Display', serif;
   font-size: 22px;
+  font-weight: 700;
   letter-spacing: -0.4px;
   margin-top: 0;
   margin-bottom: 8px;
@@ -181,11 +201,14 @@ button:focus-visible,
   margin: 0 auto;
 }
 
+/* The page's <h1>. margin-top is pinned because h1's UA default is 0.67em —
+   at this size that is a 40px drop nobody asked for. */
 .hero-text {
   font-size: 60px;
   font-weight: 700;
   letter-spacing: -1px;
   line-height: 1.1;
+  margin-top: 0;
   margin-bottom: 10px;
 }
 
@@ -238,29 +261,69 @@ button:focus-visible,
 }
 .affiliations img.logo-lg { height: 112px; }
 
-/* Venue — a postmark-sized ink stamp, set as an eyebrow above the title.
-   Deliberately the same warm-ink device as .tagline / .section-subtitle rather
-   than a new one, and deliberately *not* accent-colored: coral is reserved on
-   this page for interactive state (link hover, focus, active TOC, selection),
-   so a static line must not claim it. Flush left so it shares the hero's
-   alignment spine with .hero-text / .sub-hero-text / .authors — centered under
-   the logo cluster it just floated between two blocks with nothing to anchor to. */
+/* Venue — the page's one credential, set as an eyebrow above the title.
+   It used to be a filled ink box, deliberately the same device as .tagline and
+   .section-subtitle. With eleven of those boxes now on the page, a twelfth at
+   14px stopped reading as authority and started reading as a section heading
+   that had shrunk — and it sat directly above a 60px title, so the two competed.
+   The box is gone; the mark carries the identity instead: a root joint, a bone,
+   a child joint. That is the smallest kinematic chain, the primitive this whole
+   model generalises over, and it is the one element at the top of the page drawn
+   from the paper's own subject.
+   Still deliberately *not* accent-coloured: coral is reserved on this page for
+   interactive state (link hover, focus, active TOC, selection), so a static
+   line must not claim it. Flush left so it shares the hero's alignment spine
+   with .hero-text / .sub-hero-text / .authors — centered under the logo cluster
+   it just floated between two blocks with nothing to anchor to. */
 .venue-line {
-  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  /* A hairline mark has less optical mass than the old filled box, so it needs
+     a little more air below to hold the title off it. */
+  margin-bottom: 18px;
 }
+
+/* Root solid, child hollow — the distinction rig UIs draw, and at this size the
+   thing that makes the mark read as two nodes joined by a bone rather than as a
+   bullet followed by a dash. The bone stops at the child's stroke (x2=27, not
+   29) so nothing shows through the open joint; the joint is fill:none rather
+   than a paper colour, so it cannot desync from the background. */
+.venue-rig {
+  flex: none;
+  width: 34px;
+  height: 8px;
+}
+.venue-rig line {
+  stroke: var(--slate-dark);
+  stroke-width: 1;
+}
+.venue-rig-root {
+  fill: var(--slate-dark);
+}
+.venue-rig-joint {
+  fill: none;
+  stroke: var(--slate-dark);
+  stroke-width: 1;
+}
+
 .venue {
-  display: inline-block;
   font-family: 'Roboto Mono', monospace;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
-  /* Small mono caps need air between letters to stay legible as a solid block. */
-  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  /* Out of the box the label has to hold itself together as a line of record,
+     which takes more tracking than it did as a solid block (was 0.08em). */
+  letter-spacing: 0.14em;
   line-height: 1;
-  background: var(--slate-dark);
-  color: #fff;
-  /* Right padding is short by the tracking amount: letter-spacing appends a
-     trailing gap after the final glyph, so equal padding reads off-center. */
-  padding: 7px 12px 6px 13px;
+  color: var(--slate-dark);
+}
+
+/* The venue name is the credential; the year only dates it. Splitting weight
+   and ink says so without adding a separator. */
+.venue-year {
+  font-weight: 300;
+  color: var(--slate-light);
 }
 
 /* Quick links. Live links get a sliding coral underline; disabled ones read dead. */
@@ -338,20 +401,55 @@ button:focus-visible,
 
 /* ── 6. Section headings ────────────────────────────────────────────────────── */
 /* Warm ink boxes: near-black (not pure #000) carries a hint of warmth on cream.
+   Both ranks use that box; what separates them is the hairline the section rank
+   trails across the column. Size alone did not — at 24px vs 20px "Experiments."
+   and "1. Diverse Skeletons, Diverse Prompts." scanned as the same object.
    scroll-margin keeps a heading clear of the top edge on TOC anchor jumps. */
+
+/* Rank 1 (h2). The flex row is the heading; the plate is the <span> inside it.
+   Splitting them is what lets ::after trail a hairline from the plate to the
+   edge of the text column — the device that makes this read as a chapter
+   division rather than a sticker floating on the page. */
 .tagline {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   font-family: 'Roboto Mono', monospace;
   font-size: 24px;
-  background: var(--slate-dark);
-  color: #fff;
-  display: inline-block;
-  padding: 8px 16px;
+  /* Explicit, because h2's UA default is bold and the @import ships only 300
+     and 700 — an unset weight would snap the plate to a much heavier face. */
+  font-weight: 300;
   /* More room above (separate from prior section) than below (hug the content
-     this heading introduces). */
-  margin: 30px 0 18px;
+     this heading introduces). Being block-level, the top margin COLLAPSES with
+     the previous element's bottom margin rather than adding to it, and the
+     tallest of those is .figure-caption's 40px. So any value past 40 sets every
+     section break to exactly itself — 56px for a uniform rhythm. Below 40 the
+     gaps go ragged, each pinned by whatever happens to precede it. */
+  margin: 56px 0 18px;
   scroll-margin-top: 32px;
 }
+.tagline > span {
+  background: var(--slate-dark);
+  color: #fff;
+  /* Mono set solid on ink needs air between letters to read as one block —
+     the same reasoning as .venue, which is this device one size down. */
+  letter-spacing: 0.04em;
+  /* Right padding is short by the tracking amount: letter-spacing appends a
+     trailing gap after the final glyph, so equal padding reads off-center. */
+  padding: 8px 16px 8px 17px;
+}
+.tagline::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
 
+/* Rank 2: the same plate one size down, and deliberately still inline-block —
+   an unfilled variant (ink bar in the left margin) was tried and reverted,
+   since the section rule above already tells the ranks apart. Every instance
+   is styled identically on purpose; see the comment above
+   #diverse-skeletons-prompts in index.html. */
 .section-subtitle {
   font-family: 'Roboto Mono', monospace;
   font-size: 20px;

@@ -19,9 +19,11 @@
 </head>
 
 <body>
-  <!-- Fixed table of contents (mirrors videomimic.net). -->
-  <div class="toc">
-    <h3>Content</h3>
+  <!-- Fixed table of contents (mirrors videomimic.net). A <nav> landmark, so
+       screen readers can jump straight to it; aria-label names it, since the
+       page has more than one navigable region. -->
+  <nav class="toc" aria-label="Contents">
+    <div class="toc-title">Content</div>
     <hr />
     <ul>
       <li><a href="#examples">Interactive Examples</a></li>
@@ -36,11 +38,20 @@
       <li class="toc-subsection"><a href="#motion-inbetweening">Motion In-Betweening</a></li>
       <li class="toc-subsection"><a href="#motion-expansion">Motion Expansion</a></li>
     </ul>
-  </div>
+  </nav>
 
   <div class="main-content">
-    <div class="venue-line"><span class="venue">SIGGRAPH Asia 2026</span></div>
-    <div class="hero-text">UniMate</div>
+    <!-- The mark is a two-joint kinematic chain — decorative, so it is hidden
+         from assistive tech; the credential itself is the text beside it. -->
+    <div class="venue-line">
+      <svg class="venue-rig" viewBox="0 0 34 8" aria-hidden="true" focusable="false">
+        <line x1="4" y1="4" x2="27" y2="4" />
+        <circle class="venue-rig-root" cx="4" cy="4" r="3" />
+        <circle class="venue-rig-joint" cx="29" cy="4" r="2" />
+      </svg>
+      <span class="venue">SIGGRAPH Asia <span class="venue-year">2026</span></span>
+    </div>
+    <h1 class="hero-text">UniMate</h1>
     <div class="sub-hero-text">One Unified Model to Animate Diverse Skeletons</div>
 
     <div class="authors">
@@ -74,7 +85,7 @@
       characters with <em>diverse skeletal topologies</em> within a single <em>unified</em> model.
     </p>
 
-    <div class="tagline" id="examples">Interactive Examples.</div>
+    <h2 class="tagline" id="examples"><span>Interactive Examples.</span></h2>
     <div class="section">
       Explore our interactive 3D animation examples. Click on any example in the
       sidebar to view it. Toggle the skeleton and playback from the controls
@@ -90,30 +101,30 @@
     </div>
     <p class="viewer-hint">Drag to orbit &nbsp;·&nbsp; scroll to zoom &nbsp;·&nbsp; right-drag to pan</p>
 
-    <div class="tagline" id="abstract">Abstract.</div>
+    <h2 class="tagline" id="abstract"><span>Abstract.</span></h2>
     <div class="section">
       Recent advances in automatic rigging now deliver animation-ready 3D assets
       at scale, yet generating the motion to drive them remains a bottleneck.
       Existing learned animators are topology-constrained: they rely on
       category-specific templates or require per-skeleton fine-tuning and reference
       motions at inference. We present <em>UniMate</em>, a unified foundation model
-      that <strong>synthesizes articulated motion for arbitrary skeletons from a rigged 3D
-      asset and a text prompt, with no test-time optimization or per-skeleton
-      retraining</strong>. UniMate relies on a topology-aware diffusion transformer, which
+      that synthesizes articulated motion for <strong>arbitrary skeletons</strong> from a rigged 3D
+      asset and a text prompt, with <strong>no test-time optimization or per-skeleton
+      retraining</strong>. UniMate relies on a <strong>topology-aware diffusion transformer</strong>, which
       integrates skeletal topology into attention via three mechanisms: (1) a
       graph-aware attention bias from pairwise joint relations and geodesic
       distances; (2) a spectral rotary position embedding generalizing RoPE to
       arbitrary kinematic trees via the graph Laplacian; and (3) a global
       topological conditioner attention-pooled from the rest-pose skeleton. We also
-      curate UniML3D, 13,006 motion sequences spanning bipedal, quadrupedal, avian,
+      curate <strong>UniML3D, 13,006 motion sequences</strong> spanning bipedal, quadrupedal, avian,
       marine, insectoid, serpentine, and articulated rigid objects with unified
       canonicalization and text pairing. Trained on this dataset, UniMate
-      outperforms state-of-the-art baselines in <strong>quality, generalization, and
-      efficiency</strong>, and supports zero-shot cross-topology transfer, in-betweening,
-      and text-guided editing.
+      outperforms state-of-the-art baselines in quality, generalization, and
+      efficiency, and supports <strong>zero-shot cross-topology transfer, in-betweening,
+      expansion, and text-guided editing</strong>.
     </div>
 
-    <div><div class="tagline" id="experiments">Experiments.</div></div>
+    <h2 class="tagline" id="experiments"><span>Experiments.</span></h2>
 
     <!-- Breadth first: these three clips are each a 2x3 grid of prompt + result panels
          spanning categories, so they carry the section's claim, and §2-4 below decompose
@@ -213,7 +224,7 @@
       </div>
     </div>
 
-    <div><div class="tagline" id="application">Applications.</div></div>
+    <h2 class="tagline" id="application"><span>Applications.</span></h2>
 
     <!-- Application 1: Motion Editing (UniMate paper, Fig. 10). -->
     <div class="section-subtitle" id="motion-editing">1. Motion Editing.</div>
@@ -419,34 +430,109 @@
     });
   </script>
 
-  <!-- TOC scroll-spy: light up the rail beside the section currently in view. -->
+  <!-- TOC rail behaviour: two independent jobs, both keyed to scroll position.
+       Neither is required to navigate — the rail's links are plain anchors. -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const links = [...document.querySelectorAll('.toc a')];
-      // Map each tracked section element -> its TOC link, in document order.
-      const sections = new Map();
-      links.forEach((a) => {
-        const el = document.getElementById(a.getAttribute('href').slice(1));
-        if (el) sections.set(el, a);
-      });
-      if (!sections.size) return;
+      const toc = document.querySelector('.toc');
+      if (!toc) return;
 
-      const visible = new Set();
-      const setActive = (a) => {
-        if (!a) return;
-        links.forEach((l) => l.classList.toggle('active', l === a));
-      };
+      /* 1. Scroll-spy — light up the link beside the section being read. */
+      (function scrollSpy() {
+        const links = [...toc.querySelectorAll('a')];
+        // Each tracked section element -> its link, kept in document order.
+        const sections = new Map();
+        links.forEach((a) => {
+          const el = document.getElementById(a.getAttribute('href').slice(1));
+          if (el) sections.set(el, a);
+        });
+        if (!sections.size) return;
 
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((e) => e.isIntersecting ? visible.add(e.target) : visible.delete(e.target));
-        // Active = the topmost section whose heading sits in the upper viewport band.
-        for (const [el, a] of sections) {
-          if (visible.has(el)) { setActive(a); return; }
+        const visible = new Set();
+        const setActive = (a) => {
+          if (a) links.forEach((l) => l.classList.toggle('active', l === a));
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((e) => e.isIntersecting ? visible.add(e.target) : visible.delete(e.target));
+          // Active = the topmost section whose heading sits in the upper viewport band.
+          for (const [el, a] of sections) {
+            if (visible.has(el)) { setActive(a); return; }
+          }
+        }, { rootMargin: '0px 0px -78% 0px', threshold: 0 });
+
+        sections.forEach((_, el) => observer.observe(el));
+        setActive(sections.values().next().value);   // default to the first section
+      })();
+
+      /* 2. Collision watcher — the galleries are full-bleed (100vw) while the
+         rail is fixed in the left gutter, so a wide strip ends up running
+         underneath it. Fade the rail out (.toc.is-eclipsed) while that lasts.
+         Measured rather than breakpointed: whether a gallery reaches the
+         gutter depends on how wide its clips are, and they differ. */
+      (function collisionWatcher() {
+        const strips = [...document.querySelectorAll('.video-gallery-container')]
+          .map((el) => ({ frame: el, clips: [...el.querySelectorAll('.gallery-video')] }))
+          .filter((strip) => strip.clips.length);
+        if (!strips.length) return;
+
+        // Grow each strip vertically so the rail doesn't blink back on in the
+        // short caption/heading gap between two consecutive galleries.
+        const BLEED = 90;
+        // getBoundingClientRect stops at the border box, but the clips' 12px
+        // drop shadow is just as visible over the rail.
+        const SHADOW = 12;
+
+        // What a strip actually paints. NOT its frame: that is a fixed 1150px
+        // centred box, so on the single-clip Applications galleries the frame
+        // reaches the gutter while the clip itself is nowhere near it. Measure
+        // the clips, then clamp to the frame, which is what crops them once
+        // the strip is scrolled horizontally.
+        function paintedRect(strip) {
+          const frame = strip.frame.getBoundingClientRect();
+          let left = Infinity, right = -Infinity;
+          for (const clip of strip.clips) {
+            const r = clip.getBoundingClientRect();
+            if (!r.width) continue;            // not laid out yet
+            left = Math.min(left, r.left);
+            right = Math.max(right, r.right);
+          }
+          if (left === Infinity) return null;
+          return {
+            left: Math.max(left - SHADOW, frame.left),
+            right: Math.min(right + SHADOW, frame.right),
+            top: frame.top - BLEED,
+            bottom: frame.bottom + BLEED,
+          };
         }
-      }, { rootMargin: '0px 0px -78% 0px', threshold: 0 });
 
-      sections.forEach((_, el) => observer.observe(el));
-      setActive(sections.values().next().value); // default to the first section
+        const overlaps = (a, b) =>
+          a.right > b.left && a.left < b.right && a.bottom > b.top && a.top < b.bottom;
+
+        let queued = false;
+        function update() {
+          queued = false;
+          if (getComputedStyle(toc).display === 'none') return;   // rail is off below 1400px
+          const rail = toc.getBoundingClientRect();
+          toc.classList.toggle('is-eclipsed', strips.some((strip) => {
+            const painted = paintedRect(strip);
+            return painted !== null && overlaps(painted, rail);
+          }));
+        }
+        function schedule() {
+          if (queued) return;
+          queued = true;
+          requestAnimationFrame(update);
+        }
+
+        addEventListener('scroll', schedule, { passive: true });
+        addEventListener('resize', schedule);
+        addEventListener('load', schedule);        // posters settle the clips' widths
+        // rAF is suspended in a background tab, so a scroll that lands while
+        // the tab is hidden leaves the rail stale. Re-check on the way back.
+        addEventListener('visibilitychange', schedule);
+        update();
+      })();
     });
   </script>
 
