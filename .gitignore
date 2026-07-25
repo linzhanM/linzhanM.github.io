@@ -5,17 +5,41 @@
 .Spotlight-V100
 .Trashes
 .fseventsd
+.AppleDouble
+.AppleDB
+.AppleDesktop
+.LSOverride
+.DocumentRevisions-V100
+.TemporaryItems
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.apdisk
+Icon?
+Network Trash Folder
+Temporary Items
+
+# iCloud Drive (this repo lives in ~/Library/Mobile Documents — evicted files
+# leave behind .<name>.icloud placeholder stubs)
+.*.icloud
+*.icloud
 
 # Windows
 Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
 Desktop.ini
+$RECYCLE.BIN/
 
 # Editors
 .vscode/
 .idea/
+.zed/
 *.swp
 *.swo
-*~
+*.swn
+*.sublime-workspace
+.netrwhist
+*.iml
 
 # Claude Code (local settings only — shared config like .claude/settings.json can be committed)
 .claude/settings.local.json
@@ -26,6 +50,42 @@ AGENTS.md
 # Python (local dev server)
 __pycache__/
 *.pyc
+*.pyo
+.venv/
+venv/
 
-# Logs / temp
+# Node (only if tooling is ever added — lockfiles stay committed)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.npm/
+
+# Static-site build output (this site is served straight from the branch, so any
+# of these appearing means a generator ran locally)
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+*.css.map
+*.js.map
+
+# Secrets / local env
+.env
+.env.*
+*.pem
+
+# Logs / temp / scratch
 *.log
+*.tmp
+*.bak
+*.orig
+*.rej
+scratch/
+tmp/
+
+# Media working files (source projects and renders that don't belong in the repo —
+# the finished .mp4/.png/.glb assets under assets/ and unimate/glbs/ are committed)
+*.aep
+*.prproj
+*.fcpbundle
+*.mov.sb-*

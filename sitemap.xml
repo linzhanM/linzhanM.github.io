@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- /resume/ is deliberately absent: it carries a noindex meta tag. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://linzhanm.github.io/</loc>
+    <loc>https://linzhanmou.com/</loc>
   </url>
   <url>
-    <loc>https://linzhanm.github.io/dimo/</loc>
+    <loc>https://linzhanmou.com/dimo/</loc>
     <lastmod>2026-07-13</lastmod>
+  </url>
+  <url>
+    <loc>https://linzhanmou.com/unimate/</loc>
+    <lastmod>2026-07-25</lastmod>
   </url>
 </urlset>
