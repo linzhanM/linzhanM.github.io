@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- /resume/ is deliberately absent: it carries a noindex meta tag. -->
+<!-- /resume/ is deliberately absent: it carries a noindex meta tag.
+
+     Keep each <lastmod> equal to the date that page's content actually changed
+     (check it with `git log` on the page's file). It is a recrawl signal, so a
+     stale date tells Google the page is settled and slows reindexing, while a
+     date bumped without a real edit teaches it to ignore the field entirely.
+
+     Note: XML comments cannot contain a double hyphen, so don't paste git flags
+     in here. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://linzhanmou.com/</loc>
+    <lastmod>2026-07-25</lastmod>
   </url>
   <url>
     <loc>https://linzhanmou.com/dimo/</loc>
-    <lastmod>2026-07-13</lastmod>
+    <lastmod>2026-07-25</lastmod>
   </url>
   <url>
     <loc>https://linzhanmou.com/unimate/</loc>

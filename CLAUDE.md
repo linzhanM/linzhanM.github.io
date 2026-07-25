@@ -91,6 +91,7 @@ Search-engine visibility is set **per page**, and the pieces interact — read t
 - `/resume/` and `resume.pdf` are **unlinked from the entire site** (the homepage's Resume nav link is commented out, and nothing links the PDF). They are URLs you have to know.
 - The `google-site-verification` meta lives in `index.html`.
 - Keep `sitemap.xml` and the meta tags in agreement: a `noindex` page must not be listed.
+- **Update a page's `<lastmod>` when you change that page.** It is a recrawl signal: a stale date says "settled, don't bother", which is exactly wrong after an edit, and a date bumped without a real edit trains Google to ignore the field. Take it from `git log` on the page's file. Two traps: XML comments **cannot contain a double hyphen** (so no git flags pasted into them — this silently broke the file once), and the date must be `YYYY-MM-DD` and not in the future. Validate with `xmllint --noout sitemap.xml` before pushing.
 
 ## Résumé page (`resume/`)
 
