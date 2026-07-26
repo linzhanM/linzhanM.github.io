@@ -356,13 +356,16 @@ button:focus-visible,
   transform-origin: left center;
   transition: transform 0.22s ease;
 }
+/* :focus-visible, not :focus — a mouse click leaves focus on the anchor, so with
+   plain :focus the coral + underline stayed lit after returning from the opened
+   tab. Keyboard users still get the state (and the global focus ring above). */
 .quick-links a:not(.disabled):hover,
-.quick-links a:not(.disabled):focus {
+.quick-links a:not(.disabled):focus-visible {
   color: var(--accent);
   text-decoration: none;
 }
 .quick-links a:not(.disabled):hover::after,
-.quick-links a:not(.disabled):focus::after {
+.quick-links a:not(.disabled):focus-visible::after {
   transform: scaleX(1);
 }
 .quick-links a.disabled {
