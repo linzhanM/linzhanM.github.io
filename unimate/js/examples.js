@@ -74,7 +74,12 @@ export const EXAMPLES = [
     files: [
       'glbs/garfield.glb',
       'glbs/gundam-punch.glb',
-      { url: 'glbs/mixamo-flip.glb', material: MIXAMO },
+      {
+        url: 'glbs/mixamo-flip.glb',
+        material: MIXAMO,
+        labelSlot: 'above',
+        lockLabelSlot: true,
+      },
       'glbs/ironman-walk.glb',
     ],
     pad: 1.15, spacing: 0.96

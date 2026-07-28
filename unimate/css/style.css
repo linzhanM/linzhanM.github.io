@@ -713,6 +713,7 @@ button:focus-visible,
   position: absolute;
   top: 10px;
   right: 10px;
+  transform-origin: top right;
   z-index: 3;
   --background-color: rgba(250, 249, 245, 0.94);
   --title-background-color: rgba(240, 238, 230, 0.96);
@@ -729,6 +730,7 @@ button:focus-visible,
   border-radius: 7px;
   overflow: hidden;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  will-change: transform;
 }
 
 /* Prompt chips. Each model's prompt is pinned to it the way an annotation is
@@ -1020,15 +1022,11 @@ button:focus-visible,
   .example-item.active { border-color: var(--accent); background: var(--ivory-medium); }
   .viewer-wrapper { height: 420px; }
 
-  /* A 250px chip is most of a phone screen, and the busiest stage carries nine
-     of them — tighten the type and the wrap so they read as tags on the models
-     rather than a wall of text over the canvas. A full sentence has to wrap to
-     two lines at this width; that is the trade for keeping the canvas legible. */
-  .viewer-label {
-    max-width: 160px;
-    font-size: 9px;
-    padding: 3px 6px 4px;
-  }
+  /* Prompt chips keep their desktop typography and one-line measure. viewer.js
+     scales the complete chip (type, padding and leader) with the canvas width,
+     and feeds that same visual size to its collision solver. This preserves the
+     desktop annotation effect instead of turning long prompts into two-line
+     mobile cards. */
 
   /* Every gallery, not just Applications. The clip sizes above are all fixed
      HEIGHTS, so on a phone width follows the 1.75:1 aspect and runs off-screen —

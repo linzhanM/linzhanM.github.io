@@ -27,7 +27,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { EXAMPLES } from './examples.js?v=22';
+import { EXAMPLES } from './examples.js?v=23';
 
 const wrapper = document.getElementById('viewer-wrapper');
 const overlay = document.getElementById('loading-overlay');
@@ -54,6 +54,8 @@ let skeletons = [];    // one THREE.SkeletonHelper per model
 let labels = [];       // { el, anchor } per PROMPTED model — sparse, see buildLabels
 let grid = null;       // shared ground grid, sized to the whole stage
 let shadowPlane = null; // transparent shadow-catcher over the floor (always on — no toggle)
+let viewPointerDown = false; // prompts hide while the user drags/orbits the canvas
+const activeViewPointers = new Set(); // keep multi-touch hidden until every finger lifts
 
 let loadToken = 0;     // guards against overlapping async loads
 let activePad = 1.15;  // camera padding of the current example (so Reset view keeps it)
@@ -800,8 +802,31 @@ function measureGui() {
 document.fonts?.ready.then(measureLabels);
 
 function applyLabels() {
-  labelLayer.style.display = settings['show prompts'] ? '' : 'none';
+  labelLayer.style.display = settings['show prompts'] && !viewPointerDown ? '' : 'none';
 }
+
+// Prompt annotations are useful at rest but obscure the models while orbiting.
+// Hide them from pointer-down through release; listen for release on window so
+// dragging beyond the canvas cannot leave the layer stuck invisible.
+const finishViewDrag = (event) => {
+  activeViewPointers.delete(event.pointerId);
+  if (activeViewPointers.size) return;
+  if (!viewPointerDown) return;
+  viewPointerDown = false;
+  applyLabels();
+};
+renderer.domElement.addEventListener('pointerdown', (event) => {
+  activeViewPointers.add(event.pointerId);
+  viewPointerDown = true;
+  applyLabels();
+});
+window.addEventListener('pointerup', finishViewDrag);
+window.addEventListener('pointercancel', finishViewDrag);
+window.addEventListener('blur', () => {
+  activeViewPointers.clear();
+  viewPointerDown = false;
+  applyLabels();
+});
 
 const GAP = 12;      // px of air between a chip's edge and the rig's silhouette
 const PIN_RADIUS = 2.5; // .viewer-pin's outer radius, incl. its halo (css §8)
@@ -828,6 +853,17 @@ const PILL_PAD = 4;  // px of clearance from the canvas edges and from other chi
 const DEPTH_SPAN = 0.35;
 const DEPTH_FADE = 0.45;   // opacity given up at full recession
 const DEPTH_SHRINK = 0.12; // scale given up at full recession
+
+// Below the phone layout breakpoint, scale overlay UI from the viewer's tuned
+// desktop width. The desktop content column is 960px; the sidebar occupies
+// 165px + 22px left padding, the flex gap is 14px, and the viewer border takes
+// 3px, leaving a 756px canvas client area. Using that exact baseline (with no
+// minimum readability override) makes prompts and Controls true geometric
+// reductions of the desktop composition rather than similar mobile variants.
+const DESKTOP_VIEWER_WIDTH = 756;
+const phoneLayout = window.matchMedia('(max-width: 720px)');
+const promptViewportScale = (width) =>
+  phoneLayout.matches ? Math.min(1, width / DESKTOP_VIEWER_WIDTH) : 1;
 
 const MAX_LIFT = 115; // px a pill may be pushed up off its model to dodge another.
                       // Enough for the Zoo's worst case — the chicken standing under
@@ -937,6 +973,7 @@ function updateLabels(dt) {
   if (!labels.length || !settings['show prompts']) return;
   const w = wrapper.clientWidth;
   const h = wrapper.clientHeight;
+  const viewportScale = promptViewportScale(w);
 
   // Where every rig on the stage is, chips or not — a labelled model must not be
   // covered by someone else's chip either.
@@ -988,8 +1025,10 @@ function updateLabels(dt) {
     // The anchor's own screen point — the top-center of the rig.
     const ax = (labelNdc.x * 0.5 + 0.5) * w;
     const ay = (-labelNdc.y * 0.5 + 0.5) * h;
-    const halfW = l.w / 2;
-    const halfH = l.h / 2;
+    // l.w/l.h are the desktop chip's unscaled layout box. Placement uses its
+    // responsive visual box so mobile labels do not reserve desktop-sized gaps.
+    const halfW = l.w * viewportScale / 2;
+    const halfH = l.h * viewportScale / 2;
     // Keep the whole chip inside the frame. A model near an edge would otherwise
     // center its chip over the border and lose half the text to the layer's clip —
     // a nudged-but-readable label beats a cropped one, and the leader still says
@@ -1207,7 +1246,7 @@ function updateLabels(dt) {
     // collision pass above ran on the UNSCALED boxes, so a shrunken chip only ever
     // clears its neighbours by more than asked — never less.
     const t = Math.min(1, Math.max(0, (p.dist / nearest - 1) / DEPTH_SPAN));
-    const scale = 1 - DEPTH_SHRINK * t;
+    const scale = viewportScale * (1 - DEPTH_SHRINK * t);
     p.el.style.opacity = p.pin.style.opacity = (1 - DEPTH_FADE * t).toFixed(3);
     p.el.style.transform =
       `translate3d(${lab.sx.toFixed(1)}px, ${lab.sy.toFixed(1)}px, 0) translate(-50%, -50%) scale(${scale.toFixed(3)})`;
@@ -1402,6 +1441,20 @@ gui.add(settings, 'show skeleton').name('Skeleton')
 gui.add(settings, 'show prompts').name('Prompts').onChange(applyLabels);
 gui.add(settings, 'wireframe').name('Wireframe').onChange(applyWireframe);
 gui.add({ reset: () => frameStage(activePad) }, 'reset').name('Reset view');
+
+// Match the prompt chips on phones: scale the complete Controls panel from its
+// pinned top-right corner, preserving the desktop proportions instead of
+// restyling individual rows. getBoundingClientRect() in measureGui() reports
+// this transformed size, so prompt labels avoid the panel's visible footprint.
+function applyResponsiveControlScale() {
+  const scale = promptViewportScale(wrapper.clientWidth);
+  gui.domElement.style.transform = scale === 1 ? '' : `scale(${scale})`;
+  // The panel's desktop inset is part of its composition, so scale that too.
+  gui.domElement.style.top = scale === 1 ? '' : `${10 * scale}px`;
+  gui.domElement.style.right = scale === 1 ? '' : `${10 * scale}px`;
+}
+applyResponsiveControlScale();
+
 // Collapsing the panel frees the space under it, so the pills' no-go box must follow.
 gui.onOpenClose?.(measureLabels);
 
@@ -1442,6 +1495,7 @@ window.addEventListener('resize', () => {
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
   renderer.setSize(w, h);
+  applyResponsiveControlScale();
   measureLabels(); // the pills' max-width is breakpoint-dependent, so their boxes move
 });
 
