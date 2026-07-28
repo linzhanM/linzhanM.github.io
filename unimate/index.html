@@ -15,7 +15,7 @@
   <link rel="canonical" href="https://linzhanmou.com/unimate/" />
   <link rel="icon" type="image/png" sizes="2048x2048" href="assets/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/favicon-baymax.png" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
@@ -65,9 +65,9 @@
     </div>
 
     <div class="affiliations">
-      <img class="logo-lg" src="assets/princeton.png" alt="Princeton University" />
-      <img class="logo-lg" src="assets/ucb.svg" alt="University of California, Berkeley" />
-      <img src="assets/mit.png" alt="Massachusetts Institute of Technology" />
+      <img class="logo-lg" src="assets/logos/princeton.png" alt="Princeton University" />
+      <img class="logo-lg" src="assets/logos/ucb.svg" alt="University of California, Berkeley" />
+      <img src="assets/logos/mit.png" alt="Massachusetts Institute of Technology" />
     </div>
 
     <!-- TODO: add real hrefs and drop class="disabled" once links are live. -->
@@ -75,10 +75,10 @@
       <a class="disabled" href="#" aria-disabled="true">[arXiv]</a>
       <a class="pending" href="https://github.com/Friedrich-M/UniMate" target="_blank" rel="noopener">[Code (coming soon)]</a>
       <a class="disabled" href="#" aria-disabled="true">[Dataset]</a>
-      <a class="disabled" href="#" aria-disabled="true">[Twitter]</a>
+      <a class="pending" href="#examples">[Interactive Examples]</a>
     </div>
 
-    <video id="teaser-video" src="assets/teaser.mp4" poster="assets/posters/teaser.jpg"
+    <video id="teaser-video" src="assets/videos/teaser.mp4" poster="assets/posters/teaser.jpg"
       width="100%" preload="none" muted playsinline loop></video>
     <p class="figure-caption">
       Given a rigged 3D asset and a text prompt, UniMate generates animations for
@@ -87,14 +87,16 @@
 
     <h2 class="tagline" id="examples"><span>Interactive Examples.</span></h2>
     <div class="section">
-      Explore our interactive 3D animation examples. Click on any example in the
-      sidebar to view it. Toggle the skeleton and playback from the controls
-      panel; drag to rotate, scroll to zoom.
+      Explore our interactive 3D animations by selecting an example group from
+      the sidebar. Each character is labelled with the text prompt used to
+      generate its motion. Drag to rotate and scroll to zoom.
     </div>
 
     <div class="viewer-layout">
       <div class="example-sidebar" id="example-sidebar"></div>
       <div class="viewer-wrapper" id="viewer-wrapper">
+        <!-- One prompt pill per model; filled and positioned by viewer.js. -->
+        <div id="viewer-labels"></div>
         <div id="loading-overlay"><span class="spinner"></span>Loading…</div>
         <div id="drop-hint">Drop .fbx / .glb / .gltf to visualize</div>
       </div>
@@ -138,9 +140,9 @@
     <div class="video-gallery-section" id="demoGallerySection">
       <div class="video-gallery-container">
         <div class="video-gallery" id="videoGalleryDemo">
-          <video class="gallery-video" src="assets/diverse-1.mp4" poster="assets/posters/diverse-1.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/diverse-2.mp4" poster="assets/posters/diverse-2.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/diverse-3.mp4" poster="assets/posters/diverse-3.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/diverse-1.mp4" poster="assets/posters/diverse-1.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/diverse-2.mp4" poster="assets/posters/diverse-2.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/diverse-3.mp4" poster="assets/posters/diverse-3.jpg" preload="none" muted playsinline loop></video>
         </div>
       </div>
       <div class="gallery-caption-container">
@@ -166,8 +168,8 @@
     <div class="video-gallery-section" id="transferGallerySection">
       <div class="video-gallery-container">
         <div class="video-gallery" id="videoGalleryTransfer">
-          <video class="gallery-video" src="assets/transfer-walk.mp4" poster="assets/posters/transfer-walk.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/transfer-attack.mp4" poster="assets/posters/transfer-attack.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/transfer-walk.mp4" poster="assets/posters/transfer-walk.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/transfer-attack.mp4" poster="assets/posters/transfer-attack.jpg" preload="none" muted playsinline loop></video>
         </div>
       </div>
       <div class="gallery-caption-container">
@@ -184,9 +186,9 @@
     <div class="video-gallery-section" id="promptGallerySection">
       <div class="video-gallery-container">
         <div class="video-gallery" id="videoGalleryPrompt">
-          <video class="gallery-video" src="assets/prompt-bighero.mp4" poster="assets/posters/prompt-bighero.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/prompt-eagle.mp4" poster="assets/posters/prompt-eagle.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/prompt-shark.mp4" poster="assets/posters/prompt-shark.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/prompt-bighero.mp4" poster="assets/posters/prompt-bighero.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/prompt-eagle.mp4" poster="assets/posters/prompt-eagle.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/prompt-shark.mp4" poster="assets/posters/prompt-shark.jpg" preload="none" muted playsinline loop></video>
         </div>
       </div>
       <div class="gallery-caption-container">
@@ -207,9 +209,9 @@
     <div class="video-gallery-section" id="motionGallerySection">
       <div class="video-gallery-container">
         <div class="video-gallery" id="videoGalleryMotion">
-          <video class="gallery-video" src="assets/motion-cat.mp4" poster="assets/posters/motion-cat.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/motion-snake.mp4" poster="assets/posters/motion-snake.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/motion-human.mp4" poster="assets/posters/motion-human.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/motion-cat.mp4" poster="assets/posters/motion-cat.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/motion-snake.mp4" poster="assets/posters/motion-snake.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/motion-human.mp4" poster="assets/posters/motion-human.jpg" preload="none" muted playsinline loop></video>
         </div>
       </div>
       <div class="gallery-caption-container">
@@ -232,7 +234,7 @@
     <div class="video-gallery-section" id="editGallerySection">
       <div class="video-gallery-container">
         <div class="video-gallery" id="videoGalleryEdit">
-          <video class="gallery-video" src="assets/editing.mp4" poster="assets/posters/editing.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/editing.mp4" poster="assets/posters/editing.jpg" preload="none" muted playsinline loop></video>
         </div>
       </div>
       <div class="gallery-caption-container">
@@ -249,7 +251,7 @@
     <div class="video-gallery-section" id="inbetweenGallerySection">
       <div class="video-gallery-container">
         <div class="video-gallery" id="videoGalleryInbetween">
-          <video class="gallery-video" src="assets/inbetweening.mp4" poster="assets/posters/inbetweening.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/inbetweening.mp4" poster="assets/posters/inbetweening.jpg" preload="none" muted playsinline loop></video>
         </div>
       </div>
       <div class="gallery-caption-container">
@@ -266,7 +268,7 @@
     <div class="video-gallery-section" id="expansionGallerySection">
       <div class="video-gallery-container">
         <div class="video-gallery" id="videoGalleryExpansion">
-          <video class="gallery-video" src="assets/expansion.mp4" poster="assets/posters/expansion.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/expansion.mp4" poster="assets/posters/expansion.jpg" preload="none" muted playsinline loop></video>
         </div>
       </div>
       <div class="gallery-caption-container">
@@ -310,231 +312,13 @@
     }
   </script>
 
-  <script type="module" src="js/viewer.js"></script>
+  <script type="module" src="js/viewer.js?v=23"></script>
 
-  <!-- Experiments gallery: horizontal scroll buttons (VideoMimic pattern). -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  <!-- Galleries: scroll buttons + play-only-what-is-visible. -->
+  <script src="js/gallery.js"></script>
 
-      // Only galleries with enough videos to overflow keep scroll buttons.
-      // Listed in DOM order.
-      const galleries = [
-        {
-          sectionId: 'demoGallerySection',
-          galleryInnerId: 'videoGalleryDemo',
-          scrollLeftBtnId: 'scrollLeftBtnDemo',
-          scrollRightBtnId: 'scrollRightBtnDemo'
-        },
-        {
-          sectionId: 'promptGallerySection',
-          galleryInnerId: 'videoGalleryPrompt',
-          scrollLeftBtnId: 'scrollLeftBtnPrompt',
-          scrollRightBtnId: 'scrollRightBtnPrompt'
-        },
-        {
-          sectionId: 'motionGallerySection',
-          galleryInnerId: 'videoGalleryMotion',
-          scrollLeftBtnId: 'scrollLeftBtnMotion',
-          scrollRightBtnId: 'scrollRightBtnMotion'
-        }
-      ];
-
-      galleries.forEach((cfg) => {
-        const section = document.getElementById(cfg.sectionId);
-        if (!section) return;
-        const container = section.querySelector('.video-gallery-container');
-        const inner = document.getElementById(cfg.galleryInnerId);
-        const leftBtn = document.getElementById(cfg.scrollLeftBtnId);
-        const rightBtn = document.getElementById(cfg.scrollRightBtnId);
-        if (!(container && inner && leftBtn && rightBtn)) return;
-
-        const items = [...inner.querySelectorAll('.gallery-video')];
-        if (!items.length) return;
-
-        // Do not cache a video's width here: at DOMContentLoaded its intrinsic
-        // dimensions may not be known yet, so width:auto can briefly measure as
-        // only a few pixels. Navigate to the live position of a specific item
-        // instead, which also handles galleries whose videos have different widths.
-        let targetIndex = 0;
-        let programmaticScroll = false;
-        let scrollTimer;
-
-        // Position of an item inside the container's scrollable content. Measure
-        // it from the rects, not offsetLeft: the videos' offsetParent is the
-        // position:relative .video-gallery-section, which is 100vw wide, while the
-        // scroller below it is capped and centered — so offsetLeft carries the side
-        // gutter and every target overshoots by it.
-        const itemLeft = (item) =>
-          item.getBoundingClientRect().left
-          - container.getBoundingClientRect().left
-          + container.scrollLeft;
-
-        const nearestItemIndex = () => {
-          const viewportCenter = container.scrollLeft + container.clientWidth / 2;
-          let nearest = 0;
-          let nearestDistance = Infinity;
-          items.forEach((item, index) => {
-            const itemCenter = itemLeft(item) + item.offsetWidth / 2;
-            const distance = Math.abs(itemCenter - viewportCenter);
-            if (distance < nearestDistance) {
-              nearest = index;
-              nearestDistance = distance;
-            }
-          });
-          return nearest;
-        };
-
-        const showItem = (index) => {
-          targetIndex = Math.max(0, Math.min(items.length - 1, index));
-          const item = items[targetIndex];
-          const maxScroll = container.scrollWidth - container.clientWidth;
-          const centeredLeft = itemLeft(item) - (container.clientWidth - item.offsetWidth) / 2;
-          programmaticScroll = true;
-          container.scrollTo({
-            left: Math.max(0, Math.min(maxScroll, centeredLeft)),
-            behavior: reduceMotion ? 'auto' : 'smooth'
-          });
-          window.clearTimeout(scrollTimer);
-          scrollTimer = window.setTimeout(() => { programmaticScroll = false; }, 500);
-        };
-
-        // Establish the initial item after layout, then keep an explicit target
-        // so rapid clicks during a smooth scroll advance rather than reselecting
-        // the item that is still visually nearest.
-        requestAnimationFrame(() => { targetIndex = nearestItemIndex(); });
-        leftBtn.addEventListener('click', () => showItem(targetIndex - 1));
-        rightBtn.addEventListener('click', () => showItem(targetIndex + 1));
-        container.addEventListener('scroll', () => {
-          if (!programmaticScroll) targetIndex = nearestItemIndex();
-        }, { passive: true });
-      });
-
-      // Load and play only videos that are actually visible. Off-screen clips
-      // pause immediately, avoiding simultaneous downloads and decoding work.
-      const videoObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          const video = entry.target;
-          if (entry.isIntersecting && !reduceMotion) {
-            video.play().catch(() => {});
-          } else {
-            video.pause();
-          }
-        });
-      }, { threshold: 0.15 });
-
-      document.querySelectorAll('video').forEach((video) => {
-        if (reduceMotion) video.controls = true;
-        videoObserver.observe(video);
-      });
-    });
-  </script>
-
-  <!-- TOC rail behaviour: two independent jobs, both keyed to scroll position.
-       Neither is required to navigate — the rail's links are plain anchors. -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const toc = document.querySelector('.toc');
-      if (!toc) return;
-
-      /* 1. Scroll-spy — light up the link beside the section being read. */
-      (function scrollSpy() {
-        const links = [...toc.querySelectorAll('a')];
-        // Each tracked section element -> its link, kept in document order.
-        const sections = new Map();
-        links.forEach((a) => {
-          const el = document.getElementById(a.getAttribute('href').slice(1));
-          if (el) sections.set(el, a);
-        });
-        if (!sections.size) return;
-
-        const visible = new Set();
-        const setActive = (a) => {
-          if (a) links.forEach((l) => l.classList.toggle('active', l === a));
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((e) => e.isIntersecting ? visible.add(e.target) : visible.delete(e.target));
-          // Active = the topmost section whose heading sits in the upper viewport band.
-          for (const [el, a] of sections) {
-            if (visible.has(el)) { setActive(a); return; }
-          }
-        }, { rootMargin: '0px 0px -78% 0px', threshold: 0 });
-
-        sections.forEach((_, el) => observer.observe(el));
-        setActive(sections.values().next().value);   // default to the first section
-      })();
-
-      /* 2. Collision watcher — the galleries are full-bleed (100vw) while the
-         rail is fixed in the left gutter, so a wide strip ends up running
-         underneath it. Fade the rail out (.toc.is-eclipsed) while that lasts.
-         Measured rather than breakpointed: whether a gallery reaches the
-         gutter depends on how wide its clips are, and they differ. */
-      (function collisionWatcher() {
-        const strips = [...document.querySelectorAll('.video-gallery-container')]
-          .map((el) => ({ frame: el, clips: [...el.querySelectorAll('.gallery-video')] }))
-          .filter((strip) => strip.clips.length);
-        if (!strips.length) return;
-
-        // Grow each strip vertically so the rail doesn't blink back on in the
-        // short caption/heading gap between two consecutive galleries.
-        const BLEED = 90;
-        // getBoundingClientRect stops at the border box, but the clips' 12px
-        // drop shadow is just as visible over the rail.
-        const SHADOW = 12;
-
-        // What a strip actually paints. NOT its frame: that is a fixed 1150px
-        // centred box, so on the single-clip Applications galleries the frame
-        // reaches the gutter while the clip itself is nowhere near it. Measure
-        // the clips, then clamp to the frame, which is what crops them once
-        // the strip is scrolled horizontally.
-        function paintedRect(strip) {
-          const frame = strip.frame.getBoundingClientRect();
-          let left = Infinity, right = -Infinity;
-          for (const clip of strip.clips) {
-            const r = clip.getBoundingClientRect();
-            if (!r.width) continue;            // not laid out yet
-            left = Math.min(left, r.left);
-            right = Math.max(right, r.right);
-          }
-          if (left === Infinity) return null;
-          return {
-            left: Math.max(left - SHADOW, frame.left),
-            right: Math.min(right + SHADOW, frame.right),
-            top: frame.top - BLEED,
-            bottom: frame.bottom + BLEED,
-          };
-        }
-
-        const overlaps = (a, b) =>
-          a.right > b.left && a.left < b.right && a.bottom > b.top && a.top < b.bottom;
-
-        let queued = false;
-        function update() {
-          queued = false;
-          if (getComputedStyle(toc).display === 'none') return;   // rail is off below 1400px
-          const rail = toc.getBoundingClientRect();
-          toc.classList.toggle('is-eclipsed', strips.some((strip) => {
-            const painted = paintedRect(strip);
-            return painted !== null && overlaps(painted, rail);
-          }));
-        }
-        function schedule() {
-          if (queued) return;
-          queued = true;
-          requestAnimationFrame(update);
-        }
-
-        addEventListener('scroll', schedule, { passive: true });
-        addEventListener('resize', schedule);
-        addEventListener('load', schedule);        // posters settle the clips' widths
-        // rAF is suspended in a background tab, so a scroll that lands while
-        // the tab is hidden leaves the rail stale. Re-check on the way back.
-        addEventListener('visibilitychange', schedule);
-        update();
-      })();
-    });
-  </script>
+  <!-- TOC rail: scroll-spy + the full-bleed-gallery collision watcher. -->
+  <script src="js/toc.js"></script>
 
   <script type="text/javascript">
     var sc_project = 12925377;
