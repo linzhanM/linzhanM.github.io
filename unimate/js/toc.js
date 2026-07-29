@@ -40,11 +40,14 @@ document.addEventListener('DOMContentLoaded', function () {
     setActive(sections.values().next().value);   // default to the first section
   })();
 
-  /* 2. Collision watcher — the galleries are full-bleed (100vw) while the
-     rail is fixed in the left gutter, so a wide strip ends up running
-     underneath it. Fade the rail out (.toc.is-eclipsed) while that lasts.
-     Measured rather than breakpointed: whether a gallery reaches the
-     gutter depends on how wide its clips are, and they differ. */
+  /* 2. Collision watcher — the rail is fixed in the left gutter, so anything
+     that reaches past the text column runs underneath it. Fade the rail out
+     (.toc.is-eclipsed) while that lasts. The galleries used to be full-bleed
+     (100vw around a 1150px track) and hit this constantly; they are capped at
+     the column now, so it only fires in the first few px above the rail's own
+     1400px breakpoint — and it is what keeps the rail safe if a gallery is ever
+     widened past the column again. Measured rather than breakpointed: whether a
+     gallery reaches the gutter depends on how wide its clips are. */
   (function collisionWatcher() {
     const strips = [...document.querySelectorAll('.video-gallery-container')]
       .map((el) => ({ frame: el, clips: [...el.querySelectorAll('.gallery-video')] }))
@@ -58,9 +61,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // drop shadow is just as visible over the rail.
     const SHADOW = 12;
 
-    // What a strip actually paints. NOT its frame: that is a fixed 1150px
-    // centred box, so on the single-clip Applications galleries the frame
-    // reaches the gutter while the clip itself is nowhere near it. Measure
+    // What a strip actually paints. NOT its frame: that is the full width of
+    // the text column, so on the single-clip Applications galleries the frame
+    // is wider than the clip inside it. Measure
     // the clips, then clamp to the frame, which is what crops them once
     // the strip is scrolled horizontally.
     function paintedRect(strip) {

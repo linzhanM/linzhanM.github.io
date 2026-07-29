@@ -56,6 +56,7 @@ let grid = null;       // shared ground grid, sized to the whole stage
 let shadowPlane = null; // transparent shadow-catcher over the floor (always on — no toggle)
 let viewPointerDown = false; // prompts hide while the user drags/orbits the canvas
 const activeViewPointers = new Set(); // keep multi-touch hidden until every finger lifts
+let viewZooming = false; // and while wheel-zooming, which has no pointer to release
 
 let loadToken = 0;     // guards against overlapping async loads
 let activePad = 1.15;  // camera padding of the current example (so Reset view keeps it)
@@ -763,11 +764,14 @@ function buildLabels(specs) {
     // tie doesn't flip the chip back and forth; see SLOT_HYSTERESIS.
     labels.push({
       el, pin, anchor, pivot: pivots[i],
+      order: i,
       slot: s.labelSlot || 'above',
       lockSlot: s.lockLabelSlot || false,
       offset: s.labelOffset || [0, 0],
       pinOffset: s.labelPinOffset || [0, 0],
-      sx: null, sy: null, w: 0, h: 0,
+      sx: null, sy: null, tx: null, ty: null,
+      candidateX: null, candidateY: null, candidateFrames: 0,
+      w: 0, h: 0,
     });
   });
   measureLabels();
@@ -802,7 +806,8 @@ function measureGui() {
 document.fonts?.ready.then(measureLabels);
 
 function applyLabels() {
-  labelLayer.style.display = settings['show prompts'] && !viewPointerDown ? '' : 'none';
+  labelLayer.style.display =
+    settings['show prompts'] && !viewPointerDown && !viewZooming ? '' : 'none';
 }
 
 // Prompt annotations are useful at rest but obscure the models while orbiting.
@@ -825,8 +830,30 @@ window.addEventListener('pointercancel', finishViewDrag);
 window.addEventListener('blur', () => {
   activeViewPointers.clear();
   viewPointerDown = false;
+  clearTimeout(zoomRestTimer);
+  viewZooming = false;
   applyLabels();
 });
+
+// Wheel zoom has no pointer to release, so hide on the first notch and restore a
+// beat after the last one. ZOOM_REST_MS outlasts the controls' damped glide
+// (dampingFactor 0.08), so the chips reappear against a camera that has stopped
+// rather than re-solving their layout through the tail of the zoom. Pinch-zoom
+// needs nothing here: two fingers down is already a pointer drag.
+const ZOOM_REST_MS = 320;
+let zoomRestTimer = 0;
+renderer.domElement.addEventListener('wheel', () => {
+  if (!controls.enableZoom) return;
+  if (!viewZooming) {
+    viewZooming = true;
+    applyLabels();
+  }
+  clearTimeout(zoomRestTimer);
+  zoomRestTimer = setTimeout(() => {
+    viewZooming = false;
+    applyLabels();
+  }, ZOOM_REST_MS);
+}, { passive: true });
 
 const GAP = 12;      // px of air between a chip's edge and the rig's silhouette
 const PIN_RADIUS = 2.5; // .viewer-pin's outer radius, incl. its halo (css §8)
@@ -894,6 +921,11 @@ const BASELINE_SNAP = 18;
 const SETTLE_TAU = 0.09;
 const SETTLE_SNAP = 220;  // px — a jump this large is a new stage or a re-entry, not
                           // a nudge, so take it instantly instead of sliding across.
+const DEPTH_ORDER_EPSILON = 0.04; // near-coplanar labels keep catalog order instead
+                                  // of swapping collision priority on sub-pixel depth noise
+const TARGET_SWITCH_DISTANCE = 8; // larger target jumps are usually a solver branch switch
+const TARGET_CONFIRM_RADIUS = 6;   // consecutive proposals count as the same new position
+const TARGET_CONFIRM_FRAMES = 3;   // ~50ms at 60fps: invisible, but kills A/B oscillation
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 // Two passes per frame. Pass 1 projects every rig to a screen box and picks each
 // chip's slot; pass 2 walks them near→far, pushes each clear of the chips already
@@ -1144,7 +1176,26 @@ function updateLabels(dt) {
     }
   }
 
-  visible.sort((a, b) => a.depth - b.depth);
+  // Side-by-side rigs are effectively at the same depth. Sorting those by their
+  // tiny projected-depth difference lets collision ownership swap every frame
+  // around a tie, which sends both chips searching in opposite directions. Form
+  // deterministic near-coplanar bands, then use catalog order within each band;
+  // real front/back rows remain ordered by distance.
+  visible.sort((a, b) => a.dist - b.dist);
+  for (let start = 0; start < visible.length;) {
+    let end = start + 1;
+    const bandNear = visible[start].dist;
+    while (end < visible.length &&
+           (visible[end].dist - bandNear) / Math.max(1e-6, bandNear) <= DEPTH_ORDER_EPSILON) {
+      end++;
+    }
+    visible.splice(
+      start,
+      end - start,
+      ...visible.slice(start, end).sort((a, b) => a.label.order - b.label.order)
+    );
+    start = end;
+  }
   for (let i = 0; i < visible.length; i++) {
     const p = visible[i];
     // Only the already-placed (nearer) pills can push this one; re-check after each
@@ -1230,10 +1281,38 @@ function updateLabels(dt) {
     p.cy = THREE.MathUtils.clamp(p.cy, p.halfH + PILL_PAD, Math.max(p.halfH + PILL_PAD, h - p.halfH - PILL_PAD));
     p.x = p.label.lockSlot ? canvasX(p.x, p.halfW) : spanX(p.x, p.halfW);
 
+    // A crowded layout can have two equally valid escape routes. Do not let an
+    // A/B/A/B sequence become visible: small tracking motion is accepted at once,
+    // while a large branch switch must propose the same destination for three
+    // consecutive frames. A genuinely better slot therefore moves after ~50ms;
+    // an unstable alternative never takes control.
+    const lab = p.label;
+    if (lab.tx == null) {
+      lab.tx = p.x; lab.ty = p.cy;
+    } else if (Math.hypot(p.x - lab.tx, p.cy - lab.ty) <= TARGET_SWITCH_DISTANCE) {
+      lab.tx = p.x; lab.ty = p.cy;
+      lab.candidateFrames = 0;
+    } else {
+      const sameCandidate = lab.candidateX != null &&
+        Math.hypot(p.x - lab.candidateX, p.cy - lab.candidateY) <= TARGET_CONFIRM_RADIUS;
+      if (sameCandidate) {
+        lab.candidateFrames++;
+      } else {
+        lab.candidateX = p.x;
+        lab.candidateY = p.cy;
+        lab.candidateFrames = 1;
+      }
+      if (lab.candidateFrames >= TARGET_CONFIRM_FRAMES) {
+        lab.tx = p.x; lab.ty = p.cy;
+        lab.candidateFrames = 0;
+      }
+    }
+    p.x = lab.tx;
+    p.cy = lab.ty;
+
     // Ease onto the target. Everything above computed where the chip BELONGS; this
     // is where it is drawn on the way there, so a slot flip or a resolved collision
     // glides instead of teleporting mid-orbit.
-    const lab = p.label;
     const k = reduceMotion ? 1 : 1 - Math.exp(-dt / SETTLE_TAU);
     if (lab.sx == null || Math.hypot(p.x - lab.sx, p.cy - lab.sy) > SETTLE_SNAP) {
       lab.sx = p.x; lab.sy = p.cy;

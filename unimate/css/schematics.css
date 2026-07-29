@@ -1,0 +1,876 @@
+/* ============================================================================
+   UniMate — Application schematics.
+
+   One drawn plate beside each Applications clip: the clip is the evidence, the
+   plate is the claim. Kept out of style.css on purpose — this is a self-contained
+   figure system (layout, rig, motion) with its own vocabulary, and the page sheet
+   should not have to carry it. It reads the :root tokens from style.css and adds
+   nothing to the page's own elements.
+
+   One convention runs through all three plates, and it is the only thing the
+   three tasks differ in: INK is what you hand the model, ACCENT is what it
+   returns. Editing splits one figure (held joints / resampled joints),
+   in-betweening splits a timeline (two keys / the span between), expansion
+   leaves the timeline open (a source / a prompt at a time).
+
+   Sections:
+     1. Layout — the row, and the plate beside the clip
+     2. The rig — bones, joints, labels, chips
+     3. Motion — the slow argument (6s) and the figures' own clocks
+     4. Responsive + reduced motion
+   ============================================================================ */
+
+/* ── 1. Layout ──────────────────────────────────────────────────────────────
+   Each Application clip runs beside a small diagram of what the task actually
+   is: the clip is the evidence, the diagram is the claim. They are drawn in the
+   viewer's own vocabulary — a rig of bones and hollow joints, mono micro-labels,
+   a chip for a text prompt — and read as a set because one convention runs
+   through all three: INK is what you give the model, ACCENT is what it returns.
+   That is the only thing the three tasks differ in, so it is the thing the
+   drawings encode; nothing here is decoration.
+   The SVGs are inline in index.html rather than assets, so these tokens reach
+   them (an <img> would be a separate document and take none of the palette). */
+.app-row {
+  --app-stage: #f8f8f6;
+  --app-panel: #f1f1ef;
+  --app-ink: #111111;
+  --app-muted: #62615b;
+  --app-signal: #3f718e;
+  --app-signal-soft: #cfe1eb;
+  --app-grid: rgba(164, 164, 157, 0.22);
+  /* Existing motion keyframes use the page tokens. Scope them to the
+     application console so all three plates share this clearer state system. */
+  --accent: var(--app-signal);
+  --rule: #c0bdad;
+  display: flex;
+  align-items: stretch;       /* the panel is as tall as the clip beside it */
+  gap: 12px;
+  padding: 12px;
+  background: var(--app-panel);
+  border: 1px solid #dfdfdc;
+  border-radius: 20px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 12px 30px rgba(17, 17, 17, 0.045);
+}
+.app-row .video-gallery-container {
+  flex: 1 1 auto;
+  min-width: 0;               /* a flex item's default min-width is its content */
+  border-radius: 13px;
+}
+.app-row .video-gallery {
+  padding-bottom: 0;
+  height: 100%;
+}
+.app-row .gallery-video {
+  height: 100%;
+  object-fit: contain;
+  border: 0;
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: none;
+}
+/* A framed plate, the same frame as the clip: two figures side by side, one
+   filmed and one drawn, not a picture with a note stuck beside it. The panel is
+   portrait, so the drawings inside are too — a vertical time axis, which is the
+   TOC rail's reading direction anyway. */
+.app-diagram {
+  flex: 0 0 240px;
+  margin: 0;
+  padding: 14px 16px;
+  box-sizing: border-box;
+  border: 1px solid #dadad5;
+  border-radius: 13px;
+  background-color: var(--app-stage);
+  background-image:
+    linear-gradient(var(--app-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--app-grid) 1px, transparent 1px);
+  background-size: 18px 18px;
+  box-shadow:
+    0 1px 0 #fff inset,
+    0 0 0 1px rgba(255, 255, 255, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.app-diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Bones. The rig is stroked, never filled. non-scaling-stroke so the line weight
+   is identical on the big editing rigs (scale 1.4) and the small ones in a
+   column (0.8) — one hand drew all of them. */
+.dg-rig {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.dg-ink { stroke: var(--app-ink); }
+.dg-gen { stroke: var(--app-signal); }
+
+/* A figure here is the page's rig representation, not a stick man: every
+   articulation is a joint node and every bone is the segment between two of
+   them — root, chest, neck, head, and a shoulder/elbow/hand, hip/knee/foot chain
+   per limb. Joints are hollow, like the viewer's and like the venue mark's; the
+   fill is the diagram stage, so a bone passing under one is punched out rather
+   than crossing it.
+
+   Node size and stroke are a pair: the bones keep a non-scaling stroke, so a
+   ring's hole is `2r x scale - stroke` and shrinks with the rig. At r 1.6 and a
+   1.2px ring the 0.8-scale figures had a 1.4px hole and read as solid dots — the
+   hollow/solid distinction survived only on the big editing plate. r 2 with a
+   1.1px ring holds the hole open at every scale used here (0.8 / 0.85 / 1.4).
+   Check that arithmetic before changing either number or the rig scales. */
+.dg-joint {
+  fill: var(--app-stage);
+  stroke-width: 1.45;
+  vector-effect: non-scaling-stroke;
+}
+.dg-joint.dg-gen,
+.dg-gen .dg-joint {
+  fill: var(--app-signal-soft);
+}
+/* Exactly one node per figure is solid: the root. The venue mark in the masthead
+   fills its root joint the same way — in a kinematic tree one joint is the parent
+   of every other, and the drawing should say which. Nothing else is ever filled;
+   if a second node looks solid, its ring has closed up (see above). */
+.dg-root.dg-ink { fill: var(--app-ink); }
+.dg-root.dg-gen,
+.dg-gen .dg-root { fill: var(--app-signal); }
+
+.dg-axis {
+  stroke: var(--rule);
+  stroke-width: 1.25;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.dg-label {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  fill: var(--app-muted);
+  stroke: none;
+}
+.dg-label.is-gen { fill: var(--app-signal); }
+
+/* Prompt chip — the page's own annotation chip, at diagram scale. */
+.dg-chip {
+  fill: #fbd45b;
+  stroke: #e6b61f;
+  stroke-width: 1;
+  filter: drop-shadow(0 2px 2px rgba(17, 17, 17, 0.08));
+}
+.dg-chip-text {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  fill: var(--app-ink);
+  stroke: none;
+}
+.dg-chip-text.is-long {
+  font-size: 7.2px;
+  letter-spacing: 0;
+}
+.dg-chip-text.is-extra-long {
+  font-size: 6.2px;
+  letter-spacing: -0.01em;
+}
+
+/* The caption belongs to the console above it. A short state key replaces a
+   decorative rule: it teaches the ink/accent convention once per demo. */
+.video-gallery-section:has(.app-row) .gallery-caption-container {
+  margin-top: 10px;
+  padding: 0 12px;
+}
+.video-gallery-section:has(.app-row) .gallery-caption {
+  color: var(--app-muted, #62615b);
+}
+.video-gallery-section:has(.app-row) .gallery-caption b {
+  color: var(--app-ink, #111111);
+}
+
+/* --- Motion -----------------------------------------------------------------
+   Two clocks. The slow one (6s) is the argument: the accent stretch of the axis
+   draws itself and the generated poses land on it in order, so the loop reads as
+   the gap being filled rather than as shapes blinking. `pathLength="1"` in the
+   markup is what lets one dash rule drive strokes of different real lengths.
+
+   The fast one is the figures themselves. Every limb is two bones with a real
+   joint between them, and each bone carries its own track: the shin lags the
+   thigh and only flexes on the lift, the forearm lags the upper arm, the body
+   bobs twice per stride, and the head trails the bob. Contralateral limbs share
+   one keyframe track and are offset by half a period, so left and right can
+   never drift. --dg-phase shifts every bone of one rig at once — that is how a
+   column of figures shows one motion at successive moments instead of three
+   figures doing three things. Every offset is a NEGATIVE delay, so a figure is
+   already mid-stride on the first frame rather than starting from a dead pose. */
+@keyframes dg-draw {
+  0%, 6%    { stroke-dashoffset: 1; }
+  34%, 88%  { stroke-dashoffset: 0; }
+  100%      { stroke-dashoffset: 1; }
+}
+@keyframes dg-appear {
+  0%, 5%    { opacity: 0; }
+  22%, 93%  { opacity: 1; }
+  100%      { opacity: 0; }
+}
+
+.dg-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: dg-draw 6s ease-in-out infinite;
+}
+.dg-appear {
+  opacity: 0;
+  animation: dg-appear 6s ease-in-out infinite;
+}
+/* Order of arrival. Prompt first, then the pose it produced. */
+.dg-d1 { animation-delay: 0.35s; }
+.dg-d2 { animation-delay: 0.7s; }
+.dg-d3 { animation-delay: 1.05s; }
+.dg-d4 { animation-delay: 1.4s; }
+
+/* Every bone rotates about its own joint. The pivot is given as a corner of the
+   bone's own box (transform-box: fill-box) rather than in rig coordinates: a
+   length like `22px 20px` would need transform-box: view-box, and that resolves
+   against the ROOT viewBox, not the rig's local space — inside a translated,
+   scaled group every pivot then lands off the body and the limbs fan out from
+   nowhere. Each bone is drawn so its joint IS a corner of its box: the left
+   side's joints are the top-right of theirs, the right side's the top-left. That
+   holds for the two-segment chains too, whose box is the union with the bone
+   below — the forearm never swings past the shoulder's x, so the corner is a
+   fixed point even while the elbow moves. Keep it that way when editing a pose. */
+.dg-limb { transform-box: fill-box; }
+.dg-arm-l, .dg-fore-l, .dg-leg-l, .dg-shin-l { transform-origin: 100% 0%; }
+.dg-arm-r, .dg-fore-r, .dg-leg-r, .dg-shin-r { transform-origin: 0% 0%; }
+
+/* --- Gait: 1.4s a stride, mirrored tracks, contralateral half-period offset. */
+@keyframes dg-arm-l   { 0%, 100% { transform: rotate(-16deg); } 50% { transform: rotate(14deg); } }
+@keyframes dg-arm-r   { 0%, 100% { transform: rotate(16deg); }  50% { transform: rotate(-14deg); } }
+@keyframes dg-fore-l  { 0%, 100% { transform: rotate(6deg); } 32% { transform: rotate(20deg); } 68% { transform: rotate(2deg); } }
+@keyframes dg-fore-r  { 0%, 100% { transform: rotate(-6deg); } 32% { transform: rotate(-20deg); } 68% { transform: rotate(-2deg); } }
+@keyframes dg-thigh-l { 0%, 100% { transform: rotate(11deg); } 50% { transform: rotate(-9deg); } }
+@keyframes dg-thigh-r { 0%, 100% { transform: rotate(-11deg); } 50% { transform: rotate(9deg); } }
+@keyframes dg-shin-l  { 0%, 100% { transform: rotate(-2deg); } 28% { transform: rotate(-22deg); } 62% { transform: rotate(-4deg); } }
+@keyframes dg-shin-r  { 0%, 100% { transform: rotate(2deg); } 28% { transform: rotate(22deg); } 62% { transform: rotate(4deg); } }
+/* Two bobs per stride — the weight passes over each foot in turn. */
+@keyframes dg-bob     { 0%, 50%, 100% { transform: translateY(0); } 25%, 75% { transform: translateY(-1.2px); } }
+
+.is-walk .dg-body   { animation: dg-bob 1.5s ease-in-out infinite; animation-delay: var(--dg-phase, 0s); }
+.is-walk .dg-arm-l  { animation: dg-arm-l 1.5s ease-in-out infinite; animation-delay: var(--dg-phase, 0s); }
+.is-walk .dg-arm-r  { animation: dg-arm-r 1.5s ease-in-out infinite; animation-delay: var(--dg-phase, 0s); }
+.is-walk .dg-fore-l { animation: dg-fore-l 1.5s ease-in-out infinite; animation-delay: calc(var(--dg-phase, 0s) - 1.38s); }
+.is-walk .dg-fore-r { animation: dg-fore-r 1.5s ease-in-out infinite; animation-delay: calc(var(--dg-phase, 0s) - 1.38s); }
+.is-walk .dg-leg-l  { animation: dg-thigh-l 1.5s ease-in-out infinite; animation-delay: calc(var(--dg-phase, 0s) - 0.75s); }
+.is-walk .dg-leg-r  { animation: dg-thigh-r 1.5s ease-in-out infinite; animation-delay: calc(var(--dg-phase, 0s) - 0.75s); }
+.is-walk .dg-shin-l { animation: dg-shin-l 1.5s ease-in-out infinite; animation-delay: calc(var(--dg-phase, 0s) - 0.63s); }
+.is-walk .dg-shin-r { animation: dg-shin-r 1.5s ease-in-out infinite; animation-delay: calc(var(--dg-phase, 0s) - 0.63s); }
+
+/* --- Quadruped motion for Motion Editing. The source stands and shakes its
+       head. In the edited copy that ink motion is retained while the generated
+       body and diagonal leg pairs form a forward trot. */
+.dg-qleg-1, .dg-qshin-1,
+.dg-qleg-3, .dg-qshin-3 { transform-origin: 100% 0%; }
+.dg-qleg-2, .dg-qshin-2,
+.dg-qleg-4, .dg-qshin-4 { transform-origin: 0% 0%; }
+.dg-qneck { transform-origin: 0% 100%; }
+.dg-qtail { transform-origin: 100% 100%; }
+
+@keyframes dg-qleg-a  { 0%, 100% { transform: rotate(12deg); } 50% { transform: rotate(-12deg); } }
+@keyframes dg-qleg-b  { 0%, 100% { transform: rotate(-12deg); } 50% { transform: rotate(12deg); } }
+@keyframes dg-qshin-a { 0%, 100% { transform: rotate(-6deg); } 32% { transform: rotate(-24deg); } 68% { transform: rotate(2deg); } }
+@keyframes dg-qshin-b { 0%, 100% { transform: rotate(6deg); } 32% { transform: rotate(24deg); } 68% { transform: rotate(-2deg); } }
+@keyframes dg-qbody   { 0%, 50%, 100% { transform: translateY(0); } 25%, 75% { transform: translateY(-0.8px); } }
+
+.is-quad-walk .dg-body,
+.is-quad-edit .dg-body { animation: dg-qbody 1.5s ease-in-out infinite; }
+.is-quad-walk .dg-qleg-1,
+.is-quad-walk .dg-qleg-4 { animation: dg-qleg-a 1.5s ease-in-out infinite; }
+.is-quad-walk .dg-qleg-2,
+.is-quad-walk .dg-qleg-3 { animation: dg-qleg-b 1.5s ease-in-out infinite; }
+.is-quad-walk .dg-qshin-1,
+.is-quad-walk .dg-qshin-4 { animation: dg-qshin-a 1.5s ease-in-out infinite; animation-delay: -1.36s; }
+.is-quad-walk .dg-qshin-2,
+.is-quad-walk .dg-qshin-3 { animation: dg-qshin-b 1.5s ease-in-out infinite; animation-delay: -0.61s; }
+
+@keyframes dg-qheadshake {
+  0%, 100% { transform: rotate(-9deg); }
+  25% { transform: rotate(12deg); }
+  50% { transform: rotate(-7deg); }
+  75% { transform: rotate(10deg); }
+}
+.is-quad-headshake .dg-qneck {
+  animation: dg-qheadshake 1.8s ease-in-out infinite;
+}
+
+/* Editing is staged as an edit, not shown fully resolved from frame one:
+   source first, selected body/legs second, prompt third, edited result last.
+   Only the region to be changed takes the temporary signal colour; it remains
+   still and returns to ink as the generated lower rig arrives. */
+@keyframes dg-edit-source-tone {
+  0%, 27.692% { --edit-region-stroke: var(--app-ink); }
+  30.769%, 38.462% { --edit-region-stroke: var(--app-signal); }
+  40%, 100% { --edit-region-stroke: var(--app-ink); }
+}
+@keyframes dg-edit-source-root {
+  0%, 27.692% { fill: var(--app-ink); }
+  30.769%, 38.462% { fill: var(--app-signal); }
+  40%, 100% { fill: var(--app-ink); }
+}
+@keyframes dg-edit-prompt-in {
+  0%, 32% { opacity: 0; transform: translateY(-3px); }
+  36%, 95.385% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(0); }
+}
+@keyframes dg-edit-output-in {
+  0%, 44.515% { opacity: 0; }
+  44.615%, 95.385% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes dg-edit-source-head {
+  0% { transform: rotate(-9deg); }
+  13.846% { transform: rotate(12deg); }
+  27.692%, 44.615% { transform: rotate(-9deg); }
+  52.308% { transform: rotate(12deg); }
+  60% { transform: rotate(-9deg); }
+  67.692% { transform: rotate(12deg); }
+  75.385% { transform: rotate(-9deg); }
+  83.077% { transform: rotate(12deg); }
+  90.769%,
+  100% { transform: rotate(-9deg); }
+}
+
+.dg-edit-source {
+  --edit-region-stroke: var(--app-ink);
+  animation: dg-edit-source-tone 6.5s ease-in-out infinite;
+}
+.dg-edit-source .dg-edit-region,
+.dg-edit-source .dg-edit-region .dg-ink {
+  stroke: var(--edit-region-stroke);
+}
+.dg-edit-source .dg-edit-region-root {
+  animation: dg-edit-source-root 6.5s ease-in-out infinite;
+}
+.dg-edit-source .dg-qneck {
+  animation: dg-edit-source-head 6.5s ease-in-out infinite;
+}
+.dg-edit-prompt {
+  transform-box: view-box;
+  transform-origin: center;
+  animation: dg-edit-prompt-in 6.5s ease-out infinite both;
+}
+.dg-edit-output {
+  animation: dg-edit-output-in 6.5s ease-in-out infinite both;
+}
+/* Three walking cycles occupy 44.615–90.769% of the same master. Before and after
+   that window every track holds an exact pose, creating a real pause rather than a
+   merely visible rig whose joints continue moving underneath. */
+@keyframes dg-edit-walk-body {
+  0%, 44.615%, 60%, 75.385%, 90.769%, 100% { transform: translateY(0); }
+  48.462%, 56.154%, 63.846%, 71.538%, 79.231%, 86.923% { transform: translateY(-0.8px); }
+}
+@keyframes dg-edit-walk-leg-a {
+  0%, 44.615%, 60%, 75.385%, 90.769%, 100% { transform: rotate(12deg); }
+  52.308%, 67.692%, 83.077% { transform: rotate(-12deg); }
+}
+@keyframes dg-edit-walk-leg-b {
+  0%, 44.615%, 60%, 75.385%, 90.769%, 100% { transform: rotate(-12deg); }
+  52.308%, 67.692%, 83.077% { transform: rotate(12deg); }
+}
+@keyframes dg-edit-walk-shin-a {
+  0%, 44.615%, 60%, 75.385%, 90.769%, 100% { transform: rotate(-6deg); }
+  49.743%, 65.128%, 80.513% { transform: rotate(-24deg); }
+  54.872%, 70.257%, 85.641% { transform: rotate(2deg); }
+}
+@keyframes dg-edit-walk-shin-b {
+  0%, 44.615%, 60%, 75.385%, 90.769%, 100% { transform: rotate(6deg); }
+  49.743%, 65.128%, 80.513% { transform: rotate(24deg); }
+  54.872%, 70.257%, 85.641% { transform: rotate(-2deg); }
+}
+
+#editGallerySection .dg-edit-output.is-quad-walk .dg-body,
+#editGallerySection .dg-edit-output.is-quad-headshake .dg-qneck {
+  animation-duration: 6.5s;
+  animation-delay: 0s;
+}
+#editGallerySection .dg-edit-output.is-quad-walk .dg-body {
+  animation-name: dg-edit-walk-body;
+}
+#editGallerySection .dg-edit-output.is-quad-headshake .dg-qneck {
+  animation-name: dg-edit-source-head;
+}
+#editGallerySection .dg-edit-output.is-quad-walk .dg-qleg-1,
+#editGallerySection .dg-edit-output.is-quad-walk .dg-qleg-4 {
+  animation-name: dg-edit-walk-leg-a;
+  animation-duration: 6.5s;
+  animation-delay: 0s;
+}
+#editGallerySection .dg-edit-output.is-quad-walk .dg-qleg-2,
+#editGallerySection .dg-edit-output.is-quad-walk .dg-qleg-3 {
+  animation-name: dg-edit-walk-leg-b;
+  animation-duration: 6.5s;
+  animation-delay: 0s;
+}
+#editGallerySection .dg-edit-output.is-quad-walk .dg-qshin-1,
+#editGallerySection .dg-edit-output.is-quad-walk .dg-qshin-4 {
+  animation-name: dg-edit-walk-shin-a;
+  animation-duration: 6.5s;
+  animation-delay: 0s;
+}
+#editGallerySection .dg-edit-output.is-quad-walk .dg-qshin-2,
+#editGallerySection .dg-edit-output.is-quad-walk .dg-qshin-3 {
+  animation-name: dg-edit-walk-shin-b;
+  animation-duration: 6.5s;
+  animation-delay: 0s;
+}
+
+/* --- Squat: the torso drops, knees travel outward, lower legs fold back, and
+       the arms counterbalance slightly before the figure rises to standing. */
+@keyframes dg-squat-body {
+  0% { transform: translateY(0) rotate(0); }
+  48%, 56% { transform: translateY(14px) rotate(0); }
+  100% { transform: translate(2px, -2px) rotate(2deg); }
+}
+@keyframes dg-squat-head {
+  0%, 56% { transform: translateX(0); }
+  100% { transform: translateX(2px); }
+}
+@keyframes dg-squat-leg-l {
+  0% { transform: rotate(0); }
+  48%, 56% { transform: rotate(-46deg); }
+  100% { transform: rotate(-12deg); }
+}
+@keyframes dg-squat-leg-r {
+  0% { transform: rotate(0); }
+  48%, 56% { transform: rotate(46deg); }
+  100% { transform: rotate(3deg); }
+}
+@keyframes dg-squat-shin-l {
+  0% { transform: rotate(0); }
+  48%, 56% { transform: rotate(64deg); }
+  100% { transform: rotate(16deg); }
+}
+@keyframes dg-squat-shin-r {
+  0% { transform: rotate(0); }
+  48%, 56% { transform: rotate(-64deg); }
+  100% { transform: rotate(-2deg); }
+}
+@keyframes dg-squat-arm-l {
+  0% { transform: rotate(0); }
+  48%, 56% { transform: rotate(32deg); }
+  100% { transform: rotate(-18deg); }
+}
+@keyframes dg-squat-arm-r {
+  0% { transform: rotate(0); }
+  48%, 56% { transform: rotate(-32deg); }
+  100% { transform: rotate(12deg); }
+}
+@keyframes dg-squat-fore-l {
+  0%, 56% { transform: rotate(0); }
+  100% { transform: rotate(8deg); }
+}
+@keyframes dg-squat-fore-r {
+  0%, 56% { transform: rotate(0); }
+  100% { transform: rotate(-6deg); }
+}
+
+.is-squat .dg-body { animation: dg-squat-body 3s ease-in-out infinite; animation-delay: var(--dg-phase, 0s); }
+.is-squat .dg-head { animation: dg-squat-head 3s ease-in-out infinite; animation-delay: var(--dg-phase, 0s); }
+.is-squat .dg-leg-l { animation: dg-squat-leg-l 3s ease-in-out infinite; animation-delay: var(--dg-phase, 0s); }
+.is-squat .dg-leg-r { animation: dg-squat-leg-r 3s ease-in-out infinite; animation-delay: var(--dg-phase, 0s); }
+.is-squat .dg-shin-l { animation: dg-squat-shin-l 3s ease-in-out infinite; animation-delay: var(--dg-phase, 0s); }
+.is-squat .dg-shin-r { animation: dg-squat-shin-r 3s ease-in-out infinite; animation-delay: var(--dg-phase, 0s); }
+.is-squat .dg-arm-l { animation: dg-squat-arm-l 3s ease-in-out infinite; animation-delay: var(--dg-phase, 0s); }
+.is-squat .dg-arm-r { animation: dg-squat-arm-r 3s ease-in-out infinite; animation-delay: var(--dg-phase, 0s); }
+.is-squat .dg-fore-l { animation: dg-squat-fore-l 3s ease-in-out infinite; animation-delay: var(--dg-phase, 0s); }
+.is-squat .dg-fore-r { animation: dg-squat-fore-r 3s ease-in-out infinite; animation-delay: var(--dg-phase, 0s); }
+
+/* One generated skeleton travels down the interpolation span while its joints
+   perform the complete Start → squat → End motion. The duplicate snapshot rigs
+   remain in the SVG source for easy pose editing but are not rendered. */
+@keyframes dg-squat-travel {
+  0% { transform: translate(58px, 85px) scale(.8); }
+  100% { transform: translate(58px, 223px) scale(.8); }
+}
+@keyframes dg-inbetween-progress {
+  0% { stroke-dashoffset: 1; }
+  100% { stroke-dashoffset: 0; }
+}
+#inbetweenGallerySection .dg-draw {
+  animation: dg-inbetween-progress 4s linear infinite;
+}
+#inbetweenGallerySection .dg-appear.dg-d1 {
+  opacity: 1;
+  animation: dg-squat-travel 4s linear infinite both;
+}
+#inbetweenGallerySection .dg-appear.dg-d2,
+#inbetweenGallerySection .dg-appear.dg-d3 {
+  display: none;
+}
+#inbetweenGallerySection .is-squat .dg-body,
+#inbetweenGallerySection .is-squat .dg-head,
+#inbetweenGallerySection .is-squat .dg-leg-l,
+#inbetweenGallerySection .is-squat .dg-leg-r,
+#inbetweenGallerySection .is-squat .dg-shin-l,
+#inbetweenGallerySection .is-squat .dg-shin-r,
+#inbetweenGallerySection .is-squat .dg-arm-l,
+#inbetweenGallerySection .is-squat .dg-arm-r,
+#inbetweenGallerySection .is-squat .dg-fore-l,
+#inbetweenGallerySection .is-squat .dg-fore-r {
+  animation-duration: 4s;
+  animation-delay: 0s;
+}
+
+/* The final key is a clearly different recovered stance: weight shifts right,
+   the left foot finishes forward, and the arms settle asymmetrically. */
+.is-squat-end .dg-body { transform: translate(2px, -2px) rotate(2deg); }
+.is-squat-end .dg-head { transform: translateX(2px); }
+.is-squat-end .dg-leg-l { transform: rotate(-12deg); }
+.is-squat-end .dg-leg-r { transform: rotate(3deg); }
+.is-squat-end .dg-shin-l { transform: rotate(16deg); }
+.is-squat-end .dg-shin-r { transform: rotate(-2deg); }
+.is-squat-end .dg-arm-l { transform: rotate(-18deg); }
+.is-squat-end .dg-arm-r { transform: rotate(12deg); }
+.is-squat-end .dg-fore-l { transform: rotate(8deg); }
+.is-squat-end .dg-fore-r { transform: rotate(-6deg); }
+
+/* --- The edit: the resampled arms gesture and the head turns, over the same 3s.
+       The held legs below keep the gait, in phase with the source rig above. */
+@keyframes dg-point-l { 0%, 100% { transform: rotate(0); } 45%, 68% { transform: rotate(16deg); } }
+@keyframes dg-point-r { 0% { transform: rotate(0); } 45%, 68% { transform: rotate(-64deg); } 100% { transform: rotate(0); } }
+@keyframes dg-pointf-r{ 0%, 100% { transform: rotate(0); } 38% { transform: rotate(-22deg); } 60% { transform: rotate(-6deg); } }
+@keyframes dg-turn    { 0%, 100% { transform: translateX(0); } 45%, 68% { transform: translateX(-3px); } }
+
+.is-edit .dg-head   { animation: dg-turn 3s ease-in-out infinite; }
+.is-edit .dg-arm-l  { animation: dg-point-l 3s ease-in-out infinite; }
+.is-edit .dg-arm-r  { animation: dg-point-r 3s ease-in-out infinite; }
+.is-edit .dg-fore-r { animation: dg-pointf-r 3s ease-in-out infinite; animation-delay: -2.88s; }
+
+/* The quadruped edit is intentionally local: a curious head turn and a broader
+   tail sweep make the coral region unmistakably different while the ink trot
+   beneath it remains the source motion. */
+@keyframes dg-qlook { 0%, 100% { transform: rotate(0); } 45%, 68% { transform: rotate(-18deg); } }
+@keyframes dg-qwag  { 0%, 100% { transform: rotate(-8deg); } 35% { transform: rotate(24deg); } 68% { transform: rotate(-20deg); } }
+.is-quad-edit .dg-qneck { animation: dg-qlook 3s ease-in-out infinite; }
+.is-quad-edit .dg-qtail { animation: dg-qwag 1.1s ease-in-out infinite; }
+
+/* Whole-figure phase offsets. -1s/-2s thirds a 3s sweep; the walk pair is
+   deliberately not a half period, which would read as one mirrored figure. */
+.dg-phase-a { --dg-phase: -1s; }
+.dg-phase-b { --dg-phase: -2s; }
+.dg-phase-x { --dg-phase: -0.45s; }
+.dg-phase-y { --dg-phase: -0.95s; }
+
+/* --- Expansion is a chain, not a chorus -------------------------------------
+   The other two plates show one motion at several moments, so their figures all
+   move at once. Expansion shows something else: prompt 1 produces a stretch of
+   motion, that stretch STOPS, and prompt 2 carries on from where it stopped.
+   So the figures here run one at a time, and a figure that has had its turn
+   holds its last pose for the rest of the loop rather than looping on its own.
+
+   One 9s master gives the bird three motion windows separated by explicit
+   hand-offs. A motion finishes, its dashed connector runs, the diagram breathes
+   for a beat, and only then does the next motion begin. */
+/* The bar fills downward, reaching exactly one third more at the end of each
+   turn. It grows by dash LENGTH, not by dashoffset: with `dasharray: 1` on a
+   pathLength-1 stroke, an offset of 1 does not hide the dash, it slides the
+   pattern's next repeat onto the path's last point — which showed up as a stray
+   dot parked at the bottom of the plate. Linear, because it is a clock. */
+@keyframes dg-seq-axis {
+  0%      { stroke-dasharray: 0 1; }
+  24%     { stroke-dasharray: 0.3333 1; }
+  36%     { stroke-dasharray: 0.3333 1; }
+  60%     { stroke-dasharray: 0.6667 1; }
+  70%     { stroke-dasharray: 0.6667 1; }
+  92%,
+  100%    { stroke-dasharray: 1 1; }
+}
+
+/* The pose hand-off borrows Pi's compact connector language: short 2/5 dashes,
+   round caps, and a separate solid triangular head. The dash motion travels
+   toward the receiving pose instead of pulsing the whole connector. */
+@keyframes dg-pose-flow {
+  to { stroke-dashoffset: -7; }
+}
+@keyframes dg-pose-link-1 {
+  0%, 23.5% { opacity: 0; }
+  24.5%, 32% { opacity: 1; }
+  34%, 100% { opacity: 0; }
+}
+@keyframes dg-pose-link-2 {
+  0%, 59.5% { opacity: 0; }
+  60.5%, 66.5% { opacity: 1; }
+  68%, 100% { opacity: 0; }
+}
+.dg-pose-link {
+  fill: none;
+  stroke: var(--app-ink);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 2 5;
+  vector-effect: non-scaling-stroke;
+  animation: dg-pose-flow .55s linear infinite;
+}
+.dg-pose-link.is-link-1 {
+  animation:
+    dg-pose-flow .55s linear infinite,
+    dg-pose-link-1 9s ease-in-out infinite both;
+}
+.dg-pose-link.is-link-2 {
+  animation:
+    dg-pose-flow .55s linear infinite,
+    dg-pose-link-2 9s ease-in-out infinite both;
+}
+.dg-pose-link .dg-pose-link-head {
+  fill: var(--app-ink);
+  stroke: none;
+}
+
+/* --- The chain, on one clock -----------------------------------------------
+   Three prompts, three motions you can name at a glance, and every motion's
+   LAST pose is the next one's FIRST — that shared pose is the join, so these
+   numbers are the specification of it:
+
+     1  takes off   wings drive down as the body rises
+     2  strikes forward   wings brace while the body accelerates ahead
+     3  lands       wings brake, legs open, and the body settles
+
+   Every track on this plate is the SAME 9s animation with NO delay: each motion
+   and hand-off owns an explicit window in the master. That is what makes
+   the plate restart as a plate — at 9s every figure, chip and tick resets
+   together and the chain rebuilds from an empty timeline. (Delays were the
+   obvious way to stagger the turns, and they cost exactly this: three clocks
+   each 3s out of step, so a figure was still standing there from the last round
+   while the first one started over.) Before its turn a figure already holds its
+   opening pose, so when it fades in it appears in the pose the figure above it
+   is holding; after its turn it holds its closing pose, which is what "that
+   motion has stopped" looks like. Edit a motion's opening stop and you must edit
+   the previous one's closing stop with it, or the chain comes apart there.
+
+   The easing is per segment: the take-off has a strong downstroke, the glide
+   travels almost level, and the landing decelerates as the legs unfold. */
+
+@keyframes dg-in-1 { 0% { opacity: 0; } 2.5%, 24% { opacity: 1; } 31%, 100% { opacity: 0.88; } }
+@keyframes dg-tone-1 { 0%, 24% { stroke: var(--accent); } 31%, 100% { stroke: var(--app-ink); } }
+@keyframes dg-root-1 { 0%, 24% { fill: var(--accent); } 31%, 100% { fill: var(--app-ink); } }
+@keyframes dg-chip-1 { 0% { opacity: 0; transform: translateX(-5px); } 6% { opacity: 1; transform: translateX(0); } 100% { opacity: 1; transform: translateX(0); } }
+@keyframes dg-in-2 { 0%, 23.5% { opacity: 0; } 24.5%, 60% { opacity: 1; } 61%, 100% { opacity: 0.88; } }
+@keyframes dg-tone-2 { 0%, 60% { stroke: var(--accent); } 61%, 100% { stroke: var(--app-ink); } }
+@keyframes dg-root-2 { 0%, 60% { fill: var(--accent); } 61%, 100% { fill: var(--app-ink); } }
+@keyframes dg-chip-2 { 0%, 23.5% { opacity: 0; transform: translateX(-5px); } 24.5%, 100% { opacity: 1; transform: translateX(0); } }
+@keyframes dg-in-3 { 0%, 59.5% { opacity: 0; } 60.5%, 100% { opacity: 1; } }
+@keyframes dg-tone-3 { 0%, 100% { stroke: var(--accent); } }
+@keyframes dg-root-3 { 0%, 100% { fill: var(--accent); } }
+@keyframes dg-chip-3 { 0%, 59.5% { opacity: 0; transform: translateX(-5px); } 60.5%, 100% { opacity: 1; transform: translateX(0); } }
+
+/* The seam is where the plate's argument sits: the bar reaches the tick at the
+   same instant the motion above stops and the one below takes its pose. One
+   accent flash as it passes, then back to a hairline — the plate's one flourish. */
+@keyframes dg-seam-2 { 0%, 32.83% { stroke: var(--rule); } 34.83% { stroke: var(--accent); } 44.33%, 100% { stroke: var(--rule); } }
+@keyframes dg-seam-3 { 0%, 66.17% { stroke: var(--rule); } 68.17% { stroke: var(--accent); } 77.67%, 100% { stroke: var(--rule); } }
+
+/* One line assigns a figure its whole turn: when it appears, what it plays,
+   when it goes ink. Nothing on this plate carries an animation-delay. */
+.dg-seq-in, .dg-chip-in, .dg-seam, .is-seq .dg-limb, .is-seq .dg-body, .is-seq .dg-root {
+  animation-duration: 9s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+.dg-seq-in, .dg-seam { animation-timing-function: ease-out; }
+/* The bar is the only thing here that runs continuously rather than in turns —
+   it is the clock the turns are measured against. */
+.dg-seq-axis {
+  stroke-dasharray: 0 1;
+  animation: dg-seq-axis 9s linear infinite both;
+}
+.dg-chip-in { animation-timing-function: cubic-bezier(.22,1,.36,1); }
+.is-seq .dg-limb, .is-seq .dg-body { animation-timing-function: ease-in-out; }
+.is-seq .dg-root { animation-timing-function: linear; }
+.is-t1.dg-seq-in { animation-name: dg-in-1, dg-tone-1; }
+.is-t1 .dg-root { animation-name: dg-root-1; }
+.dg-chip-in.is-t1 { animation-name: dg-chip-1; }
+.is-t2.dg-seq-in { animation-name: dg-in-2, dg-tone-2; }
+.is-t2 .dg-root { animation-name: dg-root-2; }
+.dg-chip-in.is-t2 { animation-name: dg-chip-2; }
+.is-t3.dg-seq-in { animation-name: dg-in-3, dg-tone-3; }
+.is-t3 .dg-root { animation-name: dg-root-3; }
+.dg-chip-in.is-t3 { animation-name: dg-chip-3; }
+.dg-seam.is-t2 { animation-name: dg-seam-2; }
+.dg-seam.is-t3 { animation-name: dg-seam-3; }
+
+/* Expansion uses a bird rather than repeating In-betweening's humanoid. Its
+   three turns also use a separate motion vocabulary: take-off, glide, landing.
+   The wing pivots meet at the root, while the legs fold from the hips. */
+.is-bird .dg-wing-up {
+  transform-box: fill-box;
+  transform-origin: 100% 100%;
+}
+.is-bird .dg-wing-down {
+  transform-box: fill-box;
+  transform-origin: 100% 0%;
+}
+.is-bird .dg-bird-legs {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+}
+
+@keyframes dg-bird-takeoff {
+  0% { transform: translateY(14px) rotate(7deg); }
+  8% { transform: translateY(8px) rotate(2deg); }
+  16% { transform: translateY(-2px) rotate(-7deg); }
+  24%, 100% { transform: translateY(-13px) rotate(-3deg); }
+}
+@keyframes dg-bird-takeoff-up {
+  0% { transform: rotate(22deg); }
+  8% { transform: rotate(-18deg); }
+  16% { transform: rotate(16deg); }
+  24%, 100% { transform: rotate(-10deg); }
+}
+@keyframes dg-bird-takeoff-down {
+  0% { transform: rotate(-18deg); }
+  8% { transform: rotate(20deg); }
+  16% { transform: rotate(-14deg); }
+  24%, 100% { transform: rotate(8deg); }
+}
+@keyframes dg-bird-fold-legs {
+  0% { transform: scaleY(1); }
+  18%, 100% { transform: scaleY(.52) translateY(-2px); }
+}
+
+@keyframes dg-bird-glide {
+  0%, 36% { transform: translate(-8px, 1px) rotate(-3deg); }
+  44% { transform: translate(-1px, -2px) rotate(-5deg); }
+  52% { transform: translate(9px, -1px) rotate(2deg); }
+  60%, 100% { transform: translate(16px, 1px) rotate(1deg); }
+}
+@keyframes dg-bird-glide-up {
+  0%, 36% { transform: rotate(-8deg); }
+  48% { transform: rotate(-2deg); }
+  60%, 100% { transform: rotate(-6deg); }
+}
+@keyframes dg-bird-glide-down {
+  0%, 36% { transform: rotate(7deg); }
+  48% { transform: rotate(2deg); }
+  60%, 100% { transform: rotate(5deg); }
+}
+
+@keyframes dg-bird-land {
+  0%, 70% { transform: translateY(-16px) rotate(3deg); }
+  79% { transform: translateY(-3px) rotate(9deg); }
+  90% { transform: translateY(13px) rotate(0); }
+  92%, 100% { transform: translateY(11px) rotate(0); }
+}
+@keyframes dg-bird-land-up {
+  0%, 70% { transform: rotate(-8deg); }
+  79% { transform: rotate(20deg); }
+  90%, 100% { transform: rotate(38deg); }
+}
+@keyframes dg-bird-land-down {
+  0%, 70% { transform: rotate(7deg); }
+  79% { transform: rotate(-18deg); }
+  90%, 100% { transform: rotate(-34deg); }
+}
+@keyframes dg-bird-open-legs {
+  0%, 70% { transform: scaleY(.52) translateY(-2px); }
+  90%, 100% { transform: scaleY(1) translateY(0); }
+}
+
+.is-bird.is-t1 .dg-bird-body { animation-name: dg-bird-takeoff; }
+.is-bird.is-t1 .dg-wing-up { animation-name: dg-bird-takeoff-up; }
+.is-bird.is-t1 .dg-wing-down { animation-name: dg-bird-takeoff-down; }
+.is-bird.is-t1 .dg-bird-legs { animation-name: dg-bird-fold-legs; }
+.is-bird.is-t2 .dg-bird-body { animation-name: dg-bird-glide; }
+.is-bird.is-t2 .dg-wing-up { animation-name: dg-bird-glide-up; }
+.is-bird.is-t2 .dg-wing-down { animation-name: dg-bird-glide-down; }
+.is-bird.is-t2 .dg-bird-legs { animation-name: dg-bird-fold-legs; }
+.is-bird.is-t3 .dg-bird-body { animation-name: dg-bird-land; }
+.is-bird.is-t3 .dg-wing-up { animation-name: dg-bird-land-up; }
+.is-bird.is-t3 .dg-wing-down { animation-name: dg-bird-land-down; }
+.is-bird.is-t3 .dg-bird-legs { animation-name: dg-bird-open-legs; }
+
+/* The arrow and its label belong to the third turn, and to the fact that the
+   chain could go on — they arrive with the last prompt and clear with the rest. */
+@keyframes dg-extension-in {
+  0%, 92% { opacity: 0; }
+  95%, 100% { opacity: 1; }
+}
+.dg-arrow-in {
+  animation: dg-extension-in 9s ease-out infinite both;
+}
+
+/* Reduced motion: the diagrams are content, so they stay — they just arrive
+   already finished and hold still. */
+@media (prefers-reduced-motion: reduce) {
+  .dg-draw,
+  #inbetweenGallerySection .dg-draw,
+  .dg-appear,
+  #inbetweenGallerySection .dg-appear.dg-d1,
+  .dg-edit-source,
+  .dg-edit-source .dg-root,
+  .dg-edit-source .dg-qneck,
+  .dg-edit-prompt,
+  .dg-edit-output,
+  #editGallerySection .dg-edit-output *,
+  .dg-chip-in,
+  .dg-seam,
+  .dg-arrow-in,
+  .dg-pose-link,
+  .dg-pose-link.is-link-1,
+  .dg-pose-link.is-link-2,
+  .is-seq .dg-root {
+    animation: none;
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+  .dg-limb,
+  .dg-head,
+  .dg-body,
+  .dg-seq-in,
+  .dg-seq-axis {
+    animation: none;
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+  /* The expansion plate is the one that says something by moving, so it has to
+     say it standing still: every figure visible, the bar full, the chain read
+     off the three poses down the column instead of off the clock. */
+  .dg-seq-axis { stroke-dasharray: 1 1; }
+}
+
+/* ── 4. Responsive ──────────────────────────────────────────────────────────
+   Below this the column can no longer hold a clip and a 240px plate side by
+   side, so the plate drops under its clip and centres. It stays visible: it is
+   the explanation of the task, not an ornament, and unlike the clip it reads at
+   any size. */
+@media (max-width: 1000px) {
+  .app-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+  }
+  .app-diagram {
+    flex: none;
+    width: 100%;
+    max-width: 320px;
+    align-self: center;
+  }
+}
+
+@media (max-width: 520px) {
+  .app-row {
+    padding: 8px;
+    border-radius: 16px;
+  }
+  .app-row .gallery-video,
+  .app-diagram {
+    border-radius: 10px;
+  }
+}

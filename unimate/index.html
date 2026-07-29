@@ -16,6 +16,9 @@
   <link rel="icon" type="image/png" sizes="2048x2048" href="assets/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/favicon-baymax.png" />
   <link rel="stylesheet" href="css/style.css" />
+  <!-- The Applications schematics: their own figure system (layout, rig, motion),
+       kept out of the page sheet. Loaded after it, so it can read the tokens. -->
+  <link rel="stylesheet" href="css/schematics.css" />
 </head>
 
 <body>
@@ -232,15 +235,146 @@
     <div class="section-subtitle" id="motion-editing">1. Motion Editing.</div>
 
     <div class="video-gallery-section" id="editGallerySection">
-      <div class="video-gallery-container">
-        <div class="video-gallery" id="videoGalleryEdit">
-          <video class="gallery-video" src="assets/videos/editing.mp4" poster="assets/posters/editing.jpg" preload="none" muted playsinline loop></video>
+      <div class="app-row">
+        <div class="video-gallery-container">
+          <div class="video-gallery" id="videoGalleryEdit">
+            <video class="gallery-video" src="assets/videos/editing.mp4" poster="assets/posters/editing.jpg" preload="none" muted playsinline loop></video>
+          </div>
         </div>
+        <!-- Editing is the spatial one: the same span of time, some joints held
+             and the rest resampled. So the diagram splits one rig, not a clip. -->
+        <figure class="app-diagram">
+          <svg viewBox="0 0 200 362" role="img" aria-labelledby="dg-edit-t">
+            <title id="dg-edit-t">A source quadruped shakes its head while standing still. In the edited motion, the original head movement is held in ink while the body and legs, drawn in the accent colour, are regenerated to walk forward from the new prompt.</title>
+            <text class="dg-label" x="100" y="12" text-anchor="middle">SOURCE</text>
+            <g class="dg-rig dg-ink is-quad-headshake dg-edit-source" transform="translate(42,30) scale(2.1)">
+              <g class="dg-body">
+                <path class="dg-edit-region" d="M14 24H42"/>
+                <circle class="dg-joint dg-ink dg-root dg-edit-region-root" cx="28" cy="24" r="2.6"/>
+                <circle class="dg-joint dg-ink dg-edit-region" cx="14" cy="24" r="2"/>
+                <circle class="dg-joint dg-ink dg-edit-region" cx="42" cy="24" r="2"/>
+                <g class="dg-limb dg-qleg-1 dg-edit-region">
+                  <path d="M15 24 11 36"/>
+                  <circle class="dg-joint dg-ink" cx="11" cy="36" r="2"/>
+                  <g class="dg-limb dg-qshin-1">
+                    <path d="M11 36 8 48"/>
+                    <circle class="dg-joint dg-ink" cx="8" cy="48" r="2"/>
+                  </g>
+                </g>
+                <g class="dg-limb dg-qleg-2 dg-edit-region">
+                  <path d="M21 24 23 36"/>
+                  <circle class="dg-joint dg-ink" cx="23" cy="36" r="2"/>
+                  <g class="dg-limb dg-qshin-2">
+                    <path d="M23 36 20 48"/>
+                    <circle class="dg-joint dg-ink" cx="20" cy="48" r="2"/>
+                  </g>
+                </g>
+                <g class="dg-limb dg-qleg-3 dg-edit-region">
+                  <path d="M35 24 33 36"/>
+                  <circle class="dg-joint dg-ink" cx="33" cy="36" r="2"/>
+                  <g class="dg-limb dg-qshin-3">
+                    <path d="M33 36 36 48"/>
+                    <circle class="dg-joint dg-ink" cx="36" cy="48" r="2"/>
+                  </g>
+                </g>
+                <g class="dg-limb dg-qleg-4 dg-edit-region">
+                  <path d="M41 24 45 36"/>
+                  <circle class="dg-joint dg-ink" cx="45" cy="36" r="2"/>
+                  <g class="dg-limb dg-qshin-4">
+                    <path d="M45 36 48 48"/>
+                    <circle class="dg-joint dg-ink" cx="48" cy="48" r="2"/>
+                  </g>
+                </g>
+                <g class="dg-limb dg-qneck">
+                  <path d="M42 24 48 17 53 18"/>
+                  <circle class="dg-joint dg-ink" cx="48" cy="17" r="2"/>
+                  <circle class="dg-head dg-joint dg-ink" cx="53" cy="18" r="2.4"/>
+                </g>
+                <g class="dg-limb dg-qtail">
+                  <path d="M14 24 8 18 4 14"/>
+                  <circle class="dg-joint dg-ink" cx="8" cy="18" r="2"/>
+                  <circle class="dg-joint dg-ink" cx="4" cy="14" r="2"/>
+                </g>
+              </g>
+            </g>
+
+            <g class="dg-edit-prompt">
+              <rect class="dg-chip" x="20" y="144" width="160" height="22" rx="11"/>
+              <text class="dg-chip-text" x="100" y="159" text-anchor="middle">walks forward</text>
+              <path class="dg-axis" d="M100 172v12"/>
+              <path class="dg-axis" d="m95 180 5 6 5-6"/>
+            </g>
+
+            <text class="dg-label is-gen" x="100" y="202" text-anchor="middle">EDITED</text>
+            <!-- One quadruped, two authors: the ink head keeps the source shake;
+                 the accent body and legs are regenerated into a forward walk. -->
+            <g class="dg-rig dg-gen is-quad-walk dg-edit-output" transform="translate(42,220) scale(2.1)">
+              <g class="dg-body">
+                <path d="M14 24H42"/>
+                <circle class="dg-joint dg-gen dg-root" cx="28" cy="24" r="2.6"/>
+                <circle class="dg-joint dg-gen" cx="14" cy="24" r="2"/>
+                <circle class="dg-joint dg-gen" cx="42" cy="24" r="2"/>
+                <g class="dg-limb dg-qleg-1">
+                  <path d="M15 24 11 36"/>
+                  <circle class="dg-joint dg-gen" cx="11" cy="36" r="2"/>
+                  <g class="dg-limb dg-qshin-1">
+                    <path d="M11 36 8 48"/>
+                    <circle class="dg-joint dg-gen" cx="8" cy="48" r="2"/>
+                  </g>
+                </g>
+                <g class="dg-limb dg-qleg-2">
+                  <path d="M21 24 23 36"/>
+                  <circle class="dg-joint dg-gen" cx="23" cy="36" r="2"/>
+                  <g class="dg-limb dg-qshin-2">
+                    <path d="M23 36 20 48"/>
+                    <circle class="dg-joint dg-gen" cx="20" cy="48" r="2"/>
+                  </g>
+                </g>
+                <g class="dg-limb dg-qleg-3">
+                  <path d="M35 24 33 36"/>
+                  <circle class="dg-joint dg-gen" cx="33" cy="36" r="2"/>
+                  <g class="dg-limb dg-qshin-3">
+                    <path d="M33 36 36 48"/>
+                    <circle class="dg-joint dg-gen" cx="36" cy="48" r="2"/>
+                  </g>
+                </g>
+                <g class="dg-limb dg-qleg-4">
+                  <path d="M41 24 45 36"/>
+                  <circle class="dg-joint dg-gen" cx="45" cy="36" r="2"/>
+                  <g class="dg-limb dg-qshin-4">
+                    <path d="M45 36 48 48"/>
+                    <circle class="dg-joint dg-gen" cx="48" cy="48" r="2"/>
+                  </g>
+                </g>
+              </g>
+            </g>
+            <g class="dg-rig dg-ink is-quad-headshake dg-edit-output" transform="translate(42,220) scale(2.1)">
+              <g class="dg-body">
+                <g class="dg-limb dg-qneck">
+                  <path d="M42 24 48 17 53 18"/>
+                  <circle class="dg-joint dg-ink" cx="48" cy="17" r="2"/>
+                  <circle class="dg-head dg-joint dg-ink" cx="53" cy="18" r="2.4"/>
+                </g>
+                <g class="dg-limb dg-qtail">
+                  <path d="M14 24 8 18 4 14"/>
+                  <circle class="dg-joint dg-ink" cx="8" cy="18" r="2"/>
+                  <circle class="dg-joint dg-ink" cx="4" cy="14" r="2"/>
+                </g>
+              </g>
+            </g>
+
+            <path class="dg-rig dg-ink" d="M26 341h14"/>
+            <text class="dg-label" x="46" y="344">HELD</text>
+            <path class="dg-rig dg-gen" d="M100 341h14"/>
+            <text class="dg-label is-gen" x="120" y="344">RESAMPLED</text>
+          </svg>
+        </figure>
       </div>
       <div class="gallery-caption-container">
         <p class="figure-caption gallery-caption">
-          <b>Motion editing.</b> Given a source motion (left), we keep a subset of joints
-          fixed and resample the remaining joint trajectories under a new prompt (right).
+          <b>Motion editing.</b> Given a standing quadruped that shakes its head, we
+          preserve the head motion and regenerate its body and legs to follow the prompt
+          “walks forward.”
         </p>
       </div>
     </div>
@@ -249,10 +383,293 @@
     <div class="section-subtitle" id="motion-inbetweening">2. Motion In-Betweening.</div>
 
     <div class="video-gallery-section" id="inbetweenGallerySection">
-      <div class="video-gallery-container">
-        <div class="video-gallery" id="videoGalleryInbetween">
-          <video class="gallery-video" src="assets/videos/inbetweening.mp4" poster="assets/posters/inbetweening.jpg" preload="none" muted playsinline loop></video>
+      <div class="app-row">
+        <div class="video-gallery-container">
+          <div class="video-gallery" id="videoGalleryInbetween">
+            <video class="gallery-video" src="assets/videos/inbetweening.mp4" poster="assets/posters/inbetweening.jpg" preload="none" muted playsinline loop></video>
+          </div>
         </div>
+        <!-- In-betweening is temporal and symmetric: both ends are given, the
+             middle is filled. The rigs sit on one baseline so the row reads as
+             a span of time rather than as five separate figures. -->
+        <figure class="app-diagram">
+          <svg viewBox="0 0 200 362" role="img" aria-labelledby="dg-btw-t">
+            <title id="dg-btw-t">Five human skeletons down one timeline show a standing key pose, three generated stages of a squat, and the final return to standing. The prompt reads “squats and then rises back up.”</title>
+            <!-- The axis is the argument: ink where the motion is given, accent
+                 across the span UniMate fills in. -->
+            <path class="dg-axis" d="M16 14V348"/>
+            <path class="dg-rig dg-gen dg-draw" pathLength="1" d="M16 78V288"/>
+            <path class="dg-rig dg-ink" d="M10 46h12M10 316h12"/>
+
+            <!-- The keys are the only still figures on the plate: they are what
+                 you gave. One generated skeleton travels down the span while
+                 changing continuously from the opening to the closing pose. -->
+            <g class="dg-rig dg-ink" transform="translate(58,16) scale(0.8)">
+              <g class="dg-body">
+                <path d="M22 38V26"/>
+                <circle class="dg-joint dg-ink" cx="22" cy="26" r="2"/>
+                <circle class="dg-joint dg-ink dg-root" cx="22" cy="38" r="2.6"/>
+                <path d="M22 38 17 40"/>
+                <circle class="dg-joint dg-ink" cx="17" cy="40" r="2"/>
+                <g class="dg-limb dg-leg-l">
+                  <path d="M17 40 14 52"/>
+                  <circle class="dg-joint dg-ink" cx="14" cy="52" r="2"/>
+                  <g class="dg-limb dg-shin-l">
+                    <path d="M14 52 12 64"/>
+                    <circle class="dg-joint dg-ink" cx="12" cy="64" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 38 27 40"/>
+                <circle class="dg-joint dg-ink" cx="27" cy="40" r="2"/>
+                <g class="dg-limb dg-leg-r">
+                  <path d="M27 40 30 52"/>
+                  <circle class="dg-joint dg-ink" cx="30" cy="52" r="2"/>
+                  <g class="dg-limb dg-shin-r">
+                    <path d="M30 52 32 64"/>
+                    <circle class="dg-joint dg-ink" cx="32" cy="64" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 26V19"/>
+                <circle class="dg-joint dg-ink" cx="22" cy="19" r="2"/>
+                <path d="M22 19V11"/>
+                <circle class="dg-head dg-joint dg-ink" cx="22" cy="11" r="2"/>
+                <path d="M22 26 14 23"/>
+                <circle class="dg-joint dg-ink" cx="14" cy="23" r="2"/>
+                <g class="dg-limb dg-arm-l">
+                  <path d="M14 23 8 33"/>
+                  <circle class="dg-joint dg-ink" cx="8" cy="33" r="2"/>
+                  <g class="dg-limb dg-fore-l">
+                    <path d="M8 33 5 44"/>
+                    <circle class="dg-joint dg-ink" cx="5" cy="44" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 26 30 23"/>
+                <circle class="dg-joint dg-ink" cx="30" cy="23" r="2"/>
+                <g class="dg-limb dg-arm-r">
+                  <path d="M30 23 36 33"/>
+                  <circle class="dg-joint dg-ink" cx="36" cy="33" r="2"/>
+                  <g class="dg-limb dg-fore-r">
+                    <path d="M36 33 39 44"/>
+                    <circle class="dg-joint dg-ink" cx="39" cy="44" r="2"/>
+                  </g>
+                </g>
+              </g>
+            </g>
+            <g class="dg-rig dg-gen dg-appear dg-d1 is-squat" transform="translate(58,85) scale(0.8)">
+              <g class="dg-body">
+                <path d="M22 38V26"/>
+                <circle class="dg-joint dg-gen" cx="22" cy="26" r="2"/>
+                <circle class="dg-joint dg-gen dg-root" cx="22" cy="38" r="2.6"/>
+                <path d="M22 38 17 40"/>
+                <circle class="dg-joint dg-gen" cx="17" cy="40" r="2"/>
+                <g class="dg-limb dg-leg-l">
+                  <path d="M17 40 14 52"/>
+                  <circle class="dg-joint dg-gen" cx="14" cy="52" r="2"/>
+                  <g class="dg-limb dg-shin-l">
+                    <path d="M14 52 12 64"/>
+                    <circle class="dg-joint dg-gen" cx="12" cy="64" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 38 27 40"/>
+                <circle class="dg-joint dg-gen" cx="27" cy="40" r="2"/>
+                <g class="dg-limb dg-leg-r">
+                  <path d="M27 40 30 52"/>
+                  <circle class="dg-joint dg-gen" cx="30" cy="52" r="2"/>
+                  <g class="dg-limb dg-shin-r">
+                    <path d="M30 52 32 64"/>
+                    <circle class="dg-joint dg-gen" cx="32" cy="64" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 26V19"/>
+                <circle class="dg-joint dg-gen" cx="22" cy="19" r="2"/>
+                <path d="M22 19V11"/>
+                <circle class="dg-head dg-joint dg-gen" cx="22" cy="11" r="2"/>
+                <path d="M22 26 14 23"/>
+                <circle class="dg-joint dg-gen" cx="14" cy="23" r="2"/>
+                <g class="dg-limb dg-arm-l">
+                  <path d="M14 23 8 33"/>
+                  <circle class="dg-joint dg-gen" cx="8" cy="33" r="2"/>
+                  <g class="dg-limb dg-fore-l">
+                    <path d="M8 33 5 44"/>
+                    <circle class="dg-joint dg-gen" cx="5" cy="44" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 26 30 23"/>
+                <circle class="dg-joint dg-gen" cx="30" cy="23" r="2"/>
+                <g class="dg-limb dg-arm-r">
+                  <path d="M30 23 36 33"/>
+                  <circle class="dg-joint dg-gen" cx="36" cy="33" r="2"/>
+                  <g class="dg-limb dg-fore-r">
+                    <path d="M36 33 39 44"/>
+                    <circle class="dg-joint dg-gen" cx="39" cy="44" r="2"/>
+                  </g>
+                </g>
+              </g>
+            </g>
+            <g class="dg-rig dg-gen dg-appear dg-d2 is-squat dg-phase-a" transform="translate(58,154) scale(0.8)">
+              <g class="dg-body">
+                <path d="M22 38V26"/>
+                <circle class="dg-joint dg-gen" cx="22" cy="26" r="2"/>
+                <circle class="dg-joint dg-gen dg-root" cx="22" cy="38" r="2.6"/>
+                <path d="M22 38 17 40"/>
+                <circle class="dg-joint dg-gen" cx="17" cy="40" r="2"/>
+                <g class="dg-limb dg-leg-l">
+                  <path d="M17 40 14 52"/>
+                  <circle class="dg-joint dg-gen" cx="14" cy="52" r="2"/>
+                  <g class="dg-limb dg-shin-l">
+                    <path d="M14 52 12 64"/>
+                    <circle class="dg-joint dg-gen" cx="12" cy="64" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 38 27 40"/>
+                <circle class="dg-joint dg-gen" cx="27" cy="40" r="2"/>
+                <g class="dg-limb dg-leg-r">
+                  <path d="M27 40 30 52"/>
+                  <circle class="dg-joint dg-gen" cx="30" cy="52" r="2"/>
+                  <g class="dg-limb dg-shin-r">
+                    <path d="M30 52 32 64"/>
+                    <circle class="dg-joint dg-gen" cx="32" cy="64" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 26V19"/>
+                <circle class="dg-joint dg-gen" cx="22" cy="19" r="2"/>
+                <path d="M22 19V11"/>
+                <circle class="dg-head dg-joint dg-gen" cx="22" cy="11" r="2"/>
+                <path d="M22 26 14 23"/>
+                <circle class="dg-joint dg-gen" cx="14" cy="23" r="2"/>
+                <g class="dg-limb dg-arm-l">
+                  <path d="M14 23 8 33"/>
+                  <circle class="dg-joint dg-gen" cx="8" cy="33" r="2"/>
+                  <g class="dg-limb dg-fore-l">
+                    <path d="M8 33 5 44"/>
+                    <circle class="dg-joint dg-gen" cx="5" cy="44" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 26 30 23"/>
+                <circle class="dg-joint dg-gen" cx="30" cy="23" r="2"/>
+                <g class="dg-limb dg-arm-r">
+                  <path d="M30 23 36 33"/>
+                  <circle class="dg-joint dg-gen" cx="36" cy="33" r="2"/>
+                  <g class="dg-limb dg-fore-r">
+                    <path d="M36 33 39 44"/>
+                    <circle class="dg-joint dg-gen" cx="39" cy="44" r="2"/>
+                  </g>
+                </g>
+              </g>
+            </g>
+            <g class="dg-rig dg-gen dg-appear dg-d3 is-squat dg-phase-b" transform="translate(58,223) scale(0.8)">
+              <g class="dg-body">
+                <path d="M22 38V26"/>
+                <circle class="dg-joint dg-gen" cx="22" cy="26" r="2"/>
+                <circle class="dg-joint dg-gen dg-root" cx="22" cy="38" r="2.6"/>
+                <path d="M22 38 17 40"/>
+                <circle class="dg-joint dg-gen" cx="17" cy="40" r="2"/>
+                <g class="dg-limb dg-leg-l">
+                  <path d="M17 40 14 52"/>
+                  <circle class="dg-joint dg-gen" cx="14" cy="52" r="2"/>
+                  <g class="dg-limb dg-shin-l">
+                    <path d="M14 52 12 64"/>
+                    <circle class="dg-joint dg-gen" cx="12" cy="64" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 38 27 40"/>
+                <circle class="dg-joint dg-gen" cx="27" cy="40" r="2"/>
+                <g class="dg-limb dg-leg-r">
+                  <path d="M27 40 30 52"/>
+                  <circle class="dg-joint dg-gen" cx="30" cy="52" r="2"/>
+                  <g class="dg-limb dg-shin-r">
+                    <path d="M30 52 32 64"/>
+                    <circle class="dg-joint dg-gen" cx="32" cy="64" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 26V19"/>
+                <circle class="dg-joint dg-gen" cx="22" cy="19" r="2"/>
+                <path d="M22 19V11"/>
+                <circle class="dg-head dg-joint dg-gen" cx="22" cy="11" r="2"/>
+                <path d="M22 26 14 23"/>
+                <circle class="dg-joint dg-gen" cx="14" cy="23" r="2"/>
+                <g class="dg-limb dg-arm-l">
+                  <path d="M14 23 8 33"/>
+                  <circle class="dg-joint dg-gen" cx="8" cy="33" r="2"/>
+                  <g class="dg-limb dg-fore-l">
+                    <path d="M8 33 5 44"/>
+                    <circle class="dg-joint dg-gen" cx="5" cy="44" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 26 30 23"/>
+                <circle class="dg-joint dg-gen" cx="30" cy="23" r="2"/>
+                <g class="dg-limb dg-arm-r">
+                  <path d="M30 23 36 33"/>
+                  <circle class="dg-joint dg-gen" cx="36" cy="33" r="2"/>
+                  <g class="dg-limb dg-fore-r">
+                    <path d="M36 33 39 44"/>
+                    <circle class="dg-joint dg-gen" cx="39" cy="44" r="2"/>
+                  </g>
+                </g>
+              </g>
+            </g>
+            <g class="dg-rig dg-ink is-squat-end" transform="translate(58,292) scale(0.8)">
+              <g class="dg-body">
+                <path d="M22 38V26"/>
+                <circle class="dg-joint dg-ink" cx="22" cy="26" r="2"/>
+                <circle class="dg-joint dg-ink dg-root" cx="22" cy="38" r="2.6"/>
+                <path d="M22 38 17 40"/>
+                <circle class="dg-joint dg-ink" cx="17" cy="40" r="2"/>
+                <g class="dg-limb dg-leg-l">
+                  <path d="M17 40 14 52"/>
+                  <circle class="dg-joint dg-ink" cx="14" cy="52" r="2"/>
+                  <g class="dg-limb dg-shin-l">
+                    <path d="M14 52 12 64"/>
+                    <circle class="dg-joint dg-ink" cx="12" cy="64" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 38 27 40"/>
+                <circle class="dg-joint dg-ink" cx="27" cy="40" r="2"/>
+                <g class="dg-limb dg-leg-r">
+                  <path d="M27 40 30 52"/>
+                  <circle class="dg-joint dg-ink" cx="30" cy="52" r="2"/>
+                  <g class="dg-limb dg-shin-r">
+                    <path d="M30 52 32 64"/>
+                    <circle class="dg-joint dg-ink" cx="32" cy="64" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 26V19"/>
+                <circle class="dg-joint dg-ink" cx="22" cy="19" r="2"/>
+                <path d="M22 19V11"/>
+                <circle class="dg-head dg-joint dg-ink" cx="22" cy="11" r="2"/>
+                <path d="M22 26 14 23"/>
+                <circle class="dg-joint dg-ink" cx="14" cy="23" r="2"/>
+                <g class="dg-limb dg-arm-l">
+                  <path d="M14 23 8 33"/>
+                  <circle class="dg-joint dg-ink" cx="8" cy="33" r="2"/>
+                  <g class="dg-limb dg-fore-l">
+                    <path d="M8 33 5 44"/>
+                    <circle class="dg-joint dg-ink" cx="5" cy="44" r="2"/>
+                  </g>
+                </g>
+                <path d="M22 26 30 23"/>
+                <circle class="dg-joint dg-ink" cx="30" cy="23" r="2"/>
+                <g class="dg-limb dg-arm-r">
+                  <path d="M30 23 36 33"/>
+                  <circle class="dg-joint dg-ink" cx="36" cy="33" r="2"/>
+                  <g class="dg-limb dg-fore-r">
+                    <path d="M36 33 39 44"/>
+                    <circle class="dg-joint dg-ink" cx="39" cy="44" r="2"/>
+                  </g>
+                </g>
+              </g>
+            </g>
+
+            <text class="dg-label" x="106" y="46">KEY</text>
+            <text class="dg-label is-gen" x="106" y="168">GENERATED</text>
+            <rect class="dg-chip" x="98" y="176" width="100" height="32" rx="12"/>
+            <text class="dg-chip-text is-extra-long" x="148" y="189" text-anchor="middle">
+              <tspan x="148">squats and then</tspan>
+              <tspan x="148" dy="10">rises back up.</tspan>
+            </text>
+            <text class="dg-label" x="106" y="320">KEY</text>
+          </svg>
+        </figure>
       </div>
       <div class="gallery-caption-container">
         <p class="figure-caption gallery-caption">
@@ -266,10 +683,94 @@
     <div class="section-subtitle" id="motion-expansion">3. Motion Expansion.</div>
 
     <div class="video-gallery-section" id="expansionGallerySection">
-      <div class="video-gallery-container">
-        <div class="video-gallery" id="videoGalleryExpansion">
-          <video class="gallery-video" src="assets/videos/expansion.mp4" poster="assets/posters/expansion.jpg" preload="none" muted playsinline loop></video>
+      <div class="app-row">
+        <div class="video-gallery-container">
+          <div class="video-gallery" id="videoGalleryExpansion">
+            <video class="gallery-video" src="assets/videos/expansion.mp4" poster="assets/posters/expansion.jpg" preload="none" muted playsinline loop></video>
+          </div>
         </div>
+        <!-- Expansion is open-ended: one source, then a chip per chained prompt,
+             and the axis runs off the right edge because the sequence does. -->
+        <figure class="app-diagram">
+          <svg viewBox="0 0 200 362" role="img" aria-labelledby="dg-exp-t">
+            <title id="dg-exp-t">The bird skeleton follows three prompts down one timeline. It takes off, strikes forward, and lands, with each new motion continuing from the last pose of the preceding motion.</title>
+            <!-- The bar is the sequence: it steps down one third per prompt and
+                 never retreats, and the arrow at the foot only arrives with the
+                 last one, because the chain could go on. -->
+            <path class="dg-axis" d="M16 14V340"/>
+            <path class="dg-rig dg-gen dg-seq-axis" pathLength="1" d="M16 14V340"/>
+            <path class="dg-axis dg-seam is-t2" d="M11 123h10"/>
+            <path class="dg-axis dg-seam is-t3" d="M11 232h10"/>
+            <path class="dg-rig dg-gen dg-arrow-in" d="m10 334 6 8 6-8"/>
+
+            <!-- Pi-style moving dashed arrows hand the ending pose of each
+                 motion to the starting pose of the next one. -->
+            <g class="dg-pose-link is-link-1">
+              <path d="M91 54h3q5 0 5 5v105q0 6-6 6h-2"/>
+              <path class="dg-pose-link-head" d="m86 170 7-4v8z"/>
+            </g>
+            <g class="dg-pose-link is-link-2">
+              <path d="M91 170h3q5 0 5 5v105q0 6-6 6h-2"/>
+              <path class="dg-pose-link-head" d="m86 286 7-4v8z"/>
+            </g>
+
+            <!-- A bird gives Expansion its own skeleton vocabulary. The same
+                 rig continues through three new, non-repeated motion examples. -->
+            <g class="dg-rig dg-gen dg-seq-in is-seq is-bird is-t1" transform="translate(34,24)">
+              <g class="dg-body dg-bird-body">
+                <path d="M8 30 28 30 39 24 48 25"/>
+                <circle class="dg-joint" cx="8" cy="30" r="2"/>
+                <circle class="dg-joint dg-root" cx="28" cy="30" r="2.6"/>
+                <circle class="dg-joint" cx="39" cy="24" r="2"/>
+                <circle class="dg-joint" cx="48" cy="25" r="2.4"/>
+                <path d="M8 30 1 25M8 30 1 33"/>
+                <g class="dg-limb dg-wing-up"><path d="M28 30 17 13 6 7"/><circle class="dg-joint" cx="17" cy="13" r="2"/><circle class="dg-joint" cx="6" cy="7" r="2"/></g>
+                <g class="dg-limb dg-wing-down"><path d="M28 30 19 43 9 49"/><circle class="dg-joint" cx="19" cy="43" r="2"/><circle class="dg-joint" cx="9" cy="49" r="2"/></g>
+                <g class="dg-limb dg-bird-legs"><path d="M24 31 23 40 18 45M31 31 33 40 38 44"/><circle class="dg-joint" cx="23" cy="40" r="2"/><circle class="dg-joint" cx="33" cy="40" r="2"/></g>
+              </g>
+            </g>
+            <g class="dg-rig dg-gen dg-seq-in is-seq is-bird is-t2" transform="translate(34,140)">
+              <g class="dg-body dg-bird-body">
+                <path d="M8 30 28 30 39 24 48 25"/>
+                <circle class="dg-joint" cx="8" cy="30" r="2"/>
+                <circle class="dg-joint dg-root" cx="28" cy="30" r="2.6"/>
+                <circle class="dg-joint" cx="39" cy="24" r="2"/>
+                <circle class="dg-joint" cx="48" cy="25" r="2.4"/>
+                <path d="M8 30 1 25M8 30 1 33"/>
+                <g class="dg-limb dg-wing-up"><path d="M28 30 17 13 6 7"/><circle class="dg-joint" cx="17" cy="13" r="2"/><circle class="dg-joint" cx="6" cy="7" r="2"/></g>
+                <g class="dg-limb dg-wing-down"><path d="M28 30 19 43 9 49"/><circle class="dg-joint" cx="19" cy="43" r="2"/><circle class="dg-joint" cx="9" cy="49" r="2"/></g>
+                <g class="dg-limb dg-bird-legs"><path d="M24 31 23 40 18 45M31 31 33 40 38 44"/><circle class="dg-joint" cx="23" cy="40" r="2"/><circle class="dg-joint" cx="33" cy="40" r="2"/></g>
+              </g>
+            </g>
+            <g class="dg-rig dg-gen dg-seq-in is-seq is-bird is-t3" transform="translate(34,256)">
+              <g class="dg-body dg-bird-body">
+                <path d="M8 30 28 30 39 24 48 25"/>
+                <circle class="dg-joint" cx="8" cy="30" r="2"/>
+                <circle class="dg-joint dg-root" cx="28" cy="30" r="2.6"/>
+                <circle class="dg-joint" cx="39" cy="24" r="2"/>
+                <circle class="dg-joint" cx="48" cy="25" r="2.4"/>
+                <path d="M8 30 1 25M8 30 1 33"/>
+                <g class="dg-limb dg-wing-up"><path d="M28 30 17 13 6 7"/><circle class="dg-joint" cx="17" cy="13" r="2"/><circle class="dg-joint" cx="6" cy="7" r="2"/></g>
+                <g class="dg-limb dg-wing-down"><path d="M28 30 19 43 9 49"/><circle class="dg-joint" cx="19" cy="43" r="2"/><circle class="dg-joint" cx="9" cy="49" r="2"/></g>
+                <g class="dg-limb dg-bird-legs"><path d="M24 31 23 40 18 45M31 31 33 40 38 44"/><circle class="dg-joint" cx="23" cy="40" r="2"/><circle class="dg-joint" cx="33" cy="40" r="2"/></g>
+              </g>
+            </g>
+
+            <g class="dg-chip-in is-t1">
+              <rect class="dg-chip" x="104" y="40" width="92" height="20" rx="10"/>
+              <text class="dg-chip-text" x="150" y="54" text-anchor="middle">1 &#183; takes off</text>
+            </g>
+            <g class="dg-chip-in is-t2">
+              <rect class="dg-chip" x="104" y="156" width="92" height="20" rx="10"/>
+              <text class="dg-chip-text is-long" x="150" y="170" text-anchor="middle">2 &#183; strikes forward</text>
+            </g>
+            <g class="dg-chip-in is-t3">
+              <rect class="dg-chip" x="104" y="272" width="92" height="20" rx="10"/>
+              <text class="dg-chip-text" x="150" y="286" text-anchor="middle">3 &#183; lands</text>
+            </g>
+            <text class="dg-label is-gen dg-arrow-in" x="30" y="356">EXTENDED</text>
+          </svg>
+        </figure>
       </div>
       <div class="gallery-caption-container">
         <p class="figure-caption gallery-caption">
@@ -312,7 +813,7 @@
     }
   </script>
 
-  <script type="module" src="js/viewer.js?v=28"></script>
+  <script type="module" src="js/viewer.js?v=29"></script>
 
   <!-- Galleries: scroll buttons + play-only-what-is-visible. -->
   <script src="js/gallery.js"></script>
