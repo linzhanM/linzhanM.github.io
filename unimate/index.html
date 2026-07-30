@@ -390,11 +390,11 @@
           </div>
         </div>
         <!-- In-betweening is temporal and symmetric: both ends are given, the
-             middle is filled. The rigs sit on one baseline so the row reads as
-             a span of time rather than as five separate figures. -->
+             middle is filled. The rigs sit on one axis so the column reads as a
+             span of time rather than as three separate figures. -->
         <figure class="app-diagram">
           <svg viewBox="0 0 200 362" role="img" aria-labelledby="dg-btw-t">
-            <title id="dg-btw-t">Five human skeletons down one timeline show a standing key pose, three generated stages of a squat, and the final return to standing. The prompt reads “squats and then rises back up.”</title>
+            <title id="dg-btw-t">Three human skeletons down one timeline: a standing key pose at the top, a generated skeleton squatting as it travels down the span, and the final return to standing at the bottom. The prompt reads “squats and then rises back up.”</title>
             <!-- The axis is the argument: ink where the motion is given, accent
                  across the span UniMate fills in. -->
             <path class="dg-axis" d="M16 14V348"/>
@@ -455,109 +455,7 @@
                 </g>
               </g>
             </g>
-            <g class="dg-rig dg-gen dg-appear dg-d1 is-squat" transform="translate(58,85) scale(0.8)">
-              <g class="dg-body">
-                <path d="M22 38V26"/>
-                <circle class="dg-joint dg-gen" cx="22" cy="26" r="2"/>
-                <circle class="dg-joint dg-gen dg-root" cx="22" cy="38" r="2.6"/>
-                <path d="M22 38 17 40"/>
-                <circle class="dg-joint dg-gen" cx="17" cy="40" r="2"/>
-                <g class="dg-limb dg-leg-l">
-                  <path d="M17 40 14 52"/>
-                  <circle class="dg-joint dg-gen" cx="14" cy="52" r="2"/>
-                  <g class="dg-limb dg-shin-l">
-                    <path d="M14 52 12 64"/>
-                    <circle class="dg-joint dg-gen" cx="12" cy="64" r="2"/>
-                  </g>
-                </g>
-                <path d="M22 38 27 40"/>
-                <circle class="dg-joint dg-gen" cx="27" cy="40" r="2"/>
-                <g class="dg-limb dg-leg-r">
-                  <path d="M27 40 30 52"/>
-                  <circle class="dg-joint dg-gen" cx="30" cy="52" r="2"/>
-                  <g class="dg-limb dg-shin-r">
-                    <path d="M30 52 32 64"/>
-                    <circle class="dg-joint dg-gen" cx="32" cy="64" r="2"/>
-                  </g>
-                </g>
-                <path d="M22 26V19"/>
-                <circle class="dg-joint dg-gen" cx="22" cy="19" r="2"/>
-                <path d="M22 19V11"/>
-                <circle class="dg-head dg-joint dg-gen" cx="22" cy="11" r="2"/>
-                <path d="M22 26 14 23"/>
-                <circle class="dg-joint dg-gen" cx="14" cy="23" r="2"/>
-                <g class="dg-limb dg-arm-l">
-                  <path d="M14 23 8 33"/>
-                  <circle class="dg-joint dg-gen" cx="8" cy="33" r="2"/>
-                  <g class="dg-limb dg-fore-l">
-                    <path d="M8 33 5 44"/>
-                    <circle class="dg-joint dg-gen" cx="5" cy="44" r="2"/>
-                  </g>
-                </g>
-                <path d="M22 26 30 23"/>
-                <circle class="dg-joint dg-gen" cx="30" cy="23" r="2"/>
-                <g class="dg-limb dg-arm-r">
-                  <path d="M30 23 36 33"/>
-                  <circle class="dg-joint dg-gen" cx="36" cy="33" r="2"/>
-                  <g class="dg-limb dg-fore-r">
-                    <path d="M36 33 39 44"/>
-                    <circle class="dg-joint dg-gen" cx="39" cy="44" r="2"/>
-                  </g>
-                </g>
-              </g>
-            </g>
-            <g class="dg-rig dg-gen dg-appear dg-d2 is-squat dg-phase-a" transform="translate(58,154) scale(0.8)">
-              <g class="dg-body">
-                <path d="M22 38V26"/>
-                <circle class="dg-joint dg-gen" cx="22" cy="26" r="2"/>
-                <circle class="dg-joint dg-gen dg-root" cx="22" cy="38" r="2.6"/>
-                <path d="M22 38 17 40"/>
-                <circle class="dg-joint dg-gen" cx="17" cy="40" r="2"/>
-                <g class="dg-limb dg-leg-l">
-                  <path d="M17 40 14 52"/>
-                  <circle class="dg-joint dg-gen" cx="14" cy="52" r="2"/>
-                  <g class="dg-limb dg-shin-l">
-                    <path d="M14 52 12 64"/>
-                    <circle class="dg-joint dg-gen" cx="12" cy="64" r="2"/>
-                  </g>
-                </g>
-                <path d="M22 38 27 40"/>
-                <circle class="dg-joint dg-gen" cx="27" cy="40" r="2"/>
-                <g class="dg-limb dg-leg-r">
-                  <path d="M27 40 30 52"/>
-                  <circle class="dg-joint dg-gen" cx="30" cy="52" r="2"/>
-                  <g class="dg-limb dg-shin-r">
-                    <path d="M30 52 32 64"/>
-                    <circle class="dg-joint dg-gen" cx="32" cy="64" r="2"/>
-                  </g>
-                </g>
-                <path d="M22 26V19"/>
-                <circle class="dg-joint dg-gen" cx="22" cy="19" r="2"/>
-                <path d="M22 19V11"/>
-                <circle class="dg-head dg-joint dg-gen" cx="22" cy="11" r="2"/>
-                <path d="M22 26 14 23"/>
-                <circle class="dg-joint dg-gen" cx="14" cy="23" r="2"/>
-                <g class="dg-limb dg-arm-l">
-                  <path d="M14 23 8 33"/>
-                  <circle class="dg-joint dg-gen" cx="8" cy="33" r="2"/>
-                  <g class="dg-limb dg-fore-l">
-                    <path d="M8 33 5 44"/>
-                    <circle class="dg-joint dg-gen" cx="5" cy="44" r="2"/>
-                  </g>
-                </g>
-                <path d="M22 26 30 23"/>
-                <circle class="dg-joint dg-gen" cx="30" cy="23" r="2"/>
-                <g class="dg-limb dg-arm-r">
-                  <path d="M30 23 36 33"/>
-                  <circle class="dg-joint dg-gen" cx="36" cy="33" r="2"/>
-                  <g class="dg-limb dg-fore-r">
-                    <path d="M36 33 39 44"/>
-                    <circle class="dg-joint dg-gen" cx="39" cy="44" r="2"/>
-                  </g>
-                </g>
-              </g>
-            </g>
-            <g class="dg-rig dg-gen dg-appear dg-d3 is-squat dg-phase-b" transform="translate(58,223) scale(0.8)">
+            <g class="dg-rig dg-gen dg-travel is-squat" transform="translate(58,85) scale(0.8)">
               <g class="dg-body">
                 <path d="M22 38V26"/>
                 <circle class="dg-joint dg-gen" cx="22" cy="26" r="2"/>
@@ -815,7 +713,7 @@
   <!-- Galleries: scroll buttons + play-only-what-is-visible. -->
   <script src="js/gallery.js"></script>
 
-  <!-- TOC rail: scroll-spy + the full-bleed-gallery collision watcher. -->
+  <!-- TOC rail: scroll-spy + the gutter-collision watcher. -->
   <script src="js/toc.js"></script>
 
   <script type="text/javascript">

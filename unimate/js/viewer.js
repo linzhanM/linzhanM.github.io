@@ -10,7 +10,7 @@
 //   1. Imports & DOM refs
 //   2. State (toolbar settings, active stage, tuning constants)
 //   3. Scene setup (scene / camera / renderer / lights / controls / loaders)
-//   4. Toolbar appliers (time scale / wireframe / lighting)
+//   4. Toolbar appliers (wireframe / lighting)
 //   5. Model loading & material repair
 //   6. Normalize & ground (Blender pipeline port)
 //   7. Stage: framing + teardown
@@ -41,8 +41,6 @@ const settings = {
   'show model': true,
   'show skeleton': true,
   'wireframe': false,
-  'pause': false,
-  'time scale': 1.0,
   'show prompts': true,
 };
 
@@ -118,10 +116,6 @@ const fbxLoader = new FBXLoader();
 const clock = new THREE.Clock();
 
 // ── 4. Toolbar appliers ──────────────────────────────────────────────────────
-function applyTimeScale() {
-  for (const m of mixers) m.timeScale = settings['pause'] ? 0 : settings['time scale'];
-}
-
 function applyWireframe() {
   for (const model of models) model.traverse((o) => {
     if (!o.isMesh) return;
@@ -1488,7 +1482,6 @@ async function loadStage(specs, activeIndex, opts = {}) {
     applyOffsets(specs);
     applyStageShift(activeShift); // move objects; frameStage keeps camera/floor centered
 
-    applyTimeScale();
     applyWireframe();
     applyLighting(opts.lighting || 1);
     buildLabels(specs); // after layout — the anchors ride the pivots, so order is free

@@ -100,10 +100,10 @@ button:focus-visible,
   }
 }
 
-/* Set while a full-bleed gallery is running under the rail; see the collision
-   watcher in index.html for when that happens. Opacity rather than display or
-   visibility, so the element keeps its box and the watcher can go on measuring
-   it while hidden. */
+/* Set while a gallery clip reaches into the gutter under the rail; see the
+   collision watcher in js/toc.js for when that happens. Opacity rather than
+   display or visibility, so the element keeps its box and the watcher can go on
+   measuring it while hidden. */
 .toc.is-eclipsed {
   opacity: 0;
   pointer-events: none;

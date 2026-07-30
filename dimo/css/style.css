@@ -2,14 +2,14 @@
    DIMO — Diverse 3D Motion Generation for Arbitrary Objects
    Concept: one input → diverse trajectories sampled from a
    continuous motion latent space (blue → violet → pink).
-   Dark "latent space" hero, light "paper" body. No JS.
+   Dark "latent space" hero, light "paper" body. The only script is
+   js/nav.js, which reveals and tracks the side nav.
    ============================================================ */
 
 /* ---------- Design tokens ---------- */
 :root {
   /* Dark hero */
   --space: #0B0E14;
-  --space-2: #11151F;
   --on-space: #F4F6FA;
   --on-space-mute: #9AA3B2;
   --hairline-dark: rgba(255, 255, 255, 0.12);
@@ -18,7 +18,6 @@
   --paper: #FFFFFF;
   --paper-2: #F5F6F8;
   --ink: #0E1320;
-  --ink-soft: #39414F;
   --mute: #6B7280;
   --line: #E6E8EC;
 
@@ -30,7 +29,6 @@
 
   --radius: 14px;
   --container: 1020px;
-  --reading: 760px;
 
   --display: "Space Grotesk", system-ui, sans-serif;
   --body: "Inter", system-ui, sans-serif;
@@ -111,10 +109,6 @@ body::before {
 /* Alternating tint separates sections; no border needed between them. */
 .section--alt {
   background: var(--paper-2);
-}
-
-.prose {
-  max-width: 100%;
 }
 
 .prose p {

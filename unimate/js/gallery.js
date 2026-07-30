@@ -8,7 +8,7 @@
 //      visitor for USER_PAUSE_MS whenever they drive it themselves
 //   3. an IntersectionObserver that plays only the clips currently in view
 //
-// Neither is required to see the content: the strips scroll natively, and the
+// None of it is required to see the content: the strips scroll natively, and the
 // clips carry `poster` frames, so this degrades to a plain scrollable row.
 // ─────────────────────────────────────────────────────────────────────────────
 

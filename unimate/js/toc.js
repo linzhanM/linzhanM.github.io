@@ -4,8 +4,8 @@
 // rail itself is hidden below 1400px.
 //
 //   1. scrollSpy()        — light up the link beside the section being read
-//   2. collisionWatcher() — fade the rail out while a full-bleed gallery runs
-//                           underneath it
+//   2. collisionWatcher() — fade the rail out while a gallery clip reaches into
+//                           the gutter underneath it
 // ─────────────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', function () {
