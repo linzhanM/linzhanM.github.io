@@ -598,19 +598,19 @@ body::before {
   animation: skel-wave 1.5s ease-in-out infinite;
 }
 
-.field .swingA {
+.field .swing-a {
   animation: skel-swing 1s ease-in-out infinite;
 }
 
-.field .swingB {
+.field .swing-b {
   animation: skel-swing 1s ease-in-out infinite reverse;
 }
 
-.field .legA {
+.field .leg-a {
   animation: skel-leg 1s ease-in-out infinite;
 }
 
-.field .legB {
+.field .leg-b {
   animation: skel-leg 1s ease-in-out infinite reverse;
 }
 
