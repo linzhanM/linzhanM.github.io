@@ -112,6 +112,19 @@
 .dg-ink { stroke: var(--app-ink); }
 .dg-gen { stroke: var(--app-signal); }
 
+/* Colour is a STATE on these plates (ink = given, signal = returned), so it has
+   to change the way a state does: over a moment, not between two frames. An
+   unregistered custom property animates DISCRETELY — it flips at the midpoint of
+   the interval no matter how wide the ramp — so the editing plate's ink→signal
+   →ink handover snapped however gently it was written. Registering it as a
+   <color> is what makes the ramp real; browsers without @property fall back to
+   the old flip, which is what this looked like before. */
+@property --edit-region-stroke {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #111111;
+}
+
 /* A figure here is the page's rig representation, not a stick man: every
    articulation is a joint node and every bone is the segment between two of
    them — root, chest, neck, head, and a shoulder/elbow/hand, hip/knee/foot chain
@@ -151,15 +164,18 @@
 
 .dg-label {
   font-family: 'Roboto Mono', monospace;
-  font-size: 8.5px;
+  font-size: 9.5px;
   font-weight: 700;
-  letter-spacing: 0.13em;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
   fill: var(--app-muted);
   stroke: none;
 }
 .dg-label.is-gen { fill: var(--app-signal); }
 
-/* Prompt chip — the page's own annotation chip, at diagram scale. */
+/* Prompt chips carry the action, so their type is a step larger than the state
+   labels above. A tighter mono setting keeps the longer prompts calm without
+   making them look squeezed into their pills. */
 .dg-chip {
   fill: #fbd45b;
   stroke: #e6b61f;
@@ -168,34 +184,65 @@
 }
 .dg-chip-text {
   font-family: 'Roboto Mono', monospace;
-  font-size: 8.5px;
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
   fill: var(--app-ink);
   stroke: none;
 }
 .dg-chip-text.is-long {
-  font-size: 7.2px;
-  letter-spacing: 0;
+  font-size: 8.5px;
+  letter-spacing: -0.025em;
 }
 .dg-chip-text.is-extra-long {
-  font-size: 6.2px;
-  letter-spacing: -0.01em;
+  font-size: 8.3px;
+  letter-spacing: -0.025em;
+}
+
+/* Each plate has a different text density. Keep the shared hierarchy above,
+   then tune only the places where that density changes: the editing legend
+   needs breathing room, the in-between prompt needs a clear two-line rhythm,
+   and Expansion's numbered prompts should read as one aligned series. */
+#editGallerySection .dg-label {
+  letter-spacing: 0.09em;
+}
+#inbetweenGallerySection .dg-chip-text tspan + tspan {
+  baseline-shift: -1px;
+}
+#expansionGallerySection .dg-chip-text {
+  font-size: 9.25px;
+  letter-spacing: -0.02em;
+}
+#expansionGallerySection .dg-chip-text.is-long {
+  font-size: 7.8px;
 }
 
 /* The caption belongs to the console above it. A short state key replaces a
    decorative rule: it teaches the ink/accent convention once per demo. */
 .video-gallery-section:has(.app-row) .gallery-caption-container {
   margin-top: 10px;
-  padding: 0 12px;
+  padding: 10px 12px 0;
+  border-top: 1px solid #dadad5;
+  align-items: flex-start;
+}
+.video-gallery-section:has(.app-row) .gallery-caption-container::before {
+  content: '';
+  flex: 0 0 7px;
+  width: 7px;
+  height: 7px;
+  margin: 4px 10px 0 1px;
+  box-sizing: border-box;
+  border: 2px solid var(--app-signal, #3f718e);
+  border-radius: 50%;
 }
 .video-gallery-section:has(.app-row) .gallery-caption {
   color: var(--app-muted, #62615b);
+  line-height: 1.55;
 }
 .video-gallery-section:has(.app-row) .gallery-caption b {
   color: var(--app-ink, #111111);
 }
-
 /* --- Motion -----------------------------------------------------------------
    Two clocks. The slow one (6s) is the argument: the accent stretch of the axis
    draws itself and the generated poses land on it in order, so the loop reads as
@@ -314,36 +361,42 @@
    source first, selected body/legs second, prompt third, edited result last.
    Only the region to be changed takes the temporary signal colour; it remains
    still and returns to ink as the generated lower rig arrives. */
+/* Both handovers are the SAME 3.077% (0.2s) ramp — the selection turning signal
+   and the selection returning to ink are one gesture played twice, so a snap on
+   the way back read as a glitch against a fade on the way out. Keep the two
+   widths equal if either landmark moves. */
 @keyframes dg-edit-source-tone {
   0%, 27.692% { --edit-region-stroke: var(--app-ink); }
-  30.769%, 38.462% { --edit-region-stroke: var(--app-signal); }
-  40%, 100% { --edit-region-stroke: var(--app-ink); }
+  30.769%, 46.154% { --edit-region-stroke: var(--app-signal); }
+  49.231%, 100% { --edit-region-stroke: var(--app-ink); }
 }
 @keyframes dg-edit-source-root {
   0%, 27.692% { fill: var(--app-ink); }
-  30.769%, 38.462% { fill: var(--app-signal); }
-  40%, 100% { fill: var(--app-ink); }
+  30.769%, 46.154% { fill: var(--app-signal); }
+  49.231%, 100% { fill: var(--app-ink); }
 }
 @keyframes dg-edit-prompt-in {
   0%, 32% { opacity: 0; transform: translateY(-3px); }
   36%, 95.385% { opacity: 1; transform: translateY(0); }
   100% { opacity: 0; transform: translateY(0); }
 }
+/* The edited rig arrives ACROSS 44.615%, not at it: a 0.2s cross, the same width
+   as the tone handover above, centred on the landmark it used to snap on. */
 @keyframes dg-edit-output-in {
-  0%, 44.515% { opacity: 0; }
-  44.615%, 95.385% { opacity: 1; }
+  0%, 43.077% { opacity: 0; }
+  46.154%, 95.385% { opacity: 1; }
   100% { opacity: 0; }
 }
 @keyframes dg-edit-source-head {
   0% { transform: rotate(-9deg); }
   13.846% { transform: rotate(12deg); }
-  27.692%, 44.615% { transform: rotate(-9deg); }
-  52.308% { transform: rotate(12deg); }
-  60% { transform: rotate(-9deg); }
-  67.692% { transform: rotate(12deg); }
-  75.385% { transform: rotate(-9deg); }
-  83.077% { transform: rotate(12deg); }
-  90.769%,
+  27.692%, 53.846% { transform: rotate(-9deg); }
+  60.769% { transform: rotate(12deg); }
+  67.692% { transform: rotate(-9deg); }
+  74.615% { transform: rotate(12deg); }
+  81.538% { transform: rotate(-9deg); }
+  88.462% { transform: rotate(12deg); }
+  95.385%,
   100% { transform: rotate(-9deg); }
 }
 
@@ -369,30 +422,31 @@
 .dg-edit-output {
   animation: dg-edit-output-in 6.5s ease-in-out infinite both;
 }
-/* Three walking cycles occupy 44.615–90.769% of the same master. Before and after
-   that window every track holds an exact pose, creating a real pause rather than a
-   merely visible rig whose joints continue moving underneath. */
+/* The edited rig crosses in over 43.077–46.154%, and SOURCE starts handing its
+   selection back to ink on the frame it lands — one exchange, not two events —
+   finishing at 49.231%. Both rigs then hold for 0.3s, three compact walking
+   cycles run from 53.846–95.385%, and the closing hold follows. */
 @keyframes dg-edit-walk-body {
-  0%, 44.615%, 60%, 75.385%, 90.769%, 100% { transform: translateY(0); }
-  48.462%, 56.154%, 63.846%, 71.538%, 79.231%, 86.923% { transform: translateY(-0.8px); }
+  0%, 53.846%, 67.692%, 81.538%, 95.385%, 100% { transform: translateY(0); }
+  57.308%, 64.231%, 71.154%, 78.077%, 85%, 91.923% { transform: translateY(-0.8px); }
 }
 @keyframes dg-edit-walk-leg-a {
-  0%, 44.615%, 60%, 75.385%, 90.769%, 100% { transform: rotate(12deg); }
-  52.308%, 67.692%, 83.077% { transform: rotate(-12deg); }
+  0%, 53.846%, 67.692%, 81.538%, 95.385%, 100% { transform: rotate(12deg); }
+  60.769%, 74.615%, 88.462% { transform: rotate(-12deg); }
 }
 @keyframes dg-edit-walk-leg-b {
-  0%, 44.615%, 60%, 75.385%, 90.769%, 100% { transform: rotate(-12deg); }
-  52.308%, 67.692%, 83.077% { transform: rotate(12deg); }
+  0%, 53.846%, 67.692%, 81.538%, 95.385%, 100% { transform: rotate(-12deg); }
+  60.769%, 74.615%, 88.462% { transform: rotate(12deg); }
 }
 @keyframes dg-edit-walk-shin-a {
-  0%, 44.615%, 60%, 75.385%, 90.769%, 100% { transform: rotate(-6deg); }
-  49.743%, 65.128%, 80.513% { transform: rotate(-24deg); }
-  54.872%, 70.257%, 85.641% { transform: rotate(2deg); }
+  0%, 53.846%, 67.692%, 81.538%, 95.385%, 100% { transform: rotate(-6deg); }
+  58.461%, 72.307%, 86.153% { transform: rotate(-24deg); }
+  63.077%, 76.923%, 90.769% { transform: rotate(2deg); }
 }
 @keyframes dg-edit-walk-shin-b {
-  0%, 44.615%, 60%, 75.385%, 90.769%, 100% { transform: rotate(6deg); }
-  49.743%, 65.128%, 80.513% { transform: rotate(24deg); }
-  54.872%, 70.257%, 85.641% { transform: rotate(-2deg); }
+  0%, 53.846%, 67.692%, 81.538%, 95.385%, 100% { transform: rotate(6deg); }
+  58.461%, 72.307%, 86.153% { transform: rotate(24deg); }
+  63.077%, 76.923%, 90.769% { transform: rotate(-2deg); }
 }
 
 #editGallerySection .dg-edit-output.is-quad-walk .dg-body,
@@ -495,13 +549,24 @@
 /* One generated skeleton travels down the interpolation span while its joints
    perform the complete Start → squat → End motion. The duplicate snapshot rigs
    remain in the SVG source for easy pose editing but are not rendered. */
+/* The pass ends 138px below where it starts and in a different pose, so the loop
+   used to teleport: bottom-of-span end pose → top-of-span standing, on one frame,
+   every 4s. It now dissolves at both ends of the span instead, and the accent
+   stretch of the axis clears with it — the reset happens while there is nothing
+   on screen to see it happen to. The intermediate stops are the travel and the
+   fill sampled AT the fade times (138px and one dash unit over 100%), so the
+   linear timing still carries a constant speed straight through them. */
 @keyframes dg-squat-travel {
-  0% { transform: translate(58px, 85px) scale(.8); }
-  100% { transform: translate(58px, 223px) scale(.8); }
+  0% { opacity: 0; transform: translate(58px, 85px) scale(.8); }
+  6% { opacity: 1; transform: translate(58px, 93.3px) scale(.8); }
+  91% { opacity: 1; transform: translate(58px, 210.6px) scale(.8); }
+  100% { opacity: 0; transform: translate(58px, 223px) scale(.8); }
 }
 @keyframes dg-inbetween-progress {
-  0% { stroke-dashoffset: 1; }
-  100% { stroke-dashoffset: 0; }
+  0% { opacity: 0; stroke-dashoffset: 1; }
+  6% { opacity: 1; stroke-dashoffset: 0.94; }
+  91% { opacity: 1; stroke-dashoffset: 0.09; }
+  100% { opacity: 0; stroke-dashoffset: 0; }
 }
 #inbetweenGallerySection .dg-draw {
   animation: dg-inbetween-progress 4s linear infinite;
@@ -599,15 +664,18 @@
 @keyframes dg-pose-flow {
   to { stroke-dashoffset: -7; }
 }
+/* 1% of 9s is 90ms — long enough to be seen arriving and too short to be seen
+   arriving smoothly, which is the worst of both. Every fade on this plate is at
+   least 2.5% (~0.22s), the width the other two plates hand things over in. */
 @keyframes dg-pose-link-1 {
-  0%, 23.5% { opacity: 0; }
-  24.5%, 32% { opacity: 1; }
-  34%, 100% { opacity: 0; }
+  0%, 22.5% { opacity: 0; }
+  25%, 32% { opacity: 1; }
+  34.5%, 100% { opacity: 0; }
 }
 @keyframes dg-pose-link-2 {
-  0%, 59.5% { opacity: 0; }
-  60.5%, 66.5% { opacity: 1; }
-  68%, 100% { opacity: 0; }
+  0%, 58.5% { opacity: 0; }
+  61%, 68% { opacity: 1; }
+  70.5%, 100% { opacity: 0; }
 }
 .dg-pose-link {
   fill: none;
@@ -639,9 +707,9 @@
    LAST pose is the next one's FIRST — that shared pose is the join, so these
    numbers are the specification of it:
 
-     1  takes off   wings drive down as the body rises
-     2  strikes forward   wings brace while the body accelerates ahead
-     3  lands       wings brake, legs open, and the body settles
+     1  takes off         wings beat down as the body rises and the legs fold
+     2  strikes forward   coil, then head, wings and legs all fire on one beat
+     3  lands             wings brake, legs open, and the body settles
 
    Every track on this plate is the SAME 9s animation with NO delay: each motion
    and hand-off owns an explicit window in the master. That is what makes
@@ -655,21 +723,24 @@
    motion has stopped" looks like. Edit a motion's opening stop and you must edit
    the previous one's closing stop with it, or the chain comes apart there.
 
-   The easing is per segment: the take-off has a strong downstroke, the glide
-   travels almost level, and the landing decelerates as the legs unfold. */
+   The easing is per segment: the take-off has a strong downstroke, the strike
+   holds still and then fires, and the landing decelerates as the legs unfold. */
 
 @keyframes dg-in-1 { 0% { opacity: 0; } 2.5%, 24% { opacity: 1; } 31%, 100% { opacity: 0.88; } }
 @keyframes dg-tone-1 { 0%, 24% { stroke: var(--accent); } 31%, 100% { stroke: var(--app-ink); } }
 @keyframes dg-root-1 { 0%, 24% { fill: var(--accent); } 31%, 100% { fill: var(--app-ink); } }
 @keyframes dg-chip-1 { 0% { opacity: 0; transform: translateX(-5px); } 6% { opacity: 1; transform: translateX(0); } 100% { opacity: 1; transform: translateX(0); } }
-@keyframes dg-in-2 { 0%, 23.5% { opacity: 0; } 24.5%, 60% { opacity: 1; } 61%, 100% { opacity: 0.88; } }
-@keyframes dg-tone-2 { 0%, 60% { stroke: var(--accent); } 61%, 100% { stroke: var(--app-ink); } }
-@keyframes dg-root-2 { 0%, 60% { fill: var(--accent); } 61%, 100% { fill: var(--app-ink); } }
-@keyframes dg-chip-2 { 0%, 23.5% { opacity: 0; transform: translateX(-5px); } 24.5%, 100% { opacity: 1; transform: translateX(0); } }
-@keyframes dg-in-3 { 0%, 59.5% { opacity: 0; } 60.5%, 100% { opacity: 1; } }
+/* Turn 2 is turn 1 shifted by exactly 36% — same fade widths, same 7% handover
+   to ink while the connector runs. They were 7% and 1%, which made the second
+   hand-off look like a different event from the first. */
+@keyframes dg-in-2 { 0%, 22.5% { opacity: 0; } 25%, 60% { opacity: 1; } 67%, 100% { opacity: 0.88; } }
+@keyframes dg-tone-2 { 0%, 60% { stroke: var(--accent); } 67%, 100% { stroke: var(--app-ink); } }
+@keyframes dg-root-2 { 0%, 60% { fill: var(--accent); } 67%, 100% { fill: var(--app-ink); } }
+@keyframes dg-chip-2 { 0%, 22.5% { opacity: 0; transform: translateX(-5px); } 25%, 100% { opacity: 1; transform: translateX(0); } }
+@keyframes dg-in-3 { 0%, 58.5% { opacity: 0; } 61%, 100% { opacity: 1; } }
 @keyframes dg-tone-3 { 0%, 100% { stroke: var(--accent); } }
 @keyframes dg-root-3 { 0%, 100% { fill: var(--accent); } }
-@keyframes dg-chip-3 { 0%, 59.5% { opacity: 0; transform: translateX(-5px); } 60.5%, 100% { opacity: 1; transform: translateX(0); } }
+@keyframes dg-chip-3 { 0%, 58.5% { opacity: 0; transform: translateX(-5px); } 61%, 100% { opacity: 1; transform: translateX(0); } }
 
 /* The seam is where the plate's argument sits: the bar reaches the tick at the
    same instant the motion above stops and the one below takes its pose. One
@@ -707,8 +778,13 @@
 .dg-seam.is-t3 { animation-name: dg-seam-3; }
 
 /* Expansion uses a bird rather than repeating In-betweening's humanoid. Its
-   three turns also use a separate motion vocabulary: take-off, glide, landing.
-   The wing pivots meet at the root, while the legs fold from the hips. */
+   three turns also use a separate motion vocabulary: take-off, strike, landing.
+   The wing and neck pivots meet at the root, while the legs fold from the hips.
+   The neck is its own bone group for the same reason the wings are: turn 2 is a
+   strike, and a strike is a head thrown forward — with the head welded into the
+   spine path the only forward cue left was the body sliding sideways, which
+   reads as a glide. Its pivot is the root corner of its own box (the path starts
+   at the root, and nothing in the group reaches left of or below it). */
 .is-bird .dg-wing-up {
   transform-box: fill-box;
   transform-origin: 100% 100%;
@@ -717,15 +793,26 @@
   transform-box: fill-box;
   transform-origin: 100% 0%;
 }
+.is-bird .dg-bird-neck {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+}
 .is-bird .dg-bird-legs {
   transform-box: fill-box;
   transform-origin: 50% 0%;
 }
 
+/* Per-keyframe easing, and it is not decoration. The group's ease-in-out applies
+   to EVERY interval, so a track that passes THROUGH its waypoints decelerated to
+   a dead stop at each one: the take-off climbed in three visible lurches. Easing
+   per segment is right where a value reverses — a wingbeat really does stop at
+   the top of the stroke — and wrong where it passes through, so the wings keep
+   the default and the body tracks below spell out one accelerate → carry →
+   settle. Check which kind a track is before touching its timing. */
 @keyframes dg-bird-takeoff {
-  0% { transform: translateY(14px) rotate(7deg); }
-  8% { transform: translateY(8px) rotate(2deg); }
-  16% { transform: translateY(-2px) rotate(-7deg); }
+  0% { transform: translateY(14px) rotate(7deg); animation-timing-function: ease-in; }
+  8% { transform: translateY(8px) rotate(2deg); animation-timing-function: linear; }
+  16% { transform: translateY(-2px) rotate(-7deg); animation-timing-function: cubic-bezier(.2,.6,.35,1); }
   24%, 100% { transform: translateY(-13px) rotate(-3deg); }
 }
 @keyframes dg-bird-takeoff-up {
@@ -741,69 +828,141 @@
   24%, 100% { transform: rotate(8deg); }
 }
 @keyframes dg-bird-fold-legs {
-  0% { transform: scaleY(1); }
-  18%, 100% { transform: scaleY(.52) translateY(-2px); }
+  0% { transform: rotate(0deg) scaleY(1) translateY(0); }
+  18%, 100% { transform: rotate(0deg) scaleY(.52) translateY(-2px); }
 }
 
-@keyframes dg-bird-glide {
-  0%, 36% { transform: translate(-8px, 1px) rotate(-3deg); }
-  44% { transform: translate(-1px, -2px) rotate(-5deg); }
-  52% { transform: translate(9px, -1px) rotate(2deg); }
-  60%, 100% { transform: translate(16px, 1px) rotate(1deg); }
+/* Turn 2 is a STRIKE, and a strike is three beats, not a trajectory: coil, snap,
+   hold. It was written first as a drift — the body sliding 24px right at an even
+   speed — and a body moving forward at constant speed is a glide however far it
+   goes, which is why the chip and the drawing disagreed. What names this motion
+   is the timing (0.36s drawing back, a 0.3s dead beat, then 0.4s out) and the
+   fact that every bone fires on the same beat: the wings spread and sweep back,
+   the head cocks back and is thrown forward, the legs tuck and reach out. The
+   coil is a reversal, so it eases into its stop; the beat is a flat hold; the
+   snap decelerates into full extension and settles back out of a small overshoot.
+   Do not smooth the 40→43.5% hold away — without that stillness the coil and the
+   snap merge into one continuous swing, and it is a glide again. */
+@keyframes dg-bird-strike {
+  0%, 36% { transform: translate(0, -13px) rotate(-3deg); animation-timing-function: ease-out; }
+  40%, 43.5% { transform: translate(-8px, -10px) rotate(-11deg); animation-timing-function: cubic-bezier(.2,.7,.35,1); }
+  48% { transform: translate(12px, -15px) rotate(5deg); animation-timing-function: ease-out; }
+  51%, 100% { transform: translate(9px, -14px) rotate(3deg); }
 }
-@keyframes dg-bird-glide-up {
-  0%, 36% { transform: rotate(-8deg); }
-  48% { transform: rotate(-2deg); }
-  60%, 100% { transform: rotate(-6deg); }
+/* Wings: spread wide on the coil, then swept back along the body and LOCKED there
+   for the thrust and the hold. Beating wings were tried first and are wrong here —
+   a wingbeat is a cycle, and a cycle reads as flight no matter how hard it is
+   thrown; a strike is ballistic, so the limbs stop and the whole body goes. Wide
+   → swept is also a one-way silhouette change, which a flap is not. */
+@keyframes dg-bird-strike-up {
+  0%, 36% { transform: rotate(-10deg); animation-timing-function: ease-out; }
+  40%, 43.5% { transform: rotate(26deg); animation-timing-function: cubic-bezier(.2,.7,.35,1); }
+  48% { transform: rotate(-36deg); animation-timing-function: ease-out; }
+  51%, 100% { transform: rotate(-33deg); }
 }
-@keyframes dg-bird-glide-down {
-  0%, 36% { transform: rotate(7deg); }
-  48% { transform: rotate(2deg); }
-  60%, 100% { transform: rotate(5deg); }
+@keyframes dg-bird-strike-down {
+  0%, 36% { transform: rotate(8deg); animation-timing-function: ease-out; }
+  40%, 43.5% { transform: rotate(26deg); animation-timing-function: cubic-bezier(.2,.7,.35,1); }
+  48% { transform: rotate(-34deg); animation-timing-function: ease-out; }
+  51%, 100% { transform: rotate(-31deg); }
+}
+/* The head is the point of the strike: cocked back and up on the coil, thrown
+   through the body's own forward pitch on the snap, held out at the end. */
+@keyframes dg-bird-strike-neck {
+  0%, 36% { transform: rotate(0deg); animation-timing-function: ease-out; }
+  40%, 43.5% { transform: rotate(-20deg); animation-timing-function: cubic-bezier(.2,.7,.35,1); }
+  48% { transform: rotate(16deg); animation-timing-function: ease-out; }
+  51%, 100% { transform: rotate(11deg); }
+}
+/* Tucked tighter under the coil, then thrown forward with everything else — the
+   legs are the one track the landing inherits mid-motion, so it opens from here. */
+@keyframes dg-bird-strike-legs {
+  0%, 36% { transform: rotate(0deg) scaleY(.52) translateY(-2px); animation-timing-function: ease-out; }
+  40%, 43.5% { transform: rotate(-12deg) scaleY(.5) translateY(-2px); animation-timing-function: cubic-bezier(.2,.7,.35,1); }
+  48% { transform: rotate(24deg) scaleY(.8) translateY(0); animation-timing-function: ease-out; }
+  51%, 100% { transform: rotate(18deg) scaleY(.75) translateY(0); }
 }
 
+/* The descent is a fall, so it accelerates the whole way down and only the touch
+   settles — the 90→92% step back up is the weight arriving, and IS a reversal,
+   so it keeps an ease. The braking wings open through their waypoint rather than
+   stopping on it. */
 @keyframes dg-bird-land {
-  0%, 70% { transform: translateY(-16px) rotate(3deg); }
-  79% { transform: translateY(-3px) rotate(9deg); }
-  90% { transform: translateY(13px) rotate(0); }
-  92%, 100% { transform: translateY(11px) rotate(0); }
+  0%, 70% { transform: translate(9px, -14px) rotate(3deg); animation-timing-function: ease-in; }
+  79% { transform: translate(12px, -2px) rotate(10deg); animation-timing-function: cubic-bezier(.4,0,.5,1); }
+  90% { transform: translate(11px, 13px) rotate(0); }
+  92%, 100% { transform: translate(11px, 11px) rotate(0); }
 }
+/* The brake is the strike's sweep run backwards: the locked wings open wide
+   again, which is why turn 3 opens on turn 2's swept angles rather than on the
+   authored rest pose. */
 @keyframes dg-bird-land-up {
-  0%, 70% { transform: rotate(-8deg); }
-  79% { transform: rotate(20deg); }
+  0%, 70% { transform: rotate(-33deg); animation-timing-function: ease-in; }
+  79% { transform: rotate(16deg); animation-timing-function: cubic-bezier(.2,.6,.35,1); }
   90%, 100% { transform: rotate(38deg); }
 }
 @keyframes dg-bird-land-down {
-  0%, 70% { transform: rotate(7deg); }
-  79% { transform: rotate(-18deg); }
-  90%, 100% { transform: rotate(-34deg); }
+  0%, 70% { transform: rotate(-31deg); animation-timing-function: ease-in; }
+  79% { transform: rotate(4deg); animation-timing-function: cubic-bezier(.2,.6,.35,1); }
+  90%, 100% { transform: rotate(20deg); }
+}
+/* The head comes back level as the weight arrives — the strike is over, and the
+   bird ends the chain standing rather than still reaching. */
+@keyframes dg-bird-land-neck {
+  0%, 70% { transform: rotate(11deg); animation-timing-function: ease-in; }
+  79% { transform: rotate(4deg); }
+  90%, 100% { transform: rotate(0deg); }
 }
 @keyframes dg-bird-open-legs {
-  0%, 70% { transform: scaleY(.52) translateY(-2px); }
-  90%, 100% { transform: scaleY(1) translateY(0); }
+  0%, 70% { transform: rotate(18deg) scaleY(.75) translateY(0); }
+  79% { transform: rotate(24deg) scaleY(.95) translateY(0); }
+  90%, 100% { transform: rotate(0deg) scaleY(1) translateY(0); }
 }
 
 .is-bird.is-t1 .dg-bird-body { animation-name: dg-bird-takeoff; }
 .is-bird.is-t1 .dg-wing-up { animation-name: dg-bird-takeoff-up; }
 .is-bird.is-t1 .dg-wing-down { animation-name: dg-bird-takeoff-down; }
 .is-bird.is-t1 .dg-bird-legs { animation-name: dg-bird-fold-legs; }
-.is-bird.is-t2 .dg-bird-body { animation-name: dg-bird-glide; }
-.is-bird.is-t2 .dg-wing-up { animation-name: dg-bird-glide-up; }
-.is-bird.is-t2 .dg-wing-down { animation-name: dg-bird-glide-down; }
-.is-bird.is-t2 .dg-bird-legs { animation-name: dg-bird-fold-legs; }
+.is-bird.is-t2 .dg-bird-body { animation-name: dg-bird-strike; }
+.is-bird.is-t2 .dg-wing-up { animation-name: dg-bird-strike-up; }
+.is-bird.is-t2 .dg-wing-down { animation-name: dg-bird-strike-down; }
+.is-bird.is-t2 .dg-bird-neck { animation-name: dg-bird-strike-neck; }
+.is-bird.is-t2 .dg-bird-legs { animation-name: dg-bird-strike-legs; }
 .is-bird.is-t3 .dg-bird-body { animation-name: dg-bird-land; }
 .is-bird.is-t3 .dg-wing-up { animation-name: dg-bird-land-up; }
 .is-bird.is-t3 .dg-wing-down { animation-name: dg-bird-land-down; }
+.is-bird.is-t3 .dg-bird-neck { animation-name: dg-bird-land-neck; }
 .is-bird.is-t3 .dg-bird-legs { animation-name: dg-bird-open-legs; }
+/* Turn 1 gives the neck no track at all: it holds the authored neutral pose, so
+   the chain's first neck stop is 0deg and turn 2 opens on it. */
 
 /* The arrow and its label belong to the third turn, and to the fact that the
    chain could go on — they arrive with the last prompt and clear with the rest. */
 @keyframes dg-extension-in {
-  0%, 92% { opacity: 0; }
-  95%, 100% { opacity: 1; }
+  0%, 86% { opacity: 0; }
+  89.5%, 100% { opacity: 1; }
 }
 .dg-arrow-in {
   animation: dg-extension-in 9s ease-out infinite both;
+}
+
+/* The plate's own loop seam, and the one cut on these three plates that cannot
+   be eased away track by track: at 9s the bar is full, two birds hold ink poses
+   and the third has just landed — every one of those end poses IS the statement
+   being held, so none of them can drift toward the opening pose to meet it. The
+   plate clears instead, and rebuilds from an empty timeline with nothing on
+   screen to see it rebuild. One rule on the <svg>, not a fade per track: each
+   track already animates its own opacity, and a second animation on the same
+   property would simply replace it. Keep the arrow's arrival above clear of the
+   fade-out — it is the last thing to land, not something to flash. */
+@keyframes dg-plate-clear {
+  0% { opacity: 0; }
+  3% { opacity: 1; }
+  96% { opacity: 1; }
+  100% { opacity: 0; }
+}
+#expansionGallerySection .app-diagram svg {
+  animation: dg-plate-clear 9s linear infinite both;
 }
 
 /* Reduced motion: the diagrams are content, so they stay — they just arrive
@@ -834,7 +993,10 @@
   .dg-head,
   .dg-body,
   .dg-seq-in,
-  .dg-seq-axis {
+  .dg-seq-axis,
+  /* The plate-clear is a loop seam, and with the loop stopped there is no seam
+     to hide — left running it would be the only thing still moving here. */
+  #expansionGallerySection .app-diagram svg {
     animation: none;
     opacity: 1;
     stroke-dashoffset: 0;
