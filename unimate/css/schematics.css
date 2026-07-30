@@ -826,41 +826,27 @@
 /* Reduced motion: the diagrams are content, so they stay — they just arrive
    already finished and hold still. */
 @media (prefers-reduced-motion: reduce) {
-  .dg-draw,
-  .dg-travel,
-  .dg-edit-source,
-  .dg-edit-source .dg-root,
-  .is-quad-headshake .dg-qneck,
-  .dg-edit-prompt,
-  .dg-edit-output,
-  #editGallerySection .dg-edit-output *,
-  .dg-chip-in,
-  .dg-seam,
-  .dg-arrow-in,
-  .dg-pose-link,
-  .dg-pose-link.is-link-1,
-  .dg-pose-link.is-link-2,
-  .is-seq .dg-root {
-    animation: none;
-    opacity: 1;
-    stroke-dashoffset: 0;
-  }
-  .dg-limb,
-  .dg-head,
-  .dg-body,
-  .dg-seq-in,
-  .dg-seq-axis,
-  /* The plate-clear is a loop seam, and with the loop stopped there is no seam
-     to hide — left running it would be the only thing still moving here. */
-  #expansionGallerySection .app-diagram svg {
-    animation: none;
-    opacity: 1;
-    stroke-dashoffset: 0;
+  /* One rule over the whole plate, and `!important` on purpose. This block used
+     to name the animated parts one selector at a time, and it silently fell out
+     of date: the tracks that drive these plates are FAR more specific than
+     anything a list like that carries — a bird's limb sits at
+     `.is-bird.is-t1 .dg-bird-body` (0,3,0), the squat rig at `.is-squat .dg-body`
+     (0,2,0), and the edit plate's used to be `#id`-scoped (1,3,0) — so ten of
+     them kept animating straight through a stated "hold still". Specificity is
+     the wrong tool here: the intent is an override of everything below it, which
+     is exactly what `!important` means. dimo/css/style.css settles its own figure
+     the same way. Note `*` reaches the <svg> too, which is what stops the
+     expansion plate's loop-seam fade — with the loop stopped there is no seam to
+     hide, and left running it would be the only thing still moving. */
+  .app-diagram * {
+    animation: none !important;
+    opacity: 1 !important;
+    stroke-dashoffset: 0 !important;
   }
   /* The expansion plate is the one that says something by moving, so it has to
      say it standing still: every figure visible, the bar full, the chain read
      off the three poses down the column instead of off the clock. */
-  .dg-seq-axis { stroke-dasharray: 1 1; }
+  .dg-seq-axis { stroke-dasharray: 1 1 !important; }
 }
 
 /* ── 4. Responsive ──────────────────────────────────────────────────────────
