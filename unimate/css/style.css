@@ -10,7 +10,7 @@
      2. Base (body, focus, selection)
      3. Table of contents (fixed left rail)
      4. Layout + hero (title, authors, affiliations, quick links)
-     5. Teaser video + figure captions
+     5. Teaser video, figure captions, dataset curation table
      6. Section headings
      7. Video galleries
      8. Interactive 3D viewer (sidebar + canvas)
@@ -396,7 +396,7 @@ button:focus-visible,
   color: var(--link-muted);
 }
 
-/* ── 5. Teaser video + figure captions ──────────────────────────────────────── */
+/* ── 5. Teaser video, figure captions, dataset curation table ──────────────── */
 /* The teaser is the one video with no frame. It runs the full column directly
    under the title block, where a border would draw a box around the first thing
    on the page; the gallery clips below are framed (see .gallery-video) because
@@ -408,6 +408,28 @@ button:focus-visible,
   display: block;
 }
 
+/* The UniML3D overview figure. Framed, unlike the teaser directly above it,
+   and the rule is the one already written at .gallery-video rather than a new
+   one: this render is white to the pixel at all four edges (measured off the
+   PNG) against the page's #fdfaf4 — 1.03:1 — so with no border it dissolves
+   into the paper, and its shadow is offset 4px down, which reads at the bottom
+   edge and does nothing for the top. The teaser gets away with no frame
+   because it opens the page; this sits mid-document among framed figures.
+
+   width/height are the file's real pixels (4654x946). They are here to reserve
+   the aspect ratio before the 3.5MB decodes, so the section below it doesn't
+   jump — the CSS width overrides the attribute for layout. */
+.dataset-figure {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1.5px solid var(--slate-light);
+  border-radius: 15px;
+  box-sizing: border-box;
+  background-color: #fdfaf4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 .figure-caption {
   font-family: 'Roboto Mono', monospace;
   font-size: 14px;
@@ -416,6 +438,156 @@ button:focus-visible,
   margin-top: 10px;
   margin-bottom: 40px;
   padding: 0 20px;
+}
+
+/* --- Dataset curation table ------------------------------------------------
+   The whole pipeline as one table, set the way a paper sets an algorithm
+   float: a caption above, heavy rules top and bottom, numbered mono lines.
+   Rules and not a frame, deliberately — everything else in the Dataset section
+   is media that needs a border to separate it from the cream (see
+   .dataset-figure), but this is type, and type on paper is ruled, not boxed.
+   It is a real <table> because the content is genuinely tabular (step, action,
+   consequence), which buys row and column association for free, and it is HTML
+   rather than an inline SVG like the Applications schematics because the
+   content is words, and words should stay selectable and searchable.
+
+   THE SIGIL IS PER LINE, NOT PER PASS, and it is the design. "−" removes,
+   "+" adds, "→" re-expresses — so the column states what each step actually
+   does to the clip. An earlier version keyed the sigil to the pass (filter
+   subtracts, canonicalize transforms), which was tidier and wrong: root
+   realignment *corrects* a root rather than deleting one, and the hand review
+   inside annotate *discards* pairs. Don't collapse it back to two.
+
+   Roboto Mono throughout at the two weights the @import already requests. The
+   accent appears on the sigils and nowhere else, because that is where the
+   meaning is. */
+.algo {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 34px;
+  border-top: 1.5px solid var(--slate-dark);
+  border-bottom: 1.5px solid var(--slate-dark);
+  font-family: 'Roboto Mono', monospace;
+  font-size: 13.5px;
+}
+
+/* Above the rule, as a paper sets a table caption — figures caption below,
+   tables above. */
+.algo-caption {
+  caption-side: top;
+  padding: 0 1px 8px;
+  text-align: left;
+  font-size: 12.5px;
+  font-weight: 300;
+  color: var(--slate-light);
+}
+
+/* Each group opens with its own signature on a tinted band. The band alone
+   delimits the group — it had a hairline under it as well, which was the same
+   job done twice. */
+.algo-sig > th {
+  padding: 8px 10px;
+  background: var(--ivory-medium);
+  font-weight: 400;
+  font-size: 13px;
+  text-align: left;
+}
+
+/* Air before the second pass, so the two groups read apart inside one table. */
+.algo tbody + tbody .algo-sig > th {
+  border-top: 14px solid #fdfaf4;
+}
+
+/* filter(raw clip) → kept clip. A signature, not a title: it states what the
+   pass takes and returns, and the two chain — `kept clip` is the return of the
+   first and the argument of the second, which is the pipeline in two lines. */
+.algo-name {
+  font-weight: 700;
+  color: var(--slate-dark);
+}
+
+.algo-arg,
+.algo-ret {
+  font-weight: 300;
+  color: var(--slate-light);
+}
+
+.algo td {
+  padding: 5.5px 10px;
+  vertical-align: baseline;
+  line-height: 1.5;
+}
+
+/* Right-aligned so 1–9 and 10 line up on the units, the way an algorithm
+   float numbers its lines. Quiet: they index the lines, they aren't content. */
+.algo-n {
+  width: 2.6em;
+  padding-right: 0;
+  text-align: right;
+  font-weight: 300;
+  color: var(--slate-light);
+  opacity: 0.55;
+}
+
+.algo-op {
+  padding-right: 30px;
+  font-weight: 700;
+  color: var(--slate-dark);
+  white-space: nowrap;
+}
+
+/* Left-aligned, NOT right. Ragged-right against the measure is fine; what
+   matters is that all ten sigils stack on one vertical rail, because the
+   −/→ column is the device the whole table turns on. Right-aligning this
+   scattered them across four different x positions and the reader lost it. */
+.algo-out {
+  font-weight: 300;
+  color: var(--slate-light);
+}
+
+.algo-sigil {
+  color: var(--accent);
+}
+
+/* Under ~720px the operation can no longer share a line with its consequence:
+   the row becomes a two-line stack, both hanging off the same line number.
+   Kept with the component rather than in §11 — the TOC does the same at line
+   96, and splitting a figure system across two files is how it drifts. */
+@media (max-width: 720px) {
+  .algo,
+  .algo tbody,
+  .algo tr,
+  .algo th,
+  .algo td {
+    display: block;
+  }
+
+  .algo tr:not(.algo-sig) {
+    display: grid;
+    grid-template-columns: 2.6em 1fr;
+    padding: 6px 0;
+  }
+
+  .algo td {
+    padding: 0 0 0 10px;
+  }
+
+  .algo-n {
+    width: auto;
+    padding: 0;
+  }
+
+  .algo-op {
+    white-space: normal;
+  }
+
+  .algo-out {
+    grid-column: 2;
+  }
+
+  .algo tbody + tbody .algo-sig > th {
+    border-top-width: 12px;
+  }
 }
 
 /* ── 6. Section headings ────────────────────────────────────────────────────── */

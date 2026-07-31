@@ -40,6 +40,7 @@
       <li class="toc-subsection"><a href="#motion-editing">Motion Editing</a></li>
       <li class="toc-subsection"><a href="#motion-inbetweening">Motion In-Betweening</a></li>
       <li class="toc-subsection"><a href="#motion-expansion">Motion Expansion</a></li>
+      <li><a href="#dataset">Dataset</a></li>
     </ul>
   </nav>
 
@@ -674,6 +675,166 @@
         </p>
       </div>
     </div>
+
+    <!-- Last content section, after Applications and before the BibTeX block.
+         The paper puts it at Sec. 4, ahead of the results; here it closes the
+         page instead, so a visitor meets the model and what it does first and
+         the corpus it was trained on as the supporting material.
+         The prose is deliberately short — the figure carries the breadth, and
+         the counts (13,006 sequences, 2,140,232 frames, 3,584 prompts) live in
+         the abstract and the paper rather than being restated here. Anything
+         added back must come from Sec. 4 / Appendix A.1 of assets/unimate.pdf. -->
+    <h2 class="tagline" id="dataset"><span>Dataset.</span></h2>
+    <div class="section">
+      Training an animator that generalizes across object categories needs motion
+      data with the same breadth, but raw 4D sources are noisy and inconsistent:
+      disconnected or scene-level skeletons, broken roots, non-functional joints,
+      physically implausible motion, and mismatched coordinate frames. We curate
+      <strong>UniML3D</strong> by unifying three complementary sources &mdash;
+      <em>Truebones</em>, <em>Mixamo</em>, and <em>Objaverse-XL</em>.
+    </div>
+
+    <img class="dataset-figure" src="assets/dataset_overview.png" width="4654" height="946"
+      loading="lazy" decoding="async"
+      alt="Sample rigs and motion sequences from UniML3D, spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid skeletons." />
+    <p class="figure-caption">
+      Samples from <em>UniML3D</em>, spanning bipedal, quadrupedal, avian, marine,
+      insectoid, serpentine, and articulated rigid objects &mdash; each with detailed
+      skeleton annotations and a coherent text prompt paired to its motion.
+    </p>
+
+    <!-- Two subsections, numbered and styled exactly like the ones under
+         Experiments and Applications: the pipeline has two halves and the paper
+         names them separately (Sec. 4, "Filtering and Annotation" and "Motion
+         Canonicalization"). Filtering decides which clips survive; canonicali-
+         zation decides what the survivors are expressed in. -->
+    <!-- One table, two passes. Set as a paper's algorithm float — rules top and
+         bottom, numbered mono lines — rather than a flowchart of boxes and
+         arrows: that is the vernacular this content comes from, and HTML keeps
+         every stage selectable and searchable where an inline SVG (as the
+         Applications schematics use) would not.
+
+         The two <tbody> groups are identical in form and differ in exactly one
+         column, because the passes differ in kind. Filtering SUBTRACTS — its
+         right column is what leaves, marked "−". Canonicalization discards
+         nothing and re-expresses everything — its right column is what the line
+         establishes, marked "→". Rendering both the same way would be the
+         templated answer and would misstate the pipeline. Numbering runs 1..10
+         unbroken, and the two signature rows chain (raw clip → kept clip →
+         training sample), so this reads as one pass over a clip and not as two
+         unrelated lists.
+
+         Canonicalize opens with the two steps from Sec. 3.1 — BFS serialization
+         and topology-diameter normalization — because Sec. 4 says the mapping
+         builds on them, and the later lines are meaningless without them: there
+         is no "one kinematic basis across topologies" until the joints have a
+         shared ordering and the rigs a shared scale. They live in a different
+         section of the paper, not a different pipeline. -->
+    <table class="algo">
+      <caption class="algo-caption">Three passes over every asset. Each line removes (&minus;), adds (+), or re-expresses (&rarr;) what the pass was handed.</caption>
+      <tbody>
+        <tr class="algo-sig">
+          <th colspan="3" scope="colgroup">
+            <span class="algo-name">filter</span><span class="algo-arg">(raw&nbsp;clip)</span>
+            <span class="algo-sigil">&rarr;</span>
+            <span class="algo-ret">kept clip</span>
+          </th>
+        </tr>
+        <tr>
+          <td class="algo-n">1</td>
+          <td class="algo-op">prune to a single tree</td>
+          <td class="algo-out"><span class="algo-sigil">&minus;</span> every tree but the primary one, by cumulative skinning weight</td>
+        </tr>
+        <tr>
+          <td class="algo-n">2</td>
+          <td class="algo-op">realign the root by forward kinematics</td>
+          <td class="algo-out"><span class="algo-sigil">&rarr;</span> a spurious root carried onto the semantic root</td>
+        </tr>
+        <tr>
+          <td class="algo-n">3</td>
+          <td class="algo-op">remove phantom joints</td>
+          <td class="algo-out"><span class="algo-sigil">&minus;</span> IK controllers and helper bones with zero skinning weight</td>
+        </tr>
+        <tr>
+          <td class="algo-n">4</td>
+          <td class="algo-op">drop static clips</td>
+          <td class="algo-out"><span class="algo-sigil">&minus;</span> sequences with negligible normalized displacement</td>
+        </tr>
+        <tr>
+          <td class="algo-n">5</td>
+          <td class="algo-op">reject implausible clips</td>
+          <td class="algo-out"><span class="algo-sigil">&minus;</span> outlier root velocity, or jitter past an anatomical threshold</td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr class="algo-sig">
+          <th colspan="3" scope="colgroup">
+            <span class="algo-name">annotate</span><span class="algo-arg">(kept&nbsp;clip)</span>
+            <span class="algo-sigil">&rarr;</span>
+            <span class="algo-ret">captioned clip</span>
+          </th>
+        </tr>
+        <tr>
+          <td class="algo-n">6</td>
+          <td class="algo-op">standardize joint names</td>
+          <td class="algo-out"><span class="algo-sigil">&rarr;</span> one anatomical vocabulary, mapped by an LLM</td>
+        </tr>
+        <tr>
+          <td class="algo-n">7</td>
+          <td class="algo-op">resample and render</td>
+          <td class="algo-out"><span class="algo-sigil">&rarr;</span> 30 FPS, four synchronized views</td>
+        </tr>
+        <tr>
+          <td class="algo-n">8</td>
+          <td class="algo-op">caption with multimodal LLMs</td>
+          <td class="algo-out"><span class="algo-sigil">+</span> one text prompt per clip</td>
+        </tr>
+        <tr>
+          <td class="algo-n">9</td>
+          <td class="algo-op">review every pair by hand</td>
+          <td class="algo-out"><span class="algo-sigil">&minus;</span> captions that misidentify the dominant action</td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr class="algo-sig">
+          <th colspan="3" scope="colgroup">
+            <span class="algo-name">canonicalize</span><span class="algo-arg">(captioned&nbsp;clip)</span>
+            <span class="algo-sigil">&rarr;</span>
+            <span class="algo-ret">training sample</span>
+          </th>
+        </tr>
+        <tr>
+          <td class="algo-n">10</td>
+          <td class="algo-op">serialize the tree breadth-first</td>
+          <td class="algo-out"><span class="algo-sigil">&rarr;</span> one joint ordering per skeleton</td>
+        </tr>
+        <tr>
+          <td class="algo-n">11</td>
+          <td class="algo-op">scale by topology diameter</td>
+          <td class="algo-out"><span class="algo-sigil">&rarr;</span> comparable extent across rigs</td>
+        </tr>
+        <tr>
+          <td class="algo-n">12</td>
+          <td class="algo-op">place in a canonical frame</td>
+          <td class="algo-out"><span class="algo-sigil">&rarr;</span> <em>y</em>-axis up, root at the origin</td>
+        </tr>
+        <tr>
+          <td class="algo-n">13</td>
+          <td class="algo-op">align the initial facing direction</td>
+          <td class="algo-out"><span class="algo-sigil">&rarr;</span> +<em>z</em>, from the symmetric hip pair</td>
+        </tr>
+        <tr>
+          <td class="algo-n">14</td>
+          <td class="algo-op">express rotations against the rest pose</td>
+          <td class="algo-out"><span class="algo-sigil">&rarr;</span> one kinematic basis across topologies</td>
+        </tr>
+        <tr>
+          <td class="algo-n">15</td>
+          <td class="algo-op">normalize by feature statistics</td>
+          <td class="algo-out"><span class="algo-sigil">&rarr;</span> global on the root, local on the rest</td>
+        </tr>
+      </tbody>
+    </table>
 
     <div class="bibtex-code">
       <div class="bibtex-title">BibTeX</div>
