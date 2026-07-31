@@ -666,8 +666,15 @@ body::before {
   box-shadow: 0 18px 40px rgba(14, 19, 32, 0.12);
 }
 
-.media + .media {
-  margin-top: 20px;
+/* Space between one figure and the next. `.media + .media` on its own never
+   matched anything on this page — in Applications a .caption always sits
+   between the two videos — so the second video ended up flush against the
+   first one's caption, 0px, and the caption read as a label on the video below
+   it rather than the one it describes. Both cases are listed so the gap is
+   the same whether or not the first figure is captioned. */
+.media + .media,
+.caption + .media {
+  margin-top: 40px;
 }
 
 .media video,
@@ -688,12 +695,36 @@ body::before {
   border: 0;
 }
 
+/* A caption belongs to the figure above it, so what binds it there is being
+   nearer to that figure than to the next one: 14px up against the 40px down.
+   The old 18/0 said the opposite. The scale it sits in — 14 within a figure,
+   40 between figures, 52 between sections — keeps each boundary louder than
+   the one inside it. It spans the container, so it already lines up with the
+   figure's own left and right edges; no rule is needed for that.
+
+   Size: a caption is *content* — it says what you are looking at — but at
+   0.82rem it was set as chrome. That put it at 13.1px against the .kicker
+   eyebrow's 12.5px, so a sentence was reading at the size of a tag while the
+   prose beside it ran at 18.9px. 0.95rem gives it its own step: clearly above
+   the labels, clearly below the prose. Tracking comes down with the size going
+   up — the wider the setting, the more the counters open on their own, and
+   Space Mono is a wide face before any tracking is added. */
 .caption {
   font-family: var(--mono);
-  font-size: 0.82rem;
-  letter-spacing: 0.04em;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
   color: var(--mute);
-  margin: 18px 0 0;
+  margin: 14px 0 0;
+}
+
+/* Run-in application name, the way the paper's own figure captions are set:
+   the name in full ink, the mechanism behind it in --mute. It is what lets the
+   two captions be scanned as a pair before either is read. Space Mono 700 is
+   already in the font request, so this costs no extra weight. */
+.caption b {
+  color: var(--ink);
+  font-weight: 700;
 }
 
 .figure {
