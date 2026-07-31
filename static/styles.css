@@ -265,6 +265,82 @@ a:hover {
   }
 }
 
+/* --- Section reveal --- */
+/* Shared by both root pages, and it covers the sections *only*. Whatever sits
+   above the first one — .hero here, the résumé masthead over in resume.css —
+   renders immediately, with nothing applied to it at all.
+
+   That division is the point. The top block is what the visitor came for and
+   the only thing certain to be on screen at load; animating it delays the one
+   thing that should already be there, and buys nothing, since there is no
+   scroll position to reveal it at. So the entrance begins at Recent Research
+   and at Education. This is also exactly what the reference does
+   (ying-hui-he.github.io/cv.html): its sections carry
+   `.fade-in { opacity: 0; transform: translateY(16px) }` and pick up a
+   `.visible` class as they scroll into view, while its masthead has neither.
+
+   Sections wait until they are actually on screen rather than running a fixed
+   load stagger, which spends its later steps on content below the fold and
+   leaves a fast scroller arriving at a section already half-finished.
+
+   TIMING IS DERIVED, NOT PICKED. This site owns one piece of travel — the nav
+   keypoint, `transform 420ms cubic-bezier(0.34, 1.2, 0.64, 1), opacity 220ms`
+   — and everything else it does is a 120–250ms colour or hover change. A
+   reveal is the only other thing here that moves, so it moves on the
+   keypoint's clock: 420ms for the travel, 220ms for the fade, same split, same
+   tempo. The curve is that curve with the overshoot taken out (y1 1.2 -> 0.9).
+   A dot may spring past its mark and come back; a section springing past its
+   own resting position would shove the page it is part of.
+
+   The two numbers that are *not* the keypoint's, and why:
+     10px of travel, not the 16px the reference uses and every template
+     repeats. Nothing else on this site moves further than a few px — the
+     burger's bars go 5 — and the shadow tokens exist so media reads as set
+     *onto* paper. 10px settles; 16px slides.
+     220ms fade against 420ms travel means a section is legible well before it
+     stops moving, which is what keeps this from feeling like waiting.
+
+   The hidden state is gated behind .js-anim, which a one-line inline script in
+   each page's <head> sets before any body markup is parsed. Two failure modes
+   that gate closes: with JS off, .js-anim is never added and every section
+   renders normally, where the reference's own `.fade-in { opacity: 0 }` would
+   leave the page permanently blank; and because the class lands before first
+   paint, there is no frame where the sections show and are then hidden.
+   nav.js carries the matching failsafes — no IntersectionObserver, or an
+   observer that never fires, reveals everything. */
+.js-anim .page-section {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 220ms cubic-bezier(0.34, 0.9, 0.64, 1),
+              transform 420ms cubic-bezier(0.34, 0.9, 0.64, 1);
+}
+
+.js-anim .page-section.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Paper gets the finished page. A section the visitor never scrolled to is
+   still legitimately at opacity 0 when they hit Cmd-P, and paper has no
+   second chance — so the print sheet overrides the hidden state outright
+   rather than trusting the observer to have reached it. */
+@media print {
+  .js-anim .page-section {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The arrival is decoration. Without it the page is simply already there —
+   and nav.js reveals every section up front rather than on scroll. */
+@media (prefers-reduced-motion: reduce) {
+  .js-anim .page-section {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* --- Sections --- */
 .page-section {
   margin-top: 2.25rem;

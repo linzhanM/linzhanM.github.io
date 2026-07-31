@@ -142,7 +142,12 @@
 }
 
 /* The keypoint: one dot, parked under the active label. nav.js drives the
-   custom properties; opacity stays 0 until a section is actually in view. */
+   custom properties; opacity stays 0 until a section is actually in view.
+
+   The travel is deliberately longer and springier than a UI easing: the dot is
+   a physical marker sliding along a rail, and the slight overshoot at the end
+   is what sells it as having momentum rather than being redrawn. It is also
+   what carries the dot between pages — see .is-instant below. */
 .nav-keypoint {
   position: absolute;
   bottom: -2px;
@@ -156,6 +161,18 @@
   transform: translateX(var(--kp-x, 0));
   transition: transform 420ms cubic-bezier(0.34, 1.2, 0.64, 1), opacity 220ms ease-out;
   pointer-events: none;
+}
+
+/* Moving between pages is two documents, so the dot would ordinarily just
+   appear under the new page's label. Instead nav.js puts it back where the
+   previous page left it and lets the transition above carry it across — one
+   dot continuing its journey, not a second one switched on.
+
+   That initial placement must not animate, or the dot would fly in from the
+   rail's left edge on every load. nav.js adds this class for exactly that one
+   write and removes it in the same task, with a forced reflow in between. */
+.navbar-sections.is-instant .nav-keypoint {
+  transition: none;
 }
 
 /* --- Keyboard focus (quality floor, not decoration) --- */

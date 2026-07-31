@@ -1,9 +1,9 @@
 User-agent: *
 Allow: /
 
-# The resume is deliberately unlisted. /resume/ itself stays crawlable so the
-# noindex meta tag in resume/index.html can actually be read — disallowing it
-# here would hide that tag and leave the URL indexed as a bare link. A PDF can't
+# The resume is kept out of search results. /resume.html itself stays crawlable
+# so the noindex meta tag it carries can actually be read — disallowing it here
+# would hide that tag and leave the URL indexed as a bare link. A PDF can't
 # carry a meta tag, so the file is the one path blocked outright.
 Disallow: /resume/resume.pdf
 

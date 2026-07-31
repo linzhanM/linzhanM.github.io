@@ -3,18 +3,25 @@
 
 <head>
 	<title>Resume | Linzhan Mou</title>
-	<link rel="icon" type="image/x-icon" href="../assets/princeton-logo.jpg" />
+	<link rel="icon" type="image/x-icon" href="assets/princeton-logo.jpg" />
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="Resume of Linzhan Mou - CS Ph.D. student at Princeton University. Education, publications, research and industry experience.">
 	<!-- Keep this page out of search results. Crawling stays *allowed* in
 	     robots.txt on purpose: a crawler has to fetch the page to see this tag.
-	     Blocking /resume/ there instead would hide the noindex and let the URL
-	     linger in the index. resume.pdf can't carry a meta tag, so it is the one
-	     path robots.txt disallows. -->
+	     Blocking /resume.html there instead would hide the noindex and let the
+	     URL linger in the index. resume.pdf can't carry a meta tag, so it is the
+	     one path robots.txt disallows. -->
 	<meta name="robots" content="noindex, nofollow">
 	<meta name="googlebot" content="noindex, nofollow">
+
+	<!-- Gate for the section reveal in styles.css. It has to run here, in the
+	     head, for both of its jobs: it lands before any section is parsed, so
+	     there is no frame where they show and are then hidden, and it means the
+	     hidden state exists *only* when JS is running — with JS off the page is
+	     simply a page. nav.js does the revealing. -->
+	<script>document.documentElement.classList.add('js-anim');</script>
 
 	<!-- No Font Awesome / Academicons here: the contact links say "Scholar" and
 	     "GitHub" in words, so the icons were labelling what was already labelled.
@@ -28,25 +35,37 @@
 	     The first two are shared with index.html — keep their numbers equal to
 	     the ones there, so both pages hit one cache entry per file. resume.css
 	     is only ours and carries its own counter. -->
-	<link rel="stylesheet" href="../static/custom-navbar.css?v=38">
-	<link rel="stylesheet" href="../static/styles.css?v=37">
-	<link rel="stylesheet" href="../static/resume.css?v=4">
+	<link rel="stylesheet" href="static/custom-navbar.css?v=39">
+	<link rel="stylesheet" href="static/styles.css?v=42">
+	<link rel="stylesheet" href="static/resume.css?v=12">
 </head>
 
 <body>
-	<!-- No section index on this page: the whole thing is one document you read
-	     top to bottom, so the navbar is only the way back to the homepage. That
-	     leaves nothing for the burger to reveal and nothing for the keypoint to
-	     track, so neither is here — and nav.js isn't loaded. -->
+	<!-- The site nav, identical to the homepage's. Its About link points at the
+	     homepage's hero rather than at anything here, so nav.js finds no section
+	     to track: instead it parks the keypoint under the link marked is-active
+	     below, which is this page. -->
 	<nav class="navbar" role="navigation" aria-label="Main">
 		<div class="navbar-inner">
 			<div class="navbar-brand">
 				<a class="brand-link" href="/">
-					<img src="../assets/princeton-logo.jpg" alt="" aria-hidden="true">
+					<img src="assets/princeton-logo.jpg" alt="" aria-hidden="true">
 					<strong>Linzhan Mou</strong>
 				</a>
+				<button class="navbar-burger" type="button" aria-label="Menu" aria-expanded="false"
+					aria-controls="navbar-main">
+					<span></span>
+					<span></span>
+					<span></span>
+				</button>
 			</div>
-			<a class="nav-section resume-home" href="/">Home</a>
+			<div class="navbar-menu" id="navbar-main">
+				<div class="navbar-sections">
+					<a class="nav-section" href="/#About">About</a>
+					<a class="nav-section is-active" aria-current="page" href="/resume.html">Resume</a>
+					<span class="nav-keypoint" aria-hidden="true"></span>
+				</div>
+			</div>
 		</div>
 	</nav>
 
@@ -60,10 +79,6 @@
 				<p class="resume-contact">
 					<a href="mailto:linzhan@princeton.edu">linzhan@princeton.edu</a>
 					<span class="resume-sep" aria-hidden="true">·</span>
-					<!-- Same-site, so no target="_blank": leaving the resume for the
-					     homepage is going back, not opening something new. -->
-					<a href="/">Homepage</a>
-					<span class="resume-sep" aria-hidden="true">·</span>
 					<a target="_blank" href="https://scholar.google.com/citations?user=cIXq7Z4AAAAJ&amp;hl=en">Google Scholar</a>
 					<span class="resume-sep" aria-hidden="true">·</span>
 					<a target="_blank" href="https://github.com/Friedrich-M">GitHub</a>
@@ -71,6 +86,20 @@
 					<a target="_blank" href="https://twitter.com/LinzhanMou">Twitter</a>
 					<span class="resume-sep" aria-hidden="true">·</span>
 					<a target="_blank" href="https://www.linkedin.com/in/linzhan-mou-292272256/">LinkedIn</a>
+					<!-- The same resume as a document, and the only link to the file
+					     anywhere on the site. It sits past LinkedIn with no separator
+					     and a plate around it because it is not another place to find
+					     the author — it is this page in another format, and the one
+					     thing in this line you press rather than follow. New tab: it
+					     leaves for a file, and a PDF viewer has no way back.
+					     The mark is inline SVG, not an icon font: this page drops
+					     Font Awesome and Academicons on purpose, and a two-path
+					     outline costs no stylesheet. -->
+					<a class="resume-pdf" target="_blank" href="resume/resume.pdf">
+						<svg class="resume-pdf-mark" viewBox="0 0 14 16" aria-hidden="true" focusable="false">
+							<path d="M8.6 1H2.6a1.1 1.1 0 0 0-1.1 1.1v11.8A1.1 1.1 0 0 0 2.6 15h8.8a1.1 1.1 0 0 0 1.1-1.1V5L8.6 1Z"/>
+							<path d="M8.6 1v4h3.9"/>
+						</svg>Download PDF</a>
 				</p>
 			</header>
 
@@ -113,7 +142,7 @@
 						<span class="resume-aside">May 2026 – Aug. 2026</span>
 					</div>
 					<ul class="resume-bullets">
-						<li>Project: Egocentric autoregressive world-action modeling for generalizable robot policy.</li>
+						<li>Project: Autoregressive video-action pretraining on egocentric video for generalizable robot policy.</li>
 					</ul>
 				</div>
 			</section>
@@ -131,7 +160,7 @@
 						<span class="resume-aside">Dec. 2025 – Present</span>
 					</div>
 					<ul class="resume-bullets">
-						<li>Project: Real-time, text-conditioned articulated motion generation for arbitrary skeletons (SIGGRAPH Asia 2026).</li>
+						<li>Project: One topology-aware diffusion transformer animating arbitrary skeletons from text in real time (SIGGRAPH Asia 2026).</li>
 					</ul>
 				</div>
 
@@ -159,7 +188,7 @@
 						<span class="resume-aside">Dec. 2023 – Jan. 2025</span>
 					</div>
 					<ul class="resume-bullets">
-						<li>Project: Reinforcement learning and test-time training for perceptive robot locomotion (RA-L 2025, ICRA 2025 &amp; CoRL 2026).</li>
+						<li>Project: Real-to-sim-to-real reinforcement learning for perceptive robot locomotion (RA-L 2025, ICRA 2025 &amp; CoRL 2026).</li>
 					</ul>
 				</div>
 			</section>
@@ -290,6 +319,7 @@
 		<p>&copy; <span id="copyright-year"></span> Linzhan Mou</p>
 	</footer>
 
+	<script src="static/nav.js?v=42"></script>
 	<script>document.getElementById("copyright-year").textContent = new Date().getFullYear();</script>
 </body>
 
