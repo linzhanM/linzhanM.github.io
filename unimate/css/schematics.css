@@ -694,18 +694,38 @@
    hold. It was written first as a drift — the body sliding 24px right at an even
    speed — and a body moving forward at constant speed is a glide however far it
    goes, which is why the chip and the drawing disagreed. What names this motion
-   is the timing (0.36s drawing back, a 0.3s dead beat, then 0.4s out) and the
-   fact that every bone fires on the same beat: the wings spread and sweep back,
-   the head cocks back and is thrown forward, the legs tuck and reach out. The
-   coil is a reversal, so it eases into its stop; the beat is a flat hold; the
-   snap decelerates into full extension and settles back out of a small overshoot.
-   Do not smooth the 40→43.5% hold away — without that stillness the coil and the
-   snap merge into one continuous swing, and it is a glide again. */
+   is the timing and the fact that every bone fires on the same beat: the wings
+   spread and sweep back, the head cocks back and is thrown forward, the legs
+   tuck and reach out. The coil is a reversal, so it eases into its stop; the
+   beat is a flat hold; the snap decelerates into full extension and settles
+   back out of a small overshoot. Do not smooth the 44→47% hold away — without
+   that stillness the coil and the snap merge into one continuous swing, and it
+   is a glide again.
+
+   THE WIND-UP IS THE LONGEST PHASE AND THE RELEASE THE SHORTEST — 0.72s drawing
+   back, a 0.27s dead beat, 0.22s out, 0.22s to settle. It used to be the other
+   way round (0.36s back, a 0.3s beat, 0.4s out), and a release slower than its
+   own wind-up reads as a swing however hard the curve front-loads it.
+
+   Amplitude was raised to match, and the room for it was MEASURED off the plate
+   rather than guessed — three walls, all in viewBox units:
+     · the timeline axis at x=16   the coil's tail stops at 17.6
+     · the prompt chip at x=104    the snap's leading edge stops at 96.2
+     · the hand-off connector, which runs from (91,170) down to turn 3
+   The head now covers 70→93 across the snap where it covered 72→89: that span
+   IS the event, and at 17 units it was shorter than the fade that introduces
+   the figure. The connector is the subtle one. It is invisible during the
+   strike itself (opacity 0 until 61%), so the transient peak may cross x=91 and
+   the pose the bird HOLDS may not — the held pose stops at 90.7, and its beak
+   sits above y=170, so the dashes start just clear of it. Check that corner
+   after any change to the settle: it is the only place on this plate where two
+   things that are never on screen together can still end up on top of one
+   another. */
 @keyframes dg-bird-strike {
   0%, 36% { transform: translate(0, -13px) rotate(-3deg); animation-timing-function: ease-out; }
-  40%, 43.5% { transform: translate(-8px, -10px) rotate(-11deg); animation-timing-function: cubic-bezier(.2,.7,.35,1); }
-  48% { transform: translate(12px, -15px) rotate(5deg); animation-timing-function: ease-out; }
-  51%, 100% { transform: translate(9px, -14px) rotate(3deg); }
+  44%, 47% { transform: translate(-8.5px, -6px) rotate(-15deg); animation-timing-function: cubic-bezier(.1,.85,.3,1); }
+  49.5% { transform: translate(19px, -18px) rotate(9deg); animation-timing-function: ease-out; }
+  52%, 100% { transform: translate(12px, -15px) rotate(5deg); }
 }
 /* Wings: spread wide on the coil, then swept back along the body and LOCKED there
    for the thrust and the hold. Beating wings were tried first and are wrong here —
@@ -714,31 +734,31 @@
    → swept is also a one-way silhouette change, which a flap is not. */
 @keyframes dg-bird-strike-up {
   0%, 36% { transform: rotate(-10deg); animation-timing-function: ease-out; }
-  40%, 43.5% { transform: rotate(26deg); animation-timing-function: cubic-bezier(.2,.7,.35,1); }
-  48% { transform: rotate(-36deg); animation-timing-function: ease-out; }
-  51%, 100% { transform: rotate(-33deg); }
+  44%, 47% { transform: rotate(32deg); animation-timing-function: cubic-bezier(.1,.85,.3,1); }
+  49.5% { transform: rotate(-44deg); animation-timing-function: ease-out; }
+  52%, 100% { transform: rotate(-39deg); }
 }
 @keyframes dg-bird-strike-down {
   0%, 36% { transform: rotate(8deg); animation-timing-function: ease-out; }
-  40%, 43.5% { transform: rotate(26deg); animation-timing-function: cubic-bezier(.2,.7,.35,1); }
-  48% { transform: rotate(-34deg); animation-timing-function: ease-out; }
-  51%, 100% { transform: rotate(-31deg); }
+  44%, 47% { transform: rotate(32deg); animation-timing-function: cubic-bezier(.1,.85,.3,1); }
+  49.5% { transform: rotate(-42deg); animation-timing-function: ease-out; }
+  52%, 100% { transform: rotate(-37deg); }
 }
 /* The head is the point of the strike: cocked back and up on the coil, thrown
    through the body's own forward pitch on the snap, held out at the end. */
 @keyframes dg-bird-strike-neck {
   0%, 36% { transform: rotate(0deg); animation-timing-function: ease-out; }
-  40%, 43.5% { transform: rotate(-20deg); animation-timing-function: cubic-bezier(.2,.7,.35,1); }
-  48% { transform: rotate(16deg); animation-timing-function: ease-out; }
-  51%, 100% { transform: rotate(11deg); }
+  44%, 47% { transform: rotate(-31deg); animation-timing-function: cubic-bezier(.1,.85,.3,1); }
+  49.5% { transform: rotate(25deg); animation-timing-function: ease-out; }
+  52%, 100% { transform: rotate(19deg); }
 }
 /* Tucked tighter under the coil, then thrown forward with everything else — the
    legs are the one track the landing inherits mid-motion, so it opens from here. */
 @keyframes dg-bird-strike-legs {
   0%, 36% { transform: rotate(0deg) scaleY(.52) translateY(-2px); animation-timing-function: ease-out; }
-  40%, 43.5% { transform: rotate(-12deg) scaleY(.5) translateY(-2px); animation-timing-function: cubic-bezier(.2,.7,.35,1); }
-  48% { transform: rotate(24deg) scaleY(.8) translateY(0); animation-timing-function: ease-out; }
-  51%, 100% { transform: rotate(18deg) scaleY(.75) translateY(0); }
+  44%, 47% { transform: rotate(-18deg) scaleY(.46) translateY(-2px); animation-timing-function: cubic-bezier(.1,.85,.3,1); }
+  49.5% { transform: rotate(32deg) scaleY(.86) translateY(0); animation-timing-function: ease-out; }
+  52%, 100% { transform: rotate(22deg) scaleY(.75) translateY(0); }
 }
 
 /* The descent is a fall, so it accelerates the whole way down and only the touch
@@ -746,7 +766,7 @@
    so it keeps an ease. The braking wings open through their waypoint rather than
    stopping on it. */
 @keyframes dg-bird-land {
-  0%, 70% { transform: translate(9px, -14px) rotate(3deg); animation-timing-function: ease-in; }
+  0%, 70% { transform: translate(12px, -15px) rotate(5deg); animation-timing-function: ease-in; }
   79% { transform: translate(12px, -2px) rotate(10deg); animation-timing-function: cubic-bezier(.4,0,.5,1); }
   90% { transform: translate(11px, 13px) rotate(0); }
   92%, 100% { transform: translate(11px, 11px) rotate(0); }
@@ -755,24 +775,24 @@
    again, which is why turn 3 opens on turn 2's swept angles rather than on the
    authored rest pose. */
 @keyframes dg-bird-land-up {
-  0%, 70% { transform: rotate(-33deg); animation-timing-function: ease-in; }
+  0%, 70% { transform: rotate(-39deg); animation-timing-function: ease-in; }
   79% { transform: rotate(16deg); animation-timing-function: cubic-bezier(.2,.6,.35,1); }
   90%, 100% { transform: rotate(38deg); }
 }
 @keyframes dg-bird-land-down {
-  0%, 70% { transform: rotate(-31deg); animation-timing-function: ease-in; }
+  0%, 70% { transform: rotate(-37deg); animation-timing-function: ease-in; }
   79% { transform: rotate(4deg); animation-timing-function: cubic-bezier(.2,.6,.35,1); }
   90%, 100% { transform: rotate(20deg); }
 }
 /* The head comes back level as the weight arrives — the strike is over, and the
    bird ends the chain standing rather than still reaching. */
 @keyframes dg-bird-land-neck {
-  0%, 70% { transform: rotate(11deg); animation-timing-function: ease-in; }
+  0%, 70% { transform: rotate(19deg); animation-timing-function: ease-in; }
   79% { transform: rotate(4deg); }
   90%, 100% { transform: rotate(0deg); }
 }
 @keyframes dg-bird-open-legs {
-  0%, 70% { transform: rotate(18deg) scaleY(.75) translateY(0); }
+  0%, 70% { transform: rotate(22deg) scaleY(.75) translateY(0); }
   79% { transform: rotate(24deg) scaleY(.95) translateY(0); }
   90%, 100% { transform: rotate(0deg) scaleY(1) translateY(0); }
 }
