@@ -5,6 +5,6 @@ Allow: /
 # so the noindex meta tag it carries can actually be read — disallowing it here
 # would hide that tag and leave the URL indexed as a bare link. A PDF can't
 # carry a meta tag, so the file is the one path blocked outright.
-Disallow: /resume/resume.pdf
+Disallow: /resources/resume/resume.pdf
 
 Sitemap: https://linzhanmou.com/sitemap.xml

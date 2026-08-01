@@ -30,10 +30,10 @@
 //             the auto-framing. e.g. [-1, 0, 0] moves the group left. Default [0, 0, 0].
 //
 // ── File entry ───────────────────────────────────────────────────────────────
-//   A file is either a path string ('glbs/foo.glb'), or an object { url, ...opts }:
+//   A file is either a path string ('resources/glbs/foo.glb'), or an object { url, ...opts }:
 //     url          model path (.glb / .gltf via GLTFLoader, .fbx via FBXLoader).
 //     prompt       OVERRIDE for the text prompt on the chip pinned above this model.
-//                  The prompts themselves live in `../prompts.json`, keyed by filename,
+//                  The prompts themselves live in `../resources/prompts.json`, keyed by filename,
 //                  with the house style documented there — edit them there, not here;
 //                  this field is only for showing one glb under a different prompt in
 //                  one stage. `prompt: ''` (or any falsy value) suppresses the label.
@@ -72,32 +72,32 @@ export const EXAMPLES = [
   {
     label: 'Bipedal',
     files: [
-      'glbs/garfield.glb',
-      'glbs/gundam-punch.glb',
+      'resources/glbs/garfield.glb',
+      'resources/glbs/gundam-punch.glb',
       {
-        url: 'glbs/mixamo-flip.glb',
+        url: 'resources/glbs/mixamo-flip.glb',
         material: MIXAMO,
         labelSlot: 'above',
         lockLabelSlot: true,
       },
-      'glbs/ironman-walk.glb',
+      'resources/glbs/ironman-walk.glb',
     ],
     pad: 1.15, spacing: 0.96
   },
   {
     label: 'Articulated',
     files: [
-      { url: 'glbs/satellite.glb', material: { roughness: 0.3, metalness: 0.7 }, rotate: [0, 30, 0], groundFrame: 1, groundToMesh: true },
-      { url: 'glbs/robot-arm.glb', rotate: [0, -60, 0], offset: [1., 0, -0.2], scale: 0.8, labelSlot: 'above', lockLabelSlot: true, labelOffset: [85, 10] },
-      { url: 'glbs/lamp.glb', rotate: [0, 45, 0], scale: 0.65, labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -24] },
+      { url: 'resources/glbs/satellite.glb', material: { roughness: 0.3, metalness: 0.7 }, rotate: [0, 30, 0], groundFrame: 1, groundToMesh: true },
+      { url: 'resources/glbs/robot-arm.glb', rotate: [0, -60, 0], offset: [1., 0, -0.2], scale: 0.8, labelSlot: 'above', lockLabelSlot: true, labelOffset: [85, 10] },
+      { url: 'resources/glbs/lamp.glb', rotate: [0, 45, 0], scale: 0.65, labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -24] },
     ],
     spacing: 0.6, lighting: 2., evenGaps: true,
   },
   {
     label: 'Flower',
     files: [
-      { url: 'glbs/flower.glb', labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -5] },
-      { url: 'glbs/piranha-plant.glb', rotate: [0, 45, 0], offset: [0.0, 0, -0.2], labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -45] },
+      { url: 'resources/glbs/flower.glb', labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -5] },
+      { url: 'resources/glbs/piranha-plant.glb', rotate: [0, 45, 0], offset: [0.0, 0, -0.2], labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -45] },
     ],
     spacing: 1.0, pad: 0.9,
   },
@@ -109,17 +109,17 @@ export const EXAMPLES = [
     label: 'Zoo',
     files: [
       // Row 0 (front, ground). Whole front row nudged left (−x).
-      { url: 'glbs/gyarados.glb', groundToMesh: true, scale: 1.25, offset: [-0.6, 0, 1.0] },    // 0
-      { url: 'glbs/jellyfish.glb', offset: [-0.6, 0, 1.0] },          // 1
+      { url: 'resources/glbs/gyarados.glb', groundToMesh: true, scale: 1.25, offset: [-0.6, 0, 1.0] },    // 0
+      { url: 'resources/glbs/jellyfish.glb', offset: [-0.6, 0, 1.0] },          // 1
       // Row 1 (back, ground).
-      { url: 'glbs/monster.glb', row: 1, scale: 1.3, material: { roughness: 0.8, emissiveIntensity: 0.8 }, rotate: [0, 90, 0], offset: [-0.5, -0.15, 0] },    // 2  yaw to profile; nudged left; sunk slightly into the ground
-      { url: 'glbs/stego-attack.glb', row: 1, material: { roughness: 0.6, emissiveIntensity: 0.8 }, scale: 1.8, groundFrame: 0, offset: [0., 0, 0], labelSlot: 'below', labelOffset: [30, 0] }, // 3  ground on the neutral stance (feet down, not the swinging tail); prompt starts below and slightly right
+      { url: 'resources/glbs/monster.glb', row: 1, scale: 1.3, material: { roughness: 0.8, emissiveIntensity: 0.8 }, rotate: [0, 90, 0], offset: [-0.5, -0.15, 0] },    // 2  yaw to profile; nudged left; sunk slightly into the ground
+      { url: 'resources/glbs/stego-attack.glb', row: 1, material: { roughness: 0.6, emissiveIntensity: 0.8 }, scale: 1.8, groundFrame: 0, offset: [0., 0, 0], labelSlot: 'below', labelOffset: [30, 0] }, // 3  ground on the neutral stance (feet down, not the swinging tail); prompt starts below and slightly right
       // Flyers.
-      { url: 'glbs/bird.glb', scale: 0.7, above: [2, 1.4], offset: [1.5, 0, 1.0] }, // 4  hovering at back-row center (between the two dragons); nudged forward (+z)
-      { url: 'glbs/dragon-fire.glb', material: { roughness: 0.8, emissiveIntensity: 0.8 }, scale: 2.0, above: [2, 1.5], offset: [0, 0, 1.0] }, // 5  above monster; nudged forward (+z)
-      { url: 'glbs/dragon.glb', material: { roughness: 0.3, emissiveIntensity: 0.8 }, scale: 2.0, above: [3, 1.5], offset: [-1.0, 0, 12] },      // 6  above stego; nudged forward (+z)
-      { url: 'glbs/whale.glb', rotate: [0, 180, 0], scale: 0.8, offset: [-0.6, 0.3, 1.0] }, // 7  row 0 (front), lifted slightly off the ground; nudged left (−x)
-      { url: 'glbs/chicken.glb', scale: 0.7, material: { roughness: 0.6, emissiveIntensity: 0.8 }, above: [2, 0], offset: [1.5, 0, 0] }, // 8  on the ground directly below the bird (same anchor/offset as index 4)
+      { url: 'resources/glbs/bird.glb', scale: 0.7, above: [2, 1.4], offset: [1.5, 0, 1.0] }, // 4  hovering at back-row center (between the two dragons); nudged forward (+z)
+      { url: 'resources/glbs/dragon-fire.glb', material: { roughness: 0.8, emissiveIntensity: 0.8 }, scale: 2.0, above: [2, 1.5], offset: [0, 0, 1.0] }, // 5  above monster; nudged forward (+z)
+      { url: 'resources/glbs/dragon.glb', material: { roughness: 0.3, emissiveIntensity: 0.8 }, scale: 2.0, above: [3, 1.5], offset: [-1.0, 0, 12] },      // 6  above stego; nudged forward (+z)
+      { url: 'resources/glbs/whale.glb', rotate: [0, 180, 0], scale: 0.8, offset: [-0.6, 0.3, 1.0] }, // 7  row 0 (front), lifted slightly off the ground; nudged left (−x)
+      { url: 'resources/glbs/chicken.glb', scale: 0.7, material: { roughness: 0.6, emissiveIntensity: 0.8 }, above: [2, 0], offset: [1.5, 0, 0] }, // 8  on the ground directly below the bird (same anchor/offset as index 4)
     ],
     // pad still leaves the flanks the labels need, but only just — the chips learned
     // to take side and corner slots, so the camera no longer has to stand back far
@@ -130,15 +130,15 @@ export const EXAMPLES = [
     label: 'Humanoid Robot',
     files: [
       // Row 0 (front): four gundams, matching the four robots behind.
-      { url: 'glbs/gundam-crouch.glb', scale: 0.8 },
-      { url: 'glbs/gundam-kick.glb', scale: 0.8 },
-      { url: 'glbs/gundam-jump.glb', scale: 0.8 },
-      { url: 'glbs/gundam-dance.glb', scale: 0.8 },
+      { url: 'resources/glbs/gundam-crouch.glb', scale: 0.8 },
+      { url: 'resources/glbs/gundam-kick.glb', scale: 0.8 },
+      { url: 'resources/glbs/gundam-jump.glb', scale: 0.8 },
+      { url: 'resources/glbs/gundam-dance.glb', scale: 0.8 },
       // Row 1 (back): robots.
-      { url: 'glbs/robot-walk.glb', row: 1 },
-      { url: 'glbs/robot-jump.glb', row: 1 },
-      { url: 'glbs/robot-rotate.glb', row: 1 },
-      { url: 'glbs/robot-kick.glb', row: 1, labelSlot: 'above', lockLabelSlot: true, labelOffset: [70, 15] },
+      { url: 'resources/glbs/robot-walk.glb', row: 1 },
+      { url: 'resources/glbs/robot-jump.glb', row: 1 },
+      { url: 'resources/glbs/robot-rotate.glb', row: 1 },
+      { url: 'resources/glbs/robot-kick.glb', row: 1, labelSlot: 'above', lockLabelSlot: true, labelOffset: [70, 15] },
     ],
     // pad is generous here because the labels need somewhere to live: eight chips
     // across two rows want a clear strip of sky above and floor below, and at a
@@ -148,17 +148,17 @@ export const EXAMPLES = [
   {
     label: 'Quadruped Robot',
     files: [
-      'glbs/quadruped.glb',
-      'glbs/robot.glb',
+      'resources/glbs/quadruped.glb',
+      'resources/glbs/robot.glb',
     ],
     spacing: 1.35, scale: 0.6, pad: 0.7,
   },
   {
     label: 'Baymax Robot',
     files: [
-      { url: 'glbs/bigwhite-walk.glb', labelOffset: [0, -18] },
-      { url: 'glbs/bigwhite-dance.glb', labelOffset: [0, -18] },
-      { url: 'glbs/bigwhite-punch.glb', labelOffset: [0, -18] },
+      { url: 'resources/glbs/bigwhite-walk.glb', labelOffset: [0, -18] },
+      { url: 'resources/glbs/bigwhite-dance.glb', labelOffset: [0, -18] },
+      { url: 'resources/glbs/bigwhite-punch.glb', labelOffset: [0, -18] },
     ],
     spacing: 1.0, pad: 1.12,
   },
@@ -166,28 +166,28 @@ export const EXAMPLES = [
     label: 'Eagle',
     files: [
       // Keep the prompt below the eagle and pull it clear of the canvas edge.
-      { url: 'glbs/eagle-takeoff.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 0.4, 0], labelSlot: 'below', lockLabelSlot: true, labelOffset: [24, 0] },
-      { url: 'glbs/eagle-strike.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 1.0, 0], labelOffset: [0, -10] },
+      { url: 'resources/glbs/eagle-takeoff.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 0.4, 0], labelSlot: 'below', lockLabelSlot: true, labelOffset: [24, 0] },
+      { url: 'resources/glbs/eagle-strike.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 1.0, 0], labelOffset: [0, -10] },
       // Match the left eagle's annotation: below the model and clear of Controls.
-      { url: 'glbs/eagle-landing.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 0.4, 0], labelSlot: 'below', lockLabelSlot: true },
+      { url: 'resources/glbs/eagle-landing.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 0.4, 0], labelSlot: 'below', lockLabelSlot: true },
     ],
     sizeBy: 'maxdim', spacing: 1.15, evenGaps: true, lighting: 6.0,
   },
   {
     label: 'Shark',
     files: [
-      { url: 'glbs/jaws-swimright.glb', offset: [0, 0.4, 0] },
-      { url: 'glbs/jaws-biteleft.glb', offset: [0, 0.4, 0] },
-      { url: 'glbs/jaws-swim180.glb', offset: [-0.4, 0.4, 0] },
+      { url: 'resources/glbs/jaws-swimright.glb', offset: [0, 0.4, 0] },
+      { url: 'resources/glbs/jaws-biteleft.glb', offset: [0, 0.4, 0] },
+      { url: 'resources/glbs/jaws-swim180.glb', offset: [-0.4, 0.4, 0] },
     ],
     sizeBy: 'maxdim', spacing: 1.0, evenGaps: true, lighting: 6.0, pad: 1.12,
   },
   {
     label: 'Michelle',
     files: [
-      { url: 'glbs/mixamo-kick.glb', material: MIXAMO, labelOffset: [-20, 0], labelPinOffset: [-45, 0] },
-      { url: 'glbs/mixamo-kick1.glb', material: MIXAMO },
-      { url: 'glbs/mixamo-breakdance.glb', material: MIXAMO },
+      { url: 'resources/glbs/mixamo-kick.glb', material: MIXAMO, labelOffset: [-20, 0], labelPinOffset: [-45, 0] },
+      { url: 'resources/glbs/mixamo-kick1.glb', material: MIXAMO },
+      { url: 'resources/glbs/mixamo-breakdance.glb', material: MIXAMO },
     ],
     spacing: 0.5, stagger: 0.6, pad: 1.12,
   },

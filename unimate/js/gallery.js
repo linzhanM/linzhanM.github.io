@@ -219,21 +219,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.querySelectorAll('video').forEach((video) => {
     if (reduceMotion) video.controls = true;
-
-    // Click a clip to open it full screen, the way pi.website/blog/pi05 lets
-    // you expand its figures. These strips run at half the column — and §1's
-    // clips carry prompt text baked into a 2x3 grid — so "look closer" is a
-    // real need, not a flourish. Skipped when controls are showing, because
-    // then the click belongs to the scrubber underneath the pointer.
-    if (!reduceMotion && video.requestFullscreen) {
-      video.style.cursor = 'zoom-in';
-      video.title = 'Click to view full screen';
-      video.addEventListener('click', () => {
-        if (video.controls) return;
-        if (document.fullscreenElement) document.exitFullscreen();
-        else video.requestFullscreen().catch(() => {});
-      });
-    }
     videoObserver.observe(video);
   });
 

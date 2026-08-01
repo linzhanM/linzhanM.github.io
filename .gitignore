@@ -1,80 +1,38 @@
-# macOS
+# Operating systems
 .DS_Store
-.DS_Store?
 ._*
-.Spotlight-V100
-.Trashes
-.fseventsd
-.AppleDouble
-.AppleDB
-.AppleDesktop
-.LSOverride
-.DocumentRevisions-V100
-.TemporaryItems
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-.apdisk
-Icon?
-Network Trash Folder
-Temporary Items
+Thumbs.db
+Desktop.ini
 
-# iCloud Drive (this repo lives in ~/Library/Mobile Documents — evicted files
-# leave behind .<name>.icloud placeholder stubs)
+# iCloud placeholders
 .*.icloud
 *.icloud
 
-# Windows
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-
-# Editors
-.vscode/
+# Editors and local agent settings
 .idea/
+.vscode/
 .zed/
 *.swp
 *.swo
 *.swn
 *.sublime-workspace
-.netrwhist
-*.iml
-
-# Claude Code (local settings only — shared config like .claude/settings.json can be committed)
 .claude/settings.local.json
-
-# Codex guidance, kept local (CLAUDE.md is committed)
 AGENTS.md
 
-# Python (local dev server)
-__pycache__/
-*.pyc
-*.pyo
+# Local environments and dependencies
 .venv/
 venv/
-
-# Node (only if tooling is ever added — lockfiles stay committed)
 node_modules/
-npm-debug.log*
-yarn-error.log*
 .npm/
+__pycache__/
+*.py[cod]
 
-# Static-site build output (this site is served straight from the branch, so any
-# of these appearing means a generator ran locally)
-_site/
-.jekyll-cache/
-.jekyll-metadata
-.sass-cache/
-*.css.map
-*.js.map
-
-# Secrets / local env
+# Secrets
 .env
 .env.*
 *.pem
 
-# Logs / temp / scratch
+# Logs, temporary files, and local scratch space
 *.log
 *.tmp
 *.bak
@@ -83,9 +41,24 @@ _site/
 scratch/
 tmp/
 
-# Media working files (source projects and renders that don't belong in the repo —
-# the finished .mp4/.png/.glb assets under assets/ and unimate/glbs/ are committed)
+# Static-site build artifacts
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+*.css.map
+*.js.map
+
+# Resume LaTeX intermediates
+resources/resume/*.aux
+resources/resume/*.fdb_latexmk
+resources/resume/*.fls
+resources/resume/*.out
+resources/resume/*.synctex.gz
+resources/resume/*.toc
+
+# Local media project files (finished website assets remain tracked)
 *.aep
-*.prproj
 *.fcpbundle
+*.prproj
 *.mov.sb-*

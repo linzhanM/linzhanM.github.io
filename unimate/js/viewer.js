@@ -27,7 +27,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { EXAMPLES } from './examples.js?v=23';
+import { EXAMPLES } from './examples.js?v=24';
 
 const wrapper = document.getElementById('viewer-wrapper');
 const overlay = document.getElementById('loading-overlay');
@@ -712,12 +712,12 @@ function applyStageShift(shift) {
 const labelNdc = new THREE.Vector3();
 
 // The prompt text is content, not engine config, so it lives in its own file:
-// prompts.json, one line per model keyed by FILENAME (so a glb reused across
+// resources/prompts.json, one line per model keyed by FILENAME (so a glb reused across
 // stages says the same thing everywhere). Fetched once; a failure is non-fatal —
 // the viewer just runs without chips. loadStage awaits this promise, so a stage
 // can never render before its text is in.
 const PROMPTS = new Map();
-const promptsReady = fetch('prompts.json')
+const promptsReady = fetch('resources/prompts.json')
   .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
   .then((data) => {
     // '_comment' documents the file for whoever edits it; it isn't a model.

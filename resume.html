@@ -35,9 +35,9 @@
 	     The first two are shared with index.html — keep their numbers equal to
 	     the ones there, so both pages hit one cache entry per file. resume.css
 	     is only ours and carries its own counter. -->
-	<link rel="stylesheet" href="static/custom-navbar.css?v=39">
-	<link rel="stylesheet" href="static/styles.css?v=42">
-	<link rel="stylesheet" href="static/resume.css?v=12">
+	<link rel="stylesheet" href="css/custom-navbar.css?v=39">
+	<link rel="stylesheet" href="css/styles.css?v=42">
+	<link rel="stylesheet" href="css/resume.css?v=12">
 </head>
 
 <body>
@@ -95,7 +95,7 @@
 					     The mark is inline SVG, not an icon font: this page drops
 					     Font Awesome and Academicons on purpose, and a two-path
 					     outline costs no stylesheet. -->
-					<a class="resume-pdf" target="_blank" href="resume/resume.pdf">
+					<a class="resume-pdf" target="_blank" href="resources/resume/resume.pdf">
 						<svg class="resume-pdf-mark" viewBox="0 0 14 16" aria-hidden="true" focusable="false">
 							<path d="M8.6 1H2.6a1.1 1.1 0 0 0-1.1 1.1v11.8A1.1 1.1 0 0 0 2.6 15h8.8a1.1 1.1 0 0 0 1.1-1.1V5L8.6 1Z"/>
 							<path d="M8.6 1v4h3.9"/>
@@ -319,7 +319,7 @@
 		<p>&copy; <span id="copyright-year"></span> Linzhan Mou</p>
 	</footer>
 
-	<script src="static/nav.js?v=42"></script>
+	<script src="js/nav.js?v=42"></script>
 	<script>document.getElementById("copyright-year").textContent = new Date().getFullYear();</script>
 </body>
 
