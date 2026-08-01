@@ -405,19 +405,19 @@ button:focus-visible {
   .viewer-layout { aspect-ratio: auto; }
   .example-sidebar {
     left: max(10px, env(safe-area-inset-left));
-    right: auto;
-    top: 50%;
-    bottom: auto;
-    width: 156px;
-    max-height: calc(100% - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    right: max(10px, env(safe-area-inset-right));
+    top: auto;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    width: auto;
+    max-height: none;
     height: auto;
-    flex-direction: column;
+    flex-direction: row;
     padding: 5px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    transform: translateY(-50%);
+    overflow-x: auto;
+    overflow-y: hidden;
+    transform: none;
   }
-  .example-item { width: 100%; min-height: 38px; max-height: 38px; padding: 0 11px; }
+  .example-item { width: auto; min-width: max-content; min-height: 38px; max-height: 38px; padding: 0 11px; }
   .example-item::before { left: 10px; right: 10px; bottom: 3px; height: 2px; }
   .example-item.active { padding-left: 11px; }
   .example-item.active::before { transform: scaleX(1); }
@@ -436,8 +436,10 @@ button:focus-visible {
   .viewer-wrapper { height: 100vh; height: 100dvh; min-height: 0; }
   .example-sidebar {
     left: max(6px, env(safe-area-inset-left));
-    width: clamp(106px, 29vw, 124px);
-    max-height: calc(100% - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    right: max(6px, env(safe-area-inset-right));
+    bottom: max(6px, env(safe-area-inset-bottom));
+    width: auto;
+    max-height: none;
     padding: 4px;
   }
   .example-item { min-height: 34px; max-height: 34px; padding: 0 8px; }
@@ -460,7 +462,7 @@ button:focus-visible {
 }
 
 @media (max-height: 520px) and (max-width: 900px) {
-  .example-sidebar { max-height: calc(100% - 12px); }
+  .example-sidebar { max-height: none; }
   .example-item { min-height: 30px; max-height: 30px; }
 }
 
