@@ -496,7 +496,9 @@ function frameStage(pad = 1.0) {
   let dist = Math.max(distV, distH, size.z);
   // The standalone lab places its scene picker over the canvas. Give that view
   // a little more breathing room so the leftmost character never sits under it.
-  dist *= pad * (isFullscreenLab ? activeCameraPadding : 1); // padding
+  const mobileCameraPadding = viewerConfig.mobileCameraPadding || activeCameraPadding;
+  const responsiveCameraPadding = phoneLayout.matches ? mobileCameraPadding : activeCameraPadding;
+  dist *= pad * (isFullscreenLab ? responsiveCameraPadding : 1); // padding
 
   // The objects were physically translated by activeShift (applyStageShift), which
   // dragged the box center with them. Subtract it back out so the camera, floor, and
@@ -508,7 +510,10 @@ function frameStage(pad = 1.0) {
   // Aim slightly left of the stage on the fullscreen page. This shifts the
   // characters into the clear area between the scene picker and Controls while
   // preserving the stage's physical layout and the project-page composition.
-  const safeArea = viewerConfig.horizontalSafeArea || 0;
+  const desktopSafeArea = viewerConfig.horizontalSafeArea || 0;
+  const safeArea = phoneLayout.matches
+    ? (viewerConfig.mobileHorizontalSafeArea ?? desktopSafeArea)
+    : desktopSafeArea;
   const viewX = tx - (isFullscreenLab ? Math.max(size.x, MIN_FRAME_WIDTH) * safeArea : 0);
   controls.target.set(viewX, ty, tz);
   // Lift the camera above the target (~+0.28·dist) so it looks slightly DOWN at the
@@ -955,6 +960,17 @@ const DESKTOP_VIEWER_WIDTH = 756;
 const phoneLayout = window.matchMedia('(max-width: 720px)');
 const promptViewportScale = (width) =>
   phoneLayout.matches ? Math.min(1, width / DESKTOP_VIEWER_WIDTH) : 1;
+
+// Controls use the same geometric reduction as the prompt chips, but need a
+// readability floor: the paper embed starts from a compact 160px desktop panel,
+// while the fullscreen lab starts from 210px. Separate floors make both land at
+// a comparable visual density on a phone instead of making the embed microscopic
+// or letting the lab dominate the stage.
+const controlViewportScale = (width) => {
+  if (!phoneLayout.matches) return 1;
+  const minimum = viewerConfig.mobileControlScaleMin ?? (isFullscreenLab ? 0.54 : 0.62);
+  return Math.max(minimum, Math.min(1, width / DESKTOP_VIEWER_WIDTH));
+};
 
 const MAX_LIFT = 115; // px a pill may be pushed up off its model to dodge another.
                       // Enough for the Zoo's worst case — the chicken standing under
@@ -1637,11 +1653,13 @@ gui.add({ reset: () => frameStage(activePad) }, 'reset').name('Reset view');
 // restyling individual rows. getBoundingClientRect() in measureGui() reports
 // this transformed size, so prompt labels avoid the panel's visible footprint.
 function applyResponsiveControlScale() {
-  const scale = promptViewportScale(wrapper.clientWidth);
+  const scale = controlViewportScale(wrapper.clientWidth);
   gui.domElement.style.transform = scale === 1 ? '' : `scale(${scale})`;
-  // The panel's desktop inset is part of its composition, so scale that too.
-  gui.domElement.style.top = scale === 1 ? '' : `${10 * scale}px`;
-  gui.domElement.style.right = scale === 1 ? '' : `${10 * scale}px`;
+  // Scale the desktop inset with the panel so its top/right alignment remains
+  // visually identical. max() also keeps it clear of notches in fullscreen.
+  const inset = 10 * scale;
+  gui.domElement.style.top = scale === 1 ? '' : `max(${inset}px, env(safe-area-inset-top))`;
+  gui.domElement.style.right = scale === 1 ? '' : `max(${inset}px, env(safe-area-inset-right))`;
 }
 applyResponsiveControlScale();
 
@@ -1700,6 +1718,7 @@ wrapper.addEventListener('drop', (e) => {
   updateLabels(dt); // after render: the camera matrices the pills project through are final
 })();
 
+let previousViewerWidth = wrapper.clientWidth;
 window.addEventListener('resize', () => {
   const w = wrapper.clientWidth, h = wrapper.clientHeight;
   camera.aspect = w / h;
@@ -1707,6 +1726,12 @@ window.addEventListener('resize', () => {
   renderer.setSize(w, h);
   applyResponsiveControlScale();
   measureLabels(); // the pills' max-width is breakpoint-dependent, so their boxes move
+  // A width change means either a responsive breakpoint or an orientation
+  // change. Re-fit the stage so mobile keeps the same composed view as desktop.
+  // Height-only changes are commonly Safari's address bar and should not reset
+  // a view the visitor has already orbited.
+  if (Math.abs(w - previousViewerWidth) > 1 && pivots.length) frameStage(activePad);
+  previousViewerWidth = w;
 });
 
 loadExample(0);

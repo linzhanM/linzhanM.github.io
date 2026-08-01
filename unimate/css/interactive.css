@@ -15,12 +15,16 @@
 
 * { box-sizing: border-box; }
 
-html { min-width: 320px; }
+html {
+  min-width: 320px;
+  height: 100%;
+}
 
 body {
   margin: 0;
   width: 100%;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   color: var(--ink);
   background:
@@ -148,6 +152,7 @@ button:focus-visible {
   transform: translateY(-50%);
   overflow-y: auto;
   scrollbar-width: none;
+  overscroll-behavior: contain;
 }
 
 .example-sidebar::-webkit-scrollbar { display: none; }
@@ -276,6 +281,11 @@ button:focus-visible {
   border-radius: 4px;
   overflow: hidden;
   box-shadow: 3px 3px 0 rgba(23, 25, 22, 0.1);
+  will-change: transform;
+}
+
+.viewer-wrapper .lil-gui.root > .title {
+  text-align: left;
 }
 
 #viewer-labels { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
@@ -394,27 +404,25 @@ button:focus-visible {
   .header-context { display: none; }
   .viewer-layout { aspect-ratio: auto; }
   .example-sidebar {
-    left: 8px;
-    right: 8px;
-    top: auto;
-    bottom: 8px;
-    width: auto;
-    max-width: none;
-    max-height: none;
-    height: 54px;
-    flex-direction: row;
-    justify-content: flex-start;
+    left: max(10px, env(safe-area-inset-left));
+    right: auto;
+    top: 50%;
+    bottom: auto;
+    width: 156px;
+    max-height: calc(100% - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    height: auto;
+    flex-direction: column;
     padding: 5px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    transform: none;
-    scrollbar-width: thin;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transform: translateY(-50%);
   }
-  .example-item { width: auto; min-height: 42px; padding: 0 13px; }
-  .example-item::before { left: 12px; right: 12px; bottom: 3px; height: 2px; }
-  .example-item.active { padding-left: 13px; }
+  .example-item { width: 100%; min-height: 38px; max-height: 38px; padding: 0 11px; }
+  .example-item::before { left: 10px; right: 10px; bottom: 3px; height: 2px; }
+  .example-item.active { padding-left: 11px; }
   .example-item.active::before { transform: scaleX(1); }
-  .viewer-wrapper { height: 100vh; min-height: 0; }
+  .example-name { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+  .viewer-wrapper { height: 100vh; height: 100dvh; min-height: 0; }
   .interaction-key { display: none; }
 }
 
@@ -425,9 +433,22 @@ button:focus-visible {
   .wordmark svg { width: 29px; }
   .panel-heading { padding: 12px; }
   .panel-note { display: none; }
-  .viewer-wrapper { height: 100vh; min-height: 0; }
+  .viewer-wrapper { height: 100vh; height: 100dvh; min-height: 0; }
+  .example-sidebar {
+    left: max(6px, env(safe-area-inset-left));
+    width: clamp(106px, 29vw, 124px);
+    max-height: calc(100% - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    padding: 4px;
+  }
+  .example-item { min-height: 34px; max-height: 34px; padding: 0 8px; }
+  .example-item::before { left: 8px; right: 8px; }
+  .example-item.active { padding-left: 8px; }
+  .example-name { font-size: 9px; }
   .stage-label { display: none; }
-  .interaction-guide { top: 10px; font-size: 8px; }
+  .interaction-guide {
+    top: max(8px, env(safe-area-inset-top));
+    font-size: 8px;
+  }
   .guide-hover { display: none !important; }
   .desktop-word { display: none; }
   .mobile-word { display: inline; }
@@ -436,6 +457,11 @@ button:focus-visible {
   .desktop-hint { display: none; }
   .lab-footer { gap: 20px; }
   .lab-footer span:last-child { display: none; }
+}
+
+@media (max-height: 520px) and (max-width: 900px) {
+  .example-sidebar { max-height: calc(100% - 12px); }
+  .example-item { min-height: 30px; max-height: 30px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

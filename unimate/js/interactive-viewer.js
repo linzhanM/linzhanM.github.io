@@ -4,6 +4,7 @@
 window.UNIMATE_VIEWER_CONFIG = {
   fullscreenLab: true,
   cameraPadding: 1.45,
+  mobileCameraPadding: 1.2,
   cameraPaddingByCategory: {
     'Bipedal': 1.45,
     'Articulated': 1.45,
@@ -18,9 +19,11 @@ window.UNIMATE_VIEWER_CONFIG = {
   },
   cameraElevation: 0.34,
   horizontalSafeArea: 0.09,
+  mobileHorizontalSafeArea: 0.055,
+  mobileControlScaleMin: 0.54,
   hoverPrompts: true,
   playbackControls: true,
   autoOrbitControls: true,
 };
 
-await import('./viewer.js?v=46');
+await import('./viewer.js?v=47');

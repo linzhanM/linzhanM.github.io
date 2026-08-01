@@ -1245,6 +1245,10 @@ button:focus-visible,
   will-change: transform;
 }
 
+.viewer-wrapper .lil-gui.root > .title {
+  text-align: left;
+}
+
 /* Prompt chips. Each model's prompt is pinned to it the way an annotation is
    pinned on a figure plate: a chip of the typed text, a dot on the model's crown,
    and a leader line between them. The leader is the load-bearing part — the chips
