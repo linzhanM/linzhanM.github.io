@@ -74,12 +74,9 @@
       <img src="assets/logos/mit.png" alt="Massachusetts Institute of Technology" />
     </div>
 
-    <!-- TODO: add real hrefs and drop class="disabled" once links are live. -->
     <div class="quick-links">
-      <a class="disabled" href="#" aria-disabled="true">[arXiv]</a>
-      <a class="pending" href="https://github.com/Friedrich-M/UniMate" target="_blank" rel="noopener">[Code (coming soon)]</a>
-      <a class="disabled" href="#" aria-disabled="true">[Dataset]</a>
-      <a class="pending" href="#examples">[Interactive Examples]</a>
+      <a href="https://github.com/Friedrich-M/UniMate" target="_blank" rel="noopener">[Code (coming soon)]</a>
+      <a href="interactive.html">[Interactive Examples]</a>
     </div>
 
     <video id="teaser-video" src="assets/videos/teaser.mp4" poster="assets/posters/teaser.jpg"
@@ -89,23 +86,47 @@
       characters with <em>diverse skeletal topologies</em> within a single <em>unified</em> model.
     </p>
 
-    <h2 class="tagline" id="examples"><span>Interactive Examples.</span></h2>
-    <div class="section">
-      Explore our interactive 3D animations by selecting an example group from
-      the sidebar. Each character is labelled with the text prompt used to
-      generate its motion. Drag to rotate and scroll to zoom.
-    </div>
+    <section class="interactive-showcase" aria-labelledby="examples">
+      <header class="interactive-showcase-header">
+        <h2 id="examples">Interactive Examples.</h2>
+        <p class="interactive-instructions" aria-label="Viewer instructions">
+          <span class="instruction-item">
+            <svg class="gesture-icon gesture-orbit" viewBox="0 0 32 28" aria-hidden="true" focusable="false">
+              <path class="gesture-track" d="M4.5 12.5C2.8 9.8 4.6 7 8 6.1" />
+              <path class="gesture-arrow" d="m5.1 9.1-.6 3.4 3.3-.8" />
+              <path class="gesture-track" d="M27.5 15.5c1.7 2.7-.1 5.5-3.5 6.4" />
+              <path class="gesture-arrow" d="m26.9 18.9.6-3.4-3.3.8" />
+              <rect class="gesture-mouse" x="10" y="2.5" width="12" height="23" rx="6" />
+              <path class="gesture-button" d="M16 3v7" />
+              <circle class="gesture-accent" cx="16" cy="7" r="1.5" />
+            </svg>
+            <span><strong>Drag</strong> to orbit</span>
+          </span>
+          <span class="instruction-item">
+            <svg class="gesture-icon gesture-zoom" viewBox="0 0 32 28" aria-hidden="true" focusable="false">
+              <rect class="gesture-mouse" x="4" y="2.5" width="12" height="23" rx="6" />
+              <path class="gesture-button" d="M10 3v7" />
+              <circle class="gesture-accent" cx="10" cy="7" r="1.5" />
+              <path class="gesture-track" d="M24 5v18" />
+              <path class="gesture-arrow" d="m21 8 3-3 3 3M21 20l3 3 3-3" />
+            </svg>
+            <span><strong>Scroll</strong> to zoom</span>
+          </span>
+        </p>
+        <a class="interactive-expand" href="interactive.html">View larger <span aria-hidden="true">&#8599;</span></a>
+      </header>
 
-    <div class="viewer-layout">
-      <div class="example-sidebar" id="example-sidebar"></div>
-      <div class="viewer-wrapper" id="viewer-wrapper">
-        <!-- One prompt pill per model; filled and positioned by viewer.js. -->
-        <div id="viewer-labels"></div>
-        <div id="loading-overlay"><span class="spinner"></span>Loading…</div>
-        <div id="drop-hint">Drop .fbx / .glb / .gltf to visualize</div>
+      <div class="viewer-layout">
+        <!-- One row per stage; filled and kept in sync by viewer.js. -->
+        <div class="example-sidebar" id="example-sidebar" role="group" aria-label="Example stages"></div>
+        <div class="viewer-wrapper" id="viewer-wrapper">
+          <!-- One prompt pill per model; filled and positioned by viewer.js. -->
+          <div id="viewer-labels"></div>
+          <div id="loading-overlay"><span class="spinner"></span>Loading…</div>
+          <div id="drop-hint">Drop .fbx / .glb / .gltf to visualize</div>
+        </div>
       </div>
-    </div>
-    <p class="viewer-hint">Drag to orbit &nbsp;·&nbsp; scroll to zoom &nbsp;·&nbsp; right-drag to pan</p>
+    </section>
 
     <h2 class="tagline" id="abstract"><span>Abstract.</span></h2>
     <div class="section">
@@ -869,10 +890,10 @@
     }
   </script>
 
-  <script type="module" src="js/viewer.js?v=30"></script>
+  <script type="module" src="js/viewer.js?v=46"></script>
 
   <!-- Galleries: scroll buttons + play-only-what-is-visible. -->
-  <script src="js/gallery.js?v=2"></script>
+  <script src="js/gallery.js?v=6"></script>
 
   <!-- TOC rail: scroll-spy + the gutter-collision watcher. -->
   <script src="js/toc.js"></script>

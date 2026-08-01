@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Explore UniMate's generated 3D character animations in an interactive motion lab." />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="theme-color" content="#e8e9e3" />
+  <title>UniMate Motion Lab</title>
+
+  <link rel="icon" type="image/png" href="assets/favicon-baymax.png" />
+  <link rel="apple-touch-icon" href="assets/favicon-baymax.png" />
+  <link rel="stylesheet" href="css/interactive.css" />
+</head>
+<body class="interactive-viewer-page">
+  <main class="lab-shell">
+    <section class="viewer-panel" aria-label="Interactive animation viewer">
+      <div class="viewer-layout">
+        <div class="viewer-wrapper" id="viewer-wrapper">
+          <div class="stage-label" aria-hidden="true">LIVE 3D</div>
+          <div class="interaction-guide" aria-label="Interaction instructions">
+            <span class="guide-hover">Hover a character <strong>Prompt</strong></span>
+            <span>Drag <strong>Orbit</strong></span>
+            <span class="guide-zoom"><span class="desktop-word">Scroll</span><span class="mobile-word">Pinch</span> <strong>Zoom</strong></span>
+          </div>
+          <div class="example-sidebar" id="example-sidebar" role="group" aria-label="Example stages"></div>
+          <div id="viewer-labels"></div>
+          <div id="loading-overlay"><span class="spinner"></span><span>Building scene</span></div>
+          <div id="drop-hint">Release to inspect your model</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="js/interactive-viewer.js?v=16"></script>
+</body>
+</html>

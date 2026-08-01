@@ -209,9 +209,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       const video = entry.target;
-      if (entry.isIntersecting && !reduceMotion) {
+      // dataset.userPaused is set by the Application control bars below: a
+      // clip the visitor paused stays paused when it scrolls back into view.
+      if (entry.isIntersecting && !reduceMotion && !video.dataset.userPaused) {
         video.play().catch(() => {});
-      } else {
+      } else if (!entry.isIntersecting) {
         video.pause();
       }
     });
@@ -221,6 +223,110 @@ document.addEventListener('DOMContentLoaded', function () {
     if (reduceMotion) video.controls = true;
     videoObserver.observe(video);
   });
+
+  // π0.5-style figure controls on the three Application clips, and only there —
+  // pi.website/blog/pi05 is the model: the clip autoplays in view, and hovering
+  // it fades in a control bar along the bottom (play/pause, seek, full screen);
+  // clicking the clip itself toggles play/pause. The Experiments strips don't
+  // get this: their clips are half-column comparison figures, and a bar across
+  // each would put chrome on six clips at once. Full screen goes on the
+  // CONTAINER, not the video, so the bar stays usable in full screen (pi05 does
+  // the same); iPhone has no element fullscreen, so it falls back to the
+  // video's own native player. Skipped under prefers-reduced-motion, where
+  // every video already carries the browser's native controls.
+  if (!reduceMotion) {
+    const fmt = (t) => (isFinite(t) && t > 0)
+      ? Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0')
+      : '0:00';
+    const PLAY_ICON = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.3 10.7 6 2.5 10.7z"/></svg>';
+    const PAUSE_ICON = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.4 1.5h2.4v9H2.4zM7.2 1.5h2.4v9H7.2z"/></svg>';
+    const EXPAND_ICON = '<svg viewBox="0 0 12 12" aria-hidden="true" class="app-video-stroke"><path d="M7.2 1.8h3v3M4.8 10.2h-3v-3M10.2 1.8 6.9 5.1M1.8 10.2l3.3-3.3"/></svg>';
+
+    document.querySelectorAll('.app-row .video-gallery-container').forEach((wrap) => {
+      const video = wrap.querySelector('.gallery-video');
+      if (!video) return;
+
+      const bar = document.createElement('div');
+      bar.className = 'app-video-bar';
+      bar.innerHTML =
+        '<button class="app-video-toggle" type="button" aria-label="Play or pause">' + PAUSE_ICON + '</button>' +
+        '<input class="app-video-seek" type="range" min="0" max="100" step="0.1" value="0" aria-label="Seek">' +
+        '<span class="app-video-time">0:00 / 0:00</span>' +
+        '<button class="app-video-fs" type="button" aria-label="Full screen">' + EXPAND_ICON + '</button>';
+      wrap.appendChild(bar);
+
+      const toggleBtn = bar.querySelector('.app-video-toggle');
+      const seek = bar.querySelector('.app-video-seek');
+      const time = bar.querySelector('.app-video-time');
+      const fsBtn = bar.querySelector('.app-video-fs');
+
+      // A pause the visitor asked for outranks the play-what-is-visible
+      // observer above, which would otherwise restart the clip the next time
+      // it scrolled into view. The flag is only ever set here.
+      const togglePlay = () => {
+        if (video.paused) {
+          delete video.dataset.userPaused;
+          video.play().catch(() => {});
+        } else {
+          video.dataset.userPaused = '1';
+          video.pause();
+        }
+      };
+      toggleBtn.addEventListener('click', togglePlay);
+      video.addEventListener('click', togglePlay);
+      video.title = 'Click to play or pause';
+
+      video.addEventListener('play', () => { toggleBtn.innerHTML = PAUSE_ICON; });
+      video.addEventListener('pause', () => { toggleBtn.innerHTML = PLAY_ICON; });
+
+      // The thumb is driven by requestAnimationFrame while the clip plays, not
+      // by `timeupdate` — that event fires ~4×/s, which steps the thumb across
+      // a 25s clip in visible jumps. The loop runs only between play and
+      // pause, and keeps its hands off the thumb while the visitor is
+      // scrubbing, so the two never fight over it.
+      let scrubbing = false;
+      let rafId = 0;
+      const paint = () => {
+        if (!scrubbing && video.duration) {
+          seek.value = (video.currentTime / video.duration) * 100;
+          time.textContent = fmt(video.currentTime) + ' / ' + fmt(video.duration);
+        }
+      };
+      const loop = () => { paint(); rafId = requestAnimationFrame(loop); };
+      video.addEventListener('play', () => { cancelAnimationFrame(rafId); loop(); });
+      video.addEventListener('pause', () => { cancelAnimationFrame(rafId); rafId = 0; paint(); });
+      video.addEventListener('loadedmetadata', paint);
+      // Mid-drag seeks take fastSeek where the browser has it: landing on the
+      // nearest keyframe is what keeps the picture moving under the thumb.
+      // The release (change) seeks precisely.
+      seek.addEventListener('pointerdown', () => { scrubbing = true; });
+      seek.addEventListener('input', () => {
+        if (!video.duration) return;
+        const t = (seek.value / 100) * video.duration;
+        if (scrubbing && video.fastSeek) video.fastSeek(t);
+        else video.currentTime = t;
+        time.textContent = fmt(t) + ' / ' + fmt(video.duration);
+      });
+      const endScrub = () => {
+        if (!scrubbing) return;
+        scrubbing = false;
+        if (video.duration) video.currentTime = (seek.value / 100) * video.duration;
+      };
+      seek.addEventListener('pointerup', endScrub);
+      seek.addEventListener('pointercancel', endScrub);
+      seek.addEventListener('change', endScrub);
+
+      fsBtn.addEventListener('click', () => {
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        } else if (wrap.requestFullscreen) {
+          wrap.requestFullscreen().catch(() => {});
+        } else if (video.webkitEnterFullscreen) {
+          video.webkitEnterFullscreen();
+        }
+      });
+    });
+  }
 
   // Application diagrams are explanations, not ambient decoration. Start each
   // one at the beginning when it enters the viewport so the reader always sees

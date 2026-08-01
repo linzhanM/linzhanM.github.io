@@ -27,13 +27,15 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { EXAMPLES } from './examples.js?v=24';
+import { EXAMPLES } from './examples.js?v=25';
 
 const wrapper = document.getElementById('viewer-wrapper');
 const overlay = document.getElementById('loading-overlay');
 const sidebar = document.getElementById('example-sidebar');
 const labelLayer = document.getElementById('viewer-labels');
 const LOADING_HTML = overlay.innerHTML;
+const viewerConfig = window.UNIMATE_VIEWER_CONFIG || {};
+const isFullscreenLab = viewerConfig.fullscreenLab === true;
 
 // ── 2. State ─────────────────────────────────────────────────────────────────
 // Toolbar state (persists across example switches).
@@ -42,6 +44,10 @@ const settings = {
   'show skeleton': true,
   'wireframe': false,
   'show prompts': true,
+  'paused': false,
+  'playback speed': 1,
+  'auto orbit': true,
+  'orbit speed': 1,
 };
 
 // The active "stage" — parallel arrays, one entry per model in the window.
@@ -55,9 +61,13 @@ let shadowPlane = null; // transparent shadow-catcher over the floor (always on 
 let viewPointerDown = false; // prompts hide while the user drags/orbits the canvas
 const activeViewPointers = new Set(); // keep multi-touch hidden until every finger lifts
 let viewZooming = false; // and while wheel-zooming, which has no pointer to release
+let hoveredPromptOrder = null; // full-screen lab: prompt under the pointer
+let hoverPromptX = 0;
+let hoverPromptY = 0;
 
 let loadToken = 0;     // guards against overlapping async loads
 let activePad = 1.15;  // camera padding of the current example (so Reset view keeps it)
+let activeCameraPadding = viewerConfig.cameraPadding || 1;
 let activeShift = [0, 0, 0]; // whole-diorama pan held OUT of auto-framing (e.g. [-1,0,0] slides left)
 
 // Tuning constants.
@@ -110,6 +120,10 @@ LIGHTS.forEach((l) => { l.userData.baseIntensity = l.intensity; });
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
+if (viewerConfig.autoOrbitControls) {
+  controls.autoRotate = settings['auto orbit'];
+  controls.autoRotateSpeed = settings['orbit speed'];
+}
 
 const gltfLoader = new GLTFLoader();
 const fbxLoader = new FBXLoader();
@@ -480,7 +494,9 @@ function frameStage(pad = 1.0) {
   const distV = (size.y / 2) / Math.tan(vFov / 2);
   const distH = (Math.max(size.x, MIN_FRAME_WIDTH) / 2) / Math.tan(hFov / 2);
   let dist = Math.max(distV, distH, size.z);
-  dist *= pad; // padding
+  // The standalone lab places its scene picker over the canvas. Give that view
+  // a little more breathing room so the leftmost character never sits under it.
+  dist *= pad * (isFullscreenLab ? activeCameraPadding : 1); // padding
 
   // The objects were physically translated by activeShift (applyStageShift), which
   // dragged the box center with them. Subtract it back out so the camera, floor, and
@@ -489,10 +505,16 @@ function frameStage(pad = 1.0) {
   const tx = center.x - activeShift[0];
   const ty = center.y - activeShift[1];
   const tz = center.z - activeShift[2];
-  controls.target.set(tx, ty, tz);
+  // Aim slightly left of the stage on the fullscreen page. This shifts the
+  // characters into the clear area between the scene picker and Controls while
+  // preserving the stage's physical layout and the project-page composition.
+  const safeArea = viewerConfig.horizontalSafeArea || 0;
+  const viewX = tx - (isFullscreenLab ? Math.max(size.x, MIN_FRAME_WIDTH) * safeArea : 0);
+  controls.target.set(viewX, ty, tz);
   // Lift the camera above the target (~+0.28·dist) so it looks slightly DOWN at the
   // stage instead of dead level — a gentle high-angle view.
-  camera.position.set(tx, ty + size.y * 0.12 + dist * 0.28, tz + dist);
+  const elevation = isFullscreenLab ? viewerConfig.cameraElevation : 0.28;
+  camera.position.set(viewX, ty + size.y * 0.12 + dist * elevation, tz + dist);
   camera.near = dist / 100;
   camera.far = dist * 100;
   camera.updateProjectionMatrix();
@@ -557,6 +579,7 @@ function disposeStage() {
   }
   labelLayer.replaceChildren();
   pivots = []; models = []; mixers = []; skeletons = []; labels = [];
+  hoveredPromptOrder = null;
 }
 
 // ── 8. Layout helpers ────────────────────────────────────────────────────────
@@ -800,8 +823,55 @@ function measureGui() {
 document.fonts?.ready.then(measureLabels);
 
 function applyLabels() {
-  labelLayer.style.display =
-    settings['show prompts'] && !viewPointerDown && !viewZooming ? '' : 'none';
+  const layerVisible = settings['show prompts'] && !viewPointerDown && !viewZooming;
+  labelLayer.style.display = layerVisible ? '' : 'none';
+  if (viewerConfig.hoverPrompts) {
+    for (const label of labels) {
+      const visible = layerVisible && label.order === hoveredPromptOrder;
+      label.el.style.display = visible ? '' : 'none';
+      label.pin.style.display = visible ? '' : 'none';
+    }
+  }
+}
+
+// In the standalone lab, reveal only the prompt belonging to the mesh under
+// the mouse. Walking up from the hit mesh resolves every child to its rig root.
+if (viewerConfig.hoverPrompts) {
+  const hoverRaycaster = new THREE.Raycaster();
+  const hoverPointer = new THREE.Vector2();
+
+  const setHoveredPrompt = (order) => {
+    if (hoveredPromptOrder === order) return;
+    hoveredPromptOrder = order;
+    renderer.domElement.style.cursor = order == null ? '' : 'pointer';
+    applyLabels();
+  };
+
+  renderer.domElement.addEventListener('pointermove', (event) => {
+    if (viewPointerDown || event.pointerType === 'touch') {
+      setHoveredPrompt(null);
+      return;
+    }
+    const rect = renderer.domElement.getBoundingClientRect();
+    hoverPromptX = event.clientX - rect.left;
+    hoverPromptY = event.clientY - rect.top;
+    hoverPointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    hoverPointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    hoverRaycaster.setFromCamera(hoverPointer, camera);
+
+    const hit = hoverRaycaster.intersectObjects(models, true)[0];
+    let node = hit && hit.object;
+    let order = null;
+    while (node && order == null) {
+      const index = models.indexOf(node);
+      if (index !== -1) order = index;
+      node = node.parent;
+    }
+    setHoveredPrompt(order);
+  });
+
+  renderer.domElement.addEventListener('pointerdown', () => setHoveredPrompt(null));
+  renderer.domElement.addEventListener('pointerleave', () => setHoveredPrompt(null));
 }
 
 // Prompt annotations are useful at rest but obscure the models while orbiting.
@@ -1001,6 +1071,30 @@ function updateLabels(dt) {
   const h = wrapper.clientHeight;
   const viewportScale = promptViewportScale(w);
 
+  // The full-screen lab uses a pointer-following tooltip, deliberately separate
+  // from the anchored annotation solver used by the paper page. Keep it beside
+  // the cursor, flip it to the other side near an edge, and clamp it to the canvas.
+  if (viewerConfig.hoverPrompts) {
+    const active = labels.find((label) => label.order === hoveredPromptOrder);
+    for (const label of labels) {
+      label.el.style.display = label === active ? '' : 'none';
+      label.pin.style.display = 'none';
+    }
+    if (!active) return;
+
+    const gap = 18;
+    const tooltipW = active.w || active.el.offsetWidth;
+    const tooltipH = active.h || active.el.offsetHeight;
+    let x = hoverPromptX + gap;
+    let y = hoverPromptY - tooltipH / 2;
+    if (x + tooltipW > w - 10) x = hoverPromptX - gap - tooltipW;
+    x = THREE.MathUtils.clamp(x, 10, Math.max(10, w - tooltipW - 10));
+    y = THREE.MathUtils.clamp(y, 10, Math.max(10, h - tooltipH - 10));
+    active.el.style.opacity = '1';
+    active.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+    return;
+  }
+
   // Where every rig on the stage is, chips or not — a labelled model must not be
   // covered by someone else's chip either.
   modelBoxes.length = 0;
@@ -1035,6 +1129,13 @@ function updateLabels(dt) {
   visible.length = 0;
   let nearest = Infinity;
   for (const l of labels) {
+    // The hover-only lab must keep every non-target label hidden on every frame;
+    // the regular placement path below restores display for visible annotations.
+    if (viewerConfig.hoverPrompts && l.order !== hoveredPromptOrder) {
+      l.el.style.display = 'none';
+      l.pin.style.display = 'none';
+      continue;
+    }
     l.anchor.getWorldPosition(labelWorld);
     const dist = camera.position.distanceTo(labelWorld);
     labelNdc.copy(labelWorld).project(camera);
@@ -1410,6 +1511,7 @@ function loadExample(index) {
     scale: ex.scale, spacing: ex.spacing, rowSpacing: ex.rowSpacing, pad: ex.pad, lighting: ex.lighting,
     evenGaps: ex.evenGaps, sizeBy: ex.sizeBy, stagger: ex.stagger, rowDepth: ex.rowDepth,
     stageShift: ex.stageShift,
+    cameraPadding: viewerConfig.cameraPaddingByCategory?.[ex.label],
   });
 }
 
@@ -1419,7 +1521,12 @@ async function loadStage(specs, activeIndex, opts = {}) {
   const token = ++loadToken;
   overlay.innerHTML = LOADING_HTML;
   overlay.style.display = 'flex';
-  [...sidebar.children].forEach((b, i) => b.classList.toggle('active', i === activeIndex));
+  // A dropped file has no sidebar row, so activeIndex is null and every row goes off.
+  [...sidebar.children].forEach((b, i) => {
+    const on = i === activeIndex;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', String(on));
+  });
 
   try {
     const [loaded] = await Promise.all([
@@ -1485,6 +1592,7 @@ async function loadStage(specs, activeIndex, opts = {}) {
     applyWireframe();
     applyLighting(opts.lighting || 1);
     buildLabels(specs); // after layout — the anchors ride the pivots, so order is free
+    activeCameraPadding = opts.cameraPadding ?? viewerConfig.cameraPadding ?? 1;
     activePad = opts.pad || 1.0;
     frameStage(activePad);
     overlay.style.display = 'none';
@@ -1512,6 +1620,16 @@ gui.add(settings, 'show skeleton').name('Skeleton')
   .onChange((v) => skeletons.forEach((s) => { s.visible = v; }));
 gui.add(settings, 'show prompts').name('Prompts').onChange(applyLabels);
 gui.add(settings, 'wireframe').name('Wireframe').onChange(applyWireframe);
+if (viewerConfig.playbackControls) {
+  gui.add(settings, 'paused').name('Pause');
+  gui.add(settings, 'playback speed', 0.25, 2, 0.25).name('Speed');
+}
+if (viewerConfig.autoOrbitControls) {
+  gui.add(settings, 'auto orbit').name('Auto orbit')
+    .onChange((enabled) => { controls.autoRotate = enabled; });
+  gui.add(settings, 'orbit speed', 0.25, 2, 0.25).name('Orbit speed')
+    .onChange((speed) => { controls.autoRotateSpeed = speed; });
+}
 gui.add({ reset: () => frameStage(activePad) }, 'reset').name('Reset view');
 
 // Match the prompt chips on phones: scale the complete Controls panel from its
@@ -1530,11 +1648,30 @@ applyResponsiveControlScale();
 // Collapsing the panel frees the space under it, so the pills' no-go box must follow.
 gui.onOpenClose?.(measureLabels);
 
-// Sidebar: one button per example.
+// Sidebar: one row per example — the stage's name, plus how many rigs stand on
+// it. The count is read off `files` rather than written into examples.js, so it
+// cannot fall out of step with the stage it labels. It is aria-hidden and the
+// button carries the same fact in words, since a bare numeral read out after a
+// name is ambiguous where the column of them is not.
 EXAMPLES.forEach((ex, i) => {
   const btn = document.createElement('button');
   btn.className = 'example-item';
-  btn.textContent = ex.label;
+  btn.type = 'button';
+
+  const name = document.createElement('span');
+  name.className = 'example-name';
+  name.textContent = ex.label;
+
+  const count = document.createElement('span');
+  count.className = 'example-count';
+  count.textContent = ex.files.length;
+  count.setAttribute('aria-hidden', 'true');
+
+  btn.append(name, count);
+  const words = `${ex.label} — ${ex.files.length} character${ex.files.length === 1 ? '' : 's'}`;
+  btn.setAttribute('aria-label', words);
+  btn.title = words;   // the numeral is unlabelled by design; this is where it says what it is
+  btn.setAttribute('aria-pressed', 'false');
   btn.addEventListener('click', () => loadExample(i));
   sidebar.appendChild(btn);
 });
@@ -1556,7 +1693,8 @@ wrapper.addEventListener('drop', (e) => {
 (function animate() {
   requestAnimationFrame(animate);
   const dt = clock.getDelta();
-  for (const m of mixers) m.update(dt);
+  const playbackDelta = settings['paused'] ? 0 : dt * settings['playback speed'];
+  for (const m of mixers) m.update(playbackDelta);
   controls.update();
   renderer.render(scene, camera);
   updateLabels(dt); // after render: the camera matrices the pills project through are final

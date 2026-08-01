@@ -27,64 +27,207 @@
    below reach them (an <img> would be a separate document and take none of the
    palette). */
 .app-row {
-  --app-stage: #f8f8f6;
-  --app-panel: #f1f1ef;
-  --app-ink: #111111;
-  --app-muted: #62615b;
+  /* The stage is white on purpose: the renders beside it are white to the
+     pixel, so the filmed figure and the drawn one share a ground and the two
+     frames do the separating — the same rule the galleries run on. Ink and
+     muted are the PAGE'S ink, not a private near-black: the plate is a figure
+     in this document, and only the signal pair is allowed to be foreign. */
+  --app-stage: #ffffff;
+  --app-ink: var(--slate-dark);
+  --app-muted: var(--slate-light);
   --app-signal: #3f718e;
   --app-signal-soft: #cfe1eb;
-  --app-grid: rgba(164, 164, 157, 0.22);
-  /* Existing motion keyframes use the page tokens. Scope them to the
-     application console so all three plates share this clearer state system. */
+  --app-grid: rgba(94, 93, 89, 0.14);
+  /* Existing motion keyframes use the page tokens. Scope them to the app rows
+     so all three plates share this clearer state system. */
   --accent: var(--app-signal);
   --rule: #c0bdad;
   display: flex;
-  align-items: stretch;       /* the panel is as tall as the clip beside it */
-  gap: 12px;
-  padding: 12px;
-  background: var(--app-panel);
-  border: 1px solid #dfdfdc;
-  border-radius: 20px;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.8) inset,
-    0 12px 30px rgba(17, 17, 17, 0.045);
+  align-items: stretch;       /* the plate is as tall as the clip beside it */
+  gap: var(--gallery-gap);
 }
 .app-row .video-gallery-container {
   flex: 1 1 auto;
   min-width: 0;               /* a flex item's default min-width is its content */
-  border-radius: 13px;
+  /* One clip — nothing to scroll, so don't be a scroll container: overflow-x
+     auto turns overflow-y auto with it and shaves the drop shadow off at the
+     clip's own edges, leaving the plate beside it with a fuller shadow than
+     the clip's. Visible lets the two figures cast the same shadow. */
+  overflow: visible;
+  position: relative;         /* anchors the full-screen affordance below */
+}
+/* The control bar (built by gallery.js, π0.5-style): hidden until the pointer
+   is over the clip — or focus is inside it, which is the keyboard's hover —
+   then a 200ms fade, the same reveal pi05 uses. It sits along the clip's
+   bottom edge INSIDE the frame, over the render's own dead white band, so it
+   covers nothing. Ink on translucent paper, mono time, no accent: it is
+   chrome, not content. pointer-events off while hidden, so an idle bar never
+   steals a click meant for the video. */
+.app-row .gallery-video {
+  cursor: pointer;            /* click = play/pause, pi05's own gesture */
+}
+.app-video-bar {
+  position: absolute;
+  left: 2px;                  /* inside the clip's 1.5px frame line */
+  right: 2px;
+  bottom: 12px;               /* the frame line plus the 10px shadow room */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(20, 20, 19, 0.12);
+  border-radius: 0 0 13px 13px;   /* hugs the frame's inner corners */
+  opacity: 0;
+  transition: opacity 200ms ease-in-out;
+  pointer-events: none;
+}
+.app-row .video-gallery-container:hover .app-video-bar,
+.app-row .video-gallery-container:focus-within .app-video-bar {
+  opacity: 1;
+  pointer-events: auto;
+}
+.app-video-bar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--app-ink);
+  cursor: pointer;
+}
+.app-video-bar button:focus-visible {
+  outline: 2px solid var(--app-signal);
+  outline-offset: 2px;
+}
+.app-video-bar svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+.app-video-bar svg.app-video-stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.app-video-seek {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  accent-color: var(--app-ink);
+  cursor: pointer;
+}
+.app-video-time {
+  flex: 0 0 auto;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+  color: var(--app-muted);
+  white-space: nowrap;
+}
+
+/* Full screen is the CONTAINER, not the video, so the bar rides along (pi05
+   does the same). The clip drops its page chrome — frame, radius, shadow are
+   paper furniture — and letterboxes in white, the render's own margin, not the
+   OS's black. The title patch is content-editing, so it does NOT come along:
+   full screen shows the full record, headline included. */
+.app-row .video-gallery-container:fullscreen {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.app-row .video-gallery-container:fullscreen .video-gallery {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+.app-row .video-gallery-container:fullscreen .gallery-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.app-row .video-gallery-container:fullscreen .video-gallery::before {
+  content: none;
+}
+.app-row .video-gallery-container:fullscreen .app-video-bar {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 0;
+}
+/* Each clip was rendered as a SLIDE, with its own serif headline baked into the
+   pixels ("Applications – Text-Guided Motion Editing"), which on this page sits
+   directly under a black heading plate saying the same thing. The headline
+   can't be cropped away — the clip's height is paired to the plate's, and a
+   zoom-crop would cut into the stages — but it sits on paper-white pixels, so a
+   white patch over it turns the slide back into a figure. The geometry is
+   MEASURED off the frames, not eyeballed: all three titles end at 8.4% of the
+   frame's height (expansion's prompt-pill row starts at 9.8%, the nearest
+   content on any of the three), and titles run at most 60% of the width. A
+   full-clip temporal scan (tblend difference) confirmed nothing ever moves
+   through x<63%, y<9.3% on any clip, so the patch can be static. 9% of this
+   box (which is the video plus the 10px shadow room, so ~9.2% of the video)
+   lands in the title→pill gap with ~2px clear on both sides — re-measure
+   before changing it, and drop the patch entirely if the videos are ever
+   re-rendered without their slide titles. Fullscreen shows the full record:
+   the patch stays behind in the page when the video is promoted. */
+.app-row .video-gallery {
+  position: relative;
+}
+.app-row .video-gallery::before {
+  content: '';
+  position: absolute;
+  top: 2px;                     /* just inside the clip's 1.5px frame line */
+  left: 2px;
+  width: 62%;
+  height: 9%;
+  background: #fff;
+  border-top-left-radius: 13px; /* hugs the frame's inner corner */
+  pointer-events: none;
+  z-index: 1;
 }
 .app-row .video-gallery {
-  padding-bottom: 0;
-  height: 100%;
+  height: 100%;               /* base padding stays: shadow room at the bottom */
 }
 .app-row .gallery-video {
   height: 100%;
   object-fit: contain;
-  border: 0;
-  border-radius: 13px;
-  background: #fff;
-  box-shadow: none;
+  background: #fff;           /* letterbox in the render's own white, not ivory */
 }
-/* A framed plate, the same frame as the clip: two figures side by side, one
-   filmed and one drawn, not a picture with a note stuck beside it. The panel is
-   portrait, so the drawings inside are too — a vertical time axis, which is the
-   TOC rail's reading direction anyway. */
+/* A framed plate, the same frame as the clip — border, radius and shadow are
+   the .gallery-video declarations verbatim: two figures side by side, one
+   filmed and one drawn, not a picture with a note stuck beside it. The grid is
+   what marks this one as DRAWN — a drafting sheet against the clip's footage —
+   and it is the plate's only chrome. The plate is portrait, so the drawings
+   inside are too: a vertical time axis, which is the TOC rail's reading
+   direction anyway. */
 .app-diagram {
   flex: 0 0 240px;
-  margin: 0;
+  margin: 0 0 10px;           /* same shadow room as the clip's padding */
   padding: 14px 16px;
   box-sizing: border-box;
-  border: 1px solid #dadad5;
-  border-radius: 13px;
+  border: 1.5px solid var(--slate-light);
+  border-radius: 15px;
   background-color: var(--app-stage);
   background-image:
     linear-gradient(var(--app-grid) 1px, transparent 1px),
     linear-gradient(90deg, var(--app-grid) 1px, transparent 1px);
   background-size: 18px 18px;
-  box-shadow:
-    0 1px 0 #fff inset,
-    0 0 0 1px rgba(255, 255, 255, 0.45);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -118,7 +261,7 @@
 @property --edit-region-stroke {
   syntax: '<color>';
   inherits: true;
-  initial-value: #111111;
+  initial-value: #141413;
 }
 
 /* A figure here is the page's rig representation, not a stick man: every
@@ -171,12 +314,19 @@
 
 /* Prompt chips carry the action, so their type is a step larger than the state
    labels above. A tighter mono setting keeps the longer prompts calm without
-   making them look squeezed into their pills. */
+   making them look squeezed into their pills.
+
+   The pill is white with an ink hairline — the exact form the clips beside
+   these plates use for their own baked-in prompts, so the drawing quotes the
+   film. It also keeps the plates' one convention honest: a prompt is what you
+   HAND the model, so it wears ink, not a colour of its own. (They were yellow
+   once — a third accent on a two-colour system, and the one hue on the page
+   that appeared nowhere else.) */
 .dg-chip {
-  fill: #fbd45b;
-  stroke: #e6b61f;
+  fill: #fff;
+  stroke: var(--app-ink);
   stroke-width: 1;
-  filter: drop-shadow(0 2px 2px rgba(17, 17, 17, 0.08));
+  filter: drop-shadow(0 2px 2px rgba(20, 20, 19, 0.1));
 }
 .dg-chip-text {
   font-family: 'Roboto Mono', monospace;
@@ -214,31 +364,13 @@
   font-size: 7.8px;
 }
 
-/* The caption belongs to the console above it. A short state key replaces a
-   decorative rule: it teaches the ink/accent convention once per demo. */
-.video-gallery-section:has(.app-row) .gallery-caption-container {
-  margin-top: 10px;
-  padding: 10px 12px 0;
-  border-top: 1px solid #dadad5;
-  align-items: flex-start;
-}
-.video-gallery-section:has(.app-row) .gallery-caption-container::before {
-  content: '';
-  flex: 0 0 7px;
-  width: 7px;
-  height: 7px;
-  margin: 4px 10px 0 1px;
-  box-sizing: border-box;
-  border: 2px solid var(--app-signal, #3f718e);
-  border-radius: 50%;
-}
-.video-gallery-section:has(.app-row) .gallery-caption {
-  color: var(--app-muted, #62615b);
-  line-height: 1.55;
-}
-.video-gallery-section:has(.app-row) .gallery-caption b {
-  color: var(--app-ink, #111111);
-}
+/* No caption rule of its own: the app rows take the house .gallery-caption
+   exactly as every other figure on the page does. (A console version gave them
+   a private caption — muted ink, a border-top, a signal-blue key dot — and
+   three captions dressed differently from the other twelve read as a different
+   *kind* of figure, which they are not. The ink/signal key is taught on the
+   plates themselves: the editing plate's HELD/RESAMPLED legend and the signal
+   GENERATED labels.) */
 /* --- Motion -----------------------------------------------------------------
    Each plate runs one master clock, and everything on it is a window in that
    clock rather than a track with its own delay: Editing 6.5s, In-betweening 4s,
@@ -888,13 +1020,3 @@
   }
 }
 
-@media (max-width: 520px) {
-  .app-row {
-    padding: 8px;
-    border-radius: 16px;
-  }
-  .app-row .gallery-video,
-  .app-diagram {
-    border-radius: 10px;
-  }
-}

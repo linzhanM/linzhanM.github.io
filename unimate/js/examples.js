@@ -73,7 +73,7 @@ export const EXAMPLES = [
     label: 'Bipedal',
     files: [
       'resources/glbs/garfield.glb',
-      'resources/glbs/gundam-punch.glb',
+      'resources/glbs/gundam-kick.glb',
       {
         url: 'resources/glbs/mixamo-flip.glb',
         material: MIXAMO,
@@ -131,7 +131,7 @@ export const EXAMPLES = [
     files: [
       // Row 0 (front): four gundams, matching the four robots behind.
       { url: 'resources/glbs/gundam-crouch.glb', scale: 0.8 },
-      { url: 'resources/glbs/gundam-kick.glb', scale: 0.8 },
+      { url: 'resources/glbs/gundam-punch.glb', scale: 0.8 },
       { url: 'resources/glbs/gundam-jump.glb', scale: 0.8 },
       { url: 'resources/glbs/gundam-dance.glb', scale: 0.8 },
       // Row 1 (back): robots.
