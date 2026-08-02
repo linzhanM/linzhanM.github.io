@@ -63,9 +63,11 @@
 
   .viewer-layout { flex-direction: column; }
   .interactive-showcase .viewer-layout {
-    /* The category rail moves above the canvas on phones, so it must not share
+    /* Match interactive.html: the horizontal category control sits below the
+       canvas on phones. It must not share
        a fixed height with the viewer. Let the rail size naturally and preserve
        the desktop canvas proportion (960px layout - 190px rail, by 623px). */
+    flex-direction: column-reverse;
     aspect-ratio: auto;
     min-height: 0;
   }
@@ -90,7 +92,8 @@
     padding: 8px;
     padding-right: 0;
     border-right: 0;
-    border-bottom: 1px solid var(--slate-dark);
+    border-top: 1px solid var(--slate-dark);
+    border-bottom: 0;
   }
   .interactive-showcase .category-panel {
     flex: none;
