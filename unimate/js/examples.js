@@ -44,7 +44,9 @@
 //     labelOffset  [x, y] pixel nudge applied to that prompt's chosen screen position.
 //     labelPinOffset [x, y] pixel nudge applied only to the leader's endpoint.
 //     material     per-model PBR override { roughness, metalness, emissiveIntensity,
-//                  emissive? }. Lowering roughness + an emissive lift rescues rigs
+//                  emissive?, colorScale? }. `colorScale` multiplies the base color
+//                  (and therefore its texture) to compensate for brighter stage lights.
+//                  Lowering roughness + an emissive lift rescues rigs
 //                  that render dark/matte. Pass a flat `emissive: 0xRRGGBB` for
 //                  near-black rigs (eagles); omit it to lift via the model's own map.
 //     scale        per-model size multiplier (stacks with the stage `scale`).
@@ -69,6 +71,27 @@
 const MIXAMO = { roughness: 0.8, emissiveIntensity: 0.5 };
 
 export const EXAMPLES = [
+  {
+    // A mixed-character showcase arranged as a compact three-level diorama:
+    // small characters lead in front, large mechanical forms anchor the back,
+    // and the dragon floats above them as the visual apex.
+    label: 'Showcase',
+    files: [
+      { url: 'resources/glbs/garfield.glb', row: 0, scale: 1.28, rotate: [0, 12, 0], material: { colorScale: 0.72 } },
+      { url: 'resources/glbs/wall-e-wave.glb', row: 0, scale: 1.12, groundToMesh: true, material: { colorScale: 0.78 } },
+      { url: 'resources/glbs/satellite.glb', row: 1, scale: 1.5, rotate: [0, 30, 0], groundFrame: 1, groundToMesh: true, material: { roughness: 0.3, metalness: 0.7 } },
+      { url: 'resources/glbs/bigwhite-punch.glb', row: 1, scale: 1.4, labelOffset: [0, -18], material: { colorScale: 0.68 } },
+      { url: 'resources/glbs/quadruped.glb', row: 1, scale: 1.02, rotate: [0, -18, 0], material: { colorScale: 0.6 } },
+      // Match the Zoo treatment: float above an anchor, then pull strongly
+      // forward on Z so the dragon reads at character scale instead of receding.
+      { url: 'resources/glbs/dragon.glb', scale: 2.0, above: [3, 1.5], offset: [-0.5, 0, 12], material: { colorScale: 0.7, roughness: 0.3, emissiveIntensity: 0.4 } },
+    ],
+    rowSpacing: { 0: 1.18, 1: 1.08 },
+    rowDepth: 2.15,
+    pad: 1.34,
+    evenGaps: true,
+    lighting: 2.0,
+  },
   {
     label: 'Bipedal',
     files: [

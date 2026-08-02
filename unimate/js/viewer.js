@@ -27,7 +27,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { EXAMPLES } from './examples.js?v=26';
+import { EXAMPLES } from './examples.js?v=46';
 
 const wrapper = document.getElementById('viewer-wrapper');
 const overlay = document.getElementById('loading-overlay');
@@ -267,6 +267,7 @@ function applyMaterialOverride(model, mat) {
     const mats = Array.isArray(o.material) ? o.material : [o.material];
     for (const m of mats) {
       if (!m) continue;
+      if (mat.colorScale !== undefined && m.color) m.color.multiplyScalar(mat.colorScale);
       if (mat.roughness !== undefined && 'roughness' in m) m.roughness = mat.roughness;
       if (mat.metalness !== undefined && 'metalness' in m) m.metalness = mat.metalness;
       if (mat.emissiveIntensity !== undefined && m.emissive) {
@@ -535,7 +536,7 @@ applyViewerTheme(viewerTheme, { persist: false });
 // Frame the whole stage: fit the camera to the union of all pivots, drop a checker floor.
 // pad > 1 zooms the camera further out (extra margin) without moving the models —
 // useful when a tightly-spaced row (e.g. the two quadrupeds) still reads too big.
-function frameStage(pad = 1.0) {
+function frameStage(pad = 1.0, orbitAngleDegrees = viewerConfig.initialOrbitAngle || 0) {
   const box = new THREE.Box3();
   for (const pv of pivots) box.expandByObject(pv);
   if (box.isEmpty()) return;
@@ -576,7 +577,7 @@ function frameStage(pad = 1.0) {
   // Lift the camera above the target (~+0.28·dist) so it looks slightly DOWN at the
   // stage instead of dead level — a gentle high-angle view.
   const elevation = isFullscreenLab ? viewerConfig.cameraElevation : 0.28;
-  const initialOrbitAngle = THREE.MathUtils.degToRad(viewerConfig.initialOrbitAngle || 0);
+  const initialOrbitAngle = THREE.MathUtils.degToRad(orbitAngleDegrees);
   camera.position.set(
     viewX + Math.sin(initialOrbitAngle) * dist,
     ty + size.y * 0.12 + dist * elevation,
@@ -1690,7 +1691,8 @@ async function loadStage(specs, activeIndex, opts = {}) {
     activeCameraPadding = opts.cameraPadding ?? viewerConfig.cameraPadding ?? 1;
     activeMobileCameraPadding = opts.mobileCameraPadding ?? viewerConfig.mobileCameraPadding ?? activeCameraPadding;
     activePad = opts.pad || 1.0;
-    frameStage(activePad);
+    const openingAngle = settings['auto orbit'] ? (viewerConfig.initialOrbitAngle || 0) : 0;
+    frameStage(activePad, openingAngle);
     overlay.style.display = 'none';
   } catch (err) {
     if (token !== loadToken) return;
@@ -1723,7 +1725,7 @@ if (viewerConfig.autoOrbitControls) {
   gui.add(settings, 'auto orbit').name('Auto orbit')
     .onChange((enabled) => { controls.autoRotate = enabled; });
 }
-gui.add({ reset: () => frameStage(activePad) }, 'reset').name('Reset view');
+gui.add({ reset: () => frameStage(activePad, 0) }, 'reset').name('Reset view');
 
 // Full-screen lab controls use a compact, keyboard-first dock. lil-gui remains
 // the engine's control surface for the embedded viewer, but is visually hidden
@@ -1756,7 +1758,7 @@ if (isFullscreenLab) {
 
   for (const button of dockActions) {
     button.addEventListener('click', () => {
-      if (button.dataset.action === 'reset') frameStage(activePad);
+      if (button.dataset.action === 'reset') frameStage(activePad, 0);
     });
   }
 
@@ -1777,7 +1779,7 @@ if (isFullscreenLab) {
     const target = event.target;
     if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) return;
     if (event.code === 'KeyR') {
-      frameStage(activePad);
+      frameStage(activePad, 0);
       return;
     }
     const key = dockKeys.get(event.code);

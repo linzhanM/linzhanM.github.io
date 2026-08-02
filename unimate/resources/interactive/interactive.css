@@ -923,6 +923,7 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.24);
     background: transparent;
   }
   .category-theme .theme-swatch { width: 20px; height: 20px; }
+  .category-panel .category-theme { display: none; }
   .drop-note { display: none; }
   .control-dock {
     left: max(8px, env(safe-area-inset-left));
