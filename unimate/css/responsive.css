@@ -63,7 +63,10 @@
 
   .viewer-layout { flex-direction: column; }
   .interactive-showcase .viewer-layout {
-    aspect-ratio: 960 / 623;
+    /* The category rail moves above the canvas on phones, so it must not share
+       a fixed height with the viewer. Let the rail size naturally and preserve
+       the desktop canvas proportion (960px layout - 190px rail, by 623px). */
+    aspect-ratio: auto;
     min-height: 0;
   }
   .example-sidebar {
@@ -128,9 +131,11 @@
   .example-item.active .example-name { color: var(--slate-dark); }
   .viewer-wrapper { height: auto; min-height: 0; }
   .interactive-showcase .viewer-wrapper {
-    flex: 1 1 0;
+    flex: none;
+    width: 100%;
     height: auto;
     min-height: 0;
+    aspect-ratio: 770 / 623;
   }
 
   /* Prompt chips keep their desktop typography and one-line measure. viewer.js
