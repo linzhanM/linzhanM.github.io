@@ -84,7 +84,7 @@ button:focus-visible,
   width: 192px;
   font-family: 'Roboto Mono', monospace;
   position: fixed;
-  top: 50%;                     /* vertically centered in the viewport */
+  top: calc(50% - 20px);        /* centered, with slight upward clearance */
   transform: translateY(-50%);
   max-height: 90vh;
   overflow-y: auto;

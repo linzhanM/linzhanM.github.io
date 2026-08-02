@@ -459,6 +459,17 @@ body::before {
   border-color: rgba(255, 255, 255, 0.28);
 }
 
+.btn--latest {
+  border-color: rgba(167, 139, 250, 0.62);
+  background: linear-gradient(105deg, rgba(59, 130, 246, 0.14), rgba(236, 72, 153, 0.14));
+  box-shadow: 0 0 18px rgba(139, 92, 246, 0.16);
+}
+
+.btn--latest:hover {
+  border-color: rgba(236, 72, 153, 0.78);
+  background: linear-gradient(105deg, rgba(59, 130, 246, 0.22), rgba(236, 72, 153, 0.22));
+}
+
 .btn i {
   font-size: 1.05em;
 }
@@ -764,6 +775,15 @@ body::before {
   letter-spacing: 0.06em;
   color: var(--mute);
   margin: 0;
+}
+
+.footer .footer__latest {
+  margin-bottom: 12px;
+}
+
+.footer a {
+  color: var(--ink);
+  text-underline-offset: 3px;
 }
 
 /* ============================================================
