@@ -36,6 +36,12 @@ const labelLayer = document.getElementById('viewer-labels');
 const stageName = document.getElementById('stage-name');
 const LOADING_HTML = overlay.innerHTML;
 const viewerConfig = window.UNIMATE_VIEWER_CONFIG || {};
+const hiddenCategories = new Set(viewerConfig.hiddenCategories || []);
+if (hiddenCategories.size) {
+  for (let index = EXAMPLES.length - 1; index >= 0; index--) {
+    if (hiddenCategories.has(EXAMPLES[index].label)) EXAMPLES.splice(index, 1);
+  }
+}
 const isFullscreenLab = viewerConfig.fullscreenLab === true;
 const VIEWER_THEMES = {
   dark: {

@@ -2,13 +2,6 @@
 // Interactive-only catalog and camera settings live here so the project-page
 // viewer remains identical to the original embedded experience.
 const { EXAMPLES } = await import('../../js/examples.js?v=46');
-// Keep the Showcase stage in examples.js while it is being tuned, but hide it
-// from the public category picker until the composition is ready to resume.
-const SHOWCASE_ENABLED = false;
-if (!SHOWCASE_ENABLED) {
-  const showcaseIndex = EXAMPLES.findIndex(({ label }) => label === 'Showcase');
-  if (showcaseIndex >= 0) EXAMPLES.splice(showcaseIndex, 1);
-}
 const humanoidRobotIndex = EXAMPLES.findIndex(({ label }) => label === 'Humanoid Robot');
 if (humanoidRobotIndex >= 0) {
   const combined = EXAMPLES[humanoidRobotIndex];
@@ -35,6 +28,7 @@ if (humanoidRobotIndex >= 0) {
 
 window.UNIMATE_VIEWER_CONFIG = {
   fullscreenLab: true,
+  hiddenCategories: ['Showcase'],
   cameraPadding: 1.32,
   mobileCameraPadding: 0.96,
   cameraPaddingByCategory: {
@@ -63,4 +57,4 @@ window.UNIMATE_VIEWER_CONFIG = {
   autoOrbitControls: true,
 };
 
-await import('../../js/viewer.js?v=105');
+await import('../../js/viewer.js?v=106');
