@@ -1,0 +1,431 @@
+/* Responsive overrides for the UniMate project page.
+   Loaded after style.css and schematics.css so breakpoint-specific layout
+   remains the final authority without mixing mobile policy into components. */
+
+/* ── 11. Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 1000px) {
+  .sub-hero-text {
+    font-size: clamp(28px, 5vw, 40px);
+    white-space: normal;
+  }
+  .authors {
+    white-space: normal;
+  }
+  .quick-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    white-space: normal;
+  }
+
+  /* §1's clips outrun the text column well before the phone breakpoint below: an
+     overview clip is 700px wide against a column already down to 924px here.
+     min() shrinks it to fit and can never enlarge it, so every width above the
+     crossover keeps the tuned size exactly. The cap is --column, not the
+     viewport: the two differ by the page gutter, and sizing to the viewport is
+     what used to let these clips stand ~40px wider than the prose on a tablet.
+     The value is the desktop width from §7 verbatim — keep it that way, or this
+     rule nudges the page at widths where nothing should move at all.
+     Nothing else needs a clamp here: the two-up strips (§2–4) are a fraction of
+     the column already, and the Applications clips take what .app-row leaves. */
+  #demoGallerySection .gallery-video {
+    width: min(700px, var(--column));
+    height: auto;
+  }
+
+  /* .app-row stacks here too — that rule lives in css/schematics.css. */
+}
+
+@media (max-width: 720px) {
+  /* 20px, not the desktop 30px: 30px of gutter on a 390px screen spends 15% of
+     the width on nothing. `margin: 0` goes with it — the file never resets the
+     UA's 8px body margin, which is invisible on desktop but a quarter of the
+     gutter here. --page-gutter carries the pair, so the galleries below (and
+     --column) follow the change instead of restating it; the desktop 30px + 8px
+     is left exactly as it was. */
+  :root { --page-gutter: 20px; }
+  body { margin: 0; padding: 40px 20px; }
+
+  .interactive-showcase {
+    width: 100%;
+    margin: 48px 0 62px;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 5px 5px 0 var(--ivory-dark);
+    transform: none;
+  }
+  .interactive-showcase-header {
+    min-height: 48px;
+    padding: 7px 10px;
+  }
+  .interactive-showcase h2 { font-size: 19px; }
+  .interactive-instructions { display: none; }
+
+  .viewer-layout { flex-direction: column; }
+  .interactive-showcase .viewer-layout {
+    aspect-ratio: 960 / 623;
+    min-height: 0;
+  }
+  .example-sidebar {
+    flex: none;
+    height: auto;
+    align-self: stretch;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding: 0 0 6px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+  }
+  .interactive-showcase .example-sidebar {
+    flex: none;
+    height: auto;
+    justify-content: flex-start;
+    gap: 7px;
+    padding: 8px;
+    padding-right: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--slate-dark);
+  }
+  .interactive-showcase .category-panel {
+    flex: none;
+    width: 100%;
+    border-right: 0;
+    background: var(--ivory-medium);
+  }
+  .interactive-showcase .category-heading { display: none; }
+  .interactive-showcase .example-item {
+    width: auto;
+    min-height: 38px;
+    padding: 8px 12px;
+    border: 1px solid var(--rule);
+    background: var(--ivory);
+  }
+  .interactive-showcase .example-item::before { display: none; }
+  .interactive-showcase .example-item.active {
+    border-color: var(--slate-dark);
+    background: var(--slate-dark);
+  }
+  .example-sidebar::before,
+  .example-item::before,
+  .example-item::after { display: none; }
+  /* The rig can't survive being laid on its side — a spine across the top of a
+     scrolling strip is a rule, not a chain — so the phone keeps the pill it
+     always had. Without the joints there is nothing but the border to say where
+     one stage ends and the next begins, and no canvas beside it for the pills to
+     be confused with. */
+  .example-item {
+    flex: 0 0 auto;
+    padding: 8px 11px;
+    border: 1px solid var(--ivory-dark);
+    border-radius: 8px;
+    background: #fff;
+    scroll-snap-align: start;
+  }
+  .example-item.active { border-color: var(--accent); background: var(--ivory-medium); }
+  .example-item.active .example-name { color: var(--slate-dark); }
+  .viewer-wrapper { height: auto; min-height: 0; }
+  .interactive-showcase .viewer-wrapper {
+    flex: 1 1 0;
+    height: auto;
+    min-height: 0;
+  }
+
+  /* Prompt chips keep their desktop typography and one-line measure. viewer.js
+     scales the complete chip (type, padding and leader) with the canvas width,
+     and feeds that same visual size to its collision solver. This preserves the
+     desktop annotation effect instead of turning long prompts into two-line
+     mobile cards. */
+
+  /* Every gallery, not just Applications. The clip sizes above are all fixed
+     HEIGHTS, so on a phone width follows the 1.75:1 aspect and runs off-screen —
+     698px for a §1 overview clip, 523px for an experiment strip, against a text
+     column of 350px. Nothing on the page then shares a measure, which is what
+     reads as "unscaled" on mobile: the videos are simply not in the same layout
+     as the prose. Driving width instead (and letting height follow) puts every
+     clip flush with the text column — --column is that measure, so the two
+     cannot drift apart. The cost is real and deliberate: at 350px wide the prompt text baked into
+     the §1 grids is too small to read, which is exactly what the 400px height
+     was tuned to preserve. It cannot be preserved here — a 2x3 grid of labelled
+     panels does not fit a phone at any legible scale — and a clip you can only
+     see half of doesn't preserve it either. Desktop keeps the tuned sizes.
+     Spelled out per section id rather than as a bare `.gallery-video`: a media
+     query adds no specificity, so one class would lose to the `#xGallerySection
+     .gallery-video` heights above. Add a gallery here when you add one there. */
+  #demoGallerySection .gallery-video {
+    width: var(--column);
+    height: auto;
+  }
+  #demoGallerySection .video-gallery-container {
+    width: 100%;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+  }
+  #demoGallerySection .video-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 100%);
+    width: 100%;
+    margin: 0;
+  }
+  #demoGallerySection .gallery-video {
+    width: 100%;
+    max-width: none;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  /* One clip per screen here too: two-up on a 350px column is two thumbnails.
+     These rows are already definite (§7), so the percentage is exact. */
+  #transferGallerySection .gallery-video,
+  #promptGallerySection .gallery-video,
+  #motionGallerySection .gallery-video,
+  #editGallerySection .gallery-video,
+  #inbetweenGallerySection .gallery-video,
+  #expansionGallerySection .gallery-video {
+    width: 100%;
+    height: auto;
+  }
+
+  /* On phones and small tablets, controls and caption should not compete for
+     the same line: both use the full figure measure. */
+  .gallery-caption-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .gallery-nav-controls {
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+
+  /* The complete abstract remains in the document; JavaScript only folds its
+     mobile presentation. The fade signals continuation without cutting a line
+     against a hard edge. */
+  .has-abstract-toggle .abstract-copy:not(.is-expanded) {
+    position: relative;
+    max-height: 12.2em;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, #000 76%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 76%, transparent 100%);
+  }
+  .has-abstract-toggle .abstract-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 44px;
+    margin: -8px 0 24px;
+    padding: 8px 0;
+    border: 0;
+    border-bottom: 1px solid var(--slate-dark);
+    background: transparent;
+    color: var(--slate-dark);
+    font: 700 12px/1.2 'Roboto Mono', monospace;
+    letter-spacing: 0.02em;
+    text-align: left;
+    cursor: pointer;
+  }
+  .abstract-toggle span {
+    color: var(--accent);
+    font-size: 16px;
+  }
+}
+
+/* Phones. Everything below is a translation of a desktop device to a ~350px
+   column, not a different design: the ink plates, the trailing hairline, the
+   left-aligned hero spine and the centred logo/link cluster all survive — they
+   are just re-proportioned for a 350px measure, a third of the 960px column
+   they were set for. Nothing here applies above 600px; desktop is untouched. */
+@media (max-width: 600px) {
+  /* 60px is a desktop display size; at this width it is a third of the screen
+     and crowds the subtitle under it. */
+  .hero-text { font-size: 44px; }
+  .sub-hero-text { font-size: 22px; margin-bottom: 30px; white-space: normal; }
+  .authors { white-space: normal; }
+
+  /* The three logos measure 267px side by side, so at the desktop 56px gap —
+     or the 36px this used to carry — they wrapped 2 + 1 and the cluster stood
+     176px tall, a third of the first screen spent on wordmarks. 22px is the
+     widest gap that still keeps them on one row, so they read as one line of
+     institutions rather than a stack. */
+  .affiliations { gap: 22px; margin: 20px 0 14px; }
+  .affiliations img { height: 60px; }
+  .affiliations img.logo-lg { height: 80px; }
+
+  /* The four links ran to three lines — [arXiv] alone, then [Code (coming
+     soon)] alone — which read as a list of four separate things rather than one
+     row of links. 18px overshoots the column by 6px; 16px fits two per line. */
+  .quick-links a {
+    font-size: 16px;
+    margin: 0 5px;
+  }
+
+  /* Headings. The plate is a label, not a banner: at 24px/20px these wrapped
+     and became full-width slabs of solid ink — 334x65 for a rank-2 heading on a
+     350px column, the heaviest object on the page and heavier than the videos
+     they introduce. Shrinking the type restores the intended reading at this
+     width, and for rank 1 it restores the device outright: the hairline can
+     only trail from the plate to the column edge if the plate leaves room for
+     it, so a smaller plate makes that section rule MORE visible here, not less.
+     Ranks stay 3px apart and keep the rule/no-rule distinction. */
+  .tagline {
+    font-size: 17px;
+    gap: 12px;
+    /* Same logic as the desktop 56px: it must clear .figure-caption's 40px
+       bottom margin, which does not shrink here, or the collapse leaves the
+       section breaks ragged. 44 is the smaller value that still wins. */
+    margin: 44px 0 14px;
+  }
+  .tagline > span { padding: 6px 12px 6px 13px; }
+  .section-subtitle {
+    font-size: 14px;
+    padding: 6px 12px;
+    margin: 24px 0 12px;
+  }
+
+  /* Body copy. 20px on a 350px column runs ~33 characters to the line; 18px
+     buys back four or five and reads less like large print. */
+  .section { font-size: 18px; line-height: 1.65; }
+
+  /* Captions lose their 20px inset. On desktop it holds the caption inside the
+     wider figure; here the figure IS the column, so the inset only pushed the
+     caption out of alignment with the video above it. */
+  .figure-caption { padding: 0; }
+
+  /* Caption row stacks. Side by side, the buttons took 90px of a 350px row and
+     left the caption a 245px ragged strip set against a full-width video —
+     the one place on the phone where two different measures sat touching. */
+  .gallery-caption-container {
+    flex-direction: column;
+    /* stretch, not the row layout's flex-start: once this is a column, the
+       cross axis is horizontal, and flex-start would size the caption to its
+       own text. Long captions clamp to the column and look right by accident;
+       a short one would sit in a narrow box under a full-width video. */
+    align-items: stretch;
+  }
+  .gallery-nav-controls {
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+  /* 35px is under the 44px minimum touch target, and these are the only
+     controls on the page a thumb has to hit. */
+  .gallery-nav {
+    width: 44px;
+    height: 44px;
+    margin: 0 10px 0 0;
+  }
+
+  /* Give the evidence clip the full phone measure. The explanation and its
+     topology demo then share a compact second row: prose on the left, drawing
+     on the right. */
+  #editGallerySection,
+  #inbetweenGallerySection,
+  #expansionGallerySection {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    align-items: center;
+    gap: 12px 14px;
+  }
+  #editGallerySection .app-row,
+  #inbetweenGallerySection .app-row,
+  #expansionGallerySection .app-row {
+    display: contents;
+  }
+  #editGallerySection .video-gallery-container,
+  #inbetweenGallerySection .video-gallery-container,
+  #expansionGallerySection .video-gallery-container {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    width: 100%;
+    min-width: 0;
+  }
+  #editGallerySection .gallery-video,
+  #inbetweenGallerySection .gallery-video,
+  #expansionGallerySection .gallery-video {
+    border-radius: 9px;
+    box-shadow: none;
+  }
+  #editGallerySection .app-diagram,
+  #inbetweenGallerySection .app-diagram,
+  #expansionGallerySection .app-diagram {
+    grid-column: 2;
+    grid-row: 2;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+  #editGallerySection .gallery-caption-container,
+  #inbetweenGallerySection .gallery-caption-container,
+  #expansionGallerySection .gallery-caption-container {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: center;
+    margin: 0;
+  }
+  #editGallerySection .gallery-caption,
+  #inbetweenGallerySection .gallery-caption,
+  #expansionGallerySection .gallery-caption {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  /* Keep the complete dataset panorama visible at once on mobile. */
+  .dataset-scroll {
+    margin-top: 18px;
+  }
+  .dataset-scroll .dataset-figure {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: none;
+  }
+
+  /* Translate the desktop algorithm table into numbered mobile steps. Actions
+     lead; their effect sits directly below instead of being squeezed into a
+     third column only a few words wide. */
+  .algo {
+    display: block;
+    font-size: 12.5px;
+  }
+  .algo tbody { display: block; }
+  .algo tbody + tbody .algo-sig > th { border-top-width: 10px; }
+  .algo tr { display: grid; grid-template-columns: 28px minmax(0, 1fr); }
+  .algo .algo-sig { display: table-row; }
+  .algo .algo-sig > th {
+    display: table-cell;
+    padding: 8px;
+    font-size: 12px;
+  }
+  .algo td { padding: 7px 7px 2px; line-height: 1.35; }
+  .algo .algo-n {
+    grid-row: 1 / 3;
+    width: auto;
+    padding: 8px 5px 0 0;
+  }
+  .algo .algo-op { font-weight: 700; color: var(--slate-dark); }
+  .algo .algo-out {
+    grid-column: 2;
+    padding-top: 1px;
+    padding-bottom: 8px;
+    color: var(--slate-light);
+    border-bottom: 1px solid var(--ivory-dark);
+  }
+  .algo-caption { padding-bottom: 10px; line-height: 1.45; }
+  .algo > .algo-caption {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .example-item,
+  .example-name,
+  .example-item::before,
+  .example-item::after { transition: none; }
+  .quick-links a:not(.disabled)::after { transition: none; }
+  /* The chips still track the camera — only their arrival fade is dropped. */
+  .viewer-label,
+  .viewer-pin { animation: none; }
+}
