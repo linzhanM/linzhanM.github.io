@@ -1813,24 +1813,28 @@ button:focus-visible,
     margin: 0 10px 0 0;
   }
 
-  /* Applications are evidence + explanation, not two consecutive hero images.
-     Keep both visible in one compact row on a phone: the clip owns the flexible
-     width and the topology drawing becomes a narrow marginal diagram. */
+  /* Give the evidence clip the full phone measure. The explanation and its
+     topology demo then share a compact second row: prose on the left, drawing
+     on the right. */
+  #editGallerySection,
+  #inbetweenGallerySection,
+  #expansionGallerySection {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    align-items: center;
+    gap: 12px 14px;
+  }
   #editGallerySection .app-row,
   #inbetweenGallerySection .app-row,
   #expansionGallerySection .app-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 104px;
-    align-items: center;
-    gap: 12px;
-    padding: 10px;
-    border: 1px solid var(--ivory-dark);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.38);
+    display: contents;
   }
   #editGallerySection .video-gallery-container,
   #inbetweenGallerySection .video-gallery-container,
   #expansionGallerySection .video-gallery-container {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    width: 100%;
     min-width: 0;
   }
   #editGallerySection .gallery-video,
@@ -1842,14 +1846,25 @@ button:focus-visible,
   #editGallerySection .app-diagram,
   #inbetweenGallerySection .app-diagram,
   #expansionGallerySection .app-diagram {
-    width: 104px;
+    grid-column: 2;
+    grid-row: 2;
+    width: 100%;
     max-width: none;
     margin: 0;
   }
   #editGallerySection .gallery-caption-container,
   #inbetweenGallerySection .gallery-caption-container,
   #expansionGallerySection .gallery-caption-container {
-    margin-top: 10px;
+    grid-column: 1;
+    grid-row: 2;
+    align-self: center;
+    margin: 0;
+  }
+  #editGallerySection .gallery-caption,
+  #inbetweenGallerySection .gallery-caption,
+  #expansionGallerySection .gallery-caption {
+    font-size: 12px;
+    line-height: 1.5;
   }
 
   /* Keep the complete dataset panorama visible at once on mobile. */
