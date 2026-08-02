@@ -133,7 +133,7 @@
     </section>
 
     <h2 class="tagline" id="abstract"><span>Abstract.</span></h2>
-    <div class="section">
+    <div class="section abstract-copy" id="abstract-copy">
       Recent advances in automatic rigging now deliver animation-ready 3D assets
       at scale, yet generating the motion to drive them remains a bottleneck.
       Existing learned animators are topology-constrained: they rely on
@@ -154,6 +154,8 @@
       efficiency, and supports <strong>zero-shot cross-topology transfer, in-betweening,
       expansion, and text-guided editing</strong>.
     </div>
+    <button class="abstract-toggle" type="button" aria-expanded="false"
+      aria-controls="abstract-copy" hidden>Read full abstract <span aria-hidden="true">↓</span></button>
 
     <h2 class="tagline" id="experiments"><span>Experiments.</span></h2>
 
@@ -719,9 +721,11 @@
       <em>Truebones</em>, <em>Mixamo</em>, and <em>Objaverse-XL</em>.
     </div>
 
-    <img class="dataset-figure" src="assets/dataset_overview.png" width="4654" height="946"
-      loading="lazy" decoding="async"
-      alt="Sample rigs and motion sequences from UniML3D, spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid skeletons." />
+    <div class="dataset-scroll">
+      <img class="dataset-figure" src="assets/dataset_overview.png" width="4654" height="946"
+        loading="lazy" decoding="async"
+        alt="Sample rigs and motion sequences from UniML3D, spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid skeletons." />
+    </div>
     <p class="figure-caption">
       Samples from <em>UniML3D</em>, spanning bipedal, quadrupedal, avian, marine,
       insectoid, serpentine, and articulated rigid objects &mdash; each with detailed
@@ -894,14 +898,32 @@
     }
   </script>
 
-  <script>window.UNIMATE_VIEWER_CONFIG = { hiddenCategories: ['Showcase'] };</script>
-  <script type="module" src="js/viewer.js?v=106"></script>
+  <script type="module" src="js/index-viewer.js?v=1"></script>
 
   <!-- Galleries: scroll buttons + play-only-what-is-visible. -->
   <script src="js/gallery.js?v=6"></script>
 
   <!-- TOC rail: scroll-spy + the gutter-collision watcher. -->
   <script src="js/toc.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var button = document.querySelector('.abstract-toggle');
+      var copy = document.querySelector('.abstract-copy');
+      if (!(button && copy)) return;
+
+      document.body.classList.add('has-abstract-toggle');
+      button.hidden = false;
+      button.addEventListener('click', function () {
+        var expanded = button.getAttribute('aria-expanded') === 'true';
+        copy.classList.toggle('is-expanded', !expanded);
+        button.setAttribute('aria-expanded', String(!expanded));
+        button.innerHTML = expanded
+          ? 'Read full abstract <span aria-hidden="true">↓</span>'
+          : 'Collapse abstract <span aria-hidden="true">↑</span>';
+      });
+    });
+  </script>
 
   <script type="text/javascript">
     var sc_project = 12925377;

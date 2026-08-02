@@ -430,6 +430,10 @@ button:focus-visible,
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
+.dataset-scroll {
+  width: 100%;
+}
+
 .figure-caption {
   font-family: 'Roboto Mono', monospace;
   font-size: 14px;
@@ -656,6 +660,10 @@ button:focus-visible,
   font-size: 20px;
   line-height: 1.7;
   margin-bottom: 24px;
+}
+
+.abstract-toggle {
+  display: none;
 }
 
 /* ── 7. Video galleries ─────────────────────────────────────────────────────── */
@@ -1648,6 +1656,23 @@ button:focus-visible,
     width: var(--column);
     height: auto;
   }
+  #demoGallerySection .video-gallery-container {
+    width: 100%;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+  }
+  #demoGallerySection .video-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 100%);
+    width: 100%;
+    margin: 0;
+  }
+  #demoGallerySection .gallery-video {
+    width: 100%;
+    max-width: none;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
   /* One clip per screen here too: two-up on a 350px column is two thumbnails.
      These rows are already definite (§7), so the percentage is exact. */
   #transferGallerySection .gallery-video,
@@ -1658,6 +1683,49 @@ button:focus-visible,
   #expansionGallerySection .gallery-video {
     width: 100%;
     height: auto;
+  }
+
+  /* On phones and small tablets, controls and caption should not compete for
+     the same line: both use the full figure measure. */
+  .gallery-caption-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .gallery-nav-controls {
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+
+  /* The complete abstract remains in the document; JavaScript only folds its
+     mobile presentation. The fade signals continuation without cutting a line
+     against a hard edge. */
+  .has-abstract-toggle .abstract-copy:not(.is-expanded) {
+    position: relative;
+    max-height: 12.2em;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, #000 76%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 76%, transparent 100%);
+  }
+  .has-abstract-toggle .abstract-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 44px;
+    margin: -8px 0 24px;
+    padding: 8px 0;
+    border: 0;
+    border-bottom: 1px solid var(--slate-dark);
+    background: transparent;
+    color: var(--slate-dark);
+    font: 700 12px/1.2 'Roboto Mono', monospace;
+    letter-spacing: 0.02em;
+    text-align: left;
+    cursor: pointer;
+  }
+  .abstract-toggle span {
+    color: var(--accent);
+    font-size: 16px;
   }
 }
 
@@ -1743,6 +1811,93 @@ button:focus-visible,
     width: 44px;
     height: 44px;
     margin: 0 10px 0 0;
+  }
+
+  /* Applications are evidence + explanation, not two consecutive hero images.
+     Keep both visible in one compact row on a phone: the clip owns the flexible
+     width and the topology drawing becomes a narrow marginal diagram. */
+  #editGallerySection .app-row,
+  #inbetweenGallerySection .app-row,
+  #expansionGallerySection .app-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 104px;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border: 1px solid var(--ivory-dark);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.38);
+  }
+  #editGallerySection .video-gallery-container,
+  #inbetweenGallerySection .video-gallery-container,
+  #expansionGallerySection .video-gallery-container {
+    min-width: 0;
+  }
+  #editGallerySection .gallery-video,
+  #inbetweenGallerySection .gallery-video,
+  #expansionGallerySection .gallery-video {
+    border-radius: 9px;
+    box-shadow: none;
+  }
+  #editGallerySection .app-diagram,
+  #inbetweenGallerySection .app-diagram,
+  #expansionGallerySection .app-diagram {
+    width: 104px;
+    max-width: none;
+    margin: 0;
+  }
+  #editGallerySection .gallery-caption-container,
+  #inbetweenGallerySection .gallery-caption-container,
+  #expansionGallerySection .gallery-caption-container {
+    margin-top: 10px;
+  }
+
+  /* Keep the complete dataset panorama visible at once on mobile. */
+  .dataset-scroll {
+    margin-top: 18px;
+  }
+  .dataset-scroll .dataset-figure {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: none;
+  }
+
+  /* Translate the desktop algorithm table into numbered mobile steps. Actions
+     lead; their effect sits directly below instead of being squeezed into a
+     third column only a few words wide. */
+  .algo {
+    display: block;
+    font-size: 12.5px;
+  }
+  .algo tbody { display: block; }
+  .algo tbody + tbody .algo-sig > th { border-top-width: 10px; }
+  .algo tr { display: grid; grid-template-columns: 28px minmax(0, 1fr); }
+  .algo .algo-sig { display: table-row; }
+  .algo .algo-sig > th {
+    display: table-cell;
+    padding: 8px;
+    font-size: 12px;
+  }
+  .algo td { padding: 7px 7px 2px; line-height: 1.35; }
+  .algo .algo-n {
+    grid-row: 1 / 3;
+    width: auto;
+    padding: 8px 5px 0 0;
+  }
+  .algo .algo-op { font-weight: 700; color: var(--slate-dark); }
+  .algo .algo-out {
+    grid-column: 2;
+    padding-top: 1px;
+    padding-bottom: 8px;
+    color: var(--slate-light);
+    border-bottom: 1px solid var(--ivory-dark);
+  }
+  .algo-caption { padding-bottom: 10px; line-height: 1.45; }
+  .algo > .algo-caption {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 

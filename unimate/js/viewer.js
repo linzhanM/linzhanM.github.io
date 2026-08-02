@@ -27,7 +27,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { EXAMPLES } from './examples.js?v=46';
+import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=47';
 
 const wrapper = document.getElementById('viewer-wrapper');
 const overlay = document.getElementById('loading-overlay');
@@ -36,12 +36,9 @@ const labelLayer = document.getElementById('viewer-labels');
 const stageName = document.getElementById('stage-name');
 const LOADING_HTML = overlay.innerHTML;
 const viewerConfig = window.UNIMATE_VIEWER_CONFIG || {};
+const catalog = window.UNIMATE_VIEWER_CATALOG || DEFAULT_CATALOG;
 const hiddenCategories = new Set(viewerConfig.hiddenCategories || []);
-if (hiddenCategories.size) {
-  for (let index = EXAMPLES.length - 1; index >= 0; index--) {
-    if (hiddenCategories.has(EXAMPLES[index].label)) EXAMPLES.splice(index, 1);
-  }
-}
+const EXAMPLES = catalog.filter(({ label }) => !hiddenCategories.has(label));
 const isFullscreenLab = viewerConfig.fullscreenLab === true;
 const VIEWER_THEMES = {
   dark: {
