@@ -15,7 +15,7 @@
   <link rel="canonical" href="https://linzhanmou.com/unimate/" />
   <link rel="icon" type="image/png" sizes="2048x2048" href="assets/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/style.css?v=2" />
+  <link rel="stylesheet" href="css/style.css?v=3" />
   <!-- The Applications schematics: their own figure system (layout, rig, motion),
        kept out of the page sheet. Loaded after it, so it can read the tokens. -->
   <link rel="stylesheet" href="css/schematics.css" />
@@ -118,8 +118,11 @@
       </header>
 
       <div class="viewer-layout">
-        <!-- One row per stage; filled and kept in sync by viewer.js. -->
-        <div class="example-sidebar" id="example-sidebar" role="group" aria-label="Example stages"></div>
+        <aside class="category-panel" aria-label="Motion categories">
+          <div class="category-heading"><span>Categories</span><strong>11</strong></div>
+          <!-- One row per stage; filled and kept in sync by viewer.js. -->
+          <div class="example-sidebar" id="example-sidebar" role="group" aria-label="Example stages"></div>
+        </aside>
         <div class="viewer-wrapper" id="viewer-wrapper">
           <!-- One prompt pill per model; filled and positioned by viewer.js. -->
           <div id="viewer-labels"></div>
@@ -891,7 +894,7 @@
     }
   </script>
 
-  <script type="module" src="js/viewer.js?v=47"></script>
+  <script type="module" src="js/viewer.js?v=83"></script>
 
   <!-- Galleries: scroll buttons + play-only-what-is-visible. -->
   <script src="js/gallery.js?v=6"></script>

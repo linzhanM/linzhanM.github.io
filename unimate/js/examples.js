@@ -163,6 +163,30 @@ export const EXAMPLES = [
     spacing: 1.0, pad: 1.12,
   },
   {
+    label: 'WALL-E Robot',
+    sidebarGapBefore: true,
+    files: [
+      {
+        url: 'resources/glbs/wall-e-curious.glb',
+        prompt: 'WALL-E looks around with curiosity.',
+        groundToMesh: true,
+      },
+      {
+        url: 'resources/glbs/wall-e-drive.glb',
+        prompt: 'WALL-E drives forward on his tracks.',
+        groundToMesh: true,
+      },
+      {
+        url: 'resources/glbs/wall-e-wave.glb',
+        prompt: 'WALL-E raises an arm and waves.',
+        groundToMesh: true,
+      },
+    ],
+    spacing: 1.35,
+    pad: 1.12,
+    evenGaps: true,
+  },
+  {
     label: 'Eagle',
     files: [
       // Keep the prompt below the eagle and pull it clear of the canvas edge.

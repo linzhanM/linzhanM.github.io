@@ -27,15 +27,37 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { EXAMPLES } from './examples.js?v=25';
+import { EXAMPLES } from './examples.js?v=26';
 
 const wrapper = document.getElementById('viewer-wrapper');
 const overlay = document.getElementById('loading-overlay');
 const sidebar = document.getElementById('example-sidebar');
 const labelLayer = document.getElementById('viewer-labels');
+const stageName = document.getElementById('stage-name');
 const LOADING_HTML = overlay.innerHTML;
 const viewerConfig = window.UNIMATE_VIEWER_CONFIG || {};
 const isFullscreenLab = viewerConfig.fullscreenLab === true;
+const VIEWER_THEMES = {
+  dark: {
+    background: 0x191c1b,
+    hemisphereGround: 0x4a4038,
+    checker: ['#35312c', '#222321'],
+    floorOpacity: 0.88,
+    shadowOpacity: 0.46,
+    metaColor: '#191c1b',
+  },
+  light: {
+    background: 0xf0eee6,
+    hemisphereGround: 0x9a9a9a,
+    checker: ['#e7e1d3', '#d0c9b5'],
+    floorOpacity: 0.6,
+    shadowOpacity: 0.25,
+    metaColor: '#e8e9e3',
+  },
+};
+let viewerTheme = isFullscreenLab
+  ? (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark')
+  : 'light';
 
 // ── 2. State ─────────────────────────────────────────────────────────────────
 // Toolbar state (persists across example switches).
@@ -68,6 +90,7 @@ let hoverPromptY = 0;
 let loadToken = 0;     // guards against overlapping async loads
 let activePad = 1.15;  // camera padding of the current example (so Reset view keeps it)
 let activeCameraPadding = viewerConfig.cameraPadding || 1;
+let activeMobileCameraPadding = viewerConfig.mobileCameraPadding || activeCameraPadding;
 let activeShift = [0, 0, 0]; // whole-diorama pan held OUT of auto-framing (e.g. [-1,0,0] slides left)
 
 // Tuning constants.
@@ -81,7 +104,7 @@ const MIN_FRAME_WIDTH = 3.0;        // camera always frames >= this world-width,
 
 // ── 3. Scene setup ───────────────────────────────────────────────────────────
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xf0eee6);
+scene.background = new THREE.Color(VIEWER_THEMES[viewerTheme].background);
 
 const camera = new THREE.PerspectiveCamera(
   35, wrapper.clientWidth / wrapper.clientHeight, 0.01, 5000
@@ -98,7 +121,7 @@ wrapper.appendChild(renderer.domElement);
 
 // Lights. Each remembers its base intensity so a per-example multiplier can
 // brighten/dim just one window (see applyLighting / EXAMPLES `lighting`).
-const hemiLight = new THREE.HemisphereLight(0xffffff, 0x9a9a9a, 2.2);
+const hemiLight = new THREE.HemisphereLight(0xffffff, VIEWER_THEMES[viewerTheme].hemisphereGround, 2.2);
 scene.add(hemiLight);
 const keyLight = new THREE.DirectionalLight(0xffffff, 2.0);
 keyLight.position.set(4, 8, 6);
@@ -459,20 +482,55 @@ function groundAndNormalize(pivot, model, mixer, clip, userScale = 1, groundToMe
 }
 
 // ── 7. Stage: framing + teardown ─────────────────────────────────────────────
-// Shared checkerboard floor texture: a 2x2 pixel pattern (two ivory tones), tiled
-// with NearestFilter for crisp squares. repeat is set per-rebuild to size the squares.
-const checkerTex = (() => {
-  const c = document.createElement('canvas');
-  c.width = c.height = 2;
-  const cx = c.getContext('2d');
-  cx.fillStyle = '#e7e1d3'; cx.fillRect(0, 0, 2, 2);
-  cx.fillStyle = '#d0c9b5'; cx.fillRect(0, 0, 1, 1); cx.fillRect(1, 1, 1, 1);
-  const t = new THREE.CanvasTexture(c);
-  t.magFilter = t.minFilter = THREE.NearestFilter;
-  t.wrapS = t.wrapT = THREE.RepeatWrapping;
-  t.colorSpace = THREE.SRGBColorSpace;
-  return t;
-})();
+// Shared checkerboard floor texture. The dark and light themes supply their own
+// two-tone palettes; repeat is set per rebuild to size the squares.
+const checkerCanvas = document.createElement('canvas');
+checkerCanvas.width = checkerCanvas.height = 2;
+const checkerContext = checkerCanvas.getContext('2d');
+const checkerTex = new THREE.CanvasTexture(checkerCanvas);
+checkerTex.magFilter = checkerTex.minFilter = THREE.NearestFilter;
+checkerTex.wrapS = checkerTex.wrapT = THREE.RepeatWrapping;
+checkerTex.colorSpace = THREE.SRGBColorSpace;
+
+function paintChecker(theme) {
+  const [base, alternate] = VIEWER_THEMES[theme].checker;
+  checkerContext.fillStyle = base;
+  checkerContext.fillRect(0, 0, 2, 2);
+  checkerContext.fillStyle = alternate;
+  checkerContext.fillRect(0, 0, 1, 1);
+  checkerContext.fillRect(1, 1, 1, 1);
+  checkerTex.needsUpdate = true;
+}
+
+function setFloorRepeat(squares = 24) {
+  checkerTex.repeat.set(squares / 2, squares / 2);
+}
+
+function applyViewerTheme(theme) {
+  viewerTheme = theme === 'light' ? 'light' : 'dark';
+  const palette = VIEWER_THEMES[viewerTheme];
+  if (isFullscreenLab) document.documentElement.dataset.theme = viewerTheme;
+  scene.background.setHex(palette.background);
+  hemiLight.groundColor.setHex(palette.hemisphereGround);
+  paintChecker(viewerTheme);
+  setFloorRepeat();
+  if (grid) grid.material.opacity = palette.floorOpacity;
+  if (shadowPlane) shadowPlane.material.opacity = palette.shadowOpacity;
+
+  const metaTheme = isFullscreenLab ? document.querySelector('meta[name="theme-color"]') : null;
+  if (metaTheme) metaTheme.content = palette.metaColor;
+  const themeToggle = document.querySelector('[data-theme-toggle]');
+  if (themeToggle) {
+    const nextTheme = viewerTheme === 'dark' ? 'light' : 'dark';
+    themeToggle.setAttribute('aria-pressed', String(viewerTheme === 'light'));
+    themeToggle.setAttribute('aria-label', `Switch to ${nextTheme} palette`);
+    const themeName = themeToggle.querySelector('.theme-name');
+    if (themeName) themeName.textContent = viewerTheme === 'light' ? 'Light' : 'Dark';
+  }
+
+}
+
+applyViewerTheme(viewerTheme, { persist: false });
 
 // Frame the whole stage: fit the camera to the union of all pivots, drop a checker floor.
 // pad > 1 zooms the camera further out (extra margin) without moving the models —
@@ -496,8 +554,7 @@ function frameStage(pad = 1.0) {
   let dist = Math.max(distV, distH, size.z);
   // The standalone lab places its scene picker over the canvas. Give that view
   // a little more breathing room so the leftmost character never sits under it.
-  const mobileCameraPadding = viewerConfig.mobileCameraPadding || activeCameraPadding;
-  const responsiveCameraPadding = phoneLayout.matches ? mobileCameraPadding : activeCameraPadding;
+  const responsiveCameraPadding = phoneLayout.matches ? activeMobileCameraPadding : activeCameraPadding;
   dist *= pad * (isFullscreenLab ? responsiveCameraPadding : 1); // padding
 
   // The objects were physically translated by activeShift (applyStageShift), which
@@ -519,7 +576,12 @@ function frameStage(pad = 1.0) {
   // Lift the camera above the target (~+0.28·dist) so it looks slightly DOWN at the
   // stage instead of dead level — a gentle high-angle view.
   const elevation = isFullscreenLab ? viewerConfig.cameraElevation : 0.28;
-  camera.position.set(viewX, ty + size.y * 0.12 + dist * elevation, tz + dist);
+  const initialOrbitAngle = THREE.MathUtils.degToRad(viewerConfig.initialOrbitAngle || 0);
+  camera.position.set(
+    viewX + Math.sin(initialOrbitAngle) * dist,
+    ty + size.y * 0.12 + dist * elevation,
+    tz + Math.cos(initialOrbitAngle) * dist,
+  );
   camera.near = dist / 100;
   camera.far = dist * 100;
   camera.updateProjectionMatrix();
@@ -533,12 +595,17 @@ function frameStage(pad = 1.0) {
   const shiftMag = Math.hypot(activeShift[0], activeShift[2]);
   const gridSize = (Math.max(size.x, size.z, MIN_FRAME_WIDTH, 1) + 2 * shiftMag) * 1.6;
   const squares = 24;                          // squares across the whole floor
-  checkerTex.repeat.set(squares / 2, squares / 2); // 2x2 base pattern -> 2 squares per repeat
+  setFloorRepeat(squares);
   grid = new THREE.Mesh(
     new THREE.PlaneGeometry(gridSize, gridSize),
     // Unlit (like the old line grid) so the floor tone stays constant regardless of
     // the per-window lighting multiplier.
-    new THREE.MeshBasicMaterial({ map: checkerTex, transparent: true, opacity: 0.6, side: THREE.DoubleSide })
+    new THREE.MeshBasicMaterial({
+      map: checkerTex,
+      transparent: true,
+      opacity: VIEWER_THEMES[viewerTheme].floorOpacity,
+      side: THREE.DoubleSide,
+    })
   );
   grid.rotation.x = -Math.PI / 2;
   grid.position.set(tx, 0, tz); // floor is a FIXED datum at world y = 0; each model is grounded to it
@@ -549,7 +616,7 @@ function frameStage(pad = 1.0) {
   if (shadowPlane) { scene.remove(shadowPlane); shadowPlane.geometry.dispose(); shadowPlane.material.dispose(); }
   shadowPlane = new THREE.Mesh(
     new THREE.PlaneGeometry(gridSize, gridSize),
-    new THREE.ShadowMaterial({ opacity: 0.25 })
+    new THREE.ShadowMaterial({ opacity: VIEWER_THEMES[viewerTheme].shadowOpacity })
   );
   shadowPlane.rotation.x = -Math.PI / 2;
   shadowPlane.position.set(tx, 0.001, tz); // hair above the fixed floor (no z-fight)
@@ -819,6 +886,10 @@ let guiBox = null;
 function measureGui() {
   const g = gui.domElement.getBoundingClientRect();
   const wr = wrapper.getBoundingClientRect();
+  if (!g.width || !g.height) {
+    guiBox = null;
+    return;
+  }
   guiBox = {
     left: g.left - wr.left, right: g.right - wr.left,
     top: g.top - wr.top, bottom: g.bottom - wr.top,
@@ -1528,6 +1599,7 @@ function loadExample(index) {
     evenGaps: ex.evenGaps, sizeBy: ex.sizeBy, stagger: ex.stagger, rowDepth: ex.rowDepth,
     stageShift: ex.stageShift,
     cameraPadding: viewerConfig.cameraPaddingByCategory?.[ex.label],
+    mobileCameraPadding: viewerConfig.mobileCameraPaddingByCategory?.[ex.label],
   });
 }
 
@@ -1543,6 +1615,13 @@ async function loadStage(specs, activeIndex, opts = {}) {
     b.classList.toggle('active', on);
     b.setAttribute('aria-pressed', String(on));
   });
+  if (stageName) {
+    if (activeIndex == null) {
+      stageName.textContent = 'Imported model';
+    } else {
+      stageName.textContent = EXAMPLES[activeIndex].label;
+    }
+  }
 
   try {
     const [loaded] = await Promise.all([
@@ -1609,6 +1688,7 @@ async function loadStage(specs, activeIndex, opts = {}) {
     applyLighting(opts.lighting || 1);
     buildLabels(specs); // after layout — the anchors ride the pivots, so order is free
     activeCameraPadding = opts.cameraPadding ?? viewerConfig.cameraPadding ?? 1;
+    activeMobileCameraPadding = opts.mobileCameraPadding ?? viewerConfig.mobileCameraPadding ?? activeCameraPadding;
     activePad = opts.pad || 1.0;
     frameStage(activePad);
     overlay.style.display = 'none';
@@ -1638,15 +1718,74 @@ gui.add(settings, 'show prompts').name('Prompts').onChange(applyLabels);
 gui.add(settings, 'wireframe').name('Wireframe').onChange(applyWireframe);
 if (viewerConfig.playbackControls) {
   gui.add(settings, 'paused').name('Pause');
-  gui.add(settings, 'playback speed', 0.25, 2, 0.25).name('Speed');
 }
 if (viewerConfig.autoOrbitControls) {
   gui.add(settings, 'auto orbit').name('Auto orbit')
     .onChange((enabled) => { controls.autoRotate = enabled; });
-  gui.add(settings, 'orbit speed', 0.25, 2, 0.25).name('Orbit speed')
-    .onChange((speed) => { controls.autoRotateSpeed = speed; });
 }
 gui.add({ reset: () => frameStage(activePad) }, 'reset').name('Reset view');
+
+// Full-screen lab controls use a compact, keyboard-first dock. lil-gui remains
+// the engine's control surface for the embedded viewer, but is visually hidden
+// on interactive.html so the stage has one coherent set of controls.
+const dockControls = [...wrapper.querySelectorAll('[data-setting]')];
+const dockActions = [...wrapper.querySelectorAll('[data-action]')];
+const themeToggle = wrapper.querySelector('[data-theme-toggle]');
+
+if (isFullscreenLab) {
+  function setDockSetting(key, value) {
+    settings[key] = value;
+    if (key === 'show model') models.forEach((model) => { model.visible = value; });
+    if (key === 'show skeleton') skeletons.forEach((skeleton) => { skeleton.visible = value; });
+    if (key === 'wireframe') applyWireframe();
+    if (key === 'auto orbit') controls.autoRotate = value;
+
+    for (const button of dockControls) {
+      if (button.dataset.setting !== key) continue;
+      button.classList.toggle('is-active', value);
+      button.setAttribute('aria-pressed', String(value));
+    }
+  }
+
+  for (const button of dockControls) {
+    button.addEventListener('click', () => {
+      const key = button.dataset.setting;
+      if (key) setDockSetting(key, !settings[key]);
+    });
+  }
+
+  for (const button of dockActions) {
+    button.addEventListener('click', () => {
+      if (button.dataset.action === 'reset') frameStage(activePad);
+    });
+  }
+
+  themeToggle?.addEventListener('click', () => {
+    applyViewerTheme(viewerTheme === 'dark' ? 'light' : 'dark');
+  });
+
+  const dockKeys = new Map([
+    ['KeyM', 'show model'],
+    ['KeyK', 'show skeleton'],
+    ['KeyW', 'wireframe'],
+    ['Space', 'paused'],
+    ['KeyO', 'auto orbit'],
+  ]);
+
+  window.addEventListener('keydown', (event) => {
+    if (event.metaKey || event.ctrlKey || event.altKey || event.repeat) return;
+    const target = event.target;
+    if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) return;
+    if (event.code === 'KeyR') {
+      frameStage(activePad);
+      return;
+    }
+    const key = dockKeys.get(event.code);
+    if (!key) return;
+    event.preventDefault();
+    setDockSetting(key, !settings[key]);
+  });
+}
 
 // Match the prompt chips on phones: scale the complete Controls panel from its
 // pinned top-right corner, preserving the desktop proportions instead of
@@ -1674,6 +1813,7 @@ gui.onOpenClose?.(measureLabels);
 EXAMPLES.forEach((ex, i) => {
   const btn = document.createElement('button');
   btn.className = 'example-item';
+  if (ex.sidebarGapBefore) btn.classList.add('has-group-gap');
   btn.type = 'button';
 
   const name = document.createElement('span');

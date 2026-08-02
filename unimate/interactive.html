@@ -5,28 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description" content="Explore UniMate's generated 3D character animations in an interactive motion lab." />
   <meta name="robots" content="noindex, follow" />
-  <meta name="theme-color" content="#e8e9e3" />
+  <meta name="theme-color" content="#191c1b" />
   <title>UniMate Motion Lab</title>
+
+  <script>document.documentElement.dataset.theme = 'dark';</script>
 
   <link rel="icon" type="image/png" href="assets/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/interactive.css?v=3" />
+  <link rel="stylesheet" href="resources/interactive/interactive.css?v=5" />
 </head>
 <body class="interactive-viewer-page">
   <main class="lab-shell">
     <section class="viewer-panel" aria-label="Interactive animation viewer">
       <div class="viewer-layout">
         <div class="viewer-wrapper" id="viewer-wrapper">
-          <div class="stage-label" aria-hidden="true">LIVE 3D</div>
-          <div class="interaction-guide" aria-label="Interaction instructions">
-            <span class="guide-hover">Hover a character <strong>Prompt</strong></span>
-            <span>Drag <strong>Orbit</strong></span>
-            <span class="guide-zoom"><span class="desktop-word">Scroll</span><span class="mobile-word">Pinch</span> <strong>Zoom</strong></span>
-          </div>
-          <div class="example-sidebar" id="example-sidebar" role="group" aria-label="Example stages"></div>
+          <aside class="category-panel" aria-label="Motion categories">
+            <div class="category-heading"><span>Categories</span><strong>12</strong></div>
+            <div class="example-sidebar" id="example-sidebar" role="group" aria-label="Example stages"></div>
+            <button class="theme-control category-theme" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to light palette"><span>Theme</span><span class="theme-value"><span class="theme-name">Dark</span><i class="theme-swatch" aria-hidden="true"></i></span></button>
+          </aside>
           <div id="viewer-labels"></div>
           <div id="loading-overlay"><span class="spinner"></span><span>Building scene</span></div>
           <div id="drop-hint">Release to inspect your model</div>
+          <div class="drop-note"><span aria-hidden="true">+</span> Drop GLB, GLTF, or FBX to inspect</div>
+          <div class="control-bar" aria-label="Display controls">
+            <div class="control-status" aria-live="polite">
+              <span>Category</span><strong id="stage-name">Bipedal</strong>
+            </div>
+            <div class="control-actions">
+              <button class="status-control is-active" type="button" data-setting="show model" aria-pressed="true"><span>Mesh</span><span class="control-switch" aria-hidden="true"><i></i></span></button>
+              <button class="status-control is-active" type="button" data-setting="show skeleton" aria-pressed="true"><span>Skeleton</span><span class="control-switch" aria-hidden="true"><i></i></span></button>
+              <button class="status-control" type="button" data-setting="wireframe" aria-pressed="false"><span>Wireframe</span><span class="control-switch" aria-hidden="true"><i></i></span></button>
+            </div>
+          </div>
+          <div class="control-dock" aria-label="Playback and camera controls">
+            <button class="dock-control" type="button" data-setting="paused" aria-pressed="false"><kbd>Space</kbd><span>Pause</span></button>
+            <button class="dock-control is-active" type="button" data-setting="auto orbit" aria-pressed="true"><kbd>O</kbd><span>Orbit</span></button>
+            <button class="dock-control dock-action" type="button" data-action="reset"><kbd>R</kbd><span>Reset</span></button>
+            <span class="dock-hint"><i class="orbit-icon" aria-hidden="true"></i>Drag to orbit</span>
+            <span class="dock-hint"><i class="zoom-icon" aria-hidden="true"></i>Scroll to zoom</span>
+            <a class="dock-project" href="index.html" aria-label="Return to the UniMate project page">&#8592; Project Page</a>
+          </div>
         </div>
       </div>
     </section>
@@ -40,6 +59,6 @@
       }
     }
   </script>
-  <script type="module" src="js/interactive-viewer.js?v=18"></script>
+  <script type="module" src="resources/interactive/config.js?v=19"></script>
 </body>
 </html>
