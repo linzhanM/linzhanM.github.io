@@ -67,9 +67,10 @@
        canvas on phones. It must not share
        a fixed height with the viewer. Let the rail size naturally and preserve
        the desktop canvas proportion (960px layout - 190px rail, by 623px). */
-    flex-direction: column-reverse;
+    flex-direction: column;
     aspect-ratio: auto;
     min-height: 0;
+    gap: 0;
   }
   .example-sidebar {
     flex: none;
@@ -88,30 +89,49 @@
     flex: none;
     height: auto;
     justify-content: flex-start;
-    gap: 7px;
-    padding: 8px;
-    padding-right: 0;
+    min-width: 0;
+    width: 100%;
+    gap: 5px;
+    padding: 0;
     border-right: 0;
-    border-top: 1px solid var(--slate-dark);
+    border-top: 0;
     border-bottom: 0;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
   }
+  .interactive-showcase .example-sidebar::-webkit-scrollbar { display: none; }
   .interactive-showcase .category-panel {
+    order: 3;
+    box-sizing: border-box;
     flex: none;
     width: 100%;
-    border-right: 0;
-    background: var(--ivory-medium);
+    margin: 0;
+    padding: 6px 6px;
+    border: 0;
+    border-radius: 0;
+    overflow: hidden;
+    background: var(--ivory);
+    border-top: 1px solid var(--rule);
   }
   .interactive-showcase .category-heading { display: none; }
   .interactive-showcase .example-item {
+    position: relative;
     width: auto;
+    min-width: max-content;
     min-height: 38px;
-    padding: 8px 12px;
+    max-height: 38px;
+    padding: 0 12px;
     border: 1px solid var(--rule);
+    border-radius: 5px;
     background: var(--ivory);
+    scroll-snap-align: start;
   }
   .interactive-showcase .example-item::before { display: none; }
   .interactive-showcase .example-item.active {
     border-color: var(--slate-dark);
+    color: var(--ivory);
     background: var(--slate-dark);
   }
   .example-sidebar::before,
@@ -131,14 +151,101 @@
     scroll-snap-align: start;
   }
   .example-item.active { border-color: var(--accent); background: var(--ivory-medium); }
-  .example-item.active .example-name { color: var(--slate-dark); }
+  .interactive-showcase .example-name {
+    color: var(--slate-light);
+    font-size: 10px;
+    letter-spacing: 0.015em;
+  }
+  .interactive-showcase .example-item.active .example-name { color: var(--ivory); }
   .viewer-wrapper { height: auto; min-height: 0; }
   .interactive-showcase .viewer-wrapper {
+    order: 2;
     flex: none;
     width: 100%;
     height: auto;
     min-height: 0;
     aspect-ratio: 770 / 623;
+  }
+  .interactive-showcase .viewer-wrapper .lil-gui { display: none; }
+  .interactive-showcase .embed-control-bar {
+    order: 1;
+    display: block;
+    min-height: 36px;
+    padding: 0;
+    color: var(--slate-light);
+    background: var(--ivory);
+    border: 0;
+    border-bottom: 1px solid var(--rule);
+    border-radius: 0;
+    box-shadow: none;
+    font-family: 'Roboto Mono', monospace;
+  }
+  .interactive-showcase .embed-control-actions {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+  }
+  .interactive-showcase .embed-status-control {
+    position: relative;
+    min-width: 0;
+    min-height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 8px;
+    border: 0;
+    border-right: 1px solid var(--rule);
+    border-radius: 0;
+    color: var(--slate-light);
+    background: transparent;
+    font: 700 9px 'Roboto Mono', monospace;
+    letter-spacing: 0.045em;
+    text-align: center;
+    cursor: pointer;
+    transition: color 160ms ease, background 160ms ease;
+  }
+  .interactive-showcase .embed-status-control:last-child { border-right: 0; }
+  .interactive-showcase .embed-status-control:hover { background: var(--ivory-medium); }
+  .interactive-showcase .embed-status-control:focus-visible { outline-color: var(--accent); }
+  .interactive-showcase .embed-status-control.is-active { color: var(--slate-dark); }
+  .interactive-showcase .embed-status-control i {
+    box-sizing: border-box;
+    width: 7px;
+    height: 7px;
+    flex: 0 0 7px;
+    border: 1px solid var(--slate-light);
+    border-radius: 50%;
+    background: transparent;
+    transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  }
+  .interactive-showcase .embed-status-control[aria-pressed='true'] i {
+    border-color: var(--accent);
+    background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.14);
+  }
+  .interactive-showcase .embed-playback-control i {
+    box-sizing: border-box;
+    width: 7px;
+    height: 8px;
+    flex-basis: 7px;
+    border: 0;
+    border-right: 2px solid var(--accent);
+    border-left: 2px solid var(--accent);
+    border-radius: 0;
+    background: transparent;
+  }
+  .interactive-showcase .embed-playback-control[aria-pressed='true'] i {
+    width: 0;
+    height: 0;
+    flex-basis: auto;
+    border-top: 4px solid transparent;
+    border-right: 0;
+    border-bottom: 4px solid transparent;
+    border-left: 6px solid var(--accent);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   /* Prompt chips keep their desktop typography and one-line measure. viewer.js

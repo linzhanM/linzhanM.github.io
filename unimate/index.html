@@ -15,12 +15,12 @@
   <link rel="canonical" href="https://linzhanmou.com/unimate/" />
   <link rel="icon" type="image/png" sizes="2048x2048" href="assets/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/style.css?v=4" />
+  <link rel="stylesheet" href="css/style.css?v=5" />
   <!-- The Applications schematics: their own figure system (layout, rig, motion),
        kept out of the page sheet. Loaded after it, so it can read the tokens. -->
   <link rel="stylesheet" href="css/schematics.css" />
   <!-- Breakpoint-specific page and component overrides load last. -->
-  <link rel="stylesheet" href="css/responsive.css?v=3" />
+  <link rel="stylesheet" href="css/responsive.css?v=5" />
 </head>
 
 <body>
@@ -125,6 +125,14 @@
           <!-- One row per stage; filled and kept in sync by viewer.js. -->
           <div class="example-sidebar" id="example-sidebar" role="group" aria-label="Example stages"></div>
         </aside>
+        <div class="embed-control-bar" aria-label="Display controls">
+          <div class="embed-control-actions">
+            <button class="embed-status-control embed-playback-control" type="button" data-setting="paused" aria-pressed="false"><span data-playback-label>Pause</span><i aria-hidden="true"></i></button>
+            <button class="embed-status-control is-active" type="button" data-setting="show model" aria-pressed="true"><span>Mesh</span><i aria-hidden="true"></i></button>
+            <button class="embed-status-control is-active" type="button" data-setting="show skeleton" aria-pressed="true"><span>Skeleton</span><i aria-hidden="true"></i></button>
+            <button class="embed-status-control" type="button" data-setting="wireframe" aria-pressed="false"><span>Wireframe</span><i aria-hidden="true"></i></button>
+          </div>
+        </div>
         <div class="viewer-wrapper" id="viewer-wrapper">
           <!-- One prompt pill per model; filled and positioned by viewer.js. -->
           <div id="viewer-labels"></div>
@@ -900,7 +908,7 @@
     }
   </script>
 
-  <script type="module" src="js/index-viewer.js?v=1"></script>
+  <script type="module" src="js/index-viewer.js?v=3"></script>
 
   <!-- Galleries: scroll buttons + play-only-what-is-visible. -->
   <script src="js/gallery.js?v=6"></script>

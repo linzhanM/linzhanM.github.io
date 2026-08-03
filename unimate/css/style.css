@@ -961,6 +961,8 @@ button:focus-visible,
   aspect-ratio: 960 / 623;
 }
 
+.embed-control-bar { display: none; }
+
 .interactive-showcase .category-panel {
   box-sizing: border-box;
   flex: 0 0 190px;

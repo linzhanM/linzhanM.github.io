@@ -1734,22 +1734,39 @@ gui.add({ reset: () => frameStage(activePad, 0) }, 'reset').name('Reset view');
 // the engine's control surface for the embedded viewer, but is visually hidden
 // on interactive.html so the stage has one coherent set of controls.
 const dockControls = [...wrapper.querySelectorAll('[data-setting]')];
+const embedControls = [...document.querySelectorAll('.embed-control-bar [data-setting]')];
 const dockActions = [...wrapper.querySelectorAll('[data-action]')];
 const themeToggle = wrapper.querySelector('[data-theme-toggle]');
 
-if (isFullscreenLab) {
-  function setDockSetting(key, value) {
+function setDisplaySetting(key, value, buttons) {
     settings[key] = value;
     if (key === 'show model') models.forEach((model) => { model.visible = value; });
     if (key === 'show skeleton') skeletons.forEach((skeleton) => { skeleton.visible = value; });
     if (key === 'wireframe') applyWireframe();
     if (key === 'auto orbit') controls.autoRotate = value;
 
-    for (const button of dockControls) {
+    for (const button of buttons) {
       if (button.dataset.setting !== key) continue;
       button.classList.toggle('is-active', value);
       button.setAttribute('aria-pressed', String(value));
     }
+}
+
+for (const button of embedControls) {
+  button.addEventListener('click', () => {
+    const key = button.dataset.setting;
+    if (!key) return;
+    setDisplaySetting(key, !settings[key], embedControls);
+    if (key === 'paused') {
+      const label = button.querySelector('[data-playback-label]');
+      if (label) label.textContent = settings.paused ? 'Play' : 'Pause';
+    }
+  });
+}
+
+if (isFullscreenLab) {
+  function setDockSetting(key, value) {
+    setDisplaySetting(key, value, dockControls);
   }
 
   for (const button of dockControls) {
