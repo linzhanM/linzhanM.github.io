@@ -12,8 +12,21 @@
    it; don't add entry numbering on top, it would say the same thing twice.
    One joint per paper was tried and taken out: it turned the rail into a list
    of markers, and the year is the only thing on this page that needs marking. */
+/* 63rem rather than the résumé's 60rem, and the extra 3 are the year column's
+   fault, not a change of measure: this page spends 7.5rem + 2rem of its width
+   on the spine before a word is set, so at 60rem the entries column is 807px
+   and the two longest author lines (TTT-Parkour's eight names, DuQuant's nine
+   — 819px and 828px unbroken) each wrapped a single trailing name onto a line
+   of its own. An author list is one run to be read across, not a paragraph, so
+   a widow there is worse than a wider page. 62rem is the exact threshold; 63
+   leaves ~27px so a font-rendering difference or one more co-author doesn't
+   put it back. Titles fit at either width, so nothing else on the page moves.
+   The ceiling is Bootstrap's: .container is 1140px at ≥1200px viewports, less
+   its 15px gutters, so 1008px is inside it and 69rem would be the real limit.
+   Below 1200px the container is 960px and the long lines wrap again — that is
+   the narrow window doing its job, not a regression to chase. */
 .pubs-page {
-  max-width: 60rem;   /* the résumé's measure — the two root documents align */
+  max-width: 63rem;
   margin: 0 auto;
 }
 
@@ -40,7 +53,13 @@
   justify-content: space-between;
   gap: 2rem;
   padding-top: 3.25rem;
-  padding-bottom: 0.85rem;   /* .pubs-note carries the gap to the first year */
+  /* This is the gap *above* .pubs-note, and the note's own margin is the gap
+     below it — the two together are what put the note in the masthead's block
+     rather than in 2026's. So it is set small on purpose: 17px above against
+     47px below, where 0.85rem used to make it 29 against 47 and the note
+     floated between the two. Read them as a pair; changing one alone moves
+     which block the line belongs to. */
+  padding-bottom: 0.15rem;
 }
 
 .pubs-masthead h1 {
@@ -140,9 +159,10 @@
 /* The equal-contribution note leads the record rather than closing it, so it
    belongs to the masthead block above and not to 2026 below: it sits tight
    under the title and takes over the masthead's own separation from the first
-   year group (hence the smaller padding-bottom there, which this margin
-   replaces — don't set both). Still chrome ink at --text-sm: promoting it in
-   position is not promoting it in voice. */
+   year group (hence the small padding-bottom there, which this margin
+   replaces — don't set both, and see the note at that rule for the ratio the
+   two hold). Still chrome ink at --text-sm: promoting it in position is not
+   promoting it in voice. */
 .pubs-note {
   margin: 0 0 2rem;
   font-size: var(--text-sm);
