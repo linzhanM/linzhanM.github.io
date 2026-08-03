@@ -270,7 +270,7 @@ button:focus-visible,
   width: auto;
   height: 84px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 0;
   margin: 0;
 }
 .affiliations img.logo-lg { height: 112px; }
