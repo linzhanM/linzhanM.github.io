@@ -77,6 +77,83 @@ const MIXAMO = { roughness: 0.8, emissiveIntensity: 0.5 };
 
 export const EXAMPLES = [
   SHOWCASE_EXAMPLE,
+  // The stage both pages open on — `stageFromHash()` returns 0 for the embedded
+  // viewer and for a lab arriving without a slug, so whatever stands first here
+  // is the first thing a visitor sees. Four rigs that could not be built more
+  // differently — 70 bones on tracks, a 7-bone floating robot, a 29-DOF
+  // humanoid, a 19-bone quadruped — greeting on the same beat is the paper's
+  // claim in one frame, which is why this is the stage that opens the page.
+  //
+  // All four clips are 48 frames at 24fps and hold their peak across the middle
+  // third, so the arms, the wave and the rear-up arrive together with no stagger
+  // to arrange.
+  //
+  // Two of the four carry a per-model `scale`, and both are corrections for the
+  // same thing rather than art direction: height normalization sizes a rig by
+  // its OWN tallest frame, so a clip whose peak is a raised arm (the G1) or a
+  // rear-up (the Go2) gets sized by the gesture instead of by the body, and the
+  // rig stands short for the rest of the loop. Read those two numbers as
+  // "corrects for the gesture", not as "make this one bigger".
+  {
+    label: 'Welcome',
+    files: [
+      // Two rows, front to back:
+      //   Row 0 (front):  WALL-E · EVE      — the pair, at the viewer.
+      //   Row 1 (back):   G1 · Go2          — the two Unitree machines behind.
+      // Depth is what buys the four rigs room: side by side the reared dog kept
+      // leaning into whatever stood next to it (evenGaps sizes its slot from the
+      // sprawl of a quadruped on all fours, not from the narrow column it
+      // becomes when it rears), and the row had to spread until the group
+      // stopped reading as a group. Standing them in two ranks solves the same
+      // problem with depth instead of width, and the label solver already knows
+      // what to do with a diorama: front row's chips go down onto the empty
+      // floor, back row's up into the empty sky.
+      //
+      // groundToMesh throughout: EVE's root joint sits inside the body shell,
+      // the G1's and the Go2's ankle joints sit above their foot shells, and
+      // WALL-E's tracks hang below his — joint-grounding buries the first and
+      // hovers the rest.
+      //
+      // The -open cut of the greet, not the one the WALL-E Robot stage runs:
+      // same 70-bone rig, but the arms swing out to the sides instead of lifting
+      // a little, about three times the travel. At this size in the front rank a
+      // small gesture reads as nothing happening.
+      //
+      // It takes the shared prompt from prompts.json, which is why it says
+      // "A robot …" and not the character line its neighbour stage overrides
+      // with — four chips in one voice is the stage's whole claim, and
+      // "WALL-E greets…" among them breaks the series into a cast list.
+      { url: 'resources/glbs/wall-e-greet-open.glb', groundToMesh: true },
+      // The waving cut of the greet, chosen over the plain one: the arms come up
+      // to ~46° and then swing (46 → 31 → 39 → 46 → 36) while the head rocks
+      // with them, so EVE keeps moving through the middle of the loop instead
+      // of parking at her peak the way the other three do.
+      { url: 'resources/glbs/eve_greet_wave.glb', groundToMesh: true },
+      // Same correction the Unitree G1 stage makes for this clip and for the
+      // same reason: the raised arm is what sets the bbox height, so height
+      // normalization sizes the rig by the wave rather than by the body and the
+      // G1 stands a head short of everyone here. 1.2 puts its shoulders back in
+      // line with EVE's — which matters more in the back rank, where perspective
+      // is already taking a cut out of it.
+      { url: 'resources/glbs/g1_29dof_wave.glb', groundToMesh: true, scale: 1.2, row: 1 },
+      // The multiplier lands on the rig's TALLEST frame, which for this clip is
+      // the top of the rear — so it reads roughly double what it looks like on
+      // the number. 1.3 put the dog's reared head above every other rig on the
+      // stage, which is backwards: it is the small one here. 0.95 brings the
+      // peak up to about EVE's head and leaves it at a large dog's height for
+      // the rest of the loop.
+      { url: 'resources/glbs/go2_rear_up.glb', groundToMesh: true, scale: 0.95, row: 1 },
+    ],
+    // rowDepth is well under the 2.6 default: the two ranks only have to be
+    // told apart, and at 2.4 the back pair stood off across an empty stretch of
+    // floor and read as a separate group rather than as the back of this one.
+    // 1.4 keeps them close enough to greet together while the front pair still
+    // clearly overlaps them. pad is still doing more work than usual, because a
+    // second rank pushes the front row toward the camera as well as the back
+    // row away from it — at the 1.2 that framed a single row WALL-E and EVE
+    // were cropped off the bottom edge.
+    spacing: 1.15, pad: 1.35, evenGaps: true, rowDepth: 1.4,
+  },
   {
     label: 'Bipedal',
     files: [
@@ -181,6 +258,21 @@ export const EXAMPLES = [
       },
     ],
     spacing: 1.35,
+    pad: 1.12,
+    evenGaps: true,
+  },
+  // EVE, beside WALL-E. groundToMesh on all three: the rig is 7 bones and its
+  // root joint sits well inside the body shell, so joint-grounding buries her
+  // to the waist. The three clips are gestures rather than locomotion — nothing
+  // travels, so the row holds its spacing for the whole loop.
+  {
+    label: 'EVE Robot',
+    files: [
+      { url: 'resources/glbs/eve_scan.glb', groundToMesh: true },
+      { url: 'resources/glbs/eve_curious.glb', groundToMesh: true },
+      { url: 'resources/glbs/eve_alert.glb', groundToMesh: true },
+    ],
+    spacing: 1.25,
     pad: 1.12,
     evenGaps: true,
   },

@@ -977,15 +977,33 @@ button:focus-visible,
   background: var(--ivory-medium);
 }
 
+/* The embedded rail is a RULED REGISTER: rows running full-bleed from panel
+   edge to panel edge, separated by one hairline each, so the rail draws as
+   ruled paper with fifteen lines written on it. It used to be a sheet of
+   fifteen framed cells, and that is what a register replaced — fifteen equal
+   outlines each holding one short label in a lot of air read as an unfinished
+   table. Rules and mono type with no frames is also how this page sets every
+   other list it has: the Dataset section's `.algo` float and the `.toc`.
+
+   Full bleed is what keeps a row from reading as a prompt chip — white, ink
+   hairline, mono text, shrink-to-fit, sitting inside the canvas an arm's length
+   to the right — because a chip is an OBJECT and a row is now a LINE.
+
+   `flex-start` + zero gap is what keeps the rules evenly spaced;
+   `space-between` would push the rows apart into bands. `flex: 1 1 auto` then
+   shares the column's length between them the way a ledger's lines do, and past
+   fifteen they compress to the 34px floor and the rail scrolls, top-aligned and
+   reachable. */
 .interactive-showcase .example-sidebar {
   box-sizing: border-box;
   flex: 1 1 auto;
   width: 100%;
   min-height: 0;
   height: auto;
-  justify-content: center;
-  gap: 3px;
-  padding: 10px;
+  justify-content: flex-start;
+  gap: 0;
+  /* Full bleed: the register's rules run the panel's full width. */
+  padding: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: none;
@@ -993,58 +1011,100 @@ button:focus-visible,
 
 .interactive-showcase .example-sidebar::-webkit-scrollbar { display: none; }
 
-.interactive-showcase .example-sidebar::before,
-.interactive-showcase .example-item::after {
-  display: none;
-}
+/* A line in the register: no fill, no frame, one hairline above it.
 
+   The 14px inset is a measurement, not a taste. The panel is 190px and its
+   right border takes 1, so 189 − 14 − 12 leaves 163 to hold "Unitree
+   Locomotion", which sets 130px of Roboto Mono at 12px. Treat the insets and
+   that label as one measurement whenever either changes. */
 .interactive-showcase .example-item {
+  box-sizing: border-box;
+  flex: 1 1 auto;
   width: 100%;
-  min-height: 40px;
-  padding: 9px 12px 9px 17px;
+  min-height: 34px;
+  margin-top: 0;
+  padding: 0 12px 0 14px;
   border: 0;
-  border-radius: 4px;
+  border-top: 1px solid var(--rule);
+  border-radius: 0;
   background: transparent;
-  transition: color 0.16s ease, background 0.16s ease;
+  transition: background 0.18s ease;
+  /* The global :focus-visible ring is offset 3px OUTWARD, which on a full-bleed
+     row lands outside the panel and is clipped by the rail's own overflow.
+     Inward, it draws just inside the line it belongs to. */
+  outline-offset: -3px;
 }
 
-.interactive-showcase .example-item::before {
-  left: 0;
-  top: 8px;
-  bottom: 8px;
-  width: 3px;
-  height: auto;
-  margin: 0;
-  border: 0;
-  border-radius: 0 2px 2px 0;
-  background: var(--accent);
-  transform: scaleY(0);
-  transform-origin: center;
+/* The header's own bottom rule is already the register's first line. */
+.interactive-showcase .example-item:first-child {
+  border-top: 0;
 }
 
+/* Hover lights the whole line, edge to edge — a ruled sheet has no cell to
+   fill, so the line itself is the highlight. It means "you are pointing at
+   this"; the plate below means "this is the stage on screen". One each. */
 .interactive-showcase .example-item:hover,
 .interactive-showcase .example-item:focus-visible {
-  background: rgba(250, 249, 245, 0.8);
+  z-index: 1;
+  background: var(--ivory);
+}
+
+/* The one line that leaves the register, and the whole signature of this rail:
+   a π0.5 control (pi.website/blog/pi05, the same source the Applications figure
+   bar comes from) — a hard frame and a solid offset shadow with NO blur, so the
+   selected stage reads as a plate lifted off the ruled sheet rather than as a
+   highlighted row.
+
+   Three things are load-bearing. The frame is `#000` at 1.5px —
+   `.viewer-wrapper`'s exact frame, so the selected row wears the frame of the
+   thing it drives; that is the only reason to reach for black here. The shadow
+   has zero blur, because a blurred one is a soft-UI dialect this page doesn't
+   speak. And the plate is drawn by a PSEUDO-ELEMENT inset inside the row, never
+   by a border or a margin on the row itself: both of those change how much
+   main-axis space the row asks for, so selecting a stage would re-cut all
+   fifteen lines and shift every label by a few px — the one thing a register
+   must not do. Inset this way nothing moves; a frame simply appears around a
+   line that is already where it belongs.
+
+   No accent: frame, shadow and the 700 --slate-dark ink are three signals
+   already. */
+.interactive-showcase .example-item::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  bottom: 4px;
+  left: 6px;
+  border: 1.5px solid #000;
+  background: var(--ivory);
+  box-shadow: 3px 3px 0 #000;
+  opacity: 0;
+  transition: opacity 0.18s ease;
 }
 
 .interactive-showcase .example-item.active {
-  background: var(--slate-dark);
+  z-index: 2;
 }
-
 .interactive-showcase .example-item.active::before {
-  transform: scaleY(1);
+  opacity: 1;
 }
 
-.interactive-showcase .example-item.active .example-name {
-  color: var(--ivory);
-}
-
+/* The plate is positioned, so it paints over the row's in-flow text unless the
+   text is positioned too. */
 .interactive-showcase .example-name {
-  color: var(--slate-light);
+  position: relative;
+  z-index: 1;
   font-size: 12px;
-  font-weight: 700;
 }
 
+/* Names only. The rig count was tried in this rail, set as a table of contents
+   sets a page number — a tabular numeral on a common right edge — and taken
+   back out: a line in a register is a NAME you pick, and a second column turns
+   fifteen controls into a table you read. viewer.js still writes the numeral
+   into the markup and still puts the same fact in words on every row's
+   aria-label and title, so this takes it off the screen without taking it away
+   from a screen reader. The lab hides it too (css/interactive.css), so the two
+   rails agree. */
 .interactive-showcase .example-count {
   display: none;
 }
@@ -1089,68 +1149,30 @@ button:focus-visible,
 }
 
 
-/* The sidebar reads as a kinematic chain: a bone runs down the left gutter and
-   each item is a joint on it. Selecting a character activates its joint.
-
-   It carries no boxes on purpose. Each row used to be a bordered white pill with
-   a rounded corner — which is the same dress the prompt chips wear inside the
-   canvas an arm's length to the right, so a *control* and an *annotation* read as
-   one kind of thing, and the chain the CSS claimed to draw was a 2px --ivory-dark
-   line (≈1.1:1 on this page) behind ten opaque cards, i.e. invisible. The chips
-   keep the pill; the sidebar keeps the rig. Affordance moved to hover, where a
-   field appears under the row — so the field means "you are pointing at this" and
-   the joint means "this is the stage on screen", one signal each.
-
-   Rows are content-height and the spine's spare length is spent on the gaps
-   (justify-content), not on the rows: an eleventh stage lengthens the chain
-   instead of re-cutting every row, which is what `flex: 1 1 0` used to do. */
+/* Rail shell — layout and type only. Every visual decision (frame, fill, states,
+   sizes) lives in the .interactive-showcase block above, which is the rail's one
+   and only consumer: this stylesheet is loaded by index.html alone, and the rail
+   there is always inside that section. The motion lab styles its own copy in
+   css/interactive.css and never loads this file. So nothing the showcase block
+   already sets is repeated here — a second layer for a single consumer is how
+   the previous version ended up with ~70 lines that could not render. */
 .example-sidebar {
   position: relative;
-  /* Unchanged from when the rows were pills, so the canvas beside it stays 759px
-     wide: the prompt-chip solver in viewer.js is tuned against that measure. The
-     longest row ("Quadruped Robot" + its count) needs 134 of the 146 this leaves. */
-  flex: 0 0 165px;
-  height: 590px;
-  align-self: center;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding-left: 22px;
-}
-
-/* The bone (spine) — inset so it begins/ends at the first/last joint centers.
-   --rule, not --ivory-dark: that token is a *surface* tone and at hairline width
-   on cream it does not register, which is why the chain never read. */
-.example-sidebar::before {
-  content: '';
-  position: absolute;
-  left: 7.25px;
-  top: 16px;
-  bottom: 16px;
-  width: 1.5px;
-  background: var(--rule);
 }
 
 .example-item {
   position: relative;
-  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   font-family: 'Roboto Mono', monospace;
-  font-size: 13px;
   line-height: 1.2;
   text-align: left;
   white-space: nowrap;
-  padding: 8px 9px 8px 10px;
-  border: 0;
-  /* 3px is the page's chip radius, and it is also what the global :focus-visible
-     rule stamps on — matching it keeps the field from changing shape on focus. */
-  border-radius: 3px;
-  background: transparent;
   cursor: pointer;
-  transition: background 0.18s ease;
 }
 
 /* Weight and ink carry the state, the way .venue / .venue-year split one line
@@ -1161,73 +1183,9 @@ button:focus-visible,
   color: var(--slate-light);
   transition: color 0.18s ease;
 }
-
-/* How many rigs stand on this stage: 2 to 9, and the thing that most differs
-   between them. Quiet and always the same ink — it is data, not state. Counted
-   from `files` in viewer.js, so it cannot drift from the stage it labels. */
-.example-count {
-  font-weight: 300;
-  font-size: 11px;
-  color: var(--slate-light);
-  font-variant-numeric: tabular-nums;
-}
-
-/* The joint — a hollow node sitting on the spine. The fill is the page ground so
-   the spine is punched out where it passes under, which is the convention the
-   rest of the page draws rigs with. It is #fdfaf4 (body's own literal) and not
-   --ivory: those are two different creams, and a punch-out has to match exactly. */
-.example-item::before {
-  content: '';
-  position: absolute;
-  box-sizing: border-box;
-  left: -20px;
-  top: 50%;
-  width: 12px;
-  height: 12px;
-  margin-top: -6px;
-  border-radius: 50%;
-  background: #fdfaf4;
-  border: 1.5px solid var(--rule);
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-}
-
-/* The bone that wires the joint to its rig — grows out on activation, from the
-   joint's edge to the first glyph of the label. */
-.example-item::after {
-  content: '';
-  position: absolute;
-  left: -8px;
-  top: 50%;
-  width: 18px;
-  height: 1.5px;
-  margin-top: -0.75px;
-  background: var(--accent);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.25s ease;
-}
-
-.example-item:hover,
-.example-item:focus-visible {
-  background: var(--ivory-medium);
-}
 .example-item:hover .example-name,
 .example-item:focus-visible .example-name {
   color: var(--slate-dark);
-}
-.example-item:hover::before {
-  border-color: var(--slate-light);
-}
-
-/* Activated joint: filled coral, slightly larger. Scaled rather than resized, so
-   nothing has to re-derive left/margin-top to keep it centered on the spine. */
-.example-item.active::before {
-  background: var(--accent);
-  border-color: var(--accent);
-  transform: scale(1.15);
-}
-.example-item.active::after {
-  transform: scaleX(1);
 }
 .example-item.active .example-name {
   font-weight: 700;

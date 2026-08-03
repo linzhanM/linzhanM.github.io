@@ -2,7 +2,7 @@
 // The catalog is the shared examples.js — both pages show the same stages in
 // the same order. What differs is the VIEWER: everything below is lab-only
 // presentation (fullscreen chrome, camera paddings, hover prompts, theme).
-import { HIDDEN_CATEGORIES } from './viewer-presets.js?v=1';
+import { HIDDEN_CATEGORIES } from './viewer-presets.js?v=2';
 import { LAB_TUNING } from './stage-tuning.js?v=1';
 
 window.UNIMATE_VIEWER_CONFIG = {
@@ -37,7 +37,7 @@ window.UNIMATE_VIEWER_CONFIG = {
   autoOrbitControls: true,
 };
 
-await import('./viewer.js?v=115');
+await import('./viewer.js?v=129');
 
 // Category-panel collapse — lab-only chrome, so it is wired here rather than
 // in the shared engine. The canvas never resizes: only the floating panel and

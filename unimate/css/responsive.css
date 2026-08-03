@@ -115,41 +115,43 @@
     background: var(--ivory);
     border-top: 1px solid var(--rule);
   }
+  /* The desktop rail is a ruled register: full-bleed lines that stretch to fill
+     the column, one hairline above each. None of that survives being laid on its
+     side — a rule between pills in a scrolling row is just a doubled edge, and
+     `flex: 1 1 auto` would stretch every pill to fill the strip. So the register
+     is undone here and the strip keeps the separate pill it always had. */
   .interactive-showcase .example-item {
     position: relative;
+    flex: 0 0 auto;
     width: auto;
     min-width: max-content;
     min-height: 38px;
     max-height: 38px;
+    margin-top: 0;
     padding: 0 12px;
     border: 1px solid var(--rule);
     border-radius: 5px;
     background: var(--ivory);
     scroll-snap-align: start;
   }
+  /* The register drops the first row's top rule (the header's own rule is
+     already the sheet's first line) and rounds nothing. A pill needs all four
+     sides and both corners back, and :first-child outranks the rule above. */
+  .interactive-showcase .example-item:first-child,
+  .interactive-showcase .example-item:last-child { border-radius: 5px; }
+  .interactive-showcase .example-item:first-child {
+    border-top: 1px solid var(--rule);
+  }
+  /* The desktop plate is drawn by ::before, inset inside the line. A pill is
+     already an object standing on its own, so the strip marks the selected one
+     on the pill itself and the plate has nothing left to do. */
   .interactive-showcase .example-item::before { display: none; }
   .interactive-showcase .example-item.active {
     border-color: var(--slate-dark);
     color: var(--ivory);
     background: var(--slate-dark);
+    box-shadow: none;
   }
-  .example-sidebar::before,
-  .example-item::before,
-  .example-item::after { display: none; }
-  /* The rig can't survive being laid on its side — a spine across the top of a
-     scrolling strip is a rule, not a chain — so the phone keeps the pill it
-     always had. Without the joints there is nothing but the border to say where
-     one stage ends and the next begins, and no canvas beside it for the pills to
-     be confused with. */
-  .example-item {
-    flex: 0 0 auto;
-    padding: 8px 11px;
-    border: 1px solid var(--ivory-dark);
-    border-radius: 8px;
-    background: #fff;
-    scroll-snap-align: start;
-  }
-  .example-item.active { border-color: var(--accent); background: var(--ivory-medium); }
   .interactive-showcase .example-name {
     color: var(--slate-light);
     font-size: 10px;
@@ -537,9 +539,8 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .example-item,
-  .example-name,
   .example-item::before,
-  .example-item::after { transition: none; }
+  .example-name { transition: none; }
   .quick-links a:not(.disabled)::after { transition: none; }
   /* The chips still track the camera — only their arrival fade is dropped. */
   .viewer-label,
