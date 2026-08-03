@@ -15,12 +15,12 @@
   <link rel="canonical" href="https://linzhanmou.com/unimate/" />
   <link rel="icon" type="image/png" sizes="2048x2048" href="assets/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/style.css?v=5" />
+  <link rel="stylesheet" href="css/style.css?v=6" />
   <!-- The Applications schematics: their own figure system (layout, rig, motion),
        kept out of the page sheet. Loaded after it, so it can read the tokens. -->
-  <link rel="stylesheet" href="css/schematics.css" />
+  <link rel="stylesheet" href="css/schematics.css?v=1" />
   <!-- Breakpoint-specific page and component overrides load last. -->
-  <link rel="stylesheet" href="css/responsive.css?v=5" />
+  <link rel="stylesheet" href="css/responsive.css?v=6" />
 </head>
 
 <body>
@@ -121,8 +121,9 @@
 
       <div class="viewer-layout">
         <aside class="category-panel" aria-label="Motion categories">
-          <div class="category-heading"><span>Categories</span><strong>11</strong></div>
-          <!-- One row per stage; filled and kept in sync by viewer.js. -->
+          <!-- One row per stage; filled and kept in sync by viewer.js. The lab
+               keeps a "Categories" heading over this rail; here the section
+               heading directly above already names the block. -->
           <div class="example-sidebar" id="example-sidebar" role="group" aria-label="Example stages"></div>
         </aside>
         <div class="embed-control-bar" aria-label="Display controls">
@@ -130,7 +131,6 @@
             <button class="embed-status-control embed-playback-control" type="button" data-setting="paused" aria-pressed="false"><span data-playback-label>Pause</span><i aria-hidden="true"></i></button>
             <button class="embed-status-control is-active" type="button" data-setting="show model" aria-pressed="true"><span>Mesh</span><i aria-hidden="true"></i></button>
             <button class="embed-status-control is-active" type="button" data-setting="show skeleton" aria-pressed="true"><span>Skeleton</span><i aria-hidden="true"></i></button>
-            <button class="embed-status-control" type="button" data-setting="wireframe" aria-pressed="false"><span>Wireframe</span><i aria-hidden="true"></i></button>
           </div>
         </div>
         <div class="viewer-wrapper" id="viewer-wrapper">
@@ -908,32 +908,16 @@
     }
   </script>
 
-  <script type="module" src="js/index-viewer.js?v=4"></script>
+  <script type="module" src="js/index-viewer.js?v=8"></script>
 
   <!-- Galleries: scroll buttons + play-only-what-is-visible. -->
   <script src="js/gallery.js?v=6"></script>
 
   <!-- TOC rail: scroll-spy + the gutter-collision watcher. -->
-  <script src="js/toc.js"></script>
+  <script src="js/toc.js?v=2"></script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      var button = document.querySelector('.abstract-toggle');
-      var copy = document.querySelector('.abstract-copy');
-      if (!(button && copy)) return;
-
-      document.body.classList.add('has-abstract-toggle');
-      button.hidden = false;
-      button.addEventListener('click', function () {
-        var expanded = button.getAttribute('aria-expanded') === 'true';
-        copy.classList.toggle('is-expanded', !expanded);
-        button.setAttribute('aria-expanded', String(!expanded));
-        button.innerHTML = expanded
-          ? 'Read full abstract <span aria-hidden="true">↓</span>'
-          : 'Collapse abstract <span aria-hidden="true">↑</span>';
-      });
-    });
-  </script>
+  <!-- Abstract fold: the phone-width "Read full abstract" toggle. -->
+  <script src="js/abstract.js?v=1"></script>
 
   <script type="text/javascript">
     var sc_project = 12925377;

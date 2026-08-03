@@ -115,7 +115,6 @@
     background: var(--ivory);
     border-top: 1px solid var(--rule);
   }
-  .interactive-showcase .category-heading { display: none; }
   .interactive-showcase .example-item {
     position: relative;
     width: auto;
@@ -182,7 +181,9 @@
   }
   .interactive-showcase .embed-control-actions {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    /* Three controls — Pause, Mesh, Skeleton. Wireframe is the lab's option;
+       the embedded bar dropped it. */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: stretch;
   }
   .interactive-showcase .embed-status-control {

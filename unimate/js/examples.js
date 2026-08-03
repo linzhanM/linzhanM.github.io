@@ -1,6 +1,4 @@
 // ─────────────────────────────────────────────────────────────────────────────
-
-import { SHOWCASE_EXAMPLE } from './showcase.js';
 // Interactive viewer — scene catalog (data only, no engine code).
 //
 // EXAMPLES drives the viewer's sidebar: each entry is one "stage" (a window of
@@ -30,6 +28,9 @@ import { SHOWCASE_EXAMPLE } from './showcase.js';
 //             while the camera + floor stay locked on the ground center (the objects
 //             move across a stationary floor; the viewpoint never pans). Held out of
 //             the auto-framing. e.g. [-1, 0, 0] moves the group left. Default [0, 0, 0].
+//   floor     multiplier on the auto-sized checker floor (default 1). The floor pads
+//             itself by 2×|stageShift| to keep reaching under a shifted group, which
+//             on a deep shift inflates it until the models read lost — shrink it here.
 //
 // ── File entry ───────────────────────────────────────────────────────────────
 //   A file is either a path string ('resources/glbs/foo.glb'), or an object { url, ...opts }:
@@ -68,6 +69,8 @@ import { SHOWCASE_EXAMPLE } from './showcase.js';
 //                  models (chains resolve in dependency order). Excluded from the row.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { SHOWCASE_EXAMPLE } from './showcase.js?v=1';
+
 // Shared PBR lift for the mixamo rigs — they all render dark/matte the same way,
 // so they share one material. Every other glb uses its own inline `material`.
 const MIXAMO = { roughness: 0.8, emissiveIntensity: 0.5 };
@@ -99,19 +102,11 @@ export const EXAMPLES = [
     spacing: 0.6, lighting: 2., evenGaps: true,
   },
   {
-    label: 'Flower',
-    files: [
-      { url: 'resources/glbs/flower.glb', labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -5] },
-      { url: 'resources/glbs/piranha-plant.glb', rotate: [0, 45, 0], offset: [0.0, 0, -0.2], labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -45] },
-    ],
-    spacing: 1.0, pad: 0.9,
-  },
-  {
     // Two-row diorama (front row 0 → back row 1, separated by `rowDepth`):
     //   Row 0 (front, ground):  gyarados · jellyfish          + a bird hovering above.
     //   Row 1 (back,  ground):  monster · stego               + two dragons above.
     // Flyers use `above: [index, height]` to sit over a specific ground model.
-    label: 'Zoo',
+    label: 'Creatures',
     files: [
       // Row 0 (front, ground). Whole front row nudged left (−x).
       { url: 'resources/glbs/gyarados.glb', groundToMesh: true, scale: 1.25, offset: [-0.6, 0, 1.0] },    // 0
@@ -131,24 +126,32 @@ export const EXAMPLES = [
     // enough to clear a band above and below everything.
     spacing: 1.05, pad: 1.02, evenGaps: true, rowDepth: 2.8, stageShift: [-0.3, 0, 0],
   },
+  // Unitree's two machines walking side by side, out of the depth of the
+  // stage toward the viewer — real locomotion, not in-place: the G1 covers
+  // ~1.9 of its heights per loop, the Go2 ~5.6 of its own smaller height
+  // (0.45 keeps the dog at roughly true scale beside the G1). stageShift
+  // starts the pair at the BACK of the floor so the walk ENDS at the floor
+  // centre: largest exactly when centred, never close enough to crop.
+  // `floor` reins in the checker the deep shift would otherwise inflate.
   {
-    label: 'Humanoid Robot',
+    label: 'Unitree Locomotion',
     files: [
-      // Row 0 (front): four gundams, matching the four robots behind.
-      { url: 'resources/glbs/gundam-crouch.glb', scale: 0.8 },
-      { url: 'resources/glbs/gundam-punch.glb', scale: 0.8 },
-      { url: 'resources/glbs/gundam-jump.glb', scale: 0.8 },
-      { url: 'resources/glbs/gundam-dance.glb', scale: 0.8 },
-      // Row 1 (back): robots.
-      { url: 'resources/glbs/robot-walk.glb', row: 1 },
-      { url: 'resources/glbs/robot-jump.glb', row: 1 },
-      { url: 'resources/glbs/robot-rotate.glb', row: 1 },
-      { url: 'resources/glbs/robot-kick.glb', row: 1, labelSlot: 'above', lockLabelSlot: true, labelOffset: [70, 15] },
+      { url: 'resources/glbs/g1_29dof_walk_forward.glb', groundToMesh: true },
+      { url: 'resources/glbs/go2_ellipse_walk.glb', groundToMesh: true, scale: 0.45 },
     ],
-    // pad is generous here because the labels need somewhere to live: eight chips
-    // across two rows want a clear strip of sky above and floor below, and at a
-    // tighter pad the front row's chips are squeezed against the bottom edge.
-    rowSpacing: { 0: 0.8, 1: 1.1 }, pad: 1.1, rowDepth: 1.8,
+    spacing: 1.4,
+    // scale is not cosmetic here: the pair spans less than the camera's
+    // MIN_FRAME_WIDTH, so growing the models grows them on screen instead of
+    // just refitting. Travel grows with them — keep stageShift ≈ the G1's
+    // scaled travel so the walk still ends at the floor centre.
+    scale: 3.0,
+    pad: 1.8,
+    // The walk occupies the middle third of the checker: it starts a third of
+    // the way in from the back edge and ends at two thirds — shift places the
+    // start, floor sizes the board so the ~2.5-unit scaled travel IS that
+    // middle third.
+    stageShift: [0, 0, -2.5],
+    floor: 0.8,
   },
   {
     label: 'Quadruped Robot',
@@ -159,17 +162,7 @@ export const EXAMPLES = [
     spacing: 1.35, scale: 0.6, pad: 0.7,
   },
   {
-    label: 'Baymax Robot',
-    files: [
-      { url: 'resources/glbs/bigwhite-walk.glb', labelOffset: [0, -18] },
-      { url: 'resources/glbs/bigwhite-dance.glb', labelOffset: [0, -18] },
-      { url: 'resources/glbs/bigwhite-punch.glb', labelOffset: [0, -18] },
-    ],
-    spacing: 1.0, pad: 1.12,
-  },
-  {
     label: 'WALL-E Robot',
-    sidebarGapBefore: true,
     files: [
       {
         url: 'resources/glbs/wall-e-spin.glb',
@@ -190,6 +183,59 @@ export const EXAMPLES = [
     spacing: 1.35,
     pad: 1.12,
     evenGaps: true,
+  },
+  // Unitree G1 (29-DOF humanoid). groundToMesh on all three: the ankle joints
+  // sit above the foot shells, so joint-grounding leaves the feet hovering.
+  // The wave's scale is a correction, not a design choice: sizing normalizes
+  // to bbox height, and its raised arm makes that 1.28 against the others'
+  // ~1.04 — 1.23 puts the three bodies back at one size.
+  {
+    label: 'Unitree G1 Robot',
+    files: [
+      { url: 'resources/glbs/g1_29dof_pick_up.glb', groundToMesh: true },
+      { url: 'resources/glbs/g1_29dof_jump_forward.glb', groundToMesh: true },
+      { url: 'resources/glbs/g1_29dof_wave.glb', groundToMesh: true, scale: 1.23 },
+    ],
+    spacing: 1.3,
+    scale: 1.1,
+    pad: 1.1,
+  },
+  {
+    label: 'Baymax Robot',
+    files: [
+      { url: 'resources/glbs/bigwhite-walk.glb', labelOffset: [0, -18] },
+      { url: 'resources/glbs/bigwhite-dance.glb', labelOffset: [0, -18] },
+      { url: 'resources/glbs/bigwhite-punch.glb', labelOffset: [0, -18] },
+    ],
+    spacing: 1.0, pad: 1.12,
+  },
+  {
+    label: 'Gundam Robot',
+    files: [
+      'resources/glbs/gundam-crouch.glb',
+      'resources/glbs/gundam-punch.glb',
+      'resources/glbs/gundam-jump.glb',
+      'resources/glbs/gundam-dance.glb',
+    ],
+    spacing: 1.0, pad: 0.9,
+  },
+  {
+    label: 'Armored Robot',
+    files: [
+      { url: 'resources/glbs/robot-walk.glb' },
+      { url: 'resources/glbs/robot-jump.glb' },
+      { url: 'resources/glbs/robot-rotate.glb' },
+      { url: 'resources/glbs/robot-kick.glb', labelSlot: 'above', lockLabelSlot: true, labelOffset: [70, 15] },
+    ],
+    spacing: 1.1, pad: 1.1,
+  },
+  {
+    label: 'Flower',
+    files: [
+      { url: 'resources/glbs/flower.glb', labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -5] },
+      { url: 'resources/glbs/piranha-plant.glb', rotate: [0, 45, 0], offset: [0.0, 0, -0.2], labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -45] },
+    ],
+    spacing: 1.0, pad: 0.9,
   },
   {
     label: 'Eagle',

@@ -12,18 +12,24 @@
 
   <link rel="icon" type="image/png" href="assets/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/interactive.css?v=7" />
+  <link rel="stylesheet" href="css/interactive.css?v=9" />
 </head>
 <body class="interactive-viewer-page">
   <main class="lab-shell">
     <section class="viewer-panel" aria-label="Interactive animation viewer">
       <div class="viewer-layout">
         <div class="viewer-wrapper" id="viewer-wrapper">
-          <aside class="category-panel" aria-label="Motion categories">
-            <div class="category-heading"><span>Categories</span><strong>12</strong></div>
+          <aside class="category-panel" id="category-panel" aria-label="Motion categories">
+            <div class="category-heading"><span>Categories</span><strong>14</strong></div>
             <div class="example-sidebar" id="example-sidebar" role="group" aria-label="Example stages"></div>
             <button class="theme-control category-theme" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to light palette"><span>Theme</span><span class="theme-value"><span class="theme-name">Dark</span><i class="theme-swatch" aria-hidden="true"></i></span></button>
           </aside>
+          <!-- Collapse handle for the category panel: rides its right edge, and
+               stays at the screen edge while the panel is hidden. Desktop only —
+               on phones the panel is the bottom strip and always shows. -->
+          <button class="panel-toggle" type="button" aria-controls="category-panel" aria-expanded="true" aria-label="Hide categories">
+            <svg viewBox="0 0 8 12" aria-hidden="true" focusable="false"><path d="M6.5 1 2 6l4.5 5" /></svg>
+          </button>
           <div id="viewer-labels"></div>
           <div id="loading-overlay"><span class="spinner"></span><span>Building scene</span></div>
           <div id="drop-hint">Release to inspect your model</div>
@@ -59,6 +65,6 @@
       }
     }
   </script>
-  <script type="module" src="js/interactive.js?v=44"></script>
+  <script type="module" src="js/interactive.js?v=50"></script>
 </body>
 </html>

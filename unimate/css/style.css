@@ -16,7 +16,9 @@
      8. Interactive 3D viewer (sidebar + canvas)
      9. BibTeX
     10. Footer
-    11. Responsive
+
+   Breakpoint-specific overrides (the old §11) live in css/responsive.css,
+   loaded after this file and schematics.css so they stay the final authority.
    ============================================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Mono:wght@300;700&display=swap');
@@ -975,27 +977,6 @@ button:focus-visible,
   background: var(--ivory-medium);
 }
 
-.interactive-showcase .category-heading {
-  min-height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  border-bottom: 1px solid var(--rule);
-  color: var(--slate-light);
-  font-family: 'Roboto Mono', monospace;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.interactive-showcase .category-heading strong {
-  color: var(--accent);
-  font-size: 10px;
-  font-weight: 700;
-}
-
 .interactive-showcase .example-sidebar {
   box-sizing: border-box;
   flex: 1 1 auto;
@@ -1429,14 +1410,6 @@ button:focus-visible,
 }
 @keyframes spin {
   to { transform: rotate(360deg); }
-}
-
-.viewer-hint {
-  font-family: 'Roboto Mono', monospace;
-  text-align: center;
-  color: var(--slate-light);
-  font-size: 14px;
-  margin-top: 14px;
 }
 
 #drop-hint {

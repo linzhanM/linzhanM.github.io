@@ -38,6 +38,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     sections.forEach((_, el) => observer.observe(el));
     setActive(sections.values().next().value);   // default to the first section
+
+    // The last entry (Citation) can never light up through the observer: its
+    // band is the top 22% of the viewport, and the page ends too soon after
+    // the BibTeX block for it to climb that high — the same end-of-page
+    // problem the site nav solves with a sweeping probe line. Here the page
+    // bottom IS the signal: scrolled to the end, the last link is right.
+    const lastLink = links[links.length - 1];
+    addEventListener('scroll', () => {
+      const bottom = window.innerHeight + window.scrollY
+        >= document.documentElement.scrollHeight - 8;
+      if (bottom) setActive(lastLink);
+    }, { passive: true });
   })();
 
   /* 2. Collision watcher — the rail is fixed in the left gutter, so anything

@@ -47,6 +47,12 @@
   "quadruped.glb": "A robot walks in place.",
   "robot.glb": "A robot runs in place.",
 
+  "g1_29dof_pick_up.glb": "A robot picks up an object.",
+  "g1_29dof_jump_forward.glb": "A robot jumps forward.",
+  "g1_29dof_wave.glb": "A robot waves its hand.",
+  "g1_29dof_walk_forward.glb": "A robot walks forward.",
+  "go2_ellipse_walk.glb": "A robot walks forward.",
+
   "bigwhite-walk.glb": "A robot walks forward.",
   "bigwhite-dance.glb": "A robot dances with arms swinging.",
   "bigwhite-punch.glb": "A robot punches forward.",

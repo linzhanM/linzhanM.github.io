@@ -27,7 +27,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=48';
+import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=50';
 
 const wrapper = document.getElementById('viewer-wrapper');
 const overlay = document.getElementById('loading-overlay');
@@ -36,9 +36,16 @@ const labelLayer = document.getElementById('viewer-labels');
 const stageName = document.getElementById('stage-name');
 const LOADING_HTML = overlay.innerHTML;
 const viewerConfig = window.UNIMATE_VIEWER_CONFIG || {};
-const catalog = window.UNIMATE_VIEWER_CATALOG || DEFAULT_CATALOG;
+// One catalog for both pages (examples.js); entries differ only in viewer
+// config. Hidden stages (Showcase) are filtered per the shared presets.
 const hiddenCategories = new Set(viewerConfig.hiddenCategories || []);
-const EXAMPLES = catalog.filter(({ label }) => !hiddenCategories.has(label));
+const EXAMPLES = DEFAULT_CATALOG.filter(({ label }) => !hiddenCategories.has(label));
+// The Categories heading quotes how many stages the rail below it holds. The
+// number in the markup is only a first paint — it is written from the data
+// here rather than maintained by hand in two HTML files.
+document.querySelectorAll('.category-heading strong').forEach((el) => {
+  el.textContent = EXAMPLES.length;
+});
 const isFullscreenLab = viewerConfig.fullscreenLab === true;
 const VIEWER_THEMES = {
   dark: {
@@ -95,6 +102,7 @@ let activePad = 1.15;  // camera padding of the current example (so Reset view k
 let activeCameraPadding = viewerConfig.cameraPadding || 1;
 let activeMobileCameraPadding = viewerConfig.mobileCameraPadding || activeCameraPadding;
 let activeShift = [0, 0, 0]; // whole-diorama pan held OUT of auto-framing (e.g. [-1,0,0] slides left)
+let activeFloor = 1;   // per-stage multiplier on the auto-sized checker floor
 
 // Tuning constants.
 const TARGET_HEIGHT = 1.0;          // normalized height, in world units (Blender TARGET_HEIGHT)
@@ -597,7 +605,10 @@ function frameStage(pad = 1.0, orbitAngleDegrees = viewerConfig.initialOrbitAngl
   // Objects sit `shiftMag` off the floor center, so pad the floor/shadow so it still
   // reaches under them.
   const shiftMag = Math.hypot(activeShift[0], activeShift[2]);
-  const gridSize = (Math.max(size.x, size.z, MIN_FRAME_WIDTH, 1) + 2 * shiftMag) * 1.6;
+  // activeFloor lets a stage rein this in: the 2·shiftMag term covers a shifted
+  // group from the still-centred floor, but on a deep stageShift (Unitree
+  // Locomotion, −1.8) it inflates the floor until the walkers read lost on it.
+  const gridSize = (Math.max(size.x, size.z, MIN_FRAME_WIDTH, 1) + 2 * shiftMag) * 1.6 * activeFloor;
   const squares = 24;                          // squares across the whole floor
   setFloorRepeat(squares);
   grid = new THREE.Mesh(
@@ -816,7 +827,10 @@ const labelNdc = new THREE.Vector3();
 // the viewer just runs without chips. loadStage awaits this promise, so a stage
 // can never render before its text is in.
 const PROMPTS = new Map();
-const promptsReady = fetch('resources/prompts.json')
+// The ?v= matters here as much as on the imports: Pages caches the JSON, and a
+// new rig's chip would otherwise stay missing for returning visitors. Bump it
+// whenever prompts.json changes.
+const promptsReady = fetch('resources/prompts.json?v=3')
   .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
   .then((data) => {
     // '_comment' documents the file for whoever edits it; it isn't a model.
@@ -1019,8 +1033,8 @@ const PILL_PAD = 4;  // px of clearance from the canvas edges and from other chi
 // as a FRACTION of that distance, not an absolute — is fully receded. Relative
 // because a row of models standing side by side varies in distance by a few percent
 // and must stay uniform, while a second row sits ~30% farther back and should
-// visibly drop behind it. This is what keeps the 9-chip Zoo and the two-row
-// Humanoid Robot stage from reading as one flat wall of equal-weight labels.
+// visibly drop behind it. This is what keeps the 9-chip Creatures stage and the two-row
+// Armored Robot stage from reading as one flat wall of equal-weight labels.
 const DEPTH_SPAN = 0.35;
 const DEPTH_FADE = 0.45;   // opacity given up at full recession
 const DEPTH_SHRINK = 0.12; // scale given up at full recession
@@ -1048,7 +1062,7 @@ const controlViewportScale = (width) => {
 };
 
 const MAX_LIFT = 115; // px a pill may be pushed up off its model to dodge another.
-                      // Enough for the Zoo's worst case — the chicken standing under
+                      // Enough for the Creatures stage’s worst case — the chicken standing under
                       // the hovering bird, whose pills want the same patch of sky —
                       // and short enough that a pill still reads as that model's.
 
@@ -1576,7 +1590,10 @@ function updateLabels(dt) {
 // ── 10. Load a stage / example / dropped files ───────────────────────────────
 // Expand an EXAMPLES entry's `files` into normalized specs, then load it.
 function loadExample(index) {
-  const ex = EXAMPLES[index];
+  const shared = EXAMPLES[index];
+  // Per-page presentation: stage-tuning.js may override this stage's layout
+  // options for the current page. The catalog itself (files) never differs.
+  const ex = { ...shared, ...(viewerConfig.stageTuning?.[shared.label] || {}) };
   const specs = ex.files.map((f) => {
     const o = typeof f === 'string' ? { url: f } : f;
     return {
@@ -1601,7 +1618,7 @@ function loadExample(index) {
   return loadStage(specs, index, {
     scale: ex.scale, spacing: ex.spacing, rowSpacing: ex.rowSpacing, pad: ex.pad, lighting: ex.lighting,
     evenGaps: ex.evenGaps, sizeBy: ex.sizeBy, stagger: ex.stagger, rowDepth: ex.rowDepth,
-    stageShift: ex.stageShift,
+    stageShift: ex.stageShift, floor: ex.floor,
     cameraPadding: viewerConfig.cameraPaddingByCategory?.[ex.label],
     mobileCameraPadding: viewerConfig.mobileCameraPaddingByCategory?.[ex.label],
   });
@@ -1694,6 +1711,7 @@ async function loadStage(specs, activeIndex, opts = {}) {
     activeCameraPadding = opts.cameraPadding ?? viewerConfig.cameraPadding ?? 1;
     activeMobileCameraPadding = opts.mobileCameraPadding ?? viewerConfig.mobileCameraPadding ?? activeCameraPadding;
     activePad = opts.pad || 1.0;
+    activeFloor = opts.floor || 1;
     const openingAngle = settings['auto orbit'] ? (viewerConfig.initialOrbitAngle || 0) : 0;
     frameStage(activePad, openingAngle);
     overlay.style.display = 'none';
@@ -1720,7 +1738,9 @@ gui.add(settings, 'show model').name('Mesh')
 gui.add(settings, 'show skeleton').name('Skeleton')
   .onChange((v) => skeletons.forEach((s) => { s.visible = v; }));
 gui.add(settings, 'show prompts').name('Prompts').onChange(applyLabels);
-gui.add(settings, 'wireframe').name('Wireframe').onChange(applyWireframe);
+// No Wireframe row: lil-gui only ever shows on the embedded page (the lab
+// hides it and carries wireframe in its own control bar), and the embedded
+// page dropped the option.
 if (viewerConfig.playbackControls) {
   gui.add(settings, 'paused').name('Pause');
 }
@@ -1776,9 +1796,19 @@ if (isFullscreenLab) {
     });
   }
 
+  // Reset restores the stage as it loaded: every clip back to its first frame
+  // AND the camera back to its framing. Pause state is left alone on purpose —
+  // paused, reset shows the opening pose; playing, the motion starts over.
+  // The lil-gui "Reset view" item stays camera-only: its name promises exactly
+  // the view, and it is the embedded page's control.
+  const resetStage = () => {
+    for (const m of mixers) m.setTime(0);
+    frameStage(activePad, 0);
+  };
+
   for (const button of dockActions) {
     button.addEventListener('click', () => {
-      if (button.dataset.action === 'reset') frameStage(activePad, 0);
+      if (button.dataset.action === 'reset') resetStage();
     });
   }
 
@@ -1799,7 +1829,7 @@ if (isFullscreenLab) {
     const target = event.target;
     if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) return;
     if (event.code === 'KeyR') {
-      frameStage(activePad, 0);
+      resetStage();
       return;
     }
     const key = dockKeys.get(event.code);
