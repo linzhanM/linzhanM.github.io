@@ -1,0 +1,194 @@
+/* Publications page only (publications.html). Loads after styles.css and reuses
+   its tokens, base typography, and the .pub-* entry classes — these are the same
+   papers the homepage and résumé set, and holding one voice across the three
+   pages is the point of sharing the sheet. What this layer adds is the record's
+   own structure: the masthead row and the year spine.
+
+   The spine is the page's one device, and it is the site's own motif turned
+   vertical: the nav rail carries a single accent keypoint that marks where you
+   are, so here a hairline rail runs down the left of each year's entries with
+   one accent joint at the year — a marker on a rail, not a bullet. Reverse
+   chronology is the only ordering on the page, and the spine is what encodes
+   it; don't add entry numbering on top, it would say the same thing twice. */
+.pubs-page {
+  max-width: 60rem;   /* the résumé's measure — the two root documents align */
+  margin: 0 auto;
+}
+
+/* --- Masthead --- */
+/* The résumé masthead's two-sided row: what this page is on the left, the same
+   record in its other database on the right. One baseline, so the 36px title
+   and the 15px link read as one line. Renders with the page — nothing above the
+   first year group animates (see the Entrance note in resume.css; the same
+   reasoning holds here and needs no rule). */
+.pubs-masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-top: 3.25rem;
+  padding-bottom: 2rem;
+}
+
+.pubs-masthead h1 {
+  margin: 0;
+}
+
+.pubs-scholar {
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.pubs-scholar a:link,
+.pubs-scholar a:visited {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.pubs-scholar a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.16em;
+}
+
+/* --- Year spine --- */
+/* Grid, not floats: the year is a landmark in its own column, and the entries
+   column carries the rail. Each group is a .page-section, so it takes the
+   shared section reveal from styles.css. */
+.pubs-year-group {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+}
+
+/* Fraunces numerals as a landmark — the display face's one appearance here,
+   matching the discipline in resume.css (each face spent once). Sticky, so on
+   a year with several entries the numeral keeps its group company; 5rem clears
+   the sticky navbar. align-self is required — a stretched grid item has no
+   room left to stick in. */
+.pubs-year {
+  position: sticky;
+  top: 5rem;
+  align-self: start;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+/* The rail. Its joint (::before) is the nav keypoint's twin — same 5px, same
+   accent, used as a shape, never as text colour. left: -3px centres the dot on
+   the 1px rule; top aligns it with the year numeral's optical centre. */
+.pubs-entries {
+  position: relative;
+  border-left: 1px solid var(--ivory-dark);
+  padding-left: 2rem;
+}
+
+.pubs-entries::before {
+  content: '';
+  position: absolute;
+  left: -3px;
+  top: 0.55rem;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* --- Entries --- */
+/* The .pub-* classes arrive styled from styles.css; only the spacing changes.
+   Those margins are tuned for the homepage's rows-with-thumbnails, and here
+   the entries stack directly, like the résumé's publications section. */
+.pubs-entry {
+  margin-bottom: 1.7rem;
+}
+
+.pubs-entry:last-child {
+  margin-bottom: 0;
+}
+
+.pubs-entry .pub-title {
+  margin-top: 0;
+}
+
+.pubs-entry .pub-venue {
+  margin-bottom: 2px;
+}
+
+/* Review status is a fact about the record, not a credential — it sits in the
+   venue line but drops to chrome ink and regular weight, unlike the accent
+   .venue-highlight badges, which mark something the venue awarded. */
+.pubs-status {
+  font-weight: var(--weight-regular);
+  color: var(--text-tertiary);
+}
+
+/* --- Footnote --- */
+.pubs-footnote {
+  margin: 2.75rem 0 0;
+  font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+/* --- Narrow --- */
+/* The year column has no room on a phone: the numeral moves above its group
+   and the rail stays — at 1.1rem of inset it is a margin note's rule, and the
+   joint still marks where the year begins. Sticky is pointless in block flow
+   and is dropped with the grid. */
+@media screen and (max-width: 767px) {
+  .pubs-masthead {
+    display: block;
+    padding-top: 2.5rem;
+  }
+
+  .pubs-scholar {
+    margin-top: 0.5rem;
+  }
+
+  .pubs-year-group {
+    display: block;
+  }
+
+  .pubs-year {
+    position: static;
+    margin-bottom: 0.75rem;
+  }
+
+  .pubs-entries {
+    padding-left: 1.1rem;
+  }
+}
+
+/* --- Print --- */
+/* Same contract as the résumé's sheet: paper gets the record, not the site. */
+@media print {
+  .navbar,
+  .site-footer {
+    display: none;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  .pubs-page {
+    max-width: none;
+  }
+
+  .pubs-masthead {
+    padding-top: 0;
+  }
+
+  .pubs-entry {
+    break-inside: avoid;
+  }
+
+  a:link,
+  a:visited {
+    text-decoration: none;
+  }
+}
