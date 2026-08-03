@@ -9,10 +9,23 @@
    are, so here a hairline rail runs down the left of each year's entries with
    one accent joint at the year — a marker on a rail, not a bullet. Reverse
    chronology is the only ordering on the page, and the spine is what encodes
-   it; don't add entry numbering on top, it would say the same thing twice. */
+   it; don't add entry numbering on top, it would say the same thing twice.
+   One joint per paper was tried and taken out: it turned the rail into a list
+   of markers, and the year is the only thing on this page that needs marking. */
 .pubs-page {
   max-width: 60rem;   /* the résumé's measure — the two root documents align */
   margin: 0 auto;
+}
+
+/* The rail's ink, measured against this page's background and so not in
+   styles.css. --ivory-dark is the site's border token and the obvious pick,
+   and it cannot do this job: #e8e6dc on the page's #faf9f5 is 1.19:1, so the
+   rail was never actually drawn and the year's accent joint sat in white space
+   reading as a loose bullet — the exact failure the unimate stage rail had
+   before it was rebuilt. 1.67:1 is still a hairline; it is just one that
+   renders. */
+:root {
+  --spine: #cac3b2;   /* 1.67:1 on --ivory-light */
 }
 
 /* --- Masthead --- */
@@ -27,7 +40,7 @@
   justify-content: space-between;
   gap: 2rem;
   padding-top: 3.25rem;
-  padding-bottom: 2rem;
+  padding-bottom: 0.85rem;   /* .pubs-note carries the gap to the first year */
 }
 
 .pubs-masthead h1 {
@@ -55,7 +68,11 @@
 /* --- Year spine --- */
 /* Grid, not floats: the year is a landmark in its own column, and the entries
    column carries the rail. Each group is a .page-section, so it takes the
-   shared section reveal from styles.css. */
+   shared section reveal from styles.css — which is also the reason the rail
+   stops at each year instead of running the whole record as one bone: the
+   reveal translates a group 10px, and a rail spanning two of them would
+   visibly tear on the way in. The break lands on the year boundary, which is
+   the one place a break says something. */
 .pubs-year-group {
   display: grid;
   grid-template-columns: 7.5rem minmax(0, 1fr);
@@ -84,7 +101,7 @@
    the 1px rule; top aligns it with the year numeral's optical centre. */
 .pubs-entries {
   position: relative;
-  border-left: 1px solid var(--ivory-dark);
+  border-left: 1px solid var(--spine);
   padding-left: 2rem;
 }
 
@@ -119,19 +136,28 @@
   margin-bottom: 2px;
 }
 
-/* Review status is a fact about the record, not a credential — it sits in the
-   venue line but drops to chrome ink and regular weight, unlike the accent
-   .venue-highlight badges, which mark something the venue awarded. */
-.pubs-status {
-  font-weight: var(--weight-regular);
+/* --- Note --- */
+/* The equal-contribution note leads the record rather than closing it, so it
+   belongs to the masthead block above and not to 2026 below: it sits tight
+   under the title and takes over the masthead's own separation from the first
+   year group (hence the smaller padding-bottom there, which this margin
+   replaces — don't set both). Still chrome ink at --text-sm: promoting it in
+   position is not promoting it in voice. */
+.pubs-note {
+  margin: 0 0 2rem;
+  font-size: var(--text-sm);
   color: var(--text-tertiary);
 }
 
-/* --- Footnote --- */
-.pubs-footnote {
-  margin: 2.75rem 0 0;
-  font-size: var(--text-sm);
-  color: var(--text-tertiary);
+/* --- Keyboard focus --- */
+/* The same ring custom-navbar.css draws, because the page's own links had
+   nothing: .pub-links strips the underline, so a tabbing visitor was left with
+   whatever the UA happened to paint over ivory. Quality floor, not decoration
+   — and there are ~25 of these links, which is a long way to tab blind. */
+.pubs-page a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
 /* --- Narrow --- */
