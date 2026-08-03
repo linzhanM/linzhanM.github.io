@@ -163,6 +163,7 @@ unimate/
            posters/     one poster frame per clip, same basename
            logos/       princeton.png · ucb.svg · mit.png
            favicon-baymax.png
+           og-lab-walle.png   the lab's link-preview card (WALL-E stage)
 ```
 
 The layout mirrors `dimo/` (`css/` + `js/` + `assets/`) so the two project pages read the same way. `resources/unimate.pdf` is the source for the prompt house style (Appendix A.5) and the résumé page's "paper" link; nothing on the unimate pages themselves links it.
