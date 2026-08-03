@@ -1591,6 +1591,11 @@ function updateLabels(dt) {
 // Expand an EXAMPLES entry's `files` into normalized specs, then load it.
 function loadExample(index) {
   const shared = EXAMPLES[index];
+  currentStageIndex = index;
+  // Keep the address bar a shareable link to what is on screen (lab only —
+  // the embedded page's hash belongs to the document's own anchors).
+  // replaceState, not location.hash: no history entry per click, no scroll.
+  if (isFullscreenLab) history.replaceState(null, '', '#' + stageSlug(shared.label));
   // Per-page presentation: stage-tuning.js may override this stage's layout
   // options for the current page. The catalog itself (files) never differs.
   const ex = { ...shared, ...(viewerConfig.stageTuning?.[shared.label] || {}) };
@@ -1689,6 +1694,13 @@ async function loadStage(specs, activeIndex, opts = {}) {
 
       const skeleton = new THREE.SkeletonHelper(model);
       skeleton.visible = settings['show skeleton'];
+      // The helper's material is transparent with depthTest off — "always
+      // visible" by design. But the checker floor is transparent too (0.88
+      // opacity), and the transparent pass sorts by distance: a far rig's
+      // skeleton drew BEFORE the floor, which then painted 88% over it and
+      // left a ghost. renderOrder puts every helper after the floor and
+      // shadow plane, where depthTest:false already means it wins.
+      skeleton.renderOrder = 2;
       scene.add(skeleton);
 
       pivots.push(pivot);
@@ -1926,4 +1938,28 @@ window.addEventListener('resize', () => {
   previousViewerWidth = w;
 });
 
-loadExample(0);
+// ── Deep links (lab only) ────────────────────────────────────────────────────
+// interactive.html#unitree-locomotion opens straight onto that stage: the slug
+// is the label lowercased with everything non-alphanumeric collapsed to "-",
+// so every sidebar entry has a stable, guessable address. loadExample writes
+// the current stage's slug back to the bar, and hashchange lets a pasted or
+// edited URL retarget a lab that is already open. The embedded page ignores
+// all of this — its hash is the document's own TOC anchors.
+let currentStageIndex = -1;
+const stageSlug = (label) => label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+function stageFromHash() {
+  if (!isFullscreenLab) return 0;
+  const slug = decodeURIComponent(location.hash.slice(1)).toLowerCase();
+  const i = EXAMPLES.findIndex((ex) => stageSlug(ex.label) === slug);
+  return i >= 0 ? i : 0;
+}
+
+if (isFullscreenLab) {
+  window.addEventListener('hashchange', () => {
+    const i = stageFromHash();
+    if (i !== currentStageIndex) loadExample(i);
+  });
+}
+
+loadExample(stageFromHash());
