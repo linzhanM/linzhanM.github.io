@@ -172,18 +172,18 @@ export const EXAMPLES = [
     sidebarGapBefore: true,
     files: [
       {
-        url: 'resources/glbs/wall-e-curious.glb',
-        prompt: 'WALL-E looks around with curiosity.',
+        url: 'resources/glbs/wall-e-spin.glb',
+        prompt: 'WALL-E spins around on his tracks.',
         groundToMesh: true,
       },
       {
-        url: 'resources/glbs/wall-e-drive.glb',
-        prompt: 'WALL-E drives forward on his tracks.',
+        url: 'resources/glbs/wall-e-greet.glb',
+        prompt: 'WALL-E greets with a friendly gesture.',
         groundToMesh: true,
       },
       {
-        url: 'resources/glbs/wall-e-wave.glb',
-        prompt: 'WALL-E raises an arm and waves.',
+        url: 'resources/glbs/wall-e-turn.glb',
+        prompt: 'WALL-E turns around on his tracks.',
         groundToMesh: true,
       },
     ],

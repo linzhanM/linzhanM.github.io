@@ -27,7 +27,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=47';
+import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=48';
 
 const wrapper = document.getElementById('viewer-wrapper');
 const overlay = document.getElementById('loading-overlay');

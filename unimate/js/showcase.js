@@ -7,7 +7,7 @@ export const SHOWCASE_EXAMPLE = {
   label: 'Showcase',
   files: [
     { url: 'resources/glbs/garfield.glb', row: 0, scale: 1.28, rotate: [0, 12, 0], material: { colorScale: 0.72 } },
-    { url: 'resources/glbs/wall-e-wave.glb', row: 0, scale: 1.12, groundToMesh: true, material: { colorScale: 0.78 } },
+    { url: 'resources/glbs/wall-e-greet.glb', row: 0, scale: 1.12, groundToMesh: true, material: { colorScale: 0.78 } },
     { url: 'resources/glbs/satellite.glb', row: 1, scale: 1.5, rotate: [0, 30, 0], groundFrame: 1, groundToMesh: true, material: { roughness: 0.3, metalness: 0.7 } },
     { url: 'resources/glbs/bigwhite-punch.glb', row: 1, scale: 1.4, labelOffset: [0, -18], material: { colorScale: 0.68 } },
     { url: 'resources/glbs/quadruped.glb', row: 1, scale: 1.02, rotate: [0, -18, 0], material: { colorScale: 0.6 } },

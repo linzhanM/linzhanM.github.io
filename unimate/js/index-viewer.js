@@ -5,4 +5,4 @@ window.UNIMATE_VIEWER_CONFIG = {
   hiddenCategories: HIDDEN_CATEGORIES,
 };
 
-await import('./viewer.js?v=109');
+await import('./viewer.js?v=110');

@@ -4,7 +4,7 @@
 import { prepareInteractiveCatalog } from './catalog-runtime.js';
 import { HIDDEN_CATEGORIES } from './viewer-presets.js';
 
-const { EXAMPLES } = await import('./examples.js?v=47');
+const { EXAMPLES } = await import('./examples.js?v=48');
 const interactiveCatalog = EXAMPLES.map((example) => ({
   ...example,
   files: [...example.files],
@@ -42,4 +42,4 @@ window.UNIMATE_VIEWER_CONFIG = {
   autoOrbitControls: true,
 };
 
-await import('./viewer.js?v=107');
+await import('./viewer.js?v=110');
