@@ -6,26 +6,23 @@
   "_from_author": "chicken.glb, stego-attack.glb ('attacks forward') and monster.glb ('walks in place') were corrected by the author. They are the warning against trusting a render: the peck-like head dip and the stego's rear-up both LOOK like precise verbs, but this dataset reuses a small vocabulary — 'attacks forward' is also the caption on the piranha plant. Match an existing caption before inventing a verb.",
 
   "_from_caption": [
-    "garfield.glb", "gundam-punch.glb", "satellite.glb", "robot-arm.glb", "lamp.glb",
-    "flower.glb", "piranha-plant.glb", "jellyfish.glb", "bird.glb", "dragon.glb",
-    "robot-walk.glb", "quadruped.glb", "robot.glb", "bigwhite-walk.glb", "bigwhite-dance.glb",
-    "bigwhite-punch.glb", "eagle-takeoff.glb", "eagle-strike.glb", "eagle-landing.glb",
-    "jaws-swimright.glb", "jaws-biteleft.glb", "jaws-swim180.glb", "mixamo-kick.glb"
+    "radar.glb", "robot-arm.glb", "lamp.glb", "flower.glb", "piranha-plant.glb",
+    "garfield.glb", "jellyfish.glb", "bird.glb", "dragon.glb", "gundam-punch.glb",
+    "robot-walk.glb", "quadruped-spot.glb", "quadruped-green.glb", "baymax-walk.glb",
+    "baymax-dance.glb", "baymax-punch.glb", "eagle-takeoff.glb",
+    "eagle-strike.glb", "eagle-landing.glb", "jaws-swimright.glb",
+    "jaws-bite.glb", "jaws-swim180.glb", "mixamo-spinkick.glb"
   ],
 
-  "garfield.glb": "A cat dances in rhythm.",
-  "gundam-punch.glb": "A robot punches forward.",
-  "mixamo-flip.glb": "A human performs a backflip.",
-  "ironman-walk.glb": "A robot walks in place.",
-
-  "satellite.glb": "A radar extends its bases.",
+  "radar.glb": "A radar extends its bases.",
   "robot-arm.glb": "A putter pushes forward.",
   "lamp.glb": "A lamp bends backward.",
 
   "flower.glb": "A flower closes its petals.",
-  "piranha-plant.glb": "A plant bites forward.",
+  "piranha-plant.glb": "A piranha plant bites forward.",
 
-  "gyarados.glb": "A serpent sways its body.",
+  "garfield.glb": "A garfield dances in rhythm.",
+  "gyarados.glb": "A serpent sways its tail.",
   "jellyfish.glb": "A jellyfish wriggles tentacles.",
   "monster.glb": "A monster walks in place.",
   "stego-attack.glb": "A dinosaur attacks forward.",
@@ -39,41 +36,49 @@
   "gundam-kick.glb": "A robot kicks with one leg.",
   "gundam-jump.glb": "A robot jumps and swings its arms.",
   "gundam-dance.glb": "A robot dances in place.",
+  "gundam-punch.glb": "A robot punches forward.",
+
   "robot-walk.glb": "A robot walks forward.",
   "robot-jump.glb": "A robot jumps upward.",
   "robot-rotate.glb": "A robot turns in place.",
   "robot-kick.glb": "A robot kicks forward.",
+  "quadruped-spot.glb": "A quadruped robot walks in place.",
+  "quadruped-green.glb": "A quadruped robot runs in place.",
 
-  "quadruped.glb": "A robot walks in place.",
-  "robot.glb": "A robot runs in place.",
+  "g1_pick_up.glb": "A robot picks up an object.",
+  "g1_jump.glb": "A robot jumps forward.",
+  "g1_wave.glb": "A robot waves its hand.",
+  "g1_walk.glb": "A humanoid robot walks forward.",
 
-  "g1_29dof_pick_up.glb": "A robot picks up an object.",
-  "g1_29dof_jump_forward.glb": "A robot jumps forward.",
-  "g1_29dof_wave.glb": "A robot waves its hand.",
-  "g1_29dof_walk_forward.glb": "A robot walks forward.",
-  "go2_ellipse_walk.glb": "A robot walks forward.",
-
-  "eve_greet_wave.glb": "A robot opens both arms.",
-  "wall-e-greet-open.glb": "A robot spreads both arms.",
+  "go2_ellipse_walk.glb": "A quadruped robot walks forward.",
   "go2_rear_up.glb": "A robot rears up on its hind legs.",
 
+  "eve_greet_wave.glb": "A robot opens both arms.",
   "eve_scan.glb": "A robot looks around.",
   "eve_curious.glb": "A robot raises one arm.",
   "eve_alert.glb": "A robot bends backward and shakes.",
 
-  "bigwhite-walk.glb": "A robot walks forward.",
-  "bigwhite-dance.glb": "A robot dances with arms swinging.",
-  "bigwhite-punch.glb": "A robot punches forward.",
+  "wall-e-spin.glb": "A robot spins around.",
+  "wall-e-greet.glb": "A robot greets with a friendly gesture.",
+  "wall-e-turn.glb": "A robot turns left in place.",
+  "wall-e-greet-open.glb": "A robot spreads both arms.",
+
+  "baymax-walk.glb": "A robot walks forward.",
+  "baymax-dance.glb": "A robot dances with arms swinging.",
+  "baymax-punch.glb": "A robot punches forward.",
+
+  "ironman-walk.glb": "A robot walks in place.",
 
   "eagle-takeoff.glb": "An eagle takes off and soars up.",
   "eagle-strike.glb": "An eagle strikes forward.",
   "eagle-landing.glb": "An eagle descends and lands.",
 
   "jaws-swimright.glb": "A shark swims to right.",
-  "jaws-biteleft.glb": "A shark swims and bites forward.",
+  "jaws-bite.glb": "A shark swims and bites forward.",
   "jaws-swim180.glb": "A shark swims and turns around.",
 
-  "mixamo-kick.glb": "A human performs a spin kick.",
-  "mixamo-kick1.glb": "A human performs a high kick.",
+  "mixamo-flip.glb": "A human performs a backflip.",
+  "mixamo-spinkick.glb": "A human performs a spin kick.",
+  "mixamo-highkick.glb": "A human performs a high kick.",
   "mixamo-breakdance.glb": "A human performs a breakdance spin."
 }

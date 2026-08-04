@@ -69,7 +69,7 @@
 //                  models (chains resolve in dependency order). Excluded from the row.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { SHOWCASE_EXAMPLE } from './showcase.js?v=1';
+import { SHOWCASE_EXAMPLE } from './showcase.js?v=4';
 
 // Shared PBR lift for the mixamo rigs — they all render dark/matte the same way,
 // so they share one material. Every other glb uses its own inline `material`.
@@ -119,10 +119,8 @@ export const EXAMPLES = [
       // a little, about three times the travel. At this size in the front rank a
       // small gesture reads as nothing happening.
       //
-      // It takes the shared prompt from prompts.json, which is why it says
-      // "A robot …" and not the character line its neighbour stage overrides
-      // with — four chips in one voice is the stage's whole claim, and
-      // "WALL-E greets…" among them breaks the series into a cast list.
+      // It takes the shared prompt from prompts.json, so its chip uses the same
+      // "A robot …" voice as the other three models in this mixed stage.
       { url: 'resources/glbs/wall-e-greet-open.glb', groundToMesh: true },
       // The waving cut of the greet, chosen over the plain one: the arms come up
       // to ~46° and then swing (46 → 31 → 39 → 46 → 36) while the head rocks
@@ -135,7 +133,7 @@ export const EXAMPLES = [
       // G1 stands a head short of everyone here. 1.2 puts its shoulders back in
       // line with EVE's — which matters more in the back rank, where perspective
       // is already taking a cut out of it.
-      { url: 'resources/glbs/g1_29dof_wave.glb', groundToMesh: true, scale: 1.2, row: 1 },
+      { url: 'resources/glbs/g1_wave.glb', groundToMesh: true, scale: 1.2, row: 1 },
       // The multiplier lands on the rig's TALLEST frame, which for this clip is
       // the top of the rear — so it reads roughly double what it looks like on
       // the number. 1.3 put the dog's reared head above every other rig on the
@@ -172,7 +170,7 @@ export const EXAMPLES = [
   {
     label: 'Articulated',
     files: [
-      { url: 'resources/glbs/satellite.glb', material: { roughness: 0.3, metalness: 0.7 }, rotate: [0, 30, 0], groundFrame: 1, groundToMesh: true },
+      { url: 'resources/glbs/radar.glb', material: { roughness: 0.3, metalness: 0.7 }, rotate: [0, 30, 0], groundFrame: 1, groundToMesh: true },
       { url: 'resources/glbs/robot-arm.glb', rotate: [0, -60, 0], offset: [1., 0, -0.2], scale: 0.8, labelSlot: 'above', lockLabelSlot: true, labelOffset: [85, 10] },
       { url: 'resources/glbs/lamp.glb', rotate: [0, 45, 0], scale: 0.65, labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -24] },
     ],
@@ -213,7 +211,7 @@ export const EXAMPLES = [
   {
     label: 'Unitree Locomotion',
     files: [
-      { url: 'resources/glbs/g1_29dof_walk_forward.glb', groundToMesh: true },
+      { url: 'resources/glbs/g1_walk.glb', groundToMesh: true },
       { url: 'resources/glbs/go2_ellipse_walk.glb', groundToMesh: true, scale: 0.45 },
     ],
     spacing: 1.4,
@@ -233,8 +231,8 @@ export const EXAMPLES = [
   {
     label: 'Quadruped Robot',
     files: [
-      'resources/glbs/quadruped.glb',
-      'resources/glbs/robot.glb',
+      'resources/glbs/quadruped-spot.glb',
+      'resources/glbs/quadruped-green.glb',
     ],
     spacing: 1.35, scale: 0.6, pad: 0.7,
   },
@@ -243,17 +241,14 @@ export const EXAMPLES = [
     files: [
       {
         url: 'resources/glbs/wall-e-spin.glb',
-        prompt: 'WALL-E spins around on his tracks.',
         groundToMesh: true,
       },
       {
         url: 'resources/glbs/wall-e-greet.glb',
-        prompt: 'WALL-E greets with a friendly gesture.',
         groundToMesh: true,
       },
       {
         url: 'resources/glbs/wall-e-turn.glb',
-        prompt: 'WALL-E turns around on his tracks.',
         groundToMesh: true,
       },
     ],
@@ -284,9 +279,9 @@ export const EXAMPLES = [
   {
     label: 'Unitree G1 Robot',
     files: [
-      { url: 'resources/glbs/g1_29dof_pick_up.glb', groundToMesh: true },
-      { url: 'resources/glbs/g1_29dof_jump_forward.glb', groundToMesh: true },
-      { url: 'resources/glbs/g1_29dof_wave.glb', groundToMesh: true, scale: 1.23 },
+      { url: 'resources/glbs/g1_pick_up.glb', groundToMesh: true },
+      { url: 'resources/glbs/g1_jump.glb', groundToMesh: true },
+      { url: 'resources/glbs/g1_wave.glb', groundToMesh: true, scale: 1.23 },
     ],
     spacing: 1.3,
     scale: 1.1,
@@ -295,9 +290,9 @@ export const EXAMPLES = [
   {
     label: 'Baymax Robot',
     files: [
-      { url: 'resources/glbs/bigwhite-walk.glb', labelOffset: [0, -18] },
-      { url: 'resources/glbs/bigwhite-dance.glb', labelOffset: [0, -18] },
-      { url: 'resources/glbs/bigwhite-punch.glb', labelOffset: [0, -18] },
+      { url: 'resources/glbs/baymax-walk.glb', labelOffset: [0, -18] },
+      { url: 'resources/glbs/baymax-dance.glb', labelOffset: [0, -18] },
+      { url: 'resources/glbs/baymax-punch.glb', labelOffset: [0, -18] },
     ],
     spacing: 1.0, pad: 1.12,
   },
@@ -344,7 +339,7 @@ export const EXAMPLES = [
     label: 'Shark',
     files: [
       { url: 'resources/glbs/jaws-swimright.glb', offset: [0, 0.4, 0] },
-      { url: 'resources/glbs/jaws-biteleft.glb', offset: [0, 0.4, 0] },
+      { url: 'resources/glbs/jaws-bite.glb', offset: [0, 0.4, 0] },
       { url: 'resources/glbs/jaws-swim180.glb', offset: [-0.4, 0.4, 0] },
     ],
     sizeBy: 'maxdim', spacing: 1.0, evenGaps: true, lighting: 6.0, pad: 1.12,
@@ -352,8 +347,8 @@ export const EXAMPLES = [
   {
     label: 'Michelle',
     files: [
-      { url: 'resources/glbs/mixamo-kick.glb', material: MIXAMO, labelOffset: [-20, 0], labelPinOffset: [-45, 0] },
-      { url: 'resources/glbs/mixamo-kick1.glb', material: MIXAMO },
+      { url: 'resources/glbs/mixamo-spinkick.glb', material: MIXAMO, labelOffset: [-20, 0], labelPinOffset: [-45, 0] },
+      { url: 'resources/glbs/mixamo-highkick.glb', material: MIXAMO },
       { url: 'resources/glbs/mixamo-breakdance.glb', material: MIXAMO },
     ],
     spacing: 0.5, stagger: 0.6, pad: 1.12,
