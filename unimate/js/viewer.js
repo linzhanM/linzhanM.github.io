@@ -830,7 +830,7 @@ const PROMPTS = new Map();
 // The ?v= matters here as much as on the imports: Pages caches the JSON, and a
 // new rig's chip would otherwise stay missing for returning visitors. Bump it
 // whenever prompts.json changes.
-const promptsReady = fetch('resources/prompts.json?v=8')
+const promptsReady = fetch('resources/prompts.json?v=11')
   .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
   .then((data) => {
     // '_comment' documents the file for whoever edits it; it isn't a model.

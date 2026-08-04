@@ -53,13 +53,13 @@
   "g1_29dof_walk_forward.glb": "A robot walks forward.",
   "go2_ellipse_walk.glb": "A robot walks forward.",
 
-  "eve_greet_wave.glb": "A robot waves both arms.",
+  "eve_greet_wave.glb": "A robot opens both arms.",
   "wall-e-greet-open.glb": "A robot spreads both arms.",
   "go2_rear_up.glb": "A robot rears up on its hind legs.",
 
-  "eve_scan.glb": "A robot looks left and right.",
+  "eve_scan.glb": "A robot looks around.",
   "eve_curious.glb": "A robot raises one arm.",
-  "eve_alert.glb": "A robot spreads its arms.",
+  "eve_alert.glb": "A robot bends backward and shakes.",
 
   "bigwhite-walk.glb": "A robot walks forward.",
   "bigwhite-dance.glb": "A robot dances with arms swinging.",
