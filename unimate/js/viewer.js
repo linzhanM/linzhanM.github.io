@@ -103,6 +103,10 @@ let activeCameraPadding = viewerConfig.cameraPadding || 1;
 let activeMobileCameraPadding = viewerConfig.mobileCameraPadding || activeCameraPadding;
 let activeShift = [0, 0, 0]; // whole-diorama pan held OUT of auto-framing (e.g. [-1,0,0] slides left)
 let activeFloor = 1;   // per-stage multiplier on the auto-sized checker floor
+// Frame/floor from the models' ANIMATED envelope instead of the pose on screen at
+// the moment of framing. Off for the catalog (whose 15 stages are tuned against
+// the instantaneous box), on for drop-ins — see loadFiles.
+let activeFrameEnvelope = false;
 
 // Tuning constants.
 const TARGET_HEIGHT = 1.0;          // normalized height, in world units (Blender TARGET_HEIGHT)
@@ -342,12 +346,24 @@ function groundAndNormalize(pivot, model, mixer, clip, userScale = 1, groundToMe
     // Nothing rigged to measure (a static drop-in): the pivot is still identity here,
     // so the plain bbox is already in its local frame.
     const b = new THREE.Box3().setFromObject(model);
-    if (!b.isEmpty()) {
-      setLabelAnchor(pivot, (b.min.x + b.max.x) / 2, (b.min.y + b.max.y) / 2, (b.min.z + b.max.z) / 2);
-      pivot.userData.localBox = b.clone();
-      pivot.userData.localBoxFull = b.clone();
-    }
-    return new THREE.Vector3(1, 1, 1);
+    if (b.isEmpty()) return new THREE.Vector3(1, 1, 1);
+    const c = b.getCenter(new THREE.Vector3());
+    const bs = b.getSize(new THREE.Vector3());
+    setLabelAnchor(pivot, c.x, c.y, c.z);
+    pivot.userData.localBox = b.clone();
+    pivot.userData.localBoxFull = b.clone();
+    // Normalize + ground it anyway, on that one box: without it the model arrives in
+    // whatever unit it was authored in — a centimetre export is 100× the stage — and
+    // sits wherever its origin puts it, buried in the floor or hanging over it.
+    // bs.y <= 0 is a flat model (a plane, a decal); dividing by that height blows it
+    // up to the size of the sky, so fall back to the largest dimension there, as the
+    // rigged path does when the mesh can't be measured.
+    const norm = (sizeBy === 'maxdim' || bs.y <= 1e-6) ? Math.max(bs.x, bs.y, bs.z) : bs.y;
+    const ss = (TARGET_HEIGHT / Math.max(norm, 1e-6)) * userScale;
+    pivot.scale.setScalar(ss);
+    pivot.position.set(-ss * c.x, -ss * b.min.y, -ss * c.z);
+    pivot.updateMatrixWorld(true);
+    return bs.multiplyScalar(ss);   // normalized footprint, as the rigged path returns
   }
 
   // Real joints = drop the armature-origin root (≈ Blender's head_local.length < 1e-3).
@@ -549,7 +565,20 @@ applyViewerTheme(viewerTheme, { persist: false });
 // useful when a tightly-spaced row (e.g. the two quadrupeds) still reads too big.
 function frameStage(pad = 1.0, orbitAngleDegrees = viewerConfig.initialOrbitAngle || 0) {
   const box = new THREE.Box3();
-  for (const pv of pivots) box.expandByObject(pv);
+  // expandByObject measures the pose on screen at this instant, which is the whole
+  // clip for the catalog's in-place loops but one body's width of a clip that TRAVELS
+  // — the floor gets cut to that width and the camera zooms to it, and the character
+  // walks off both. Under activeFrameEnvelope, union in the whole clip's extent,
+  // which groundAndNormalize already measured (localBoxFull, in pivot-local units).
+  // Union, not replace: when the mesh can't be sampled localBoxFull falls back to the
+  // joints, which sit inside the silhouette (a head joint is below the scalp).
+  const envelope = new THREE.Box3();
+  for (const pv of pivots) {
+    pv.updateWorldMatrix(false, false);   // positions are set post-render; matrixWorld is stale
+    box.expandByObject(pv);
+    const full = activeFrameEnvelope ? pv.userData.localBoxFull : null;
+    if (full && !full.isEmpty()) box.union(envelope.copy(full).applyMatrix4(pv.matrixWorld));
+  }
   if (box.isEmpty()) return;
 
   const size = box.getSize(new THREE.Vector3());
@@ -1631,6 +1660,8 @@ function loadExample(index) {
 
 // specs: [{ url, isFbx, material, ... }].  activeIndex: sidebar item to highlight, or null.
 // opts: { scale, spacing, rowSpacing, pad, lighting, evenGaps, sizeBy, stagger, rowDepth, stageShift } — see examples.js.
+//       plus `label` (used only when activeIndex is null — a drop-in names itself)
+//       and `frameEnvelope` (frame/floor the whole clip, not the pose on screen).
 async function loadStage(specs, activeIndex, opts = {}) {
   const token = ++loadToken;
   overlay.innerHTML = LOADING_HTML;
@@ -1642,11 +1673,15 @@ async function loadStage(specs, activeIndex, opts = {}) {
     b.setAttribute('aria-pressed', String(on));
   });
   if (stageName) {
-    if (activeIndex == null) {
-      stageName.textContent = 'Imported model';
-    } else {
-      stageName.textContent = EXAMPLES[activeIndex].label;
-    }
+    // A drop-in has no catalog row to read a label off, so it names itself after the
+    // file (opts.label); 'Imported model' is the fallback for a load with no name.
+    const heading = (activeIndex == null) ? (opts.label || 'Imported model') : EXAMPLES[activeIndex].label;
+    stageName.textContent = heading;
+    // A file name is the one label long enough to ellipsize in the 194px status line
+    // — the catalog's longest fits — so only a drop-in needs the full text on hover,
+    // and a previous drop's tooltip must not outlive it.
+    if (activeIndex == null) stageName.title = heading;
+    else stageName.removeAttribute('title');
   }
 
   try {
@@ -1724,6 +1759,7 @@ async function loadStage(specs, activeIndex, opts = {}) {
     activeMobileCameraPadding = opts.mobileCameraPadding ?? viewerConfig.mobileCameraPadding ?? activeCameraPadding;
     activePad = opts.pad || 1.0;
     activeFloor = opts.floor || 1;
+    activeFrameEnvelope = !!opts.frameEnvelope;
     const openingAngle = settings['auto orbit'] ? (viewerConfig.initialOrbitAngle || 0) : 0;
     frameStage(activePad, openingAngle);
     overlay.style.display = 'none';
@@ -1738,8 +1774,21 @@ async function loadStage(specs, activeIndex, opts = {}) {
 function loadFiles(fileList) {
   const files = [...fileList].filter((f) => /\.(fbx|glb|gltf)$/i.test(f.name));
   if (!files.length) return;
-  const specs = files.map((f) => ({ url: URL.createObjectURL(f), isFbx: isFbxPath(f.name) }));
-  loadStage(specs, null);
+  // groundToMesh on every drop-in: the catalog grounds on the lowest JOINT, which
+  // holds because its 54 rigs are known to have foot joints at the sole (and the few
+  // that don't carry the flag). A visitor's rig is unknown — a belly-slung spine, a
+  // fish, a mech with its joints inside the shell all hover — and the lowest MESH
+  // vertex is the one rule that grounds any of them without knowing the skeleton.
+  const specs = files.map((f) => ({ url: URL.createObjectURL(f), isFbx: isFbxPath(f.name), groundToMesh: true }));
+  // Named after the file: the status line is the only thing on screen saying what is
+  // loaded, and two drops in a row are otherwise indistinguishable. The stem is left
+  // verbatim — prettifying `wall-e-greet` gets it wrong more often than not.
+  const label = files.length === 1
+    ? files[0].name.replace(/\.(fbx|glb|gltf)$/i, '')
+    : `${files.length} imported models`;
+  // frameEnvelope: a visitor's clip may travel where the catalog's loop in place, so
+  // the ground has to cover the path rather than the pose it starts in.
+  loadStage(specs, null, { label, frameEnvelope: true });
 }
 
 // ── 11. UI wiring ────────────────────────────────────────────────────────────
