@@ -31,9 +31,6 @@
   --slate-dark: #141413;
   --slate-light: #5e5d59;
   --accent: #d97757;
-  /* Quiet grey for quick links that aren't live yet — shared by the dead
-     placeholders and the "coming soon" ones, so they stay in sync. */
-  --link-muted: #b8b4a8;
   /* Hairline for structural rules. Tinted ink rather than --ivory-dark, which
      is a *surface* tone: at 1px on cream it disappears, and the rule beside a
      solid ink plate has to register as a line. */
@@ -342,7 +339,7 @@ button:focus-visible,
   color: var(--slate-light);
 }
 
-/* Quick links. Live links get a sliding coral underline; disabled ones read dead. */
+/* Quick links. Each one gets a sliding coral underline on hover/focus. */
 .quick-links {
   text-align: center;
   white-space: nowrap;   /* keep all links on one line */
@@ -360,7 +357,7 @@ button:focus-visible,
   padding: 5px 8px;
   transition: color 0.18s ease;
 }
-.quick-links a:not(.disabled)::after {
+.quick-links a::after {
   content: '';
   position: absolute;
   left: 8px;
@@ -375,27 +372,14 @@ button:focus-visible,
 /* :focus-visible, not :focus — a mouse click leaves focus on the anchor, so with
    plain :focus the coral + underline stayed lit after returning from the opened
    tab. Keyboard users still get the state (and the global focus ring above). */
-.quick-links a:not(.disabled):hover,
-.quick-links a:not(.disabled):focus-visible {
+.quick-links a:hover,
+.quick-links a:focus-visible {
   color: var(--accent);
   text-decoration: none;
 }
-.quick-links a:not(.disabled):hover::after,
-.quick-links a:not(.disabled):focus-visible::after {
+.quick-links a:hover::after,
+.quick-links a:focus-visible::after {
   transform: scaleX(1);
-}
-.quick-links a.disabled {
-  color: var(--link-muted);
-  cursor: not-allowed;
-  text-decoration: none;
-  pointer-events: none;
-}
-
-/* "Coming soon" sits at the same grey as the dead placeholders, but stays live:
-   it is not .disabled, so the coral hover and sliding underline above still fire
-   and the link keeps its affordance despite the quiet resting colour. */
-.quick-links a.pending {
-  color: var(--link-muted);
 }
 
 /* ── 5. Teaser video, figure captions, dataset curation table ──────────────── */

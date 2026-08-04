@@ -283,7 +283,6 @@ button:focus-visible {
 }
 
 .example-item:hover { color: var(--ink); background: var(--chrome-hover); }
-.example-item.has-group-gap { margin-top: 8px; }
 .example-item:focus-visible,
 .status-control:focus-visible,
 .dock-control:focus-visible { outline-color: var(--control-accent); }
@@ -846,7 +845,6 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.24);
   .control-dock::-webkit-scrollbar { display: none; }
   .dock-hint { display: none; }
   .example-item { width: auto; min-width: max-content; min-height: 38px; max-height: 38px; padding: 0 11px; }
-  .example-item.has-group-gap { margin-top: 0; margin-left: 8px; }
   .example-item.active { padding-left: 11px; }
   .example-name { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
   .viewer-wrapper { height: 100vh; height: 100dvh; min-height: 0; }

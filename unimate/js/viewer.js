@@ -558,7 +558,7 @@ function applyViewerTheme(theme) {
 
 }
 
-applyViewerTheme(viewerTheme, { persist: false });
+applyViewerTheme(viewerTheme);
 
 // Frame the whole stage: fit the camera to the union of all pivots, drop a checker floor.
 // pad > 1 zooms the camera further out (extra margin) without moving the models —
@@ -1263,13 +1263,6 @@ function updateLabels(dt) {
   visible.length = 0;
   let nearest = Infinity;
   for (const l of labels) {
-    // The hover-only lab must keep every non-target label hidden on every frame;
-    // the regular placement path below restores display for visible annotations.
-    if (viewerConfig.hoverPrompts && l.order !== hoveredPromptOrder) {
-      l.el.style.display = 'none';
-      l.pin.style.display = 'none';
-      continue;
-    }
     l.anchor.getWorldPosition(labelWorld);
     const dist = camera.position.distanceTo(labelWorld);
     labelNdc.copy(labelWorld).project(camera);
@@ -1926,7 +1919,6 @@ gui.onOpenClose?.(measureLabels);
 EXAMPLES.forEach((ex, i) => {
   const btn = document.createElement('button');
   btn.className = 'example-item';
-  if (ex.sidebarGapBefore) btn.classList.add('has-group-gap');
   btn.type = 'button';
 
   const name = document.createElement('span');

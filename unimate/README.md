@@ -14,7 +14,11 @@ Both entries configure the shared `js/viewer.js` engine before importing it.
 ## Directory layout
 
 ```text
-assets/                 Images, posters, videos, logos, and favicon
+assets/                 Media, split by type — the same convention the root
+  videos/               and dimo/ trees use
+  posters/              One poster frame per clip, same basename
+  logos/                Affiliation marks
+  images/               Favicon, link-preview card, dataset figure
 css/
   style.css             Project-page styles (10 numbered sections)
   schematics.css        Applications figure system (layout · rig · motion)

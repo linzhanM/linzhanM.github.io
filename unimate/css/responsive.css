@@ -541,7 +541,7 @@
   .example-item,
   .example-item::before,
   .example-name { transition: none; }
-  .quick-links a:not(.disabled)::after { transition: none; }
+  .quick-links a::after { transition: none; }
   /* The chips still track the camera — only their arrival fade is dropped. */
   .viewer-label,
   .viewer-pin { animation: none; }

@@ -135,7 +135,8 @@
   transition: color 160ms ease-out;
 }
 
-/* Specific enough to beat the generic `.navbar a:hover` in styles.css. */
+/* Two classes deep so it outranks the generic `a:hover` in styles.css, which
+   loads after this file and would otherwise set the colour for these links. */
 .navbar .nav-section:hover,
 .navbar .nav-section.is-active {
   color: var(--text-primary);
