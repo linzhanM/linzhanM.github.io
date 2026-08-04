@@ -33,7 +33,7 @@
 //             on a deep shift inflates it until the models read lost — shrink it here.
 //
 // ── File entry ───────────────────────────────────────────────────────────────
-//   A file is either a path string ('resources/glbs/foo.glb'), or an object { url, ...opts }:
+//   A file is either a path string ('resources/glbs/bird.glb'), or an object { url, ...opts }:
 //     url          model path (.glb / .gltf via GLTFLoader, .fbx via FBXLoader).
 //     prompt       OVERRIDE for the text prompt on the chip pinned above this model.
 //                  The prompts themselves live in `../resources/prompts.json`, keyed by filename,

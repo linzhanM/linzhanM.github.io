@@ -38,10 +38,35 @@ js/
   toc.js                TOC rail: scroll-spy + gutter-collision watcher
   abstract.js           Phone-width "Read full abstract" fold
 resources/
-  glbs/                 Runtime 3D model files
+  glbs/                 Runtime 3D model files (compressed — see below)
   prompts.json          Prompt labels keyed by model filename
   unimate.pdf           Paper PDF (linked from the site's resume page)
 ```
+
+## Rig compression
+
+`resources/glbs/` ships **meshopt-compressed geometry with 512px WebP textures**
+— 54 rigs, 650 MB down to 48 MB (92.7%), which takes the landing stage from
+27 MB to 1 MB. Triangle counts, animation counts and bounding boxes are
+unchanged; the reduction is texture size, vertex welding and buffer encoding.
+
+`viewer.js` therefore registers `MeshoptDecoder` on its `GLTFLoader`. **Without
+it every rig fails to parse** — `EXT_texture_webp` and `KHR_mesh_quantization`
+are native to three.js, but `EXT_meshopt_compression` is not.
+
+The uncompressed sources live in `resources/glbs-raw/`, which is gitignored: the
+repo is the deployed artifact and 657 MB of duplicates would put the published
+site near GitHub Pages' 1 GB limit. They stay recoverable from commit `b4ac4c8`.
+To rebuild after adding or replacing a rig:
+
+```bash
+npx @gltf-transform/cli optimize in.glb out.glb \
+  --texture-compress webp --texture-size 512 --compress meshopt --simplify false
+```
+
+`--simplify false` is deliberate: these meshes are unwelded (one rig is 884k
+vertices for 391k triangles), so simplification gains almost nothing here and is
+the one step that would visibly change silhouettes.
 
 ## Showcase workflow
 

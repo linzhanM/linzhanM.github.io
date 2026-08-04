@@ -27,6 +27,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=71';
 
 const wrapper = document.getElementById('viewer-wrapper');
@@ -84,9 +85,9 @@ const settings = {
 
 // The active "stage" — parallel arrays, one entry per model in the window.
 let pivots = [];       // THREE.Group wrapping each model (for ground/normalize/layout)
-let models = [];       // each model's root object
+let models = [];
 let mixers = [];       // one AnimationMixer per animated model
-let skeletons = [];    // one THREE.SkeletonHelper per model
+let skeletons = [];
 let labels = [];       // { el, anchor } per PROMPTED model — sparse, see buildLabels
 let grid = null;       // shared ground grid, sized to the whole stage
 let shadowPlane = null; // transparent shadow-catcher over the floor (always on — no toggle)
@@ -131,7 +132,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(wrapper.clientWidth, wrapper.clientHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;   // soft-edged ground shadows
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 wrapper.appendChild(renderer.domElement);
 
 // Lights. Each remembers its base intensity so a per-example multiplier can
@@ -163,7 +164,12 @@ if (viewerConfig.autoOrbitControls) {
   controls.autoRotateSpeed = settings['orbit speed'];
 }
 
-const gltfLoader = new GLTFLoader();
+// The rigs in resources/glbs/ are meshopt-compressed (EXT_meshopt_compression)
+// with WebP textures, which is what takes the set from 650 MB to 48 MB. WebP is
+// native to GLTFLoader, but meshopt geometry needs this decoder registered or
+// every .glb fails to parse. The uncompressed originals are kept out of the
+// deploy — see unimate/README.md.
+const gltfLoader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 const fbxLoader = new FBXLoader();
 const clock = new THREE.Clock();
 
@@ -184,7 +190,6 @@ function applyLighting(mult = 1) {
 // ── 5. Model loading & material repair ───────────────────────────────────────
 const isFbxPath = (p) => /\.fbx$/i.test(p);
 
-// Load one model (url string or object-URL) with the right loader.
 function loadModel(url, isFbx) {
   return new Promise((resolve, reject) => {
     const onLoad = (res) => resolve(
@@ -209,8 +214,8 @@ function fixMaterials(model, isFbx) {
     // without this they get frustum-culled and vanish ("missing geometry")
     // at some camera angles / animation frames.
     o.frustumCulled = false;
-    o.castShadow = true;     // drop shadows onto the ground catcher
-    o.receiveShadow = true;  // (and onto each other)
+    o.castShadow = true;
+    o.receiveShadow = true;   // onto the ground catcher, and onto each other
     const mats = Array.isArray(o.material) ? o.material : [o.material];
     for (const m of mats) {
       if (!m) continue;
@@ -1763,7 +1768,6 @@ async function loadStage(specs, activeIndex, opts = {}) {
   }
 }
 
-// Load user-supplied files (drag-drop or picker) as a new stage.
 function loadFiles(fileList) {
   const files = [...fileList].filter((f) => /\.(fbx|glb|gltf)$/i.test(f.name));
   if (!files.length) return;
