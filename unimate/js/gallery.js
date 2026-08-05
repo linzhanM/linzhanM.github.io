@@ -15,11 +15,10 @@
 document.addEventListener('DOMContentLoaded', function () {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Only galleries with enough videos to overflow keep scroll buttons.
-  // Listed in DOM order. `autoCycle` opts a strip into the auto-cycle below:
-  // §1, §3 and §4, the Experiments rows that hold more clips than fit. §2 is the
-  // one three-clip-wide row that isn't — it has exactly two, so there is nothing
-  // for a cycle to reveal (advance() bails on that too).
+  // Only galleries with enough videos to overflow keep scroll buttons, in DOM
+  // order. `autoCycle` opts a strip into the cycle below: §1, §3 and §4, the
+  // Experiments rows holding more clips than fit. §2 has exactly two, so a cycle
+  // has nothing to reveal (advance() bails on that too).
   const galleries = [
     {
       sectionId: 'demoGallerySection',
@@ -67,11 +66,10 @@ document.addEventListener('DOMContentLoaded', function () {
     let programmaticScroll = false;
     let scrollTimer;
 
-    // Position of an item inside the container's scrollable content. Measure
-    // it from the rects, not offsetLeft: the videos' offsetParent is the
-    // position:relative .video-gallery-section, so offsetLeft is relative to
-    // that box rather than to the scroller, and any difference between the two
-    // (the section was 100vw at one point) lands in every scroll target.
+    // Position of an item inside the container's scrollable content. From the
+    // rects, not offsetLeft: the videos' offsetParent is the position:relative
+    // .video-gallery-section, so any difference between that box and the
+    // scroller would land in every scroll target.
     const itemLeft = (item) =>
       item.getBoundingClientRect().left
       - container.getBoundingClientRect().left
@@ -94,10 +92,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Where the track has to sit for `index` to lead the view, clamped to the
     // ends. Left-aligned, not centred: §2-4 fit exactly two clips in the column
-    // (see the two-up rule in css §7), and centring the middle one of three
-    // would cut both its neighbours in half — a comparison strip has to rest on
-    // whole clips. On the wider §1 clips it is the same trade, one clip whole
-    // instead of two halves.
+    // (the two-up rule, css §7), and centring the middle of three would cut both
+    // neighbours in half — a comparison strip has to rest on whole clips.
     const scrollTargetFor = (index) => {
       const item = items[Math.max(0, Math.min(items.length - 1, index))];
       const maxScroll = container.scrollWidth - container.clientWidth;
@@ -128,12 +124,10 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // A row whose clips run past the edge doesn't always read as scrollable, so
-    // while one of these strips is on screen it walks itself to the far end and
-    // back, on a loop, a page every AUTO_CYCLE_MS. The visitor always outranks
-    // it: any manual input — a nav button, a scroll of the strip — takes the
-    // wheel and the cycle waits USER_PAUSE_MS from the last one before picking
-    // up again, from wherever they left it. Under prefers-reduced-motion it
-    // never starts.
+    // an on-screen strip walks itself to the far end and back, a page every
+    // AUTO_CYCLE_MS. The visitor always outranks it: any manual input takes the
+    // wheel, and the cycle waits USER_PAUSE_MS from the last one before picking
+    // up from wherever they left it. Never starts under reduced motion.
     let autoTimer = 0;       // the running cycle, 0 while idle
     let resumeTimer = 0;     // pending restart after the visitor's turn
     let autoStep = 1;        // ping-pong direction; flips at either end of the row
@@ -179,11 +173,10 @@ document.addEventListener('DOMContentLoaded', function () {
     requestAnimationFrame(() => { targetIndex = leadItemIndex(); });
     leftBtn.addEventListener('click', () => { yieldToUser(); showItem(stepIndex(targetIndex, -1)); });
     rightBtn.addEventListener('click', () => { yieldToUser(); showItem(stepIndex(targetIndex, 1)); });
-    // The container's scrollLeft is the one signal that means "the visitor took
-    // the strip over" — a swipe, a trackpad shove, a horizontal wheel all land
-    // here, while merely scrolling the page past the gallery does not. Ignore it
-    // during our own glide: `programmaticScroll` gives up after 500ms, which a
-    // smooth scroll can outlast, so autoQuietUntil covers the rest.
+    // The container's scrollLeft is the one signal meaning "the visitor took the
+    // strip over" — swipe, trackpad shove, horizontal wheel all land here, while
+    // scrolling the page past the gallery does not. Ignore our own glide:
+    // `programmaticScroll` gives up after 500ms, autoQuietUntil covers the rest.
     container.addEventListener('scroll', () => {
       if (programmaticScroll) return;
       if (performance.now() > autoQuietUntil) yieldToUser();
@@ -224,16 +217,14 @@ document.addEventListener('DOMContentLoaded', function () {
     videoObserver.observe(video);
   });
 
-  // π0.5-style figure controls on the three Application clips, and only there —
-  // pi.website/blog/pi05 is the model: the clip autoplays in view, and hovering
-  // it fades in a control bar along the bottom (play/pause, seek, full screen);
-  // clicking the clip itself toggles play/pause. The Experiments strips don't
-  // get this: their clips are half-column comparison figures, and a bar across
-  // each would put chrome on six clips at once. Full screen goes on the
-  // CONTAINER, not the video, so the bar stays usable in full screen (pi05 does
-  // the same); iPhone has no element fullscreen, so it falls back to the
-  // video's own native player. Skipped under prefers-reduced-motion, where
-  // every video already carries the browser's native controls.
+  // π0.5-style figure controls (pi.website/blog/pi05) on the three Application
+  // clips and only there: hovering fades in a bar along the bottom (play/pause,
+  // seek, full screen), and clicking the clip toggles play/pause. The
+  // Experiments strips are half-column comparison figures, where a bar each
+  // would put chrome on six clips at once. Full screen goes on the CONTAINER,
+  // not the video, so the bar stays usable inside it; iPhone has no element
+  // fullscreen and falls back to the video's native player. Skipped under
+  // reduced motion, where every video already carries native controls.
   if (!reduceMotion) {
     const fmt = (t) => (isFinite(t) && t > 0)
       ? Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0')
@@ -279,11 +270,10 @@ document.addEventListener('DOMContentLoaded', function () {
       video.addEventListener('play', () => { toggleBtn.innerHTML = PAUSE_ICON; });
       video.addEventListener('pause', () => { toggleBtn.innerHTML = PLAY_ICON; });
 
-      // The thumb is driven by requestAnimationFrame while the clip plays, not
-      // by `timeupdate` — that event fires ~4×/s, which steps the thumb across
-      // a 25s clip in visible jumps. The loop runs only between play and
-      // pause, and keeps its hands off the thumb while the visitor is
-      // scrubbing, so the two never fight over it.
+      // The thumb rides requestAnimationFrame, not `timeupdate` — that fires
+      // ~4×/s, which steps it across a 25s clip in visible jumps. The loop runs
+      // only between play and pause, and leaves the thumb alone while the
+      // visitor scrubs, so the two never fight over it.
       let scrubbing = false;
       let rafId = 0;
       const paint = () => {

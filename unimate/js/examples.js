@@ -80,36 +80,32 @@ const MIXAMO = { roughness: 0.8, emissiveIntensity: 0.5 };
 
 export const EXAMPLES = [
   SHOWCASE_EXAMPLE,
-  // The stage both pages open on: whatever stands first here after
-  // viewer-presets.js filters the hidden labels is the first thing a visitor
-  // sees. Four rigs that could not be built more differently — 70 bones on
-  // tracks, a 7-bone floating robot, a 29-DOF humanoid, a 19-bone quadruped —
-  // greeting on one beat is the paper's claim in a single frame. All four clips
-  // are 48 frames at 24fps and hold their peak across the middle third, so the
-  // gestures arrive together with no stagger to arrange.
+  // The stage both pages open on — whatever stands first here after
+  // viewer-presets.js filters the hidden labels. Four rigs built as differently
+  // as possible (70 bones on tracks, a 7-bone floating robot, a 29-DOF
+  // humanoid, a 19-bone quadruped) greeting on one beat is the paper's claim in
+  // a single frame. All four clips are 48 frames at 24fps and hold their peak
+  // across the middle third, so the gestures arrive together with no stagger.
   {
     label: 'Welcome',
     files: [
-      // Row 0 (front): WALL-E · EVE.  Row 1 (back): G1 · Go2 — which is how
-      // the embedded project page shows them; the lab flattens the two.
-      // Two ranks rather than one row of four: side by side, the reared dog
-      // leaned into whatever stood next to it (evenGaps sizes its slot from a
-      // quadruped's sprawl, not the narrow column it becomes rearing), and the
-      // row had to spread until it stopped reading as a group. Depth buys the
-      // same room without the spread. That is a finding about THIS canvas: the
-      // lab's frame is wide enough to carry the four side by side, and it
-      // flattens the ranks (singleRow) in stage-tuning.js rather than fork the
-      // files. Both readings of this stage are live — change one deliberately.
+      // Row 0 (front): WALL-E · EVE.  Row 1 (back): G1 · Go2 — how the embedded
+      // project page shows them; the lab flattens the two (singleRow, in
+      // stage-tuning.js). Two ranks here because side by side the reared dog
+      // leans into its neighbour — evenGaps sizes its slot from a quadruped's
+      // sprawl, not the narrow column it becomes rearing — and the row has to
+      // spread until it stops reading as a group. Depth buys that room without
+      // the spread; the lab's wider frame doesn't need it. Both readings of the
+      // stage are live, so change one deliberately.
       //
       // groundToMesh throughout: EVE's root joint sits inside her shell, the
       // G1's and Go2's ankle joints above their foot shells, WALL-E's tracks
       // below his — joint-grounding buries the first and hovers the rest.
       //
       // The two front chips are pushed out to the flanks, where at rest they
-      // crowded the G1's chip into one block in the middle; the leaders keep
-      // each one attached to its rig once they part. This costs the lab
-      // nothing — it shows one prompt at the cursor and never runs the
-      // anchored solver these offsets feed.
+      // crowded the G1's into one block in the middle; the leaders keep each
+      // attached to its rig once they part. Free for the lab, which shows one
+      // prompt at the cursor and never runs the anchored solver these feed.
       //
       // The -open cut of the greet, not the one the WALL-E Robot stage runs:
       // same rig, arms swinging out to the sides instead of lifting a little.
@@ -129,11 +125,10 @@ export const EXAMPLES = [
       // every other rig, which is backwards — it is the small one here.
       { url: 'resources/glbs/go2_rear_up.glb', groundToMesh: true, scale: 1.1, row: 1 },
     ],
-    // rowDepth is under the 2.6 default: the ranks only have to be told apart,
-    // and at 2.4 the back pair stood off across empty floor and read as a
-    // separate group. Both pages override the pad in stage-tuning.js, so these
-    // values frame nothing on their own — they are what a third page, or a
-    // dropped-in tuning entry, would inherit.
+    // rowDepth under the 2.6 default: the ranks only have to be told apart, and
+    // further back the pair stands off across empty floor as a separate group.
+    // Both pages override the pad in stage-tuning.js, so these values frame
+    // nothing on their own — they are what a new page would inherit.
     spacing: 1.15,
     pad: 1.2, evenGaps: true, rowDepth: 1.8,
   },
@@ -165,8 +160,8 @@ export const EXAMPLES = [
       { url: 'resources/glbs/chicken.glb', scale: 0.7, material: { roughness: 0.6, emissiveIntensity: 0.8 }, above: [2, 0], offset: [1.5, 0, 0] },         // 8  on the ground under the bird (same anchor and offset as 4)
     ],
     // pad leaves the flanks the chips need and no more: they take side and
-    // corner slots now, so the camera no longer stands back far enough to clear
-    // a band above and below everything.
+    // corner slots, so the camera need not stand back to clear a band above and
+    // below everything.
     spacing: 1.05, pad: 1.02, evenGaps: true, rowDepth: 2.8, stageShift: [-0.3, 0, 0],
   },
   {
@@ -188,14 +183,13 @@ export const EXAMPLES = [
     spacing: 1.35, scale: 0.6, pad: 0.7,
   },
   // The two Unitree machines walking out of the depth of the stage toward the
-  // viewer — real locomotion, not in-place, so the layout has to account for
+  // viewer — real locomotion, not in-place, so the layout must account for
   // travel. scale is not cosmetic: the pair spans less than the camera's
-  // MIN_FRAME_WIDTH, so growing the models grows them on screen instead of
-  // just refitting, and their travel grows with them. stageShift starts the
-  // pair at the BACK so the walk ENDS at the floor centre — largest exactly
-  // when centred, never close enough to crop — and keeping it near the G1's
-  // scaled travel is what holds that. floor reins in the checker the deep
-  // shift would otherwise inflate.
+  // MIN_FRAME_WIDTH, so growing the models grows them on screen rather than
+  // just refitting. stageShift starts the pair at the BACK so the walk ENDS at
+  // the floor centre — largest exactly when centred, never close enough to crop
+  // — which holds only while it stays near the G1's scaled travel. floor reins
+  // in the checker that deep shift would otherwise inflate.
   {
     label: 'Locomotion',
     files: [

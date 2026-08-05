@@ -1,8 +1,6 @@
-// Work-in-progress mixed-character stage.
-//
-// The stage stays separate from the public catalog entries while it is being
-// tuned. Both viewer entry points currently hide it through `hiddenCategories`;
-// remove that label from their configuration to resume testing.
+// Work-in-progress mixed-character stage, kept apart from the public catalog
+// entries while it is tuned: both entry points hide it through
+// `hiddenCategories`. Drop the label there to resume testing.
 export const SHOWCASE_EXAMPLE = {
   label: 'Showcase',
   files: [

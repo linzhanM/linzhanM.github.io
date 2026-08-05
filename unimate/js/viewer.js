@@ -242,13 +242,12 @@ function fixMaterials(model, isFbx) {
     }
   });
 
-  // Resolve diffuse maps by their actual load state (not a guessed delay,
-  // which could wrongly drop a slow-decoding embedded texture). A map that
-  // loaded keeps its texture (and a black base color is lifted to white so
-  // it shows through); a map that definitively failed — a missing external
-  // .fbm texture — is dropped so the surface shows a clean base color
-  // instead of an empty/black sample. Unresolved stragglers are dropped
-  // after a generous timeout.
+  // Resolve diffuse maps by their actual load state, not a guessed delay that
+  // could drop a slow-decoding embedded texture. A map that loaded keeps its
+  // texture (and a black base color lifts to white so it shows through); one
+  // that definitively failed — a missing external .fbm texture — is dropped so
+  // the surface shows a clean base color instead of an empty sample.
+  // Stragglers are dropped after a generous timeout.
   if (mapped.length) {
     const start = performance.now();
     const tick = () => {
@@ -276,10 +275,10 @@ function fixMaterials(model, isFbx) {
 }
 
 // Per-model PBR tweak (opt-in via an EXAMPLES file's `material`). Some rigs —
-// e.g. mixamo-flip — ship with high-roughness standard materials that read dark
-// and matte under the scene's direct lights. Lowering roughness sharpens their
-// specular highlights, and an emissive lift brightens the dark diffuse without
-// touching the global lighting or other models. Emissive comes in two flavors:
+// mixamo-flip — ship high-roughness standard materials that read dark and matte
+// under the scene's direct lights. Lowering roughness sharpens their speculars,
+// and an emissive lift brightens the dark diffuse without touching global
+// lighting or other models. Emissive comes in two flavors:
 //   • default (textured rigs): lift via the model's own map, so detail shows.
 //   • `emissive: 0xRRGGBB` (near-black rigs like the eagles): a FLAT emissive
 //     color, since a map-driven lift of a black texture would stay black.
@@ -310,24 +309,10 @@ function applyMaterialOverride(model, mat) {
 }
 
 // ── 6. Normalize & ground ────────────────────────────────────────────────────
-// Port of render_mesh_skeleton_stage.py's normalize + ground steps (note: glTF is
-// Y-up where the Blender script is Z-up, so "ground" here is min-Y):
-//   • normalize : scale so the MESH's tallest per-frame height == TARGET_HEIGHT (step 4)
-//   • center    : x/z centered on the MESH bounding box over all frames (recenter, step 5)
-//   • ground    : lowest JOINT across all frames -> y = 0 (lowest_joint_z + step 5),
-//                 skipping armature-origin root joints (head_local.length < 1e-3 guard)
-// groundToMesh: ground the lowest MESH vertex instead of the lowest joint — for rigs
-//   (e.g. gyarados) whose spine joints sit well above the belly, so joint-grounding
-//   leaves the body floating above the grid.
-// sizeBy: 'height' (default) scales so the tallest per-frame height == TARGET_HEIGHT;
-//   'maxdim' scales by the largest per-frame bounding-box dimension instead. Use 'maxdim'
-//   for elongated creatures animated across clips (eagles, sharks) — height varies wildly
-//   with pose, so height-normalization makes the same character different sizes per clip,
-//   whereas body length (the max dimension) is pose-stable and keeps them consistent.
 // Park an empty Object3D on the model, in the PIVOT's local frame: the pivot's
-// normalize scale + ground/layout translation then carry it into world space for
-// free, so the label's mark tracks the model wherever layout puts it.
-// (An empty contributes nothing to Box3.expandByObject, so frameStage is unaffected.)
+// normalize scale + ground/layout translation carry it into world space for
+// free, so the label's mark tracks the model wherever layout puts it. (An empty
+// contributes nothing to Box3.expandByObject, so frameStage is unaffected.)
 function setLabelAnchor(pivot, x, y, z) {
   let anchor = pivot.userData.labelAnchor;
   if (!anchor) {
@@ -339,6 +324,18 @@ function setLabelAnchor(pivot, x, y, z) {
   anchor.updateMatrixWorld(true);
 }
 
+// Port of render_mesh_skeleton_stage.py's normalize + ground steps (glTF is
+// Y-up where the Blender script is Z-up, so "ground" here is min-Y):
+//   • normalize : scale so the MESH's tallest per-frame height == TARGET_HEIGHT (step 4)
+//   • center    : x/z centered on the MESH bounding box over all frames (step 5)
+//   • ground    : lowest JOINT across all frames -> y = 0, skipping the
+//                 armature-origin root joints (head_local.length < 1e-3 guard)
+// groundToMesh grounds the lowest MESH vertex instead — for rigs (gyarados)
+//   whose spine joints sit well above the belly, which joint-grounding leaves
+//   floating above the grid. sizeBy 'maxdim' scales by the largest per-frame
+//   bbox dimension rather than height: pose-stable for elongated creatures
+//   (eagles, sharks) whose height swings enough per clip to make one character
+//   a different size in every clip.
 function groundAndNormalize(pivot, model, mixer, clip, userScale = 1, groundToMesh = false, sizeBy = 'height', groundFrame = null) {
   pivot.scale.setScalar(1);
   pivot.position.set(0, 0, 0);
@@ -362,10 +359,9 @@ function groundAndNormalize(pivot, model, mixer, clip, userScale = 1, groundToMe
     pivot.userData.localBoxFull = b.clone();
     // Normalize + ground it anyway, on that one box: without it the model arrives in
     // whatever unit it was authored in — a centimetre export is 100× the stage — and
-    // sits wherever its origin puts it, buried in the floor or hanging over it.
-    // bs.y <= 0 is a flat model (a plane, a decal); dividing by that height blows it
-    // up to the size of the sky, so fall back to the largest dimension there, as the
-    // rigged path does when the mesh can't be measured.
+    // sits wherever its origin puts it. bs.y <= 0 is a flat model (a plane, a decal),
+    // and dividing by that height blows it up to the size of the sky, so fall back to
+    // the largest dimension as the rigged path does when the mesh can't be measured.
     const norm = (sizeBy === 'maxdim' || bs.y <= 1e-6) ? Math.max(bs.x, bs.y, bs.z) : bs.y;
     const ss = (TARGET_HEIGHT / Math.max(norm, 1e-6)) * userScale;
     pivot.scale.setScalar(ss);
@@ -480,14 +476,13 @@ function groundAndNormalize(pivot, model, mixer, clip, userScale = 1, groundToMe
   pivot.position.set(-s * cx, -s * groundY, -s * cz);
   pivot.updateMatrixWorld(true);
 
-  // The model's extent in the pivot's own frame — the box updateLabels projects each
-  // frame to decide where a chip may go. It is the TYPICAL envelope, not the maximum:
-  // per-axis percentiles over the sampled frames rather than the outright extremes.
-  // The extremes belong to one instant each — a wing at the top of its beat, a tail
-  // at full stretch — and clearing them holds every chip a wingspan away from a rig
-  // that is nowhere near that big most of the time, which is what made the leaders
-  // long. At the 85th percentile the chips sit against the silhouette you actually
-  // see, and the occasional peak pose reaching a chip costs far less than that.
+  // The model's extent in the pivot's own frame — the box updateLabels projects
+  // each frame to decide where a chip may go. The TYPICAL envelope, not the
+  // maximum: per-axis percentiles over the sampled frames, because the extremes
+  // belong to one instant each (a wing at the top of its beat, a tail at full
+  // stretch) and clearing them holds every chip a wingspan from a rig that is
+  // nowhere near that big most of the time. At the 85th percentile the chips sit
+  // against the silhouette you actually see.
   const axis = (n, p) => {
     if (!frameBounds.length) return p < 0.5 ? gMin.getComponent(n >> 1) : gMax.getComponent(n >> 1);
     const col = frameBounds.map((f) => f[n]).sort((a, b) => a - b);
@@ -503,12 +498,11 @@ function groundAndNormalize(pivot, model, mixer, clip, userScale = 1, groundToMe
   // scoring coverage against the tight box would let chips settle straight onto it.
   pivot.userData.localBoxFull = new THREE.Box3(gMin.clone(), gMax.clone());
 
-  // The label's mark goes at the CENTRE of the mesh's envelope, not on an edge of
-  // it. An edge point is usually empty air — the box top floats above a dragon that
-  // is mid-downbeat, the box side is out at the tip of a tail — and a mark hanging
-  // in space next to a rig says nothing about which rig it means. The centre is
-  // inside the silhouette for every rig here, and it is static, so the mark never
-  // twitches with the animation.
+  // The label's mark goes at the CENTRE of the mesh's envelope, never an edge:
+  // an edge point is usually empty air — the box top floats above a dragon
+  // mid-downbeat, the box side is out at the tip of a tail — and a mark hanging
+  // in space says nothing about which rig it means. The centre is inside every
+  // rig's silhouette here, and static, so the mark never twitches with the clip.
   setLabelAnchor(pivot, cx, (gMin.y + gMax.y) / 2, cz);
 
   // Normalized footprint, used to space models out in a row.
@@ -729,11 +723,10 @@ function layoutRows(specs, sizes, spacing, evenGaps, rowDepth = 2.6, rowSpacing 
   }
 
   for (const [r, rowIdx] of byRow) {
-    // `rowOrder` re-sorts a row left→right by file index. It stays out of the
-    // catalog's file order because it is placement, not content: a page that
-    // flattens the ranks may want a different rig on each flank than the one
-    // the two-rank reading gives. Files it omits keep their catalog order,
-    // after the ones it names.
+    // `rowOrder` re-sorts a row left→right by file index — placement, not
+    // content, so it stays out of the catalog's file order: a page that flattens
+    // the ranks may want different rigs on the flanks. Files it omits keep their
+    // catalog order, after the ones it names.
     if (rowOrder) rowIdx.sort((a, b) => orderRank(rowOrder, a) - orderRank(rowOrder, b));
     // `rowSpacing[r]` (if given) overrides the stage `spacing` for this row only,
     // so rows with different member counts/widths can be spaced independently.
@@ -913,11 +906,10 @@ function promptFor(spec) {
   return PROMPTS.get(spec.url.split('/').pop()) || '';
 }
 
-// Rebuild the chips for the stage just loaded. A model with no prompt gets no entry.
-// Every chip carries its prompt in full, subject included — the shared subject was
-// once trimmed off single-skeleton stages to buy width, and naming the object is
-// worth more than the space it costs. The width it costs is paid for instead by the
-// slot choice and the collision pass in updateLabels.
+// Rebuild the chips for the stage just loaded. A model with no prompt gets no
+// entry. Every chip carries its prompt in full, subject included — naming the
+// object is worth more than the width it costs, and that width is paid for by
+// the slot choice and the collision pass in updateLabels instead.
 function buildLabels(specs) {
   labelLayer.replaceChildren();
   labels = [];
@@ -1089,27 +1081,27 @@ const MARGIN_BONUS = 0.16; // chip-areas refunded for sitting clear of the whole
                            // scaled by how crowded the stage is (see `spread`). Small on
                            // purpose: enough to break a jam in the middle, not enough to
                            // pull chips out to the canvas edge and widen the whole picture
-const MARK_INSET = 0.4; // how far from a rig's centre toward its chip the mark sits,
-                         // as a fraction of the distance to the silhouette's edge. Kept well short of 1: the
-// box spans the whole clip, so its edge is empty air for anything that flaps, and a
-// mark out there floats beside the rig instead of sitting on it.
+// How far from a rig's centre toward its chip the mark sits, as a fraction of the
+// distance to the silhouette's edge. Well short of 1: the box spans the whole clip,
+// so its edge is empty air for anything that flaps, and a mark out there floats
+// beside the rig instead of sitting on it.
+const MARK_INSET = 0.4;
 const PILL_PAD = 4;  // px of clearance from the canvas edges and from other chips
 // Depth grading. A chip this much farther from the camera than the nearest one —
 // as a FRACTION of that distance, not an absolute — is fully receded. Relative
-// because a row of models standing side by side varies in distance by a few percent
-// and must stay uniform, while a second row sits ~30% farther back and should
-// visibly drop behind it. This is what keeps the 9-chip Creatures stage and the two-row
-// Armored Robot stage from reading as one flat wall of equal-weight labels.
+// because a row standing side by side varies in distance by a few percent and must
+// stay uniform, while a second row sits ~30% back and should visibly drop behind
+// it. It is what keeps the 9-chip Creatures stage and the two-row Armored Robot
+// stage from reading as one flat wall of equal-weight labels.
 const DEPTH_SPAN = 0.35;
 const DEPTH_FADE = 0.45;   // opacity given up at full recession
 const DEPTH_SHRINK = 0.12; // scale given up at full recession
 
 // Below the phone layout breakpoint, scale overlay UI from the viewer's tuned
-// desktop width. The desktop content column is 960px; the sidebar occupies
-// 165px + 22px left padding, the flex gap is 14px, and the viewer border takes
-// 3px, leaving a 756px canvas client area. Using that exact baseline (with no
-// minimum readability override) makes prompts and Controls true geometric
-// reductions of the desktop composition rather than similar mobile variants.
+// desktop width: the 960px content column less the sidebar (165px + 22px), the
+// 14px flex gap and the 3px viewer border leaves a 756px canvas. Scaling from
+// that exact baseline makes prompts and Controls true geometric reductions of
+// the desktop composition rather than similar mobile variants.
 const DESKTOP_VIEWER_WIDTH = 756;
 const phoneLayout = window.matchMedia('(max-width: 720px)');
 // Where the lab's chrome restacks: interactive.css moves the category panel off
@@ -1148,11 +1140,11 @@ const SLOT_HYSTERESIS = 0.3; // the other slot must beat the current one by this
                              // fraction of the chip's area before it flips, so an
                              // orbit through a near-tie doesn't make chips jitter.
 
-// Chips whose resting heights land within this many px of each other are snapped to
-// a shared baseline. Rigs differ in height, so left alone every chip sits at its own
-// level and a row reads as scattered from half the angles you can orbit to. The
-// tolerance is deliberately small: it tidies chips that are already nearly aligned
-// and never drags one away from the model it labels.
+// Chips whose resting heights land within this many px of each other snap to a
+// shared baseline. Rigs differ in height, so left alone every chip sits at its own
+// level and a row reads as scattered from half the angles you can orbit to. Small
+// on purpose: it tidies chips already nearly aligned and never drags one away from
+// the model it labels.
 const BASELINE_SNAP = 18;
 
 // Chips ease toward their target rather than being re-placed outright. The scene is
@@ -1332,26 +1324,21 @@ function updateLabels(dt) {
     // which model it belongs to.
     const x = THREE.MathUtils.clamp(ax, halfW + PILL_PAD, Math.max(halfW + PILL_PAD, w - halfW - PILL_PAD));
 
-    // Four candidate placements around the rig. Each is scored by how much MODEL it
-    // would cover and the cheapest wins, so a rig standing at the edge of the group
-    // puts its chip out into the empty margin beside it instead of over its
-    // neighbours. The pin always lands on the edge of the model the chip approaches
-    // from, so a leader never crosses the body it points at.
+    // Candidate placements around the rig: the four sides, plus four diagonals off
+    // the corners. Each is scored by how much MODEL it would cover and the cheapest
+    // wins, so a rig standing at the edge of the group puts its chip out into the
+    // empty margin beside it instead of over its neighbours. The diagonals are for
+    // rigs boxed in on every side — the chicken standing between the monster, the
+    // stegosaurus and the whale has no clear side at all, and without a corner to
+    // reach for its chip has to sit on one of its neighbours.
     const own = screenBox(l.pivot, w, h) || { left: ax - 1, right: ax + 1, top: ay - 1, bottom: ay + 1 };
     const ownX = (own.left + own.right) / 2;
     const ownY = (own.top + own.bottom) / 2;
-    // The chip clears `own`, which spans every frame of the clip, so a wing at the
-    // top of its beat never reaches it. The JOINT goes on the rig as it stands right
-    // now, so the bone spans the gap instead of ending in empty air above a dragon
-    // that happens to be mid-downbeat.
-    // Wherever the chip ends up, its connector lands on the SAME mark: the one on
-    // the rig itself (ax, ay — the anchor, at the centre of the model). One rig, one
-    // mark, and the chip's own edge decides where the line leaves from. It is a fixed
-    // point too, so nothing twitches along with the animation.
-    // Eight of them: the four sides, and four diagonals off the corners. The
-    // diagonals exist for rigs boxed in on every side — the chicken standing between
-    // the monster, the stegosaurus and the whale has no clear side at all, and
-    // without a corner to reach for its chip has to sit on one of its neighbours.
+    // Every slot clears `own`, which spans every frame of the clip, so a wing at the
+    // top of its beat never reaches a chip. Wherever the chip lands its leader ends
+    // on the SAME mark — the anchor at (ax, ay), the model's centre — so one rig has
+    // one mark, the chip's own edge decides where the line leaves from, and neither
+    // end twitches along with the animation.
     const diag = GAP * 0.7;
     const slots = {
       above: { x: ax, cy: own.top - GAP - halfH, axis: 'y', sign: -1 },
@@ -1598,16 +1585,13 @@ function updateLabels(dt) {
     // The leader: from the chip's border to the pin. Start where the ray to the pin
     // exits the chip's box, so it works from any edge — a chip below its model draws
     // upward from its top, one beside it draws sideways — and never from under the
-    // opaque fill. CSS anchors the line at the chip's center and offsets it there,
-    // so the offsets and the length are divided by `scale`: the line is a child of
-    // the chip and is scaled with it.
-    // The mark sits on the rig, on the side facing its chip. Two failed extremes got
-    // it here: at the centre it was always on the creature but the leader had to
-    // cross half a body to reach it, and length is what makes these read as tethers
-    // instead of labels; out at the box edge the leader was short but the mark was in
-    // mid-air, since a box edge — a corner especially — is mostly empty. So: travel
-    // from the centre toward the chip, but stop at MARK_INSET of the way out. Still
-    // inside the silhouette, and most of the distance is gone.
+    // opaque fill. The offsets and the length are divided by `scale` because CSS
+    // anchors the line at the chip's centre, as a child scaled with it.
+    //
+    // The mark sits on the rig, on the side facing its chip: travel from the centre
+    // toward the chip and stop MARK_INSET of the way out. The centre alone leaves
+    // the leader crossing half a body, and a box edge — a corner especially — is
+    // mostly empty air, so a mark out there floats beside the rig.
     let markX = p.ax, markY = p.ay;
     const outX = lab.sx - p.ax;
     const outY = lab.sy - p.ay;
@@ -1711,11 +1695,11 @@ async function loadStage(specs, activeIndex, opts = {}) {
     b.classList.toggle('active', on);
     b.setAttribute('aria-pressed', String(on));
   });
-  // "View larger" hands the visitor's place over to the lab: same slug the lab
-  // writes to its own address bar, so the two pages agree by LABEL and neither
+  // "View larger" hands the visitor's place over to the lab on the same slug the
+  // lab writes to its own address bar, so the two pages agree by LABEL and neither
   // depends on the other's catalog indices. The markup ships the bare
-  // interactive.html, which is both the JS-off fallback and where a drop-in
-  // sends you — a dropped file has no stage for the lab to open on.
+  // interactive.html: both the JS-off fallback and where a drop-in sends you,
+  // having no stage for the lab to open on.
   if (expandLink) {
     const slug = activeIndex == null ? '' : '#' + stageSlug(EXAMPLES[activeIndex].label);
     expandLink.href = 'interactive.html' + slug;
@@ -1777,12 +1761,11 @@ async function loadStage(specs, activeIndex, opts = {}) {
 
       const skeleton = new THREE.SkeletonHelper(model);
       skeleton.visible = settings['show skeleton'];
-      // The helper's material is transparent with depthTest off — "always
-      // visible" by design. But the checker floor is transparent too (0.88
-      // opacity), and the transparent pass sorts by distance: a far rig's
-      // skeleton drew BEFORE the floor, which then painted 88% over it and
-      // left a ghost. renderOrder puts every helper after the floor and
-      // shadow plane, where depthTest:false already means it wins.
+      // The helper's material is transparent with depthTest off — "always visible"
+      // by design. But the checker floor is transparent too, and the transparent
+      // pass sorts by distance: a far rig's skeleton draws BEFORE the floor, which
+      // then paints over it and leaves a ghost. renderOrder puts every helper after
+      // the floor and shadow plane, where depthTest:false already means it wins.
       skeleton.renderOrder = 2;
       scene.add(skeleton);
 
@@ -1823,7 +1806,7 @@ function loadFiles(fileList) {
   const files = [...fileList].filter((f) => /\.(fbx|glb|gltf)$/i.test(f.name));
   if (!files.length) return;
   // groundToMesh on every drop-in: the catalog grounds on the lowest JOINT, which
-  // holds because its 54 rigs are known to have foot joints at the sole (and the few
+  // holds because its rigs are known to have foot joints at the sole (and the few
   // that don't carry the flag). A visitor's rig is unknown — a belly-slung spine, a
   // fish, a mech with its joints inside the shell all hover — and the lowest MESH
   // vertex is the one rule that grounds any of them without knowing the skeleton.
@@ -1905,11 +1888,10 @@ if (isFullscreenLab) {
     });
   }
 
-  // Reset restores the stage as it loaded: every clip back to its first frame
-  // AND the camera back to its framing. Pause state is left alone on purpose —
-  // paused, reset shows the opening pose; playing, the motion starts over.
-  // The lil-gui "Reset view" item stays camera-only: its name promises exactly
-  // the view, and it is the embedded page's control.
+  // Reset restores the stage as it loaded: every clip back to its first frame AND
+  // the camera back to its framing. Pause state is left alone on purpose —
+  // paused, reset shows the opening pose; playing, the motion starts over. The
+  // lil-gui "Reset view" item stays camera-only, as its name promises.
   const resetStage = () => {
     for (const m of mixers) m.setTime(0);
     frameStage(activePad, 0);
@@ -1967,10 +1949,9 @@ applyResponsiveControlScale();
 gui.onOpenClose?.(measureLabels);
 
 // Sidebar: one row per example — the stage's name, plus how many rigs stand on
-// it. The count is read off `files` rather than written into examples.js, so it
-// cannot fall out of step with the stage it labels. It is aria-hidden and the
-// button carries the same fact in words, since a bare numeral read out after a
-// name is ambiguous where the column of them is not.
+// it. The count is read off `files`, so it cannot fall out of step with the stage
+// it labels. It is aria-hidden and the button carries the same fact in words: a
+// bare numeral read out after a name is ambiguous where the column of them is not.
 EXAMPLES.forEach((ex, i) => {
   const btn = document.createElement('button');
   btn.className = 'example-item';
@@ -2035,12 +2016,12 @@ window.addEventListener('resize', () => {
 });
 
 // ── Deep links (lab only) ────────────────────────────────────────────────────
-// interactive.html#unitree-locomotion opens straight onto that stage: the slug
-// is the label lowercased with everything non-alphanumeric collapsed to "-",
-// so every sidebar entry has a stable, guessable address. loadExample writes
-// the current stage's slug back to the bar, and hashchange lets a pasted or
-// edited URL retarget a lab that is already open. The embedded page ignores
-// all of this — its hash is the document's own TOC anchors.
+// interactive.html#unitree-g1-robot opens straight onto that stage: the slug is
+// the label lowercased with everything non-alphanumeric collapsed to "-", so
+// every sidebar entry has a stable, guessable address. loadExample writes the
+// current stage's slug back to the bar, and hashchange lets a pasted or edited
+// URL retarget a lab already open. The embedded page ignores all of this — its
+// hash is the document's own TOC anchors.
 let currentStageIndex = -1;
 const stageSlug = (label) => label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
