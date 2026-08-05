@@ -45,23 +45,23 @@
   "quadruped-spot.glb": "A quadruped robot walks in place.",
   "quadruped-green.glb": "A quadruped robot runs in place.",
 
-  "g1_pick_up.glb": "A robot picks up an object.",
-  "g1_jump.glb": "A robot jumps forward.",
-  "g1_wave.glb": "A robot waves its hand.",
+  "g1_pick_up.glb": "A humanoid robot picks up an object.",
+  "g1_jump.glb": "A humanoid robot jumps forward.",
+  "g1_wave.glb": "A humanoid robot waves its hand.",
   "g1_walk.glb": "A humanoid robot walks forward.",
 
   "go2_ellipse_walk.glb": "A quadruped robot walks forward.",
-  "go2_rear_up.glb": "A robot rears up on its hind legs.",
+  "go2_rear_up.glb": "A quadruped robot rears up to greet.",
 
-  "eve_greet_wave.glb": "A robot opens both arms.",
+  "eve_greet_wave.glb": "A robot spreads both arms and waves.",
   "eve_scan.glb": "A robot looks around.",
   "eve_curious.glb": "A robot raises one arm.",
   "eve_alert.glb": "A robot bends backward and shakes.",
 
+  "wall-e-greet-open.glb": "A robot spreads both arms and waves.",
   "wall-e-spin.glb": "A robot spins around.",
   "wall-e-greet.glb": "A robot greets with a friendly gesture.",
   "wall-e-turn.glb": "A robot turns left in place.",
-  "wall-e-greet-open.glb": "A robot spreads both arms.",
 
   "baymax-walk.glb": "A robot walks forward.",
   "baymax-dance.glb": "A robot dances with arms swinging.",

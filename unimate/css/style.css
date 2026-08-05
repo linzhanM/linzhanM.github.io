@@ -998,9 +998,11 @@ button:focus-visible,
 /* A line in the register: no fill, no frame, one hairline above it.
 
    The 14px inset is a measurement, not a taste. The panel is 190px and its
-   right border takes 1, so 189 − 14 − 12 leaves 163 to hold "Unitree
-   Locomotion", which sets 130px of Roboto Mono at 12px. Treat the insets and
-   that label as one measurement whenever either changes. */
+   right border takes 1, so 189 − 14 − 12 leaves 163 to hold the longest label
+   in the catalog — "Unitree G1 Robot", 16 characters of Roboto Mono at 12px,
+   about 115px. Treat the insets and that label as one measurement whenever
+   either changes; the label that used to set this width was the 18-character
+   "Unitree Locomotion" at ~130px. */
 .interactive-showcase .example-item {
   box-sizing: border-box;
   flex: 1 1 auto;
@@ -1019,9 +1021,14 @@ button:focus-visible,
   outline-offset: -3px;
 }
 
-/* The header's own bottom rule is already the register's first line. */
+/* The header's own bottom rule is already the register's first line, so the
+   first row must not draw a second one — but it has to keep the 1px, because
+   the rows share the column's length with `flex: 1 1 auto` and a border-box
+   row that is missing a border is a row that is 1px shorter than the fifteen
+   below it. Transparent, not removed: every line in the register is then cut
+   from an identical box, which is the whole point of ruling a sheet. */
 .interactive-showcase .example-item:first-child {
-  border-top: 0;
+  border-top-color: transparent;
 }
 
 /* Hover lights the whole line, edge to edge — a ruled sheet has no cell to
@@ -1162,9 +1169,15 @@ button:focus-visible,
 /* Weight and ink carry the state, the way .venue / .venue-year split one line
    into credential and date. 300/700 are the two weights the @import actually
    requests — asking for 400 here would get a synthesized face. */
+/* One step off --slate-light toward the ink. At 300 weight and 12px, the token
+   itself sat at 5.6:1 on the panel and read as a disabled control rather than
+   as a list of sixteen things you can press; this lands near 7:1 and still
+   leaves daylight between an idle line and the --slate-dark of hover. Hover
+   also lights the whole row, so the state ladder loses nothing by narrowing
+   here. Not a new token — the two ends are the page's, this is the blend. */
 .example-name {
   font-weight: 300;
-  color: var(--slate-light);
+  color: color-mix(in srgb, var(--slate-dark) 30%, var(--slate-light));
   transition: color 0.18s ease;
 }
 .example-item:hover .example-name,

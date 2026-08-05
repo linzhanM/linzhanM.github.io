@@ -2,8 +2,8 @@
 // The catalog is the shared examples.js — both pages show the same stages in
 // the same order. What differs is the VIEWER: everything below is lab-only
 // presentation (fullscreen chrome, camera paddings, hover prompts, theme).
-import { HIDDEN_CATEGORIES } from './viewer-presets.js?v=2';
-import { LAB_TUNING } from './stage-tuning.js?v=1';
+import { HIDDEN_CATEGORIES } from './viewer-presets.js?v=3';
+import { LAB_TUNING } from './stage-tuning.js?v=7';
 
 window.UNIMATE_VIEWER_CONFIG = {
   fullscreenLab: true,
@@ -12,20 +12,26 @@ window.UNIMATE_VIEWER_CONFIG = {
   cameraPadding: 1.32,
   mobileCameraPadding: 0.96,
   cameraPaddingByCategory: {
+    // The only two-rank stage, and the rank nearest the camera is what the
+    // shared fit reads: at the default the front pair loomed and sat on the
+    // bottom edge with no floor under it. The catalog's own pad frames it on
+    // the embedded canvas, which is far squarer — this is the lab's share.
+    'Welcome': 1.28,
     'Bipedal': 1.5,
     'Articulated': 1.25,
     'Flower': 1.25,
     'Armored Robot': 1.55,
     'Gundam Robot': 1.48,
-    'Quadruped Robot': 1.40,
+    'Quadrupedal': 1.40,
   },
   mobileCameraPaddingByCategory: {
+    'Welcome': 0.93,
     'Bipedal': 1.08,
     'Articulated': 1.02,
     'Flower': 1.02,
     'Armored Robot': 1.16,
     'Gundam Robot': 1.08,
-    'Quadruped Robot': 1.03,
+    'Quadrupedal': 1.03,
   },
   cameraElevation: 0.34,
   initialOrbitAngle: 5,
@@ -37,7 +43,7 @@ window.UNIMATE_VIEWER_CONFIG = {
   autoOrbitControls: true,
 };
 
-await import('./viewer.js?v=144');
+await import('./viewer.js?v=155');
 
 // Category-panel collapse — lab-only chrome, so it is wired here rather than
 // in the shared engine. The canvas never resizes: only the floating panel and

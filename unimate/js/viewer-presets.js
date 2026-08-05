@@ -7,4 +7,6 @@
 // resolves #slugs against the filtered list — its deep link stops resolving and
 // falls back to the first visible stage. Which also means whatever stands first
 // in EXAMPLES *after* filtering is what both pages open on.
-export const HIDDEN_CATEGORIES = Object.freeze(['Showcase', 'Welcome']);
+// 'Welcome' stands first in EXAMPLES, so un-hiding it is also what both pages
+// now open on — the lab's #stage-name first paint moved with it.
+export const HIDDEN_CATEGORIES = Object.freeze(['Showcase']);
