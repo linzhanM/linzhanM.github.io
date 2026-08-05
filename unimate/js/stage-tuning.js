@@ -41,5 +41,5 @@ export const LAB_TUNING = {
   // takes a shallower rowDepth than the catalog's 1.8 and stands slightly
   // further back. This pad is multiplied by cameraPaddingByCategory['Welcome']
   // in interactive.js — the two together are the lab's framing.
-  'Welcome': { rowDepth: 1.15, pad: 1.3 },
+  'Welcome': { rowDepth: 1.25, pad: 1.3, spacing: 1.2 },
 };
