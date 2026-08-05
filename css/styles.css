@@ -472,7 +472,21 @@ hr {
   margin-bottom: 4px;
   margin-top: 4px;
   line-height: 1.4;
-  text-wrap: balance;
+  /* pretty, NOT balance. Balance minimises the longest line for the line count
+     it lands on, so it picks a split out of the text alone and then holds it:
+     UniMate's title breaks after "Model" at a 335px measure and at every
+     measure through 481px — the same two lines, 242|245, at six widths that
+     span a phone to a laptop. The column grows and the title doesn't, so at
+     767px it fills half its measure while the author line directly beneath it
+     fills all of it, and the title reads as wrapped early for no reason. Even
+     lines are what balance is for, and what they suit is a display heading
+     standing alone; these are bibliography titles set flush left above a
+     full-measure line. Greedy alone only trades the problem for orphans
+     (406|81, 495|45, 337|354|48 — a word stranded on the last line). pretty
+     fills the measure the way greedy does and pulls a word down only when the
+     last line would be a stub, which is exactly those cases. Unsupported, it
+     falls back to plain greedy wrapping — what a bibliography does on paper. */
+  text-wrap: pretty;
   text-decoration: none;
 }
 
@@ -492,7 +506,14 @@ hr {
 /* Own name in author lists. Marked, not linked: the text stays slate so it
    never reads as clickable (orange = link elsewhere on the page); a solid
    accent rule underneath does the identifying. skip-ink is off so the rule
-   runs unbroken under descenders, reading as a mark rather than an underline. */
+   runs unbroken under descenders, reading as a mark rather than an underline.
+   And the mark never breaks across a line — a rule under "Linzhan" with
+   another under "Mou" two lines down is two half-marks, which read as two
+   people, and it undoes the one thing the mark is for. It happens at any
+   width where the name lands near the end of a line, so this is not a narrow
+   screen's problem: on a phone it hits the publications page's author lists,
+   and on a desktop the homepage's, whose column is cut by the thumbnail.
+   Eleven characters can't overflow anything they are set in. */
 .pub-authors u {
   font-weight: var(--weight-semibold);
   color: var(--text-primary);
@@ -501,6 +522,7 @@ hr {
   text-decoration-thickness: 1px;
   text-decoration-skip-ink: none;
   text-underline-offset: 0.18em;
+  white-space: nowrap;
 }
 
 /* Semibold, not the old phantom 500 — the venue is the credibility line, and

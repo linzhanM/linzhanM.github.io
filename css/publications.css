@@ -182,9 +182,17 @@
 
 /* --- Narrow --- */
 /* The year column has no room on a phone: the numeral moves above its group
-   and the rail stays — at 1.1rem of inset it is a margin note's rule, and the
-   joint still marks where the year begins. Sticky is pointless in block flow
-   and is dropped with the grid. */
+   and the rail stays — at 1.1rem of inset it is a margin note's rule. Sticky
+   is pointless in block flow and is dropped with the grid.
+   THE RAIL MOVES UP A LEVEL WITH IT. Drawn where the wide layout draws it, on
+   .pubs-entries, it begins *below* the stacked numeral, so the accent joint
+   lands beside the first paper's title and reads as a bullet on that one entry
+   — the list-of-markers this page rejected (see the top of this sheet),
+   arrived at by breakpoint rather than by choice, and with the year left off
+   the rail it marks nothing. So the rule and the joint go on the group, whose
+   top edge *is* the numeral's: same hairline, same 5px joint at the same
+   0.55rem, still marking the one thing here that needs marking, and now the
+   numeral is inside the rail with its entries instead of hanging beside it. */
 @media screen and (max-width: 767px) {
   .pubs-masthead {
     display: block;
@@ -197,6 +205,20 @@
 
   .pubs-year-group {
     display: block;
+    position: relative;
+    border-left: 1px solid var(--spine);
+    padding-left: 1.1rem;
+  }
+
+  .pubs-year-group::before {
+    content: '';
+    position: absolute;
+    left: -3px;
+    top: 0.55rem;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
   }
 
   .pubs-year {
@@ -204,8 +226,33 @@
     margin-bottom: 0.75rem;
   }
 
+  /* Handed back: the group carries both now. */
   .pubs-entries {
-    padding-left: 1.1rem;
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .pubs-entries::before {
+    content: none;
+  }
+
+  /* The bracketed links are this page's only touch targets and they stand
+     22px tall — a line of 16px text, sized for a cursor. Vertical padding on
+     an inline element grows the hit box without moving a pixel of layout, and
+     the row's line-height is opened just past that box so the wrapped second
+     line a long link set produces at 320px doesn't overlap the first's
+     targets. 35px is not the 44px of a button; it is what a link in running
+     prose can take without the row turning into a menu. */
+  .pub-links {
+    line-height: 2.2;
+  }
+
+  /* The padding is that hit box; nowrap keeps the label whole, since
+     "[interactive / demo]" would leave an opening bracket on one line and its
+     closing one on the next, and half a target is worse than a small one. */
+  .pub-links a {
+    padding-block: 0.4em;
+    white-space: nowrap;
   }
 }
 
