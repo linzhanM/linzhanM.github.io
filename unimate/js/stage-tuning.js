@@ -37,9 +37,29 @@ export const EMBED_TUNING = {
 
 // The full-screen motion lab (unimate/interactive.html).
 export const LAB_TUNING = {
-  // A wide frame reads the depth between the ranks as separation, so the lab
-  // takes a shallower rowDepth than the catalog's 1.8 and stands slightly
-  // further back. This pad is multiplied by cameraPaddingByCategory['Welcome']
-  // in interactive.js — the two together are the lab's framing.
-  'Welcome': { rowDepth: 1.25, pad: 1.3, spacing: 1.2 },
+  // The lab's frame is wide, so the four greet in ONE row here rather than the
+  // catalog's two ranks — side by side they read as one group facing the
+  // visitor, where in a frame this wide the depth between ranks read as two.
+  // The catalog keeps the ranks for the embedded canvas, which is far squarer;
+  // singleRow flattens them without forking the shared files.
+  //
+  // rowOrder then puts the two Unitree rigs on the flanks (G1 · WALL-E · EVE ·
+  // Go2): left in catalog order the two of them stand together and the row
+  // falls into a pair of robots and a pair of characters. Both maps below key
+  // on the CATALOG's file index, not on a position in rowOrder — 2 is the G1
+  // and 3 the Go2, wherever the row puts them. Reorder examples.js's files and
+  // every number here means a different rig.
+  //
+  // fileOffsets then walks the two flanks toward the visitor, and the G1 left
+  // as well: four rigs on one rail read as a lineup, and breaking the rail is
+  // what makes them a group.
+  //
+  // pad is the lab's share of the framing, multiplied by
+  // cameraPaddingByCategory['Welcome'] in interactive.js: a row of four is
+  // framed on its width, so it takes far less than the two ranks did and still
+  // leaves the flanks clear of the category panel and the frame edge.
+  'Welcome': {
+    singleRow: true, rowOrder: [2, 0, 1, 3], spacing: 1.05, pad: 1.05,
+    fileOffsets: { 2: [-0.2, 0, 0.2]},
+  },
 };

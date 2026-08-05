@@ -28,13 +28,16 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=82';
+import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=85';
 
 const wrapper = document.getElementById('viewer-wrapper');
 const overlay = document.getElementById('loading-overlay');
 const sidebar = document.getElementById('example-sidebar');
 const labelLayer = document.getElementById('viewer-labels');
 const stageName = document.getElementById('stage-name');
+// The project page's "View larger" link — absent in the lab, which is where it
+// goes. loadStage keeps its hash on the stage currently on screen.
+const expandLink = document.querySelector('.interactive-expand');
 const LOADING_HTML = overlay.innerHTML;
 const viewerConfig = window.UNIMATE_VIEWER_CONFIG || {};
 // One catalog for both pages (examples.js); entries differ only in viewer
@@ -705,7 +708,7 @@ function disposeStage() {
 
 // ── 8. Layout helpers ────────────────────────────────────────────────────────
 // Each helper mutates pivots[].position in place. They run in this order:
-//   row → stagger → behind → above → offsets
+//   row → stagger → behind → above → offsets → fileOffsets
 // so later helpers can build on earlier ones (e.g. `above` snaps onto a `behind`
 // model, and `offset` nudges the final result).
 
@@ -713,7 +716,7 @@ function disposeStage() {
 // row N back along −Z so multiple rows read as a front-to-back diorama. Models with
 // `behind`/`above` are excluded — they anchor to another model later, so they must
 // not shift a row's centering.
-function layoutRows(specs, sizes, spacing, evenGaps, rowDepth = 2.6, rowSpacing = null) {
+function layoutRows(specs, sizes, spacing, evenGaps, rowDepth = 2.6, rowSpacing = null, rowOrder = null) {
   const members = pivots.map((_, i) => i).filter((i) => !specs[i].behind && !specs[i].above);
 
   // Group members by their row index (default 0 = front).
@@ -725,12 +728,24 @@ function layoutRows(specs, sizes, spacing, evenGaps, rowDepth = 2.6, rowSpacing 
   }
 
   for (const [r, rowIdx] of byRow) {
+    // `rowOrder` re-sorts a row left→right by file index. It stays out of the
+    // catalog's file order because it is placement, not content: a page that
+    // flattens the ranks may want a different rig on each flank than the one
+    // the two-rank reading gives. Files it omits keep their catalog order,
+    // after the ones it names.
+    if (rowOrder) rowIdx.sort((a, b) => orderRank(rowOrder, a) - orderRank(rowOrder, b));
     // `rowSpacing[r]` (if given) overrides the stage `spacing` for this row only,
     // so rows with different member counts/widths can be spaced independently.
     const sp = (rowSpacing && rowSpacing[r] != null) ? rowSpacing[r] : spacing;
     placeAlongX(rowIdx, sizes, sp, evenGaps);
     if (r) rowIdx.forEach((i) => { pivots[i].position.z += -r * rowDepth; pivots[i].updateMatrixWorld(true); });
   }
+}
+
+// Position within `rowOrder`; anything it doesn't name sorts after everything it does.
+function orderRank(rowOrder, i) {
+  const at = rowOrder.indexOf(i);
+  return at === -1 ? rowOrder.length + i : at;
 }
 
 // Spread one row's members along X, centered on the origin.
@@ -813,6 +828,21 @@ function placeAbove(specs) {
       progressed = true;
     });
     if (!progressed) break;
+  }
+}
+
+// `fileOffsets` is the stage-level twin of a file's `offset`: { index: [x, y, z] },
+// added on top of the catalog's own nudge rather than replacing it, so a page can
+// move one rig without forking the file entry. Same normalized units.
+function applyFileOffsets(fileOffsets) {
+  if (!fileOffsets) return;
+  for (const [i, off] of Object.entries(fileOffsets)) {
+    const pv = pivots[i];
+    if (!pv || !off) continue;
+    pv.position.x += off[0] || 0;
+    pv.position.y += off[1] || 0;
+    pv.position.z += off[2] || 0;
+    pv.updateMatrixWorld(true);
   }
 }
 
@@ -1639,7 +1669,9 @@ function loadExample(index) {
       behind: o.behind || null,
       above: o.above || null,
       scale: o.scale || null,
-      row: o.row || 0,
+      // `singleRow` is a stage-level flag, so it flattens the ranks here rather
+      // than editing the catalog's per-file `row` — the files stay shared.
+      row: ex.singleRow ? 0 : (o.row || 0),
       prompt: (o.prompt ?? null),   // ?? not || : '' is a real value here ("no label")
       labelSlot: o.labelSlot || null,
       lockLabelSlot: o.lockLabelSlot || false,
@@ -1649,7 +1681,7 @@ function loadExample(index) {
   });
   return loadStage(specs, index, {
     scale: ex.scale, spacing: ex.spacing, rowSpacing: ex.rowSpacing, pad: ex.pad, lighting: ex.lighting,
-    evenGaps: ex.evenGaps, sizeBy: ex.sizeBy, stagger: ex.stagger, rowDepth: ex.rowDepth,
+    evenGaps: ex.evenGaps, sizeBy: ex.sizeBy, stagger: ex.stagger, rowDepth: ex.rowDepth, rowOrder: ex.rowOrder, fileOffsets: ex.fileOffsets,
     stageShift: ex.stageShift, floor: ex.floor,
     cameraPadding: viewerConfig.cameraPaddingByCategory?.[ex.label],
     mobileCameraPadding: viewerConfig.mobileCameraPaddingByCategory?.[ex.label],
@@ -1657,7 +1689,8 @@ function loadExample(index) {
 }
 
 // specs: [{ url, isFbx, material, ... }].  activeIndex: sidebar item to highlight, or null.
-// opts: { scale, spacing, rowSpacing, pad, lighting, evenGaps, sizeBy, stagger, rowDepth, stageShift } — see examples.js.
+// opts: { scale, spacing, rowSpacing, rowOrder, pad, lighting, evenGaps, sizeBy, stagger,
+//         rowDepth, fileOffsets, stageShift } — see examples.js.
 //       plus `label` (used only when activeIndex is null — a drop-in names itself)
 //       and `frameEnvelope` (frame/floor the whole clip, not the pose on screen).
 async function loadStage(specs, activeIndex, opts = {}) {
@@ -1670,6 +1703,15 @@ async function loadStage(specs, activeIndex, opts = {}) {
     b.classList.toggle('active', on);
     b.setAttribute('aria-pressed', String(on));
   });
+  // "View larger" hands the visitor's place over to the lab: same slug the lab
+  // writes to its own address bar, so the two pages agree by LABEL and neither
+  // depends on the other's catalog indices. The markup ships the bare
+  // interactive.html, which is both the JS-off fallback and where a drop-in
+  // sends you — a dropped file has no stage for the lab to open on.
+  if (expandLink) {
+    const slug = activeIndex == null ? '' : '#' + stageSlug(EXAMPLES[activeIndex].label);
+    expandLink.href = 'interactive.html' + slug;
+  }
   if (stageName) {
     // A drop-in has no catalog row to read a label off, so it names itself after the
     // file (opts.label); 'Imported model' is the fallback for a load with no name.
@@ -1741,13 +1783,14 @@ async function loadStage(specs, activeIndex, opts = {}) {
       skeletons.push(skeleton);
     }
 
-    // Position the stage: rows → stagger → behind → above → offsets → whole-stage shift.
+    // Position the stage: rows → stagger → behind → above → offsets → fileOffsets → whole-stage shift.
     activeShift = opts.stageShift || [0, 0, 0];
-    layoutRows(specs, sizes, opts.spacing, opts.evenGaps, opts.rowDepth, opts.rowSpacing);
+    layoutRows(specs, sizes, opts.spacing, opts.evenGaps, opts.rowDepth, opts.rowSpacing, opts.rowOrder);
     applyStagger(opts.stagger);
     placeBehind(specs);
     placeAbove(specs);
     applyOffsets(specs);
+    applyFileOffsets(opts.fileOffsets);
     applyStageShift(activeShift); // move objects; frameStage keeps camera/floor centered
 
     applyWireframe();

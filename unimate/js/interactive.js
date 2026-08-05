@@ -3,7 +3,7 @@
 // the same order. What differs is the VIEWER: everything below is lab-only
 // presentation (fullscreen chrome, camera paddings, hover prompts, theme).
 import { HIDDEN_CATEGORIES } from './viewer-presets.js?v=3';
-import { LAB_TUNING } from './stage-tuning.js?v=8';
+import { LAB_TUNING } from './stage-tuning.js?v=12';
 
 window.UNIMATE_VIEWER_CONFIG = {
   fullscreenLab: true,
@@ -12,10 +12,11 @@ window.UNIMATE_VIEWER_CONFIG = {
   cameraPadding: 1.32,
   mobileCameraPadding: 0.96,
   cameraPaddingByCategory: {
-    // The only two-rank stage, and the rank nearest the camera is what the
-    // shared fit reads: at the default the front pair loomed and sat on the
-    // bottom edge with no floor under it. The catalog's own pad frames it on
-    // the embedded canvas, which is far squarer — this is the lab's share.
+    // stage-tuning.js lays this stage out as one row of four here, so this
+    // padding carries a wide row rather than the catalog's two ranks: enough
+    // margin that the flanking rigs never reach the panel or the frame edge
+    // as their clips swing out. It multiplies the pad in that file — the two
+    // together are the lab's framing.
     'Welcome': 1.28,
     'Bipedal': 1.5,
     'Articulated': 1.25,
@@ -25,7 +26,10 @@ window.UNIMATE_VIEWER_CONFIG = {
     'Quadrupedal': 1.40,
   },
   mobileCameraPaddingByCategory: {
-    'Welcome': 0.93,
+    // Raised from 0.93 when this stage became one row: a phone frames a row of
+    // four on its width alone, and at 0.93 the two flanks sat on the frame
+    // edges. It is still under the desktop share, like every entry here.
+    'Welcome': 1.02,
     'Bipedal': 1.08,
     'Articulated': 1.02,
     'Flower': 1.02,
@@ -43,7 +47,7 @@ window.UNIMATE_VIEWER_CONFIG = {
   autoOrbitControls: true,
 };
 
-await import('./viewer.js?v=155');
+await import('./viewer.js?v=159');
 
 // Category-panel collapse — lab-only chrome, so it is wired here rather than
 // in the shared engine. The canvas never resizes: only the floating panel and

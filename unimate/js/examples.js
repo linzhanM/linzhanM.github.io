@@ -13,6 +13,9 @@
 //   spacing    row step multiplier (gap between models, in widths). Default 1.15.
 //   rowSpacing per-row override keyed by row index, e.g. { 0: 0.9, 1: 1.1 }.
 //              Rows not listed fall back to `spacing`.
+//   rowOrder   file indices in left→right order, e.g. [2, 0, 1, 3]. Placement
+//              only — the files, and every index they cite, stay as written.
+//              Files it omits follow the ones it names, in catalog order.
 //   scale      multiplies every model's normalized size in this stage.
 //   pad        camera zoom-out margin (>1 pulls the camera back). Default 1.0.
 //   lighting   per-stage light-intensity multiplier (1 = default look).
@@ -24,6 +27,14 @@
 //   stagger    peak depth offset: alternating models step forward/back along Z
 //              so the row zig-zags instead of sitting on one line.
 //   rowDepth   Z gap between rows when files use `row` (default 2.6).
+//   fileOffsets { index: [x, y, z] } — one rig's nudge, in the same normalized
+//              units as a file's own `offset` and added on top of it. The
+//              stage-level way to move a single rig, so a page can place one
+//              without forking the shared file entry.
+//   singleRow  collapse every `row` onto the front rank, so a two-rank diorama
+//              lays out as one row. Presentation, not content — it belongs in
+//              stage-tuning.js, for the page whose frame is wide enough to
+//              carry the members side by side.
 //   stageShift [x, y, z] slides the GROUP off-center while the camera and floor
 //              stay locked on the ground center. Held out of the auto-framing.
 //   floor      multiplier on the auto-sized checker floor (default 1). The floor
@@ -79,12 +90,16 @@ export const EXAMPLES = [
   {
     label: 'Welcome',
     files: [
-      // Row 0 (front): WALL-E · EVE.  Row 1 (back): G1 · Go2.
+      // Row 0 (front): WALL-E · EVE.  Row 1 (back): G1 · Go2 — which is how
+      // the embedded project page shows them; the lab flattens the two.
       // Two ranks rather than one row of four: side by side, the reared dog
       // leaned into whatever stood next to it (evenGaps sizes its slot from a
       // quadruped's sprawl, not the narrow column it becomes rearing), and the
       // row had to spread until it stopped reading as a group. Depth buys the
-      // same room without the spread.
+      // same room without the spread. That is a finding about THIS canvas: the
+      // lab's frame is wide enough to carry the four side by side, and it
+      // flattens the ranks (singleRow) in stage-tuning.js rather than fork the
+      // files. Both readings of this stage are live — change one deliberately.
       //
       // groundToMesh throughout: EVE's root joint sits inside her shell, the
       // G1's and Go2's ankle joints above their foot shells, WALL-E's tracks
@@ -116,8 +131,9 @@ export const EXAMPLES = [
     ],
     // rowDepth is under the 2.6 default: the ranks only have to be told apart,
     // and at 2.4 the back pair stood off across empty floor and read as a
-    // separate group. pad is the lab's framing — the embed overrides it in
-    // stage-tuning.js, so change both together or only one page moves.
+    // separate group. Both pages override the pad in stage-tuning.js, so these
+    // values frame nothing on their own — they are what a third page, or a
+    // dropped-in tuning entry, would inherit.
     spacing: 1.15,
     pad: 1.2, evenGaps: true, rowDepth: 1.8,
   },
