@@ -32,16 +32,17 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600,0,0;9..144,700,0,0&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
 	<!-- ?v= busts the CDN/browser cache; bump it when editing these files.
-	     The first two are shared with index.html — keep their numbers equal to
-	     the ones there, so both pages hit one cache entry per file. resume.css
-	     is only ours and carries its own counter. -->
+	     The first two are shared with index.html and publications.html — keep
+	     all three pages' numbers equal, so they hit one cache entry per file.
+	     resume.css is only ours and carries its own counter. -->
 	<link rel="stylesheet" href="css/custom-navbar.css?v=40">
-	<link rel="stylesheet" href="css/styles.css?v=45">
+	<link rel="stylesheet" href="css/styles.css?v=46">
 	<link rel="stylesheet" href="css/resume.css?v=12">
 </head>
 
 <body>
-	<!-- The site nav, identical to the homepage's. Its About link points at the
+	<!-- The site nav. Same rail as the other two root pages, plus the Resume
+	     link, which only this page's rail carries. Its About link points at the
 	     homepage's hero rather than at anything here, so nav.js finds no section
 	     to track: instead it parks the keypoint under the link marked is-active
 	     below, which is this page. -->
@@ -322,7 +323,7 @@
 		<p>&copy; <span id="copyright-year"></span> Linzhan Mou</p>
 	</footer>
 
-	<script src="js/nav.js?v=42"></script>
+	<script src="js/nav.js?v=43"></script>
 	<script>document.getElementById("copyright-year").textContent = new Date().getFullYear();</script>
 </body>
 

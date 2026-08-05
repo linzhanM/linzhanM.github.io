@@ -30,14 +30,15 @@
 	     three pages' numbers equal, so they hit one cache entry per file.
 	     publications.css is only ours and carries its own counter. -->
 	<link rel="stylesheet" href="css/custom-navbar.css?v=40">
-	<link rel="stylesheet" href="css/styles.css?v=45">
+	<link rel="stylesheet" href="css/styles.css?v=46">
 	<link rel="stylesheet" href="css/publications.css?v=7">
 </head>
 
 <body>
-	<!-- The site nav, identical to the other root pages'. Its About link points
-	     at the homepage's hero, so nav.js finds no section to track here and
-	     parks the keypoint under the link marked is-active below. -->
+	<!-- The site nav, the same two links as the homepage's; only the résumé's
+	     rail carries a third. Its About link points at the homepage's hero, so
+	     nav.js finds no section to track here and parks the keypoint under the
+	     link marked is-active below. -->
 	<nav class="navbar" role="navigation" aria-label="Main">
 		<div class="navbar-inner">
 			<div class="navbar-brand">
@@ -189,7 +190,7 @@
 		<p>&copy; <span id="copyright-year"></span> Linzhan Mou</p>
 	</footer>
 
-	<script src="js/nav.js?v=42"></script>
+	<script src="js/nav.js?v=43"></script>
 	<script>document.getElementById("copyright-year").textContent = new Date().getFullYear();</script>
 </body>
 

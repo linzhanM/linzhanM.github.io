@@ -249,9 +249,10 @@
 /* --- Publications --- */
 /* Reuses .pub-title / .pub-authors / .pub-links from styles.css, Palatino and
    all — these are the same papers the homepage sets that way, and holding the
-   face across both pages is worth more than flattening it here. Only the
-   spacing changes: those rules are tuned for a row with a video thumbnail
-   beside them, and here the entries stack directly on one another. */
+   face across every page that lists them is worth more than flattening it here
+   (publications.css does the same). Only the spacing changes: those rules are
+   tuned for a row with a video thumbnail beside them, and here the entries
+   stack directly on one another. */
 .resume-pub .pub-title {
   margin-top: 0;
 }

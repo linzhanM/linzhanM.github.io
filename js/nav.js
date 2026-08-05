@@ -4,7 +4,8 @@
    so all the easing stays in CSS. Links are plain anchors — without JS the nav
    still navigates, it just doesn't track.
 
-   Also the section reveal shared by both root pages — see revealSections(). */
+   Also the section reveal shared by all three root pages — see
+   revealSections(). */
 
 /* Unfold each .page-section as it comes on screen. The hidden state is CSS
    (styles.css, gated behind .js-anim); this only decides *when* each one is
@@ -119,8 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	// --- Keypoint ---------------------------------------------------------
-	// Both root pages carry the same rail, so moving between them should read
-	// as the one dot travelling along it rather than as two unrelated dots
+	// All three root pages carry the same rail, so moving between them should
+	// read as the one dot travelling along it rather than as separate dots
 	// blinking on and off. Each page records the label the dot ended under; the
 	// next page starts the dot there and then lets its own first move glide it
 	// across, which is the whole trick — the animation is the ordinary CSS
