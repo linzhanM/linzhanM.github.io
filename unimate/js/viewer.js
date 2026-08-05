@@ -616,10 +616,11 @@ function frameStage(pad = 1.0, orbitAngleDegrees = viewerConfig.initialOrbitAngl
   // Aim slightly left of the stage on the fullscreen page. This shifts the
   // characters into the clear area between the scene picker and Controls while
   // preserving the stage's physical layout and the project-page composition.
-  const desktopSafeArea = viewerConfig.horizontalSafeArea || 0;
-  const safeArea = phoneLayout.matches
-    ? (viewerConfig.mobileHorizontalSafeArea ?? desktopSafeArea)
-    : desktopSafeArea;
+  // The whole shift is paid for by the LEFT-docked category panel, so it holds
+  // only while that panel is on the left: once interactive.css lays the panel
+  // along the bottom (stackedChrome) nothing sits on either side to clear, and
+  // the shift is simply a camera that missed the middle of the frame.
+  const safeArea = stackedChrome.matches ? 0 : (viewerConfig.horizontalSafeArea || 0);
   const viewX = tx - (isFullscreenLab ? Math.max(size.x, MIN_FRAME_WIDTH) * safeArea : 0);
   controls.target.set(viewX, ty, tz);
   // Lift the camera above the target (~+0.28·dist) so it looks slightly DOWN at the
@@ -1111,6 +1112,13 @@ const DEPTH_SHRINK = 0.12; // scale given up at full recession
 // reductions of the desktop composition rather than similar mobile variants.
 const DESKTOP_VIEWER_WIDTH = 756;
 const phoneLayout = window.matchMedia('(max-width: 720px)');
+// Where the lab's chrome restacks: interactive.css moves the category panel off
+// the left edge and lays it along the bottom here. A DIFFERENT question from
+// phoneLayout — that asks how far to scale the overlay UI, this asks where the
+// panel is — and the two disagree on purpose, so between 721px and 900px the
+// panel is already the bottom strip. Anything framing the canvas around the
+// panel must ask this one.
+const stackedChrome = window.matchMedia('(max-width: 900px)');
 const promptViewportScale = (width) =>
   phoneLayout.matches ? Math.min(1, width / DESKTOP_VIEWER_WIDTH) : 1;
 

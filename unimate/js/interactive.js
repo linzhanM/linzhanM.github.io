@@ -39,15 +39,17 @@ window.UNIMATE_VIEWER_CONFIG = {
   },
   cameraElevation: 0.34,
   initialOrbitAngle: 5,
+  // Clearance for the category panel docked at the left edge. No mobile
+  // counterpart on purpose: once the chrome restacks the panel is the bottom
+  // strip, and viewer.js drops the shift to 0.
   horizontalSafeArea: 0.09,
-  mobileHorizontalSafeArea: 0.055,
   mobileControlScaleMin: 0.54,
   hoverPrompts: true,
   playbackControls: true,
   autoOrbitControls: true,
 };
 
-await import('./viewer.js?v=159');
+await import('./viewer.js?v=160');
 
 // Category-panel collapse — lab-only chrome, so it is wired here rather than
 // in the shared engine. The canvas never resizes: only the floating panel and
