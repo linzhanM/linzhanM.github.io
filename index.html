@@ -33,14 +33,18 @@
 	<link rel="stylesheet" href="css/styles.css?v=46">
 
 	<script type="text/javascript">
-		function display(id) {
+		// The [abs] toggles. `control` is the link itself (passed as `this`), so the
+		// open/closed state reaches assistive tech through aria-expanded — the same
+		// thing the navbar burger and unimate's abstract fold do. The CSS ships the
+		// panel display:none, so the first click has to read the computed value:
+		// el.style.display is still empty at that point.
+		function display(id, control) {
 			var el = document.getElementById(id);
+			if (!el) return;
 			var computed = window.getComputedStyle(el).display;
-			if (el.style.display === 'none' || (el.style.display === '' && computed === 'none')) {
-				el.style.display = "block";
-			} else {
-				el.style.display = "none";
-			}
+			var open = el.style.display === 'none' || (el.style.display === '' && computed === 'none');
+			el.style.display = open ? "block" : "none";
+			if (control) control.setAttribute('aria-expanded', String(open));
 		}
 	</script>
 </head>
@@ -119,7 +123,7 @@
 
 		<div class="pub-row row align-items-start">
 			<div class="col-md-3">
-				<video class="pub-thumbnail img-thumbnail lazy-video" title="UniMate video loading.." tabindex="-1"
+				<video class="pub-thumbnail img-thumbnail lazy-video" aria-label="UniMate teaser video" tabindex="-1"
 					preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
 					src="assets/videos/unimate.mp4"></video>
 			</div>
@@ -128,7 +132,7 @@
 				<p class="pub-authors"><u>Linzhan Mou</u>, Jiahui Lei, Zhiyang Dou, Chenyue Cai, Chaoyue Song, Adam Finkelstein, Szymon Rusinkiewicz</p>
 				<p class="pub-venue">SIGGRAPH Asia 2026</p>
 				<p class="pub-links">
-					[<a href="javascript:void(0)" onclick="display('unimate-abs')">abs</a>]&nbsp;
+					[<a href="javascript:void(0)" onclick="display('unimate-abs', this)" aria-expanded="false" aria-controls="unimate-abs">abs</a>]&nbsp;
 					[<a target="_blank" href="https://linzhanmou.com/unimate/">website</a>]&nbsp;
 					[<a target="_blank" href="https://linzhanmou.com/unimate/interactive.html">interactive demo</a>]&nbsp;
 					(Conditionally Accepted)&nbsp;
@@ -141,7 +145,7 @@
 
 		<div class="pub-row row align-items-start">
 			<div class="col-md-3">
-				<video class="pub-thumbnail img-thumbnail lazy-video" title="DIMO video loading.." tabindex="-1"
+				<video class="pub-thumbnail img-thumbnail lazy-video" aria-label="DIMO teaser video" tabindex="-1"
 					preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
 					src="assets/videos/dimo.mp4"></video>
 			</div>
@@ -150,7 +154,7 @@
 				<p class="pub-authors"><u>Linzhan Mou</u>, Jiahui Lei, Chen Wang, Lingjie Liu, Kostas Daniilidis</p>
 				<p class="pub-venue">ICCV 2025 <b><span class="venue-highlight">(Highlight)</span></b></p>
 				<p class="pub-links">
-					[<a href="javascript:void(0)" onclick="display('dimo-abs')">abs</a>]&nbsp;
+					[<a href="javascript:void(0)" onclick="display('dimo-abs', this)" aria-expanded="false" aria-controls="dimo-abs">abs</a>]&nbsp;
 					[<a target="_blank" href="https://arxiv.org/abs/2511.07409">arXiv</a>]&nbsp;
 					[<a target="_blank" href="https://linzhanmou.com/dimo/">website</a>]&nbsp;
 					[<a target="_blank" href="https://github.com/Friedrich-M/DIMO">code</a>]&nbsp;
@@ -169,7 +173,7 @@
 		<template>
 		<div class="pub-row row align-items-start">
 			<div class="col-md-3">
-				<video class="pub-thumbnail img-thumbnail" title="Let Occ Flow video loading.." tabindex="-1"
+				<video class="pub-thumbnail img-thumbnail" aria-label="Let Occ Flow teaser video" tabindex="-1"
 					preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
 					src="assets/videos/let-occ-flow.mp4"></video>
 			</div>
@@ -178,7 +182,7 @@
 				<p class="pub-authors"><u>Linzhan Mou</u>*, Yili Liu*, Xuan Yu, Chenrui Han, Sitong Mao, Rong Xiong, Yue Wang</p>
 				<p class="pub-venue">CoRL 2024</p>
 				<p class="pub-links">
-					[<a href="javascript:void(0)" onclick="display('occflow-abs')">abs</a>]&nbsp;
+					[<a href="javascript:void(0)" onclick="display('occflow-abs', this)" aria-expanded="false" aria-controls="occflow-abs">abs</a>]&nbsp;
 					[<a target="_blank" href="https://arxiv.org/abs/2407.07587">arXiv</a>]&nbsp;
 					[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/">website</a>]&nbsp;
 					[<a target="_blank" href="https://github.com/eliliu2233/occ-flow">code</a>]&nbsp;
@@ -201,7 +205,7 @@
 
 		<div class="pub-row row align-items-start">
 			<div class="col-md-3">
-				<video class="pub-thumbnail img-thumbnail lazy-video" title="TTT-Parkour video loading.." tabindex="-1"
+				<video class="pub-thumbnail img-thumbnail lazy-video" aria-label="TTT-Parkour teaser video" tabindex="-1"
 					preload="none" loop="" muted="muted" playsinline="playsinline"
 					src="assets/videos/ttt-parkour.mp4"></video>
 			</div>
@@ -210,7 +214,7 @@
 				<p class="pub-authors">Shaoting Zhu*, Baijun Ye*, Jiaxuan Wang, Jiakang Chen, Ziwen Zhuang, <u>Linzhan Mou</u>, Runhan Huang, Hang Zhao</p>
 				<p class="pub-venue">arXiv 2026</p>
 				<p class="pub-links">
-					[<a href="javascript:void(0)" onclick="display('ttt-abs')">abs</a>]&nbsp;
+					[<a href="javascript:void(0)" onclick="display('ttt-abs', this)" aria-expanded="false" aria-controls="ttt-abs">abs</a>]&nbsp;
 					[<a target="_blank" href="https://arxiv.org/abs/2602.02331">arXiv</a>]&nbsp;
 					[<a target="_blank" href="https://ttt-parkour.github.io/">website</a>]&nbsp;
 					[<a target="_blank" href="https://github.com/project-instinct">framework</a>]&nbsp;
@@ -227,7 +231,7 @@
 
 		<div class="pub-row row align-items-start">
 			<div class="col-md-3">
-				<video class="pub-thumbnail img-thumbnail lazy-video" title="VR-Robo video loading.." tabindex="-1"
+				<video class="pub-thumbnail img-thumbnail lazy-video" aria-label="VR-Robo teaser video" tabindex="-1"
 					preload="none" loop="" muted="muted" playsinline="playsinline"
 					src="assets/videos/vr-robo.mp4"></video>
 			</div>
@@ -236,7 +240,7 @@
 				<p class="pub-authors">Shaoting Zhu*, <u>Linzhan Mou</u>*, Derun Li, Baijun Ye, Runhan Huang, Hang Zhao</p>
 				<p class="pub-venue">RA-L 2025</p>
 				<p class="pub-links">
-					[<a href="javascript:void(0)" onclick="display('vr-abs')">abs</a>]&nbsp;
+					[<a href="javascript:void(0)" onclick="display('vr-abs', this)" aria-expanded="false" aria-controls="vr-abs">abs</a>]&nbsp;
 					[<a target="_blank" href="https://arxiv.org/abs/2502.01536">arXiv</a>]&nbsp;
 					[<a target="_blank" href="https://vr-robo.github.io/">website</a>]&nbsp;
 					[<a target="_blank" href="https://github.com/zst1406217/VR-Robo">code</a>]&nbsp;
@@ -254,7 +258,7 @@
 
 		<div class="pub-row row align-items-start">
 			<div class="col-md-3">
-				<video class="pub-thumbnail img-thumbnail lazy-video" title="Robust Robot Walker video loading.." tabindex="-1"
+				<video class="pub-thumbnail img-thumbnail lazy-video" aria-label="Robust Robot Walker teaser video" tabindex="-1"
 					preload="none" loop="" muted="muted" playsinline="playsinline"
 					src="assets/videos/rrw.mp4"></video>
 			</div>
@@ -263,7 +267,7 @@
 				<p class="pub-authors">Shaoting Zhu, Runhan Huang, <u>Linzhan Mou</u>, Hang Zhao</p>
 				<p class="pub-venue">ICRA 2025</p>
 				<p class="pub-links">
-					[<a href="javascript:void(0)" onclick="display('rrw-abs')">abs</a>]&nbsp;
+					[<a href="javascript:void(0)" onclick="display('rrw-abs', this)" aria-expanded="false" aria-controls="rrw-abs">abs</a>]&nbsp;
 					[<a target="_blank" href="https://arxiv.org/abs/2409.07409">arXiv</a>]&nbsp;
 					[<a target="_blank" href="https://robust-robot-walker.github.io/">website</a>]&nbsp;
 					[<a target="_blank" href="https://github.com/zst1406217/robust_robot_walker">code</a>]&nbsp;
@@ -306,7 +310,11 @@
 	<script>document.getElementById("copyright-year").textContent = new Date().getFullYear();</script>
 
 	<script>
-		// Lazy-play Robotics thumbnails: only fetch + play while on screen.
+		// Play each publication clip while it is on screen and pause it otherwise.
+		// The two groups differ in the markup, not here: the Vision ones are above
+		// the fold, so they carry `autoplay` and preload their metadata, while the
+		// Robotics ones below it carry `preload="none"` — nothing is fetched for
+		// those until this observer reaches them.
 		(function () {
 			var vids = document.querySelectorAll('video.lazy-video');
 			if (!('IntersectionObserver' in window)) {
