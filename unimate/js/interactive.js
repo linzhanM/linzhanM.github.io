@@ -3,7 +3,7 @@
 // the same order. What differs is the VIEWER: everything below is lab-only
 // presentation (fullscreen chrome, camera paddings, hover prompts, theme).
 import { HIDDEN_CATEGORIES } from './viewer-presets.js?v=3';
-import { LAB_TUNING } from './stage-tuning.js?v=7';
+import { LAB_TUNING } from './stage-tuning.js?v=8';
 
 window.UNIMATE_VIEWER_CONFIG = {
   fullscreenLab: true,
