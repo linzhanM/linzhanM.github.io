@@ -41,6 +41,9 @@ resources/
   glbs/                 Runtime 3D model files (compressed — see below)
   prompts.json          Prompt labels keyed by model filename
   unimate.pdf           Paper PDF (linked from the site's resume page)
+tools/
+  render-category.mjs   Offline: render one lab category to a video. Not shipped
+                        — nothing under css/ or js/ imports it
 ```
 
 ## Rig compression
@@ -67,6 +70,76 @@ npx @gltf-transform/cli optimize in.glb out.glb \
 `--simplify false` is deliberate: these meshes are unwelded (one rig is 884k
 vertices for 391k triangles), so simplification gains almost nothing here and is
 the one step that would visibly change silhouettes.
+
+## Rendering a category to video
+
+`tools/render-category.mjs` turns one motion-lab category into a clip. The lab
+itself is the renderer — the script serves the repo, drives a headless Chrome
+over CDP, and pipes the frames into ffmpeg. Nothing about how a stage looks is
+re-implemented there, so a framing fix belongs in `examples.js` /
+`stage-tuning.js` and the render follows.
+
+```bash
+node unimate/tools/render-category.mjs --list
+node unimate/tools/render-category.mjs --category "Unitree G1 Robot"
+node unimate/tools/render-category.mjs -c welcome --zoom 1.35 --labels
+node unimate/tools/render-category.mjs -c welcome --background "#f2efe6"
+node unimate/tools/render-category.mjs -c welcome --background transparent -o walle.mov
+```
+
+Output lands in `~/Downloads/lab_renders/<slug>.mp4` — outside the repo on
+purpose, since every file under `assets/**` is referenced by a page. Needs
+Chrome and ffmpeg; no npm packages. `--help` lists every option.
+
+Four things it does that a screen recording cannot:
+
+- **The page runs on a virtual clock.** `requestAnimationFrame`,
+  `performance.now` and `Date.now` are replaced before any page script loads,
+  and each captured frame advances time by exactly `1/fps`. Capture runs at
+  ~5 fps and the result is a perfect 60.
+- **Frame 0 is the stage as the lab first shows it.** The clock goes virtual
+  *before* the stage is loaded again, so the reload's camera fit (opening orbit
+  angle) and its fresh mixers (motion at t=0) are what the first frame sees —
+  no rewind of a running mixer is possible otherwise.
+- **The clip length comes from the rigs.** The `.glb` JSON chunk carries each
+  animation's last keyframe time; the longest rig in the stage gets `--loops`
+  passes (default 3), so no rig is ever cut mid-motion.
+- **Colour and resolution are pinned.** Frames are supersampled (`--scale`,
+  default 1.5 → 2560×1440 off a 4K render) and converted to Rec.709 limited
+  range explicitly. ffmpeg otherwise picks BT.601 coefficients and tags nothing,
+  which is what makes an encode look shifted against the browser.
+
+`--background` repaints **only what is behind the stage** — the floor, lights and
+skeleton stay on the theme. It reaches the live scene through
+`window.__THREE_DEVTOOLS__`, which three dispatches every Scene and renderer to;
+that is the only way in, since the viewer exports nothing and
+`WebGLRenderer.render` is an own property of each instance, so patching the
+prototype does nothing. `transparent` also needs the page's own fills off
+(`body` carries a gradient, `.viewer-wrapper` its `--stage` colour) and Chrome's
+default background override cleared, and it only survives into `.mov` (ProRes
+4444) or a `.png` sequence — `libvpx-vp9` accepts `yuva420p` and then drops the
+alpha plane without a word.
+
+**Everything on screen runs off one measured delta** — mixers, auto-orbit and
+label easing all take `dt` from the same `THREE.Clock`. Auto-orbit only does so
+because `viewer.js` passes it explicitly (`controls.update(dt)`); OrbitControls'
+no-argument branch advances a fixed step *per frame*, which used to make the
+live lab sweep twice as fast on a 120 Hz screen and slow down under load.
+`orbit speed` is therefore a rate — OrbitControls counts it in units of
+`2π/60` rad/s, one unit being 6°/s. The lab runs **`8/6`: 8°/s, a revolution
+every 45 s**, on any display. Auto-orbit is lab-only; the project page's embed
+never sets `autoOrbitControls`, so its camera is still. What is *not* rate-free
+is OrbitControls' damping, which decays per frame: the first ~12 frames are a
+ramp, so a slower frame rate starts the sweep a fraction of a second behind and
+carries that offset for the rest of the run. It is about a degree between 30 and
+60 fps, constant rather than growing — visible only if you diff two renders.
+
+Two consequences for capture. `--fps` is a sampling knob only: the virtual clock
+hands the page exactly `1/fps` each frame, so 30 and 60 render the same clip at
+the same speed, one more finely than the other. And `--fps` must stay **at or
+above 20** — `viewer.js` caps a single frame's delta at `1/20` s so a
+backgrounded tab doesn't resume by teleporting a rig through its clip, and below
+20 fps that guard makes the whole render play slow.
 
 ## Showcase workflow
 
