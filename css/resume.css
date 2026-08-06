@@ -207,6 +207,26 @@
   color: var(--text-primary);
 }
 
+/* A lab name may link to the lab, but dressed as the text it sits in: the
+   institution line is this page's landmark rank, and an accent rule under
+   half of it would demote the name to link text and unbalance the rows whose
+   institutions link against those whose don't. So the global underline comes
+   off and the row reads identically everywhere; hover draws it back, which is
+   exactly the contact line's grammar — quiet at rest, the accent as the
+   acknowledgement. */
+.resume-where a:link,
+.resume-where a:visited {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.resume-where a:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+}
+
 /* Role / degree line: italic, one tier down, as the PDF sets it. */
 .resume-what {
   font-style: italic;
