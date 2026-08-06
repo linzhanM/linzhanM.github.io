@@ -83,7 +83,15 @@ const settings = {
   'paused': false,
   'playback speed': 1,
   'auto orbit': true,
-  'orbit speed': 1,
+  // Now that the sweep runs on the clock rather than on frames (see the render
+  // loop), this is a real rate — OrbitControls counts it in units of 2π/60 rad/s,
+  // so one unit is 6°/s. Written as the figure that was actually chosen: 8°/s,
+  // a revolution every 45 s. Fast enough to read as deliberate within a second
+  // or two of landing (which is the whole job — the lab is drag-to-orbit, this
+  // only says so), slow enough that a walk cycle stays legible from one side and
+  // that the hover tooltip, which re-picks only on pointermove, does not go
+  // stale under a still cursor.
+  'orbit speed': 8 / 6,
 };
 
 // The active "stage" — parallel arrays, one entry per model in the window.
@@ -1989,12 +1997,26 @@ wrapper.addEventListener('drop', (e) => {
 });
 
 // ── 12. Render loop, resize, init ────────────────────────────────────────────
+// One measured delta drives everything on screen — mixers, auto-orbit, label
+// easing — so a faster display renders the same motion more smoothly instead of
+// a different, faster motion.
+//
+// The cap exists because rAF stops while the tab is hidden, so the first frame
+// back carries the whole absence: uncapped, that is a rig teleporting through
+// its clip and the camera spinning several revolutions at once. 1/20 s is longer
+// than any frame a real display produces, so it only ever fires on a stall.
+const MAX_FRAME_DELTA = 1 / 20;
 (function animate() {
   requestAnimationFrame(animate);
-  const dt = clock.getDelta();
+  const dt = Math.min(clock.getDelta(), MAX_FRAME_DELTA);
   const playbackDelta = settings['paused'] ? 0 : dt * settings['playback speed'];
   for (const m of mixers) m.update(playbackDelta);
-  controls.update();
+  // Pass the delta: OrbitControls' no-argument branch advances a fixed step per
+  // FRAME, so the sweep ran twice as fast on a 120 Hz screen as on a 60 Hz one
+  // and slowed down under load. With a delta it is a rate — see 'orbit speed'.
+  // dt and not playbackDelta: Pause holds the motion still and lets the camera
+  // keep moving around it.
+  controls.update(dt);
   renderer.render(scene, camera);
   updateLabels(dt); // after render: the camera matrices the pills project through are final
 })();
