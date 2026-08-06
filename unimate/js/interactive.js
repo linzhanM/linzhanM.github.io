@@ -15,12 +15,12 @@ window.UNIMATE_VIEWER_CONFIG = {
     // Multiplies the stage's own pad in stage-tuning.js — together they are the
     // lab's framing. Wide enough that the flanks of that file's one-row Welcome
     // never reach the panel or the frame edge as their clips swing out.
-    'Welcome': 1.28,
+    'Welcome': 1.37,
     'Bipedal': 1.5,
-    'Articulated': 1.25,
+    'Articulated': 1.34,
     'Flower': 1.25,
     'Armored Robot': 1.55,
-    'Gundam Robot': 1.48,
+    'Gundam Robot': 1.58,
     'Quadrupedal': 1.40,
   },
   mobileCameraPaddingByCategory: {
@@ -36,17 +36,13 @@ window.UNIMATE_VIEWER_CONFIG = {
   },
   cameraElevation: 0.34,
   initialOrbitAngle: 5,
-  // Clearance for the category panel docked at the left edge. No mobile
-  // counterpart on purpose: once the chrome restacks the panel is the bottom
-  // strip, and viewer.js drops the shift to 0.
-  horizontalSafeArea: 0.09,
   mobileControlScaleMin: 0.54,
   hoverPrompts: true,
   playbackControls: true,
   autoOrbitControls: true,
 };
 
-await import('./viewer.js?v=162');
+await import('./viewer.js?v=165');
 
 // Category-panel collapse — lab-only chrome, so it is wired here, not in the
 // shared engine. The canvas never resizes: only the floating panel and its

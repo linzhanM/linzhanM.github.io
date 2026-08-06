@@ -615,22 +615,16 @@ function frameStage(pad = 1.0, orbitAngleDegrees = viewerConfig.initialOrbitAngl
   const tx = center.x - activeShift[0];
   const ty = center.y - activeShift[1];
   const tz = center.z - activeShift[2];
-  // Aim slightly left of the stage on the fullscreen page. This shifts the
-  // characters into the clear area between the scene picker and Controls while
-  // preserving the stage's physical layout and the project-page composition.
-  // The whole shift is paid for by the LEFT-docked category panel, so it holds
-  // only while that panel is on the left: once interactive.css lays the panel
-  // along the bottom (stackedChrome) nothing sits on either side to clear, and
-  // the shift is simply a camera that missed the middle of the frame.
-  const safeArea = stackedChrome.matches ? 0 : (viewerConfig.horizontalSafeArea || 0);
-  const viewX = tx - (isFullscreenLab ? Math.max(size.x, MIN_FRAME_WIDTH) * safeArea : 0);
-  controls.target.set(viewX, ty, tz);
+  // Aim at the stage's own centre on every page and every width. The lab's
+  // chrome floats over the canvas, but clearing it is a padding question —
+  // cameraPadding frames symmetrically, an aim point off the middle does not.
+  controls.target.set(tx, ty, tz);
   // Lift the camera above the target (~+0.28·dist) so it looks slightly DOWN at the
   // stage instead of dead level — a gentle high-angle view.
   const elevation = isFullscreenLab ? viewerConfig.cameraElevation : 0.28;
   const initialOrbitAngle = THREE.MathUtils.degToRad(orbitAngleDegrees);
   camera.position.set(
-    viewX + Math.sin(initialOrbitAngle) * dist,
+    tx + Math.sin(initialOrbitAngle) * dist,
     ty + size.y * 0.12 + dist * elevation,
     tz + Math.cos(initialOrbitAngle) * dist,
   );
@@ -1112,13 +1106,6 @@ const DEPTH_SHRINK = 0.12; // scale given up at full recession
 // the desktop composition rather than similar mobile variants.
 const DESKTOP_VIEWER_WIDTH = 756;
 const phoneLayout = window.matchMedia('(max-width: 720px)');
-// Where the lab's chrome restacks: interactive.css moves the category panel off
-// the left edge and lays it along the bottom here. A DIFFERENT question from
-// phoneLayout — that asks how far to scale the overlay UI, this asks where the
-// panel is — and the two disagree on purpose, so between 721px and 900px the
-// panel is already the bottom strip. Anything framing the canvas around the
-// panel must ask this one.
-const stackedChrome = window.matchMedia('(max-width: 900px)');
 const promptViewportScale = (width) =>
   phoneLayout.matches ? Math.min(1, width / DESKTOP_VIEWER_WIDTH) : 1;
 

@@ -91,6 +91,29 @@ Output lands in `~/Downloads/lab_renders/<slug>.mp4` — outside the repo on
 purpose, since every file under `assets/**` is referenced by a page. Needs
 Chrome and ffmpeg; no npm packages. `--help` lists every option.
 
+`render-category.mjs` is the sequence and nothing else; each step is a module in
+`tools/lib/`:
+
+| | |
+|---|---|
+| `options.mjs` | the command line — usage text and the parser |
+| `server.mjs` | the repo served read-only on loopback |
+| `chrome.mjs` | finding and launching the browser |
+| `cdp.mjs` | the DevTools socket, and one attached page |
+| `bootstrap.mjs` | everything injected into the page, virtual clock included |
+| `stage.mjs` | opening the lab and getting a category on screen |
+| `clip.mjs` | how long the video runs, read out of the `.glb` rigs |
+| `output.mjs` | frame geometry, the ffmpeg command, the frame sink |
+| `capture.mjs` | the step-screenshot-write loop |
+| `paths.mjs`, `util.mjs` | repo root and lab URL; `fail` / `slugify` / `waitUntil` |
+
+Two seams are worth knowing before editing any of them. `bootstrap.mjs` is the
+*only* channel into the page — it is stringified into
+`Page.addScriptToEvaluateOnNewDocument`, so it is plain source with no imports,
+and nothing it needs may leak into the shipped viewer. And `capture.mjs` knows
+only about a sink with `write()` and `finish()`, which is why a `.png` output
+(a directory of numbered frames) and an encoder on stdin are the same loop.
+
 Four things it does that a screen recording cannot:
 
 - **The page runs on a virtual clock.** `requestAnimationFrame`,
