@@ -2,9 +2,16 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
 
 :root {
-  --paper: #171918;
+  --paper: #131413;
   --paper-light: #f2eee8;
-  --stage: #191c1b;
+  /* The stage is the page: this is the sky behind every rig. Same warm
+     green-gray hue throughout its history, tuned by eye — #191c1b read as
+     washed, a full step down to #111312 as a void; this is their midpoint,
+     dark enough that the rigs and the checker floor read as the lit things.
+     viewer.js's VIEWER_THEMES.dark (scene background + metaColor) and the
+     theme-color meta in interactive.html carry the SAME value — move all
+     three together. */
+  --stage: #151817;
   --ink: #f2eee8;
   --muted: #9b9993;
   --line: rgba(242, 238, 232, 0.16);
@@ -359,7 +366,12 @@ button:focus-visible {
 .control-bar {
   top: 12px;
   right: 12px;
-  width: 194px;
+  /* Wide enough that the catalog's longest label — "Unitree G1 Robot" at
+     13px sans, after the mono "Category" and the 16px gap — fits without
+     the ellipsis. The ellipsis is insurance for drop-in FILE names only
+     (viewer.js promises exactly that, and puts the full name in a title);
+     at 194px it was also eating catalog names. */
+  width: 216px;
   flex-direction: column;
   align-items: stretch;
   gap: 0;
@@ -405,7 +417,7 @@ button:focus-visible {
   height: 16px;
   border: 1px solid rgba(242, 238, 232, 0.28);
   border-radius: 50%;
-  background: #191c1b;
+  background: #151817;
   box-shadow: inset 0 0 0 3px rgba(242, 238, 232, 0.08);
   transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
@@ -546,22 +558,25 @@ html[data-theme='light'] .theme-swatch {
 }
 
 .dock-project {
+  flex: none;
   display: inline-flex;
   align-items: center;
-  min-height: 23px;
-  margin-left: 6px;
-  padding: 0 7px 0 10px;
-  border-left: 1px solid rgba(211, 207, 199, 0.18);
-  color: var(--chrome-muted);
+  min-height: 28px;
+  margin-left: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--chrome-border);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--chrome-hover);
   font-family: var(--sans);
   font-size: 11px;
   font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
-  transition: color 150ms ease;
+  transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
 }
 
-.dock-project:hover { color: var(--paper-light); }
+.dock-project:hover { border-color: var(--control-accent); background: var(--control-accent-soft); }
 .dock-project:focus-visible { outline-color: var(--control-accent); }
 
 .dock-hint {
@@ -639,8 +654,6 @@ html[data-theme='light'] .dock-control.is-active kbd {
   color: var(--ink);
   border-color: rgba(238, 91, 56, 0.66);
 }
-html[data-theme='light'] .dock-project { border-left-color: rgba(23, 25, 22, 0.17); }
-html[data-theme='light'] .dock-project:hover { color: var(--ink); }
 html[data-theme='light'] .orbit-icon,
 html[data-theme='light'] .zoom-icon { border-color: rgba(23, 25, 22, 0.36); }
 html[data-theme='light'] .orbit-icon::after { border-color: var(--ink); }
@@ -804,35 +817,22 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.24);
   }
   .category-heading { display: none; }
   .example-sidebar { flex: 1 1 auto; width: auto; flex-direction: row; padding-top: 0; overflow-x: auto; overflow-y: hidden; }
-  .category-theme {
-    flex: 0 0 42px;
-    width: 42px;
-    min-height: 38px;
-    align-self: stretch;
-    display: grid;
-    place-items: center;
-    padding: 0;
-    border-top: 0;
-    border-left: 1px solid var(--chrome-divider);
-  }
-  .category-theme > span:first-child,
-  .category-theme .theme-name { display: none; }
-  .category-theme .theme-value {
-    justify-self: center;
-    gap: 0;
-    padding: 0;
-    border: 0;
-    background: transparent;
-  }
-  .category-theme .theme-swatch { width: 20px; height: 20px; }
-  .category-panel .category-theme { display: none; }
+  /* The theme toggle is desktop chrome: the bottom strip is primary navigation,
+     and every slot it has goes to a category. */
+  .category-theme { display: none; }
   .drop-note { display: none; }
+  /* The dock parks top-LEFT as a compact pill, mirroring the bar top-right —
+     the desktop's own corner grammar. Its previous home, a full-width band a
+     fixed 163px down, was tuned for one portrait height: on a tablet it floated
+     mid-sky with its content bunched left, and in landscape it landed on the
+     category strip. The corners exist at every aspect ratio; a fixed offset
+     does not. max-width keeps it clear of the 216px bar even at 561px wide. */
   .control-dock {
     left: max(8px, env(safe-area-inset-left));
-    right: max(8px, env(safe-area-inset-right));
-    top: calc(max(8px, env(safe-area-inset-top)) + 163px);
+    right: auto;
+    top: max(8px, env(safe-area-inset-top));
     bottom: auto;
-    max-width: none;
+    max-width: calc(100% - 262px);
     overflow-x: auto;
     scrollbar-width: none;
     transform: none;
@@ -840,10 +840,14 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.24);
   .control-bar {
     top: max(8px, env(safe-area-inset-top));
     right: max(8px, env(safe-area-inset-right));
-    width: min(194px, calc(100% - 16px));
+    width: min(216px, calc(100% - 16px));
   }
   .control-dock::-webkit-scrollbar { display: none; }
   .dock-hint { display: none; }
+  /* Everything at this width is a touch screen: a Space / O / R chip is a
+     promise the hardware can't keep, on a tablet as much as on a phone. */
+  .dock-control kbd { display: none; }
+  .dock-control { padding: 2px 9px; }
   .example-item { width: auto; min-width: max-content; min-height: 38px; max-height: 38px; padding: 0 11px; }
   .example-item.active { padding-left: 11px; }
   .example-name { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
@@ -876,47 +880,129 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.24);
   .example-item.active { padding-left: 11px; }
   .example-name { font-size: 11px; }
   .viewer-label { max-width: 180px; font-size: 9px; padding: 4px 7px; }
-  .control-dock {
-    top: calc(max(8px, env(safe-area-inset-top)) + 96px);
-    bottom: auto;
-    padding: 5px 6px;
-    border-radius: 12px;
-  }
+  /* THE CONSOLE. On a phone the bar and the dock fuse into one plate of three
+     ruled registers — readout, display switches, transport — hairline rules
+     and mono type, no chips: the register grammar the rest of this family
+     already sets small controls in (the project page's rail, its embed bar).
+     As two stacked chip plates the same cluster read as one instrument sawn
+     in half, and spent ~175px of a 667px screen saying it.
+
+     THE TWO ELEMENTS MEET BY ARITHMETIC, so these numbers are one decision:
+     the bar is border 1 + readout 34 + rule 1 + switch row 44 = 80px tall,
+     and the dock hangs at +79 — one px UNDER the bar, so a rounding error
+     shows as nothing instead of a lit seam. Both are flat --chrome (the
+     gradient restarts at the joint and would stripe it). Change any row
+     height and move the dock's offset with it. */
   .control-bar {
     left: max(8px, env(safe-area-inset-left));
     right: max(8px, env(safe-area-inset-right));
     width: auto;
-    padding: 8px;
-    border-radius: 12px;
+    padding: 0;
+    border-bottom: 0;
+    border-radius: 12px 12px 0 0;
+    background: var(--chrome);
   }
   .control-status {
+    box-sizing: border-box;
+    height: 34px;
     grid-template-columns: auto 1fr;
-    padding: 0 4px 7px;
+    align-items: center;
+    padding: 0 12px;
   }
   .control-actions {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 4px;
+    gap: 0;
+    border-top: 1px solid var(--chrome-divider);
   }
+  /* A register line, not a chip: the whole third is still the tap target —
+     the rules only draw where one control ends and the next begins. */
   .status-control {
+    box-sizing: border-box;
+    height: 44px;
+    min-height: 0;
     min-width: 0;
-    min-height: 48px;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 20px;
-    align-content: center;
-    gap: 4px;
-    padding: 5px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 4px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
     font-size: 10px;
   }
+  .status-control + .status-control { border-left: 1px solid var(--chrome-divider); }
   .status-control > span:first-child {
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .control-switch { justify-self: start; }
-  .dock-control { min-height: 32px; padding: 2px 7px 2px 3px; }
-  .dock-control kbd { min-width: 24px; height: 24px; font-size: 9px; }
-  .dock-control span { font-size: 10px; }
+  .control-switch { flex: none; }
+  .control-dock {
+    left: max(8px, env(safe-area-inset-left));
+    right: max(8px, env(safe-area-inset-right));
+    top: calc(max(8px, env(safe-area-inset-top)) + 79px);
+    max-width: none;
+    overflow: visible;
+    display: grid;
+    /* The link is the row's longest label, so it buys its extra share from the
+       three one-word controls — and 1.5fr exactly (3 of 4.5 = 2 of 3) lands
+       the divider before it on the switch row's right rule, one column line
+       running through both registers instead of two lines a few px apart. */
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.5fr);
+    gap: 0;
+    padding: 0;
+    border-top: 1px solid var(--chrome-divider);
+    border-radius: 0 0 12px 12px;
+    background: var(--chrome);
+  }
+  .dock-control {
+    box-sizing: border-box;
+    height: 44px;
+    min-height: 0;
+    justify-content: center;
+    padding: 0 4px;
+    border: 0;
+    border-radius: 0;
+  }
+  /* Mono, like every other label on the plate: on the console the transport
+     row is a register too, not the desktop's free-floating pill. */
+  .dock-control span,
+  .dock-project {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.015em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dock-control + .dock-control,
+  .dock-project { border-left: 1px solid var(--chrome-divider); }
+  /* State is fill and ink — a border would break the ruling. The end cells
+     round to the plate's own corners (12 outer − 1 border) so an active fill
+     never squares them off; overflow:hidden would do it too, and would clip
+     the focus ring with it. */
+  .dock-control.is-active {
+    color: var(--chrome-active-text);
+    background: var(--control-accent-soft);
+  }
+  .control-dock > :first-child { border-bottom-left-radius: 11px; }
+  .control-dock > :last-child { border-bottom-right-radius: 11px; }
+  .dock-project {
+    box-sizing: border-box;
+    height: 44px;
+    min-height: 0;
+    margin: 0;
+    justify-content: center;
+    padding: 0 4px;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-radius: 0;
+    background: transparent;
+  }
 }
 
 @media (max-height: 520px) and (max-width: 900px) {

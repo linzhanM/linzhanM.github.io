@@ -53,12 +53,12 @@ document.querySelectorAll('.category-heading strong').forEach((el) => {
 const isFullscreenLab = viewerConfig.fullscreenLab === true;
 const VIEWER_THEMES = {
   dark: {
-    background: 0x191c1b,
+    background: 0x151817,
     hemisphereGround: 0x4a4038,
     checker: ['#35312c', '#222321'],
     floorOpacity: 0.88,
     shadowOpacity: 0.46,
-    metaColor: '#191c1b',
+    metaColor: '#151817',
   },
   light: {
     background: 0xf0eee6,
@@ -1704,7 +1704,7 @@ async function loadStage(specs, activeIndex, opts = {}) {
     // file (opts.label); 'Imported model' is the fallback for a load with no name.
     const heading = (activeIndex == null) ? (opts.label || 'Imported model') : EXAMPLES[activeIndex].label;
     stageName.textContent = heading;
-    // A file name is the one label long enough to ellipsize in the 194px status line
+    // A file name is the one label long enough to ellipsize in the 216px status line
     // — the catalog's longest fits — so only a drop-in needs the full text on hover,
     // and a previous drop's tooltip must not outlive it.
     if (activeIndex == null) stageName.title = heading;

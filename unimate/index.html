@@ -15,7 +15,7 @@
   <link rel="canonical" href="https://linzhanmou.com/unimate/" />
   <link rel="icon" type="image/png" sizes="2048x2048" href="assets/images/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/images/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/style.css?v=16" />
+  <link rel="stylesheet" href="css/style.css?v=17" />
   <!-- The Applications schematics: their own figure system (layout, rig, motion),
        kept out of the page sheet. Loaded after it, so it can read the tokens. -->
   <link rel="stylesheet" href="css/schematics.css?v=1" />
@@ -744,26 +744,22 @@
       skeleton annotations and a coherent text prompt paired to its motion.
     </p>
 
-    <!-- Two subsections, numbered and styled exactly like the ones under
-         Experiments and Applications: the pipeline has two halves and the paper
-         names them separately (Sec. 4, "Filtering and Annotation" and "Motion
-         Canonicalization"). Filtering decides which clips survive; canonicali-
-         zation decides what the survivors are expressed in. -->
-    <!-- One table, two passes. Set as a paper's algorithm float — rules top and
-         bottom, numbered mono lines — rather than a flowchart of boxes and
+    <!-- One table, three passes — filter, annotate, canonicalize — following
+         the paper's own split (Sec. 4, "Filtering and Annotation" and "Motion
+         Canonicalization"; the five filtering stages are Appendix A.2's, which
+         §4 compresses to four). Set as a paper's algorithm float — rules top
+         and bottom, numbered mono lines — rather than a flowchart of boxes and
          arrows: that is the vernacular this content comes from, and HTML keeps
          every stage selectable and searchable where an inline SVG (as the
          Applications schematics use) would not.
 
-         The two <tbody> groups are identical in form and differ in exactly one
-         column, because the passes differ in kind. Filtering SUBTRACTS — its
-         right column is what leaves, marked "−". Canonicalization discards
-         nothing and re-expresses everything — its right column is what the line
-         establishes, marked "→". Rendering both the same way would be the
-         templated answer and would misstate the pipeline. Numbering runs 1..10
-         unbroken, and the two signature rows chain (raw clip → kept clip →
-         training sample), so this reads as one pass over a clip and not as two
-         unrelated lists.
+         The three <tbody> groups are identical in form; what varies is the
+         sigil, PER LINE, because the steps differ in kind — "−" removes,
+         "+" adds, "→" re-expresses (see the note at .algo in style.css for why
+         it is not per pass). Numbering runs 1..15 unbroken, and the signature
+         rows chain (raw clip → kept clip → captioned clip → training sample),
+         so this reads as one pass over a clip and not as three unrelated
+         lists.
 
          Canonicalize opens with the two steps from Sec. 3.1 — BFS serialization
          and topology-diameter normalization — because Sec. 4 says the mapping
@@ -910,7 +906,7 @@
     }
   </script>
 
-  <script type="module" src="js/index-viewer.js?v=67"></script>
+  <script type="module" src="js/index-viewer.js?v=70"></script>
 
   <!-- Galleries: scroll buttons + play-only-what-is-visible. -->
   <script src="js/gallery.js?v=6"></script>

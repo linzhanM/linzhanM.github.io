@@ -5,28 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description" content="Explore UniMate's generated 3D character animations in an interactive motion lab." />
   <meta name="robots" content="noindex, follow" />
-  <meta name="theme-color" content="#191c1b" />
+  <meta name="theme-color" content="#151817" />
   <title>UniMate Motion Lab</title>
 
-  <!-- Link preview (iMessage / Slack / Twitter cards): the WALL-E stage,
-       captured from this page itself. Absolute URLs on purpose — scrapers
-       resolve nothing. Retake the shot at interactive.html#wall-e-robot with
-       the chrome hidden if the stage or theme changes. -->
+  <!-- Link preview (iMessage / Slack / Twitter cards): the Welcome stage at
+       its greeting peak, chrome and all — the card should read as an app you
+       can open, not a render. Made from this page itself by
+       tools/render-category.mjs: -c welcome with --chrome-ui --zoom 1.15
+       --width 2560 --height 1440 --scale 2 --no-downsample, taking the
+       ~3.0s frame (the wave's second peak, ~29° into the auto-orbit — angled
+       enough to read as 3D, shallow enough that no rig occludes another).
+       Absolute URLs on purpose — scrapers resolve nothing. Re-render if the
+       stage or theme changes, and give the file a NEW name so scrapers
+       refetch it. -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="UniMate Motion Lab" />
   <meta property="og:description" content="Explore UniMate's generated 3D character animations in an interactive motion lab." />
   <meta property="og:url" content="https://linzhanmou.com/unimate/interactive.html" />
-  <meta property="og:image" content="https://linzhanmou.com/unimate/assets/images/og-lab-walle.png" />
-  <meta property="og:image:width" content="3840" />
-  <meta property="og:image:height" content="2160" />
+  <meta property="og:image" content="https://linzhanmou.com/unimate/assets/images/og-lab-welcome.png" />
+  <meta property="og:image:width" content="5120" />
+  <meta property="og:image:height" content="2880" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="https://linzhanmou.com/unimate/assets/images/og-lab-walle.png" />
+  <meta name="twitter:image" content="https://linzhanmou.com/unimate/assets/images/og-lab-welcome.png" />
 
   <script>document.documentElement.dataset.theme = 'dark';</script>
 
   <link rel="icon" type="image/png" href="assets/images/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/images/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/interactive.css?v=10" />
+  <link rel="stylesheet" href="css/interactive.css?v=17" />
 </head>
 <body class="interactive-viewer-page">
   <main class="lab-shell">
@@ -79,6 +85,20 @@
       }
     }
   </script>
-  <script type="module" src="js/interactive.js?v=117"></script>
+  <script type="module" src="js/interactive.js?v=120"></script>
+
+  <script type="text/javascript">
+    var sc_project = 12925377;
+    var sc_invisible = 1;
+    var sc_security = "43deea45";
+  </script>
+  <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+  <noscript>
+    <div class="statcounter"><a title="Web Analytics Made Easy - Statcounter" href="https://statcounter.com/"
+        target="_blank"><img class="statcounter"
+          src="https://c.statcounter.com/12925377/0/43deea45/1/"
+          alt="Web Analytics Made Easy - Statcounter" referrerPolicy="no-referrer-when-downgrade"></a>
+    </div>
+  </noscript>
 </body>
 </html>
