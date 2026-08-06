@@ -312,18 +312,33 @@
     margin-top: 0.6rem;
     text-align: left;
   }
+
+  /* On the stacked masthead the plate's left margin no longer separates it
+     from anything — it just indents a wrapped line. It takes its own row,
+     flush with the links it follows. */
+  .resume-contact a.resume-pdf:link,
+  .resume-contact a.resume-pdf:visited {
+    display: block;
+    width: fit-content;
+    margin: 0.85rem 0 0;
+  }
 }
 
-/* Phones: the right rail has nowhere to go on a 320px line, so the row stops
-   being a row and the place/date sits under its title. */
+/* Phones: the right rail has nowhere to go on a 320px line. Giving each aside
+   a line of its own read as stray body text — a bare "2025" under an award,
+   a date floating under a role. Instead the row degrades into the clause form
+   this page already speaks: the place or date joins the end of its line behind
+   the same "·" that separates clauses inside .resume-what and the contact
+   line, and the aside's smaller tertiary ink is what marks it as the aside.
+   The dot lives on the aside's ::before, inside its nowrap, so a date that
+   wraps carries its separator with it and still never breaks internally. */
 @media screen and (max-width: 575px) {
   .resume-row {
     display: block;
   }
 
-  .resume-aside {
-    display: block;
-    white-space: normal;
+  .resume-aside::before {
+    content: "· ";
   }
 }
 
