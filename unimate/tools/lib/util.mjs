@@ -8,8 +8,8 @@ export function fail(message) {
   process.exit(1);
 }
 
-// The lab's own slug rule (see interactive.js), so a --category matches the
-// hash the page resolves.
+// The lab's own slug rule (stageSlug in viewer.js), so a --category matches
+// the hash the page resolves.
 export const slugify = (label) => label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

@@ -508,7 +508,7 @@ button:focus-visible,
   line-height: 1.5;
 }
 
-/* Right-aligned so 1–9 and 10 line up on the units, the way an algorithm
+/* Right-aligned so 1–9 and 10–15 line up on the units, the way an algorithm
    float numbers its lines. Quiet: they index the lines, they aren't content. */
 .algo-n {
   width: 2.6em;
@@ -527,7 +527,7 @@ button:focus-visible,
 }
 
 /* Left-aligned, NOT right. Ragged-right against the measure is fine; what
-   matters is that all ten sigils stack on one vertical rail, because the
+   matters is that every sigil stacks on one vertical rail, because the
    −/→ column is the device the whole table turns on. Right-aligning this
    scattered them across four different x positions and the reader lost it. */
 .algo-out {
@@ -832,6 +832,7 @@ button:focus-visible,
 
 /* ── 8. Interactive 3D viewer (sidebar + canvas) ────────────────────────────── */
 .interactive-showcase {
+  position: relative;
   box-sizing: border-box;
   width: 100%;
   margin: 48px 0 68px;
@@ -927,13 +928,6 @@ button:focus-visible,
 .gesture-accent {
   fill: var(--slate-dark);
 }
-
-.interactive-showcase::before,
-.interactive-showcase::after {
-  display: none;
-}
-
-.interactive-showcase { position: relative; }
 
 .interactive-showcase .viewer-wrapper {
   border: 0;
