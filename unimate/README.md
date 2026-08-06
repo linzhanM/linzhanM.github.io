@@ -60,8 +60,10 @@ are native to three.js, but `EXT_meshopt_compression` is not.
 
 The uncompressed sources live in `resources/glbs-raw/`, which is gitignored: the
 repo is the deployed artifact and 657 MB of duplicates would put the published
-site near GitHub Pages' 1 GB limit. They stay recoverable from commit `b4ac4c8`.
-To rebuild after adding or replacing a rig:
+site near GitHub Pages' 1 GB limit. They used to be recoverable from commit
+`b4ac4c8`, but that history was purged on 2026-08-06 to bring the repo back
+under 1 GB — **the local folder is the only copy left**. To rebuild after adding
+or replacing a rig:
 
 ```bash
 npx @gltf-transform/cli optimize in.glb out.glb \
