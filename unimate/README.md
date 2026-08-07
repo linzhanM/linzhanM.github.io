@@ -67,12 +67,20 @@ or replacing a rig:
 
 ```bash
 npx @gltf-transform/cli optimize in.glb out.glb \
-  --texture-compress webp --texture-size 512 --compress meshopt --simplify false
+  --texture-compress webp --texture-size 512 --compress meshopt \
+  --simplify false --resample false
 ```
 
-`--simplify false` is deliberate: these meshes are unwelded (one rig is 884k
-vertices for 391k triangles), so simplification gains almost nothing here and is
-the one step that would visibly change silhouettes.
+Both flags are off deliberately. `--simplify` would weld and decimate meshes
+that are already unwelded (one rig is 884k vertices for 391k triangles), gaining
+almost nothing and being the one step that visibly changes silhouettes.
+
+`--resample` drops keyframes that sit on the straight line between their
+neighbours. gltf-transform calls that lossless and for playback it is — but the
+model emits 60 discrete frames per clip, so a dropped key loses a sample that
+was generated, not padding. Leaving it on cost about 0.1 MB across all 55 rigs
+and left every file with a different key count; off, the shipped files carry the
+same 60 keys the sources do.
 
 ## What every rig must be
 
@@ -84,18 +92,40 @@ Normalized across the set on 2026-08-06; a new rig has to match before it lands.
   plays `animations[0]` and never reads the name, so this is for whoever opens
   the file next, and for the validator: those tracks each raised an
   `ANIMATION_CHANNEL_TARGET_NODE_SKIN` warning.
-- **60 keyframes at 30 fps**, t = 0 … 1.96667s. Note that "2 seconds" and
-  "60 frames" disagree at 30 fps — 61 keys make 2.0s. 60 keys is the convention
-  here. Two rigs shipped 61/2.0s and one (`dragon_fire-hover`) shipped 48 keys at
-  24 fps; all three were retimed.
+- **60 LINEAR keyframes at 30 fps on every sampler**, t = 0 … 1.96667s. This is
+  what the generator produces: `animate_uni_mesh.py` sets `frame_start = 0`,
+  `frame_end = nframes - 1` at fps 30, and writes one key per frame per bone.
+  Note that "2 seconds" and "60 frames" disagree at 30 fps — 61 keys make 2.0s.
+  Two rigs shipped 61/2.0s and one (`dragon_fire-hover`) shipped 48 keys at
+  24 fps; all three were retimed. Ten more stored their unmoving channels as
+  2-key STEP (wall_e ~190 of 210 apiece) and were densified — every one of those
+  tracks was constant, so playback moved by at most 5e-08.
+- **Every joint driven on all three paths, and no sampler left unreferenced.**
+  The generator writes a curve per bone, so a rig that animates only some of its
+  joints did not come out of it intact. The four EVE clips shipped 5 channels
+  against 21 samplers — `visor`, `eye_l` and `eye_r` moved by nobody while their
+  curves sat in the file unreferenced. Reconnecting them changed no pixel: each
+  orphan was constant and already held the node's rest pose.
+- **Bone lengths never change.** They belong to the skeleton, not the motion
+  (paper §3.1), so only a root may translate. Two traps when checking this:
+  Blender puts a zero-length armature-origin node in the joint list, and the
+  joint under it is the real root whose translation is root motion — the same
+  `head_local.length < 1e-3` rule `viewer.js` uses; and several rigs carry
+  zero-length bones, so judge a change against the rig's mean bone length, never
+  the bone's own. Both traps produced wrong answers before they were handled.
+  Three known exceptions remain, all decorative bones that stretch by design:
+  `bird-flap` (tail and side plumes, up to 15% of rig scale) and
+  `wall_e-greet` / `-greet_open` (`Head_02`, WALL-E's telescoping neck, 3.9% and
+  2.0%). Freezing them would edit the motion, not the format.
 - **Filename `<category>-<action>.glb`**, one hyphen, `_` for every other gap:
   `wall_e-greet_open`, `go2-rear_up`, `quadruped_spot_arm-step_reach`.
   Lowercase, digits and underscore only.
 
-`resources/glbs/` files carry fewer than 60 stored keys on some channels — the
-pipeline's `resample` pass drops keyframes that lie on the line between their
-neighbours. Its own docs call that lossless, and playback is identical; the
-sources in `glbs-raw/` are the ones that hold a literal 60.
+Two points above depart from the generator on purpose. It names the action
+`Reconstructed_Action` (`util_anim.py`), so a freshly generated rig has to be
+renamed before it lands. And it writes only `location` and `rotation_quaternion`
+per bone — the scale channels every rig carries come from Blender's glTF
+exporter, not from the model.
 
 ## Rendering a category to video
 

@@ -18,7 +18,7 @@ window.UNIMATE_VIEWER_CONFIG = {
     'Welcome': 1.37,
     'Bipedal': 1.5,
     'Articulated': 1.34,
-    'Flower': 1.25,
+    'Flower': 1.34,
     'Armored Robot': 1.55,
     'Gundam Robot': 1.58,
     'Quadrupedal': 1.40,
