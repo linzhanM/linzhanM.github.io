@@ -64,9 +64,9 @@ resources/resume/*.toc
 *.mov.sb-*
 
 # Uncompressed rig originals, kept locally as a working backup.
-# unimate/resources/glbs/ ships the meshopt + WebP builds (650 MB -> 48 MB);
+# unimate/resources/glbs/ ships the meshopt + WebP builds (671 MB -> 50 MB);
 # these are the sources they were built from. Deliberately NOT committed: the
-# whole repo is the deployed artifact, and 657 MB of duplicates would put the
+# whole repo is the deployed artifact, and 671 MB of duplicates would put the
 # published site at ~986 MB against GitHub Pages' 1 GB limit. They were once
 # recoverable from commit b4ac4c8; that history was purged on 2026-08-06 to get
 # the repo back under 1 GB, so the local folder is now the ONLY copy. Back it up

@@ -8,4 +8,4 @@ window.UNIMATE_VIEWER_CONFIG = {
   stageTuning: EMBED_TUNING,
 };
 
-await import('./viewer.js?v=168');
+await import('./viewer.js?v=169');

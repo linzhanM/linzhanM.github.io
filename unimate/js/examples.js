@@ -72,7 +72,7 @@
 //                  (flyers). Chains resolve in dependency order. Off the row.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { SHOWCASE_EXAMPLE } from './showcase.js?v=4';
+import { SHOWCASE_EXAMPLE } from './showcase.js?v=5';
 
 // The mixamo rigs all render dark and matte the same way, so they share one
 // material. Every other glb carries its own inline `material`.
@@ -110,20 +110,20 @@ export const EXAMPLES = [
       // The -open cut of the greet, not the one the WALL-E Robot stage runs:
       // same rig, arms swinging out to the sides instead of lifting a little.
       // At this size a small gesture reads as nothing happening.
-      { url: 'resources/glbs/wall-e-greet-open.glb', groundToMesh: true, labelOffset: [-60, 0] },
+      { url: 'resources/glbs/wall_e-greet_open.glb', groundToMesh: true, labelOffset: [-60, 0] },
       // The waving cut, chosen over the plain one: the arms come up and then
       // swing while the head rocks with them, so EVE keeps moving through the
       // middle of the loop instead of parking at her peak like the other three.
-      { url: 'resources/glbs/eve_greet_wave.glb', groundToMesh: true, labelOffset: [60, 0] },
+      { url: 'resources/glbs/eve-greet_wave.glb', groundToMesh: true, labelOffset: [60, 0] },
       // Both scales correct for the gesture rather than art-direct the rig:
       // height normalization sizes a rig by its OWN tallest frame, so a clip
       // whose peak is a raised arm or a rear-up is sized by the gesture and the
       // body stands short for the rest of the loop.
-      { url: 'resources/glbs/g1_wave.glb', groundToMesh: true, scale: 1.3, row: 1 },
+      { url: 'resources/glbs/g1-wave.glb', groundToMesh: true, scale: 1.3, row: 1 },
       // Here the multiplier lands on the top of the rear, so it reads about
       // double what the number suggests. 1.3 put the dog's reared head above
       // every other rig, which is backwards — it is the small one here.
-      { url: 'resources/glbs/go2_rear_up.glb', groundToMesh: true, scale: 1.1, row: 1 },
+      { url: 'resources/glbs/go2-rear_up.glb', groundToMesh: true, scale: 1.1, row: 1 },
     ],
     // rowDepth under the 2.6 default: the ranks only have to be told apart, and
     // further back the pair stands off across empty floor as a separate group.
@@ -135,9 +135,9 @@ export const EXAMPLES = [
   {
     label: 'Articulated',
     files: [
-      { url: 'resources/glbs/radar.glb', material: { roughness: 0.3, metalness: 0.7 }, rotate: [0, 30, 0], groundFrame: 1, groundToMesh: true },
-      { url: 'resources/glbs/robot-arm.glb', rotate: [0, -60, 0], offset: [1.0, 0, -0.2], scale: 0.8, labelSlot: 'above', lockLabelSlot: true, labelOffset: [85, 10] },
-      { url: 'resources/glbs/lamp.glb', rotate: [0, 45, 0], scale: 0.65, labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -24] },
+      { url: 'resources/glbs/radar-extend.glb', material: { roughness: 0.3, metalness: 0.7 }, rotate: [0, 30, 0], groundFrame: 1, groundToMesh: true },
+      { url: 'resources/glbs/robot_arm-push.glb', rotate: [0, -60, 0], offset: [1.0, 0, -0.2], scale: 0.8, labelSlot: 'above', lockLabelSlot: true, labelOffset: [85, 10] },
+      { url: 'resources/glbs/lamp-bend.glb', rotate: [0, 45, 0], scale: 0.65, labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -24] },
     ],
     spacing: 0.6, lighting: 2.0, evenGaps: true,
   },
@@ -147,17 +147,17 @@ export const EXAMPLES = [
     label: 'Creatures',
     files: [
       // Row 0. The whole front row is nudged left (−x) and forward (+z).
-      { url: 'resources/glbs/gyarados.glb', groundToMesh: true, scale: 1.25, offset: [-0.6, 0, 1.0] },    // 0
-      { url: 'resources/glbs/jellyfish.glb', offset: [-0.6, 0, 1.0] },                                     // 1
+      { url: 'resources/glbs/gyarados-sway.glb', groundToMesh: true, scale: 1.25, offset: [-0.6, 0, 1.0] },    // 0
+      { url: 'resources/glbs/jellyfish-wriggle.glb', offset: [-0.6, 0, 1.0] },                                     // 1
       // Row 1.
-      { url: 'resources/glbs/monster.glb', row: 1, scale: 1.3, material: { roughness: 0.8, emissiveIntensity: 0.8 }, rotate: [0, 90, 0], offset: [-0.5, -0.15, 0] },    // 2  yawed to profile, sunk slightly into the ground
+      { url: 'resources/glbs/monster-walk.glb', row: 1, scale: 1.3, material: { roughness: 0.8, emissiveIntensity: 0.8 }, rotate: [0, 90, 0], offset: [-0.5, -0.15, 0] },    // 2  yawed to profile, sunk slightly into the ground
       { url: 'resources/glbs/stego-attack.glb', row: 1, material: { roughness: 0.6, emissiveIntensity: 0.8 }, scale: 1.8, groundFrame: 0, offset: [0, 0, 0], labelSlot: 'below', labelOffset: [30, 0] }, // 3  grounded on the neutral stance, not the swinging tail
       // Flyers, each anchored over a ground model.
-      { url: 'resources/glbs/bird.glb', scale: 0.7, above: [2, 1.4], offset: [1.5, 0, 1.0] },              // 4  back-row center, between the two dragons
-      { url: 'resources/glbs/dragon-fire.glb', material: { roughness: 0.8, emissiveIntensity: 0.8 }, scale: 2.0, above: [2, 1.5], offset: [0, 0, 1.0] },   // 5  above monster
-      { url: 'resources/glbs/dragon.glb', material: { roughness: 0.3, emissiveIntensity: 0.8 }, scale: 2.0, above: [3, 1.5], offset: [-1.0, 0, 12] },      // 6  above stego
-      { url: 'resources/glbs/whale.glb', rotate: [0, 180, 0], scale: 0.8, offset: [-0.6, 0.3, 1.0] },      // 7  row 0, lifted off the ground
-      { url: 'resources/glbs/chicken.glb', scale: 0.7, material: { roughness: 0.6, emissiveIntensity: 0.8 }, above: [2, 0], offset: [1.5, 0, 0] },         // 8  on the ground under the bird (same anchor and offset as 4)
+      { url: 'resources/glbs/bird-flap.glb', scale: 0.7, above: [2, 1.4], offset: [1.5, 0, 1.0] },              // 4  back-row center, between the two dragons
+      { url: 'resources/glbs/dragon_fire-hover.glb', material: { roughness: 0.8, emissiveIntensity: 0.8 }, scale: 2.0, above: [2, 1.5], offset: [0, 0, 1.0] },   // 5  above monster
+      { url: 'resources/glbs/dragon-flap.glb', material: { roughness: 0.3, emissiveIntensity: 0.8 }, scale: 2.0, above: [3, 1.5], offset: [-1.0, 0, 12] },      // 6  above stego
+      { url: 'resources/glbs/whale-sweep.glb', rotate: [0, 180, 0], scale: 0.8, offset: [-0.6, 0.3, 1.0] },      // 7  row 0, lifted off the ground
+      { url: 'resources/glbs/chicken-attack.glb', scale: 0.7, material: { roughness: 0.6, emissiveIntensity: 0.8 }, above: [2, 0], offset: [1.5, 0, 0] },         // 8  on the ground under the bird (same anchor and offset as 4)
     ],
     // pad leaves the flanks the chips need and no more: they take side and
     // corner slots, so the camera need not stand back to clear a band above and
@@ -167,7 +167,7 @@ export const EXAMPLES = [
   {
     label: 'Bipedal',
     files: [
-      'resources/glbs/garfield.glb',
+      'resources/glbs/garfield-dance.glb',
       'resources/glbs/gundam-kick.glb',
       { url: 'resources/glbs/mixamo-flip.glb', material: MIXAMO, labelSlot: 'above', lockLabelSlot: true },
       'resources/glbs/ironman-walk.glb',
@@ -177,10 +177,18 @@ export const EXAMPLES = [
   {
     label: 'Quadrupedal',
     files: [
-      'resources/glbs/quadruped-spot.glb',
-      'resources/glbs/quadruped-green.glb',
+      'resources/glbs/quadruped_spot-walk.glb',
+      'resources/glbs/quadruped_green-run.glb',
+      // Both numbers are derived, not eyed. scale: the raised arm is 18% of this
+      // rig's tallest frame, so unit-height normalization would leave the DOG at
+      // 0.82 of the two beside it — 1.54 puts its body at their height. offset:
+      // rigs are centred on their mesh bbox, and this one's arm reaches forward
+      // AND it walks 0.3m, so centring shoves the body back; 0.069 of the offset
+      // is the measured gap that puts its root joint on the row's line, the rest
+      // stages it just ahead. Re-measure both if the clip is ever replaced.
+      { url: 'resources/glbs/quadruped_spot_arm-step_reach.glb', groundToMesh: true, scale: 1.54, offset: [0, 0, 0.22] },
     ],
-    spacing: 1.35, scale: 0.6, pad: 0.7,
+    spacing: 1.35, scale: 0.6, pad: 0.9,
   },
   // The two Unitree machines walking out of the depth of the stage toward the
   // viewer — real locomotion, not in-place, so the layout must account for
@@ -193,17 +201,17 @@ export const EXAMPLES = [
   {
     label: 'Locomotion',
     files: [
-      { url: 'resources/glbs/g1_walk.glb', groundToMesh: true },
-      { url: 'resources/glbs/go2_ellipse_walk.glb', groundToMesh: true, scale: 0.45 },
+      { url: 'resources/glbs/g1-walk.glb', groundToMesh: true },
+      { url: 'resources/glbs/go2-walk.glb', groundToMesh: true, scale: 0.45 },
     ],
     spacing: 1.4, scale: 3.0, pad: 1.8, stageShift: [0, 0, -2.5], floor: 0.8,
   },
   {
     label: 'WALL-E Robot',
     files: [
-      { url: 'resources/glbs/wall-e-spin.glb', groundToMesh: true },
-      { url: 'resources/glbs/wall-e-greet.glb', groundToMesh: true },
-      { url: 'resources/glbs/wall-e-turn.glb', groundToMesh: true },
+      { url: 'resources/glbs/wall_e-spin.glb', groundToMesh: true },
+      { url: 'resources/glbs/wall_e-greet.glb', groundToMesh: true },
+      { url: 'resources/glbs/wall_e-turn.glb', groundToMesh: true },
     ],
     spacing: 1.35, pad: 1.12, evenGaps: true,
   },
@@ -213,9 +221,9 @@ export const EXAMPLES = [
   {
     label: 'EVE Robot',
     files: [
-      { url: 'resources/glbs/eve_scan.glb', groundToMesh: true },
-      { url: 'resources/glbs/eve_curious.glb', groundToMesh: true },
-      { url: 'resources/glbs/eve_alert.glb', groundToMesh: true },
+      { url: 'resources/glbs/eve-scan.glb', groundToMesh: true },
+      { url: 'resources/glbs/eve-curious.glb', groundToMesh: true },
+      { url: 'resources/glbs/eve-alert.glb', groundToMesh: true },
     ],
     spacing: 1.25, pad: 1.12, evenGaps: true,
   },
@@ -226,9 +234,9 @@ export const EXAMPLES = [
   {
     label: 'Unitree G1 Robot',
     files: [
-      { url: 'resources/glbs/g1_pick_up.glb', groundToMesh: true },
-      { url: 'resources/glbs/g1_jump.glb', groundToMesh: true },
-      { url: 'resources/glbs/g1_wave.glb', groundToMesh: true, scale: 1.23 },
+      { url: 'resources/glbs/g1-pick_up.glb', groundToMesh: true },
+      { url: 'resources/glbs/g1-jump.glb', groundToMesh: true },
+      { url: 'resources/glbs/g1-wave.glb', groundToMesh: true, scale: 1.23 },
     ],
     spacing: 1.3, scale: 1.1, pad: 1.1,
   },
@@ -254,18 +262,18 @@ export const EXAMPLES = [
   {
     label: 'Armored Robot',
     files: [
-      { url: 'resources/glbs/robot-walk.glb' },
-      { url: 'resources/glbs/robot-jump.glb' },
-      { url: 'resources/glbs/robot-rotate.glb' },
-      { url: 'resources/glbs/robot-kick.glb', labelSlot: 'above', lockLabelSlot: true, labelOffset: [70, 15] },
+      { url: 'resources/glbs/armor-walk.glb' },
+      { url: 'resources/glbs/armor-jump.glb' },
+      { url: 'resources/glbs/armor-rotate.glb' },
+      { url: 'resources/glbs/armor-kick.glb', labelSlot: 'above', lockLabelSlot: true, labelOffset: [70, 15] },
     ],
     spacing: 1.1, pad: 1.1,
   },
   {
     label: 'Flower',
     files: [
-      { url: 'resources/glbs/flower.glb', labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -5] },
-      { url: 'resources/glbs/piranha-plant.glb', rotate: [0, 45, 0], offset: [0, 0, -0.2], labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -45] },
+      { url: 'resources/glbs/flower-close.glb', labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -5] },
+      { url: 'resources/glbs/piranha_plant-bite.glb', rotate: [0, 45, 0], offset: [0, 0, -0.2], labelSlot: 'above', lockLabelSlot: true, labelOffset: [0, -45] },
     ],
     spacing: 1.0, pad: 0.9,
   },
@@ -274,7 +282,7 @@ export const EXAMPLES = [
     // canvas edge and the Controls panel; the middle one is free.
     label: 'Eagle',
     files: [
-      { url: 'resources/glbs/eagle-takeoff.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 0.4, 0], labelSlot: 'below', lockLabelSlot: true, labelOffset: [24, 0] },
+      { url: 'resources/glbs/eagle-take_off.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 0.4, 0], labelSlot: 'below', lockLabelSlot: true, labelOffset: [24, 0] },
       { url: 'resources/glbs/eagle-strike.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 1.0, 0], labelOffset: [0, -10] },
       { url: 'resources/glbs/eagle-landing.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 0.4, 0], labelSlot: 'below', lockLabelSlot: true },
     ],
@@ -283,18 +291,18 @@ export const EXAMPLES = [
   {
     label: 'Shark',
     files: [
-      { url: 'resources/glbs/jaws-swimright.glb', offset: [0, 0.4, 0] },
+      { url: 'resources/glbs/jaws-swim_right.glb', offset: [0, 0.4, 0] },
       { url: 'resources/glbs/jaws-bite.glb', offset: [0, 0.4, 0] },
-      { url: 'resources/glbs/jaws-swim180.glb', offset: [-0.4, 0.4, 0] },
+      { url: 'resources/glbs/jaws-swim_180.glb', offset: [-0.4, 0.4, 0] },
     ],
     sizeBy: 'maxdim', spacing: 1.0, evenGaps: true, lighting: 6.0, pad: 1.12,
   },
   {
     label: 'Michelle',
     files: [
-      { url: 'resources/glbs/mixamo-spinkick.glb', material: MIXAMO, labelOffset: [-20, 0], labelPinOffset: [-45, 0] },
-      { url: 'resources/glbs/mixamo-highkick.glb', material: MIXAMO },
-      { url: 'resources/glbs/mixamo-breakdance.glb', material: MIXAMO },
+      { url: 'resources/glbs/mixamo-spin_kick.glb', material: MIXAMO, labelOffset: [-20, 0], labelPinOffset: [-45, 0] },
+      { url: 'resources/glbs/mixamo-high_kick.glb', material: MIXAMO },
+      { url: 'resources/glbs/mixamo-break_dance.glb', material: MIXAMO },
     ],
     spacing: 0.5, stagger: 0.6, pad: 1.12,
   },

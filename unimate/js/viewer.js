@@ -28,7 +28,7 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=85';
+import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=86';
 
 const wrapper = document.getElementById('viewer-wrapper');
 const overlay = document.getElementById('loading-overlay');
@@ -890,7 +890,7 @@ const PROMPTS = new Map();
 // The ?v= matters here as much as on the imports: Pages caches the JSON, and a
 // new rig's chip would otherwise stay missing for returning visitors. Bump it
 // whenever prompts.json changes.
-const promptsReady = fetch('resources/prompts.json?v=19')
+const promptsReady = fetch('resources/prompts.json?v=20')
   .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
   .then((data) => {
     // '_comment' documents the file for whoever edits it; it isn't a model.
@@ -1808,7 +1808,7 @@ function loadFiles(fileList) {
   const specs = files.map((f) => ({ url: URL.createObjectURL(f), isFbx: isFbxPath(f.name), groundToMesh: true }));
   // Named after the file: the status line is the only thing on screen saying what is
   // loaded, and two drops in a row are otherwise indistinguishable. The stem is left
-  // verbatim — prettifying `wall-e-greet` gets it wrong more often than not.
+  // verbatim — prettifying `wall_e-greet` gets it wrong more often than not.
   const label = files.length === 1
     ? files[0].name.replace(/\.(fbx|glb|gltf)$/i, '')
     : `${files.length} imported models`;

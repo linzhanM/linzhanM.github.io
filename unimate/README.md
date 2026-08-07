@@ -50,7 +50,7 @@ tools/
 ## Rig compression
 
 `resources/glbs/` ships **meshopt-compressed geometry with 512px WebP textures**
-— 54 rigs, 650 MB down to 48 MB (92.7%), which takes the landing stage from
+— 55 rigs, 671 MB down to 50 MB (92.6%), which takes the landing stage from
 27 MB to 1 MB. Triangle counts, animation counts and bounding boxes are
 unchanged; the reduction is texture size, vertex welding and buffer encoding.
 
@@ -59,7 +59,7 @@ it every rig fails to parse** — `EXT_texture_webp` and `KHR_mesh_quantization`
 are native to three.js, but `EXT_meshopt_compression` is not.
 
 The uncompressed sources live in `resources/glbs-raw/`, which is gitignored: the
-repo is the deployed artifact and 657 MB of duplicates would put the published
+repo is the deployed artifact and 671 MB of duplicates would put the published
 site near GitHub Pages' 1 GB limit. They used to be recoverable from commit
 `b4ac4c8`, but that history was purged on 2026-08-06 to bring the repo back
 under 1 GB — **the local folder is the only copy left**. To rebuild after adding
@@ -73,6 +73,29 @@ npx @gltf-transform/cli optimize in.glb out.glb \
 `--simplify false` is deliberate: these meshes are unwelded (one rig is 884k
 vertices for 391k triangles), so simplification gains almost nothing here and is
 the one step that would visibly change silhouettes.
+
+## What every rig must be
+
+Normalized across the set on 2026-08-06; a new rig has to match before it lands.
+
+- **One animation, named `UniMate-Action`.** The exporters used to bake extra
+  mesh-node transform tracks (`Object_7`, `U3DMesh`, …) alongside the real clip —
+  3 channels, 2 keys, driving no joint. 112 of them were dropped. `viewer.js`
+  plays `animations[0]` and never reads the name, so this is for whoever opens
+  the file next, and for the validator: those tracks each raised an
+  `ANIMATION_CHANNEL_TARGET_NODE_SKIN` warning.
+- **60 keyframes at 30 fps**, t = 0 … 1.96667s. Note that "2 seconds" and
+  "60 frames" disagree at 30 fps — 61 keys make 2.0s. 60 keys is the convention
+  here. Two rigs shipped 61/2.0s and one (`dragon_fire-hover`) shipped 48 keys at
+  24 fps; all three were retimed.
+- **Filename `<category>-<action>.glb`**, one hyphen, `_` for every other gap:
+  `wall_e-greet_open`, `go2-rear_up`, `quadruped_spot_arm-step_reach`.
+  Lowercase, digits and underscore only.
+
+`resources/glbs/` files carry fewer than 60 stored keys on some channels — the
+pipeline's `resample` pass drops keyframes that lie on the line between their
+neighbours. Its own docs call that lossless, and playback is identical; the
+sources in `glbs-raw/` are the ones that hold a literal 60.
 
 ## Rendering a category to video
 
