@@ -35,8 +35,8 @@ const overlay = document.getElementById('loading-overlay');
 const sidebar = document.getElementById('example-sidebar');
 const labelLayer = document.getElementById('viewer-labels');
 const stageName = document.getElementById('stage-name');
-// The project page's "View larger" link — absent in the lab, which is where it
-// goes. loadStage keeps its hash on the stage currently on screen.
+// The project page's "Open full screen" link — absent in the lab, which is
+// where it goes. loadStage keeps its hash on the stage currently on screen.
 const expandLink = document.querySelector('.interactive-expand');
 const LOADING_HTML = overlay.innerHTML;
 const viewerConfig = window.UNIMATE_VIEWER_CONFIG || {};
@@ -1690,11 +1690,11 @@ async function loadStage(specs, activeIndex, opts = {}) {
     b.classList.toggle('active', on);
     b.setAttribute('aria-pressed', String(on));
   });
-  // "View larger" hands the visitor's place over to the lab on the same slug the
-  // lab writes to its own address bar, so the two pages agree by LABEL and neither
-  // depends on the other's catalog indices. The markup ships the bare
-  // interactive.html: both the JS-off fallback and where a drop-in sends you,
-  // having no stage for the lab to open on.
+  // "Open full screen" hands the visitor's place over to the lab on the same
+  // slug the lab writes to its own address bar, so the two pages agree by LABEL
+  // and neither depends on the other's catalog indices. The markup ships the
+  // bare interactive.html: both the JS-off fallback and where a drop-in sends
+  // you, having no stage for the lab to open on.
   if (expandLink) {
     const slug = activeIndex == null ? '' : '#' + stageSlug(EXAMPLES[activeIndex].label);
     expandLink.href = 'interactive.html' + slug;

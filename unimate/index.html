@@ -12,15 +12,36 @@
   <meta name="author" content="Linzhan Mou" />
   <title>UniMate &mdash; One Unified Model to Animate Diverse Skeletons</title>
 
+  <!-- Link preview (iMessage / Slack / Twitter cards). Both pages here share one
+       card, the paper's teaser figure, so a link to either arrives looking like
+       the same project. Absolute URLs on purpose: scrapers resolve nothing.
+       Three things to keep true when the image changes — the width and height
+       must match the file on disk, they must be updated in interactive.html
+       too, and the file needs a NEW name, because scrapers serve a cached copy
+       indefinitely for an unchanged URL. Card limits are the intersection of
+       the platforms': long edge under 4096px and file under 5MB (X's caps, the
+       tightest), and anything wider than 1.91:1 is centre-cropped by X and
+       Facebook — this figure is 2.59:1, so its outer quarter goes on those. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="UniMate — One Unified Model to Animate Diverse Skeletons" />
+  <meta property="og:description"
+    content="Articulated motion generation for arbitrary skeletons from a rigged 3D asset and a text prompt, with no per-skeleton retraining. SIGGRAPH Asia 2026." />
+  <meta property="og:url" content="https://linzhanmou.com/unimate/" />
+  <meta property="og:image" content="https://linzhanmou.com/unimate/assets/images/teaser.jpg" />
+  <meta property="og:image:width" content="3787" />
+  <meta property="og:image:height" content="1464" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://linzhanmou.com/unimate/assets/images/teaser.jpg" />
+
   <link rel="canonical" href="https://linzhanmou.com/unimate/" />
   <link rel="icon" type="image/png" sizes="2048x2048" href="assets/images/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/images/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/style.css?v=17" />
+  <link rel="stylesheet" href="css/style.css?v=19" />
   <!-- The Applications schematics: their own figure system (layout, rig, motion),
        kept out of the page sheet. Loaded after it, so it can read the tokens. -->
   <link rel="stylesheet" href="css/schematics.css?v=1" />
   <!-- Breakpoint-specific page and component overrides load last. -->
-  <link rel="stylesheet" href="css/responsive.css?v=9" />
+  <link rel="stylesheet" href="css/responsive.css?v=11" />
 </head>
 
 <body>
@@ -77,9 +98,23 @@
       <img src="assets/logos/mit.png" alt="Massachusetts Institute of Technology" />
     </div>
 
+    <!-- Both marks are inline SVG: this page loads no icon stylesheet.
+         See .quick-links in style.css. -->
     <div class="quick-links">
-      <a href="https://github.com/Friedrich-M/UniMate" target="_blank" rel="noopener">[Code (coming soon)]</a>
-      <a href="interactive.html">[Interactive Demo]</a>
+      <a class="quick-link" href="interactive.html"><svg
+          class="quick-link-icon quick-link-icon-pad" viewBox="0 0 20 14" aria-hidden="true"
+          focusable="false">
+          <rect x="0.75" y="1.75" width="18.5" height="10.5" rx="3.75" />
+          <path d="M3.9 7h3.6M5.7 5.2v3.6" />
+          <circle cx="13.9" cy="8.5" r="1.25" />
+          <circle class="quick-link-icon-key" cx="16.2" cy="5.8" r="1.25" />
+        </svg>Interactive demo</a>
+      <span class="quick-link-sep" aria-hidden="true">&#183;</span>
+      <a class="quick-link" href="https://github.com/Friedrich-M/UniMate" target="_blank"
+        rel="noopener"><svg class="quick-link-icon quick-link-icon-gh" viewBox="0 0 16 16" aria-hidden="true"
+          focusable="false">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
+        </svg>Code</a>
     </div>
 
     <video id="teaser-video" src="assets/videos/teaser.mp4" poster="assets/posters/teaser.jpg"
@@ -116,7 +151,14 @@
             <span><strong>Scroll</strong> to zoom</span>
           </span>
         </p>
-        <a class="interactive-expand" href="interactive.html">View larger <span aria-hidden="true">&#8599;</span></a>
+        <!-- The label has to name the destination, not the effect: worded as a
+             size change ("View larger") it read as a zoom control for the
+             viewer below rather than a link out to the full-window lab. The
+             corners say the same thing a diagonal arrow could not. -->
+        <a class="interactive-expand" href="interactive.html">Open full screen<svg
+            class="expand-mark" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
+            <path d="M5.2 1H1v4.2M8.8 1H13v4.2M5.2 13H1V8.8M8.8 13H13V8.8" />
+          </svg></a>
       </header>
 
       <div class="viewer-layout">

@@ -339,47 +339,122 @@ button:focus-visible,
   color: var(--slate-light);
 }
 
-/* Quick links. Each one gets a sliding coral underline on hover/focus. */
+/* Quick links — one quiet line of type, after anthropic.com, whose nav is set
+   the same way: plain, sentence case, no box, no fill, ink on cream and nothing
+   else until you point at it. An enclosure here reads as something the row is
+   not (plates as buttons, a ruled band as a table); the dot does the only job
+   an enclosure was needed for, which is marking where one item ends.
+
+   Playfair, not the mono the rest of the masthead speaks, and it is a font
+   *availability* constraint rather than taste: the @import loads mono at 300
+   and 700 only, so at text size the whole choice is 300 — which renders
+   identically to the credits line above — or 700, which is dense and wide.
+   There is no 500 to reach for; adding one to the @import re-resolves every
+   unweighted mono rule on the page, since CSS matches an unavailable 400 to
+   500 before 300. The serif is the page's own display face, so it borrows the
+   title's register without introducing a fourth voice.
+
+   The hover is .authors' — coral plus a thin underline — because these are
+   text links in the same block and there is no reason for two behaviours.
+   Order is try it, then take it. */
 .quick-links {
-  text-align: center;
-  white-space: nowrap;   /* keep all links on one line */
-  margin-top: 20px;
-  margin-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 18px;
+  margin: 26px 0 34px;
 }
-.quick-links a {
-  position: relative;
-  font-family: 'Roboto Mono', monospace;
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
+
+.quick-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  /* 21px, not the 18px the mono setting took: Playfair's x-height is smaller,
+     so the two match on the page even though the numbers do not. */
+  font-family: 'Playfair Display', serif;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.25;
+  color: var(--slate-dark);
   text-decoration: none;
-  margin: 0 8px;
-  padding: 5px 8px;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
   transition: color 0.18s ease;
 }
-.quick-links a::after {
-  content: '';
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  bottom: 0;
-  height: 2px;
-  background: var(--accent);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.22s ease;
-}
+
 /* :focus-visible, not :focus — a mouse click leaves focus on the anchor, so with
-   plain :focus the coral + underline stayed lit after returning from the opened
-   tab. Keyboard users still get the state (and the global focus ring above). */
-.quick-links a:hover,
-.quick-links a:focus-visible {
+   plain :focus the coral stayed lit after returning from the opened tab.
+   Keyboard users still get the state (and the global focus ring above). */
+.quick-link:hover,
+.quick-link:focus-visible {
   color: var(--accent);
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
 }
-.quick-links a:hover::after,
-.quick-links a:focus-visible::after {
-  transform: scaleX(1);
+
+/* A real element, not ::after on an anchor, which would drag the dot inside the
+   link's own underline and hit area. --slate-light and not --rule: --rule is
+   18% ink, a value tuned for a hairline running the width of the column, and a
+   single glyph at it is invisible. Not full ink either — the dot separates the
+   labels, it is not one of them. */
+.quick-link-sep {
+  font-family: 'Playfair Display', serif;
+  font-size: 21px;
+  line-height: 1;
+  color: var(--slate-light);
+  user-select: none;
+}
+
+/* Both marks are inline SVG, as .resume-pdf's is on the résumé page and for
+   the same reason: this page loads no icon stylesheet, and two glyphs are not
+   worth a font. Nudged down a pixel — the labels are sentence case, so the
+   row's optical centre sits at x-height, below the centre of the flex line. */
+.quick-link-icon {
+  flex: none;
+  transform: translateY(1px);
+}
+
+.quick-link-icon-pad {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  /* Drawn larger than it is shown, so without this the hairline thins below
+     1px and the mark goes grey beside 700-weight type. */
+  vector-effect: non-scaling-stroke;
+  /* Landscape where the octocat beside it is square, and wider than it — a
+     controller is a wide object, and squeezing it to the logo's width would
+     only make it unreadable. What matches across the row is optical weight,
+     not the bounding boxes. */
+  width: 20px;
+  height: 14px;
+}
+
+/* The d-pad and buttons are drawn at ~1px on screen, so the buttons are discs
+   and not rings: at this size an outlined circle fills in and reads as a
+   smudge, and a ring thin enough not to fill is thinner than the body it sits
+   in. */
+.quick-link-icon-pad circle {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* One lit button — the row's only colour at rest, and it earns it: coral is
+   this page's interaction ink and this is the one link that opens something
+   you operate rather than something you read. */
+.quick-link-icon-pad .quick-link-icon-key {
+  fill: var(--accent);
+}
+
+/* A logo, not an icon: solid where the controller is line work, because the
+   octocat is only itself in silhouette. A square of solid ink outweighs an
+   outline of the same size, so it is drawn smaller to match it optically. */
+.quick-link-icon-gh {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
 }
 
 /* ── 5. Teaser video, figure captions, dataset curation table ──────────────── */
@@ -1095,36 +1170,53 @@ button:focus-visible,
 }
 
 
+/* The bar's only control, so it is sized second in the bar — behind the 21px
+   heading, ahead of the 9.5px instructions. Below about 11px it drops under the
+   hints and reads as a footnote instead of the one thing you can act on. */
 .interactive-showcase-header a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   color: var(--slate-dark);
   font-family: 'Roboto Mono', monospace;
-  padding: 4px 0 3px;
+  padding: 4px 0;
   border: 0;
   border-bottom: 1px solid var(--slate-dark);
   border-radius: 0;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.015em;
   text-decoration: none;
   white-space: nowrap;
+  transition: color 0.18s ease, border-color 0.18s ease;
 }
 
-.interactive-showcase-header a span {
-  display: inline-block;
-  margin-left: 4px;
-  color: var(--accent);
+/* Grows on hover rather than sliding: the mark means "make this bigger", so the
+   corners pushing apart is the gesture that answers it. The paths are drawn in
+   the root viewBox and scale about its centre, so unlike the rigs in
+   schematics.css this one wants transform-box left at its default. */
+.interactive-showcase-header .expand-mark {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
   transition: transform 0.18s ease;
 }
 
 .interactive-showcase-header a:hover,
 .interactive-showcase-header a:focus-visible {
   border-color: var(--accent);
-  color: var(--slate-dark);
+  color: var(--accent);
 }
 
-.interactive-showcase-header a:hover span,
-.interactive-showcase-header a:focus-visible span {
-  transform: translate(2px, -2px);
+.interactive-showcase-header a:hover .expand-mark,
+.interactive-showcase-header a:focus-visible .expand-mark {
+  transform: scale(1.15);
 }
 
 .viewer-layout {

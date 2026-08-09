@@ -11,12 +11,6 @@
   .authors {
     white-space: normal;
   }
-  .quick-links {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    white-space: normal;
-  }
 
   /* §1's clips outrun the text column well before the phone breakpoint below: an
      overview clip is 700px wide against a column already down to 924px here.
@@ -370,13 +364,12 @@
   .affiliations img { height: 60px; }
   .affiliations img.logo-lg { height: 80px; }
 
-  /* The four links ran to three lines — [arXiv] alone, then [Code (coming
-     soon)] alone — which read as a list of four separate things rather than one
-     row of links. 18px overshoots the column by 6px; 16px fits two per line. */
-  .quick-links a {
-    font-size: 16px;
-    margin: 0 5px;
-  }
+  /* At 19px the two links and the dot measure 277 against a 375 phone's 335px
+     column, so the row holds one line and keeps its separator. The three sizes
+     are one measurement — change any and re-measure. */
+  .quick-links { gap: 8px 14px; margin: 22px 0 28px; }
+  .quick-link { font-size: 19px; }
+  .quick-link-sep { font-size: 19px; }
 
   /* Headings. The plate is a label, not a banner: at 24px/20px these wrapped
      and became full-width slabs of solid ink — 334x65 for a rank-2 heading on a
@@ -541,7 +534,7 @@
   .example-item,
   .example-item::before,
   .example-name { transition: none; }
-  .quick-links a::after { transition: none; }
+  .quick-link { transition: none; }
   /* The chips still track the camera — only their arrival fade is dropped. */
   .viewer-label,
   .viewer-pin { animation: none; }
