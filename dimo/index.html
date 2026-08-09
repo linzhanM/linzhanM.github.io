@@ -12,6 +12,27 @@
   <meta name="author" content="Linzhan Mou" />
   <title>DIMO &mdash; Diverse 3D Motion Generation for Arbitrary Objects</title>
 
+  <!-- Link preview (iMessage / Slack / Twitter cards). The card is the pipeline
+       figure, which is also the Method section's own image further down — one
+       file, two jobs, so it must stay card-legal whenever that figure changes.
+       Absolute URLs, because scrapers resolve nothing; the width and height
+       must match the file on disk; and a changed image needs a NEW filename,
+       since scrapers serve a cached copy indefinitely for an unchanged URL.
+       Two limits this figure does not meet, both X's: the long edge is 4314
+       against a 4096 cap, and at 2.98:1 it is far wider than the 1.91:1 X and
+       Facebook crop to. A card-sized copy would fix both without touching the
+       figure. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="DIMO — Diverse 3D Motion Generation for Arbitrary Objects" />
+  <meta property="og:description"
+    content="Diverse 3D motion generation for arbitrary objects from a single image, sampled from a learned latent space in one forward pass. ICCV 2025 Highlight." />
+  <meta property="og:url" content="https://linzhanmou.com/dimo/" />
+  <meta property="og:image" content="https://linzhanmou.com/dimo/assets/images/pipeline.png" />
+  <meta property="og:image:width" content="4314" />
+  <meta property="og:image:height" content="1450" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://linzhanmou.com/dimo/assets/images/pipeline.png" />
+
   <link rel="canonical" href="https://linzhanmou.com/dimo/" />
   <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
   <link href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" rel="stylesheet" />
