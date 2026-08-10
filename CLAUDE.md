@@ -75,7 +75,7 @@ Two artifacts from one source. `resume.html` loads the shared trio then `resume.
 
 ## `dimo/`
 
-Self-contained and custom-designed: dark "latent-space" hero over a light "paper" body, tokens split the same way, and a reserved blue→violet→pink `--spectrum` gradient used **only** on the title, the active nav node, the progress fill, and the favicon. The hero figure is an inline SVG whose limbs rotate via `transform-box: view-box`; reduced motion freezes them. The side nav is hidden below 1480px. Figure captions follow the paper's own form: a bold run-in naming the application, then the mechanism in one muted sentence.
+Self-contained and custom-designed: dark "latent-space" hero over a light "paper" body, tokens split the same way, and a reserved blue→violet→pink palette. The `--spectrum` token is one **90deg** three-stop gradient and is used on exactly three things: the hero title's words, the 3px hairline across the page top, and the kicker rule. The side nav composes its own gradients from the same `--blue`/`--violet`/`--pink` because they run at other angles — 180deg down the progress fill (`.sidenav ul::after`, driven by `--nav-progress`) and 135deg across the active keypoint — and the favicon carries the palette as three separate strokes, not a gradient. Reach for the token only when the run is horizontal. The hero figure is an inline SVG whose limbs rotate via `transform-box: view-box`; reduced motion freezes them. The side nav is hidden below 1480px. Figure captions follow the paper's own form: a bold run-in naming the application, then the mechanism in one muted sentence.
 
 ## `unimate/`
 
