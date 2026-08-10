@@ -1122,7 +1122,7 @@ button:focus-visible,
    speak. And the plate is drawn by a PSEUDO-ELEMENT inset inside the row, never
    by a border or a margin on the row itself: both of those change how much
    main-axis space the row asks for, so selecting a stage would re-cut all
-   fifteen lines and shift every label by a few px — the one thing a register
+   sixteen lines and shift every label by a few px — the one thing a register
    must not do. Inset this way nothing moves; a frame simply appears around a
    line that is already where it belongs.
 

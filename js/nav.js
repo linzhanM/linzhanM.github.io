@@ -120,12 +120,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	// --- Keypoint ---------------------------------------------------------
-	// All three root pages carry the same rail, so moving between them should
-	// read as the one dot travelling along it rather than as separate dots
-	// blinking on and off. Each page records the label the dot ended under; the
-	// next page starts the dot there and then lets its own first move glide it
-	// across, which is the whole trick — the animation is the ordinary CSS
-	// transition, it just gets a different starting point.
+	// All three root pages carry the rail in the same place, with the same
+	// labels in the same order — the résumé's simply adds a third for itself —
+	// so moving between them should read as the one dot travelling along it
+	// rather than as separate dots blinking on and off. Each page records the
+	// label the dot ended under; the next page starts the dot there and then
+	// lets its own first move glide it across, which is the whole trick — the
+	// animation is the ordinary CSS transition, it just gets a different
+	// starting point.
 	//
 	// Stored by **label text**, not by index: an index silently means the wrong
 	// link the moment one page's rail differs from another's, and the label is

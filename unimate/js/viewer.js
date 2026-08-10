@@ -44,9 +44,10 @@ const viewerConfig = window.UNIMATE_VIEWER_CONFIG || {};
 // config. Hidden stages (Showcase) are filtered per the shared presets.
 const hiddenCategories = new Set(viewerConfig.hiddenCategories || []);
 const EXAMPLES = DEFAULT_CATALOG.filter(({ label }) => !hiddenCategories.has(label));
-// The Categories heading quotes how many stages the rail below it holds. The
-// number in the markup is only a first paint — it is written from the data
-// here rather than maintained by hand in two HTML files.
+// The Categories heading quotes how many stages the rail below it holds. Only
+// the lab carries one (interactive.html; the embedded rail has no heading), and
+// the number in that markup is a first paint — it is written from the data here
+// rather than maintained by hand.
 document.querySelectorAll('.category-heading strong').forEach((el) => {
   el.textContent = EXAMPLES.length;
 });
@@ -1677,8 +1678,10 @@ function loadExample(index) {
 
 // specs: [{ url, isFbx, material, ... }].  activeIndex: sidebar item to highlight, or null.
 // opts: { scale, spacing, rowSpacing, rowOrder, pad, lighting, evenGaps, sizeBy, stagger,
-//         rowDepth, fileOffsets, stageShift } — see examples.js.
-//       plus `label` (used only when activeIndex is null — a drop-in names itself)
+//         rowDepth, fileOffsets, stageShift, floor } — see examples.js.
+//       plus `cameraPadding` / `mobileCameraPadding`, this stage's entries in the
+//       page's cameraPaddingByCategory (they fall back to the page-wide values),
+//       `label` (used only when activeIndex is null — a drop-in names itself)
 //       and `frameEnvelope` (frame/floor the whole clip, not the pose on screen).
 async function loadStage(specs, activeIndex, opts = {}) {
   const token = ++loadToken;
