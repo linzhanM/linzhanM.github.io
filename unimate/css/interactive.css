@@ -126,7 +126,12 @@ button:focus-visible {
   top: 50%;
   z-index: 5;
   width: 188px;
-  max-height: calc(100% - 36px);
+  /* The rail is centred, so this bound is what sets its distance from the
+     bottom edge: at the bound it ends 45px up, which is the clearance the
+     asset notice below it needs. It was 36px (an 18px gutter, matching the
+     left inset) before that line existed. Only short viewports feel the
+     difference, and only as the rail's existing scroll starting sooner. */
+  max-height: calc(100% - 90px);
   display: flex;
   flex-direction: column;
   padding: 10px;
@@ -667,8 +672,11 @@ html[data-theme='light'] .viewer-label::after { background: linear-gradient(to b
 html[data-theme='light'] .viewer-pin { box-shadow: 0 0 0 2px rgba(243, 244, 239, 0.68); }
 html[data-theme='light'] #loading-overlay { color: var(--ink); background: rgba(240, 238, 230, 0.88); }
 html[data-theme='light'] #drop-hint { color: var(--signal); background: rgba(249, 216, 205, 0.88); }
-html[data-theme='light'] .drop-note { color: rgba(23, 25, 22, 0.56); }
-html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.24); }
+html[data-theme='light'] .drop-note { color: rgba(23, 25, 22, 0.54); }
+html[data-theme='light'] .asset-notice { color: rgba(23, 25, 22, 0.44); }
+/* More alpha than the solid ring this replaced: a 1px dash is half ink and half
+   gap, so it needs the extra to carry the weight of the text beside it. */
+html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34); }
 
 #viewer-labels { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
 
@@ -766,6 +774,17 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.24);
 
 #drop-hint { display: none; margin: 14px; border: 1px dashed var(--signal); color: var(--paper-light); background: rgba(59, 40, 28, 0.94); }
 
+/* The two bottom corners are the stage's fine print, and they are the only text
+   on this page not carried on a plate. They share a 14px line box and a 16px
+   bottom inset so they sit on ONE baseline across the width — at unequal box
+   heights the band visibly wobbles. What they don't share is a voice, because
+   they aren't the same kind of thing: the right corner is something you can do,
+   so it takes the page's label register (mono, caps, tracked — the register of
+   the rail's CATEGORIES heading and the drop overlay's own line; the control
+   bar's "Category" is mono but neither caps nor tracked, so it is not the
+   model here); the left corner is a sentence, so it takes the sans. Mono set
+   that 50-character sentence as a bar of even texture, 20% wider and less
+   legible than the same line in the body face. Keep the split. */
 .drop-note {
   position: absolute;
   bottom: 16px;
@@ -774,22 +793,58 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.24);
   pointer-events: none;
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: rgba(211, 207, 199, 0.58);
+  gap: 9px;
+  color: rgba(211, 207, 199, 0.55);
   font-family: var(--mono);
-  font-size: 8px;
-  letter-spacing: 0.06em;
+  font-size: 9px;
+  line-height: 14px;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
+/* The mark is #drop-hint in miniature: same 1px dash, same hard corners, same
+   landscape frame that drag draws inset 14px from the viewport edge. So the mark
+   predicts the interaction — start dragging and this box becomes the stage. It
+   was a "+" in a circle, the glyph for "add", on an element that is not a button
+   and cannot be clicked. Restyling #drop-hint's border means restyling this too,
+   or the promise breaks. Below ~18px wide the dashes land mostly on the corners
+   and it reads as a pair of brackets, so this size is a floor, not a preference. */
 .drop-note span {
-  width: 18px;
-  height: 18px;
-  display: inline-grid;
-  place-items: center;
-  border: 1px solid rgba(211, 207, 199, 0.26);
-  border-radius: 50%;
-  font-size: 13px;
+  width: 21px;
+  height: 13px;
+  border: 1px dashed rgba(211, 207, 199, 0.36);
+}
+
+/* Asset attribution, in the bottom-left corner: left-aligned on the rail's own
+   18px edge so it reads as the foot of that column. It must stay ONE line — the
+   clearance below the rail is a single line's worth (see .category-panel's
+   max-height), so the max-width is set clear of the drop note rather than at the
+   corner's full width. Dimmer than the note: fine print you must be shown, not
+   an offer, and the note is the one of the two worth reading first. */
+.asset-notice {
+  position: absolute;
+  bottom: 16px;
+  left: 18px;
+  z-index: 3;
+  margin: 0;
+  max-width: calc(100% - 260px);
+  pointer-events: none;
+  color: rgba(211, 207, 199, 0.4);
+  font-family: var(--sans);
+  font-size: 10px;
+  line-height: 14px;
+  letter-spacing: 0.004em;
+}
+
+/* The sans word-space is too narrow at 10px to seat a middot — "owners·research"
+   closed up into one word. The gap is padding rather than entities in the markup
+   for two reasons: 0.42em is a width no entity gives you, and with no literal
+   whitespace the separator carries no line-break opportunity, which is one fewer
+   way for the notice to go two lines. The cost is real and accepted — copying
+   the line yields "owners·research" closed up. */
+.asset-notice i {
+  padding: 0 0.42em;
+  font-style: normal;
 }
 
 @media (max-width: 900px) {
@@ -821,6 +876,13 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.24);
      and every slot it has goes to a category. */
   .category-theme { display: none; }
   .drop-note { display: none; }
+  /* No free bottom-left here — the category strip is the whole bottom edge, and
+     floating the line above it means a second offset tied to that strip's
+     height, the same coupling the phone console already pays for. Note what
+     that costs: nothing else on the site carries this attribution, so below
+     900px it is shown nowhere — the project page has no notice to fall back
+     to. Give it one before treating this as settled. */
+  .asset-notice { display: none; }
   /* The dock parks top-LEFT as a compact pill, mirroring the bar top-right —
      the desktop's own corner grammar. Its previous home, a full-width band a
      fixed 163px down, was tuned for one portrait height: on a tablet it floated

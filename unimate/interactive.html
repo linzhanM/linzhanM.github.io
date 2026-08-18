@@ -28,7 +28,7 @@
 
   <link rel="icon" type="image/png" href="assets/images/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/images/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/interactive.css?v=17" />
+  <link rel="stylesheet" href="css/interactive.css?v=19" />
 </head>
 <body class="interactive-viewer-page">
   <main class="lab-shell">
@@ -49,7 +49,15 @@
           <div id="viewer-labels"></div>
           <div id="loading-overlay"><span class="spinner"></span><span>Building scene</span></div>
           <div id="drop-hint">Release to inspect your model</div>
-          <div class="drop-note"><span aria-hidden="true">+</span> Drop GLB, GLTF, or FBX to inspect</div>
+          <div class="drop-note"><span aria-hidden="true"></span> Drop GLB, GLTF, or FBX to inspect</div>
+          <!-- The catalog's rigs are third-party art — WALL-E, EVE, Baymax, a
+               Gundam — shown as motion targets, not as ours. The academic
+               convention for third-party character assets is two clauses and no
+               more: whose they are, and that the use is research. Both survive
+               here at their shortest; what must NOT come back is licence
+               language ("under fair use", "with permission") we were never
+               granted. Stays one line — see the clearance note in the CSS. -->
+          <p class="asset-notice">Models &copy; their respective owners<i>&middot;</i>research use only</p>
           <div class="control-bar" aria-label="Display controls">
             <div class="control-status" aria-live="polite">
               <span>Category</span><strong id="stage-name">Welcome</strong>
