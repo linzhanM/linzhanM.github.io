@@ -356,7 +356,7 @@ button:focus-visible,
 
    The hover is .authors' — coral plus a thin underline — because these are
    text links in the same block and there is no reason for two behaviours.
-   Order is try it, then take it. */
+   Order is read it, try it, then take it. */
 .quick-links {
   display: flex;
   flex-wrap: wrap;
@@ -406,15 +406,19 @@ button:focus-visible,
   user-select: none;
 }
 
-/* Both marks are inline SVG, as .resume-pdf's is on the résumé page and for
-   the same reason: this page loads no icon stylesheet, and two glyphs are not
-   worth a font. Nudged down a pixel — the labels are sentence case, so the
+/* All three marks are inline SVG, as .resume-pdf's is on the résumé page and
+   for the same reason: this page loads no icon stylesheet, and three glyphs are
+   not worth a font. Nudged down a pixel — the labels are sentence case, so the
    row's optical centre sits at x-height, below the centre of the flex line. */
 .quick-link-icon {
   flex: none;
   transform: translateY(1px);
 }
 
+/* The sheet and the controller are line work; the octocat below is a
+   silhouette. Each is sized on its own line, because what matches across the
+   row is optical weight, not the bounding boxes. */
+.quick-link-icon-doc,
 .quick-link-icon-pad {
   fill: none;
   stroke: currentColor;
@@ -424,10 +428,21 @@ button:focus-visible,
   /* Drawn larger than it is shown, so without this the hairline thins below
      1px and the mark goes grey beside 700-weight type. */
   vector-effect: non-scaling-stroke;
-  /* Landscape where the octocat beside it is square, and wider than it — a
-     controller is a wide object, and squeezing it to the logo's width would
-     only make it unreadable. What matches across the row is optical weight,
-     not the bounding boxes. */
+}
+
+/* Portrait, and the narrowest mark in the row: a page is a page, and an
+   outline that is mostly empty sheet already weighs what its neighbours do.
+   Two rules inside it, not four — at this size 3px of gap is the least that
+   stays open, and a stack of hairlines closer than that fills into a block. */
+.quick-link-icon-doc {
+  width: 12px;
+  height: 15px;
+}
+
+/* Landscape where the octocat beside it is square, and wider than it — a
+   controller is a wide object, and squeezing it to the logo's width would
+   only make it unreadable. */
+.quick-link-icon-pad {
   width: 20px;
   height: 14px;
 }
