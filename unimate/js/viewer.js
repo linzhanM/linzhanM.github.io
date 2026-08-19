@@ -82,7 +82,6 @@ const settings = {
   'wireframe': false,
   'show prompts': true,
   'paused': false,
-  'playback speed': 1,
   'auto orbit': true,
   // Now that the sweep runs on the clock rather than on frames (see the render
   // loop), this is a real rate — OrbitControls counts it in units of 2π/60 rad/s,
@@ -177,7 +176,7 @@ if (viewerConfig.autoOrbitControls) {
 }
 
 // The rigs in resources/glbs/ are meshopt-compressed (EXT_meshopt_compression)
-// with WebP textures, which is what takes the set from 650 MB to 48 MB. WebP is
+// with WebP textures, which is what takes the set from 671 MB to 50 MB. WebP is
 // native to GLTFLoader, but meshopt geometry needs this decoder registered or
 // every .glb fails to parse. The uncompressed originals are kept out of the
 // deploy — see unimate/README.md.
@@ -641,8 +640,8 @@ function frameStage(pad = 1.0, orbitAngleDegrees = viewerConfig.initialOrbitAngl
   // reaches under them.
   const shiftMag = Math.hypot(activeShift[0], activeShift[2]);
   // activeFloor lets a stage rein this in: the 2·shiftMag term covers a shifted
-  // group from the still-centred floor, but on a deep stageShift (Unitree
-  // Locomotion, −1.8) it inflates the floor until the walkers read lost on it.
+  // group from the still-centred floor, but on a deep stageShift (the
+  // Locomotion stage, −2.5) it inflates the floor until the walkers read lost on it.
   const gridSize = (Math.max(size.x, size.z, MIN_FRAME_WIDTH, 1) + 2 * shiftMag) * 1.6 * activeFloor;
   const squares = 24;                          // squares across the whole floor
   setFloorRepeat(squares);
@@ -1999,7 +1998,7 @@ const MAX_FRAME_DELTA = 1 / 20;
 (function animate() {
   requestAnimationFrame(animate);
   const dt = Math.min(clock.getDelta(), MAX_FRAME_DELTA);
-  const playbackDelta = settings['paused'] ? 0 : dt * settings['playback speed'];
+  const playbackDelta = settings['paused'] ? 0 : dt;
   for (const m of mixers) m.update(playbackDelta);
   // Pass the delta: OrbitControls' no-argument branch advances a fixed step per
   // FRAME, so the sweep ran twice as fast on a 120 Hz screen as on a 60 Hz one

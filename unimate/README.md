@@ -40,8 +40,8 @@ js/
 resources/
   glbs/                 Runtime 3D model files (compressed — see below)
   prompts.json          Prompt labels keyed by model filename
-  unimate.pdf           Paper PDF (linked from the site's resume and
-                        publications pages)
+  unimate.pdf           Paper PDF (the project page's "Paper" quick link; the
+                        root pages link it by absolute URL too)
 tools/
   render-category.mjs   Offline: render one lab category to a video. Not shipped
                         — nothing under css/ or js/ imports it

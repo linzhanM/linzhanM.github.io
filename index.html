@@ -30,7 +30,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600,0,0;9..144,700,0,0&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
 	<!-- ?v= busts the CDN/browser cache; bump it when editing these files. -->
 	<link rel="stylesheet" href="css/custom-navbar.css?v=40">
-	<link rel="stylesheet" href="css/styles.css?v=46">
+	<link rel="stylesheet" href="css/styles.css?v=47">
 
 	<script type="text/javascript">
 		// The [abs] toggles. `control` is the link itself (passed as `this`), so the
@@ -170,35 +170,6 @@
 				</div>
 			</div>
 		</div>
-
-		<template>
-		<div class="pub-row row align-items-start">
-			<div class="col-md-3">
-				<video class="pub-thumbnail img-thumbnail" aria-label="Let Occ Flow teaser video" tabindex="-1"
-					preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
-					src="assets/videos/let-occ-flow.mp4"></video>
-			</div>
-			<div class="col-md-9">
-				<p class="pub-title">Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction</p>
-				<p class="pub-authors"><u>Linzhan Mou</u>*, Yili Liu*, Xuan Yu, Chenrui Han, Sitong Mao, Rong Xiong, Yue Wang</p>
-				<p class="pub-venue">CoRL 2024</p>
-				<p class="pub-links">
-					[<a href="javascript:void(0)" onclick="display('occflow-abs', this)" aria-expanded="false" aria-controls="occflow-abs">abs</a>]&nbsp;
-					[<a target="_blank" href="https://arxiv.org/abs/2407.07587">arXiv</a>]&nbsp;
-					[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/">website</a>]&nbsp;
-					[<a target="_blank" href="https://github.com/eliliu2233/occ-flow">code</a>]&nbsp;
-					[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/static/videos/letoccflow.mp4">video</a>]&nbsp;
-					[<a target="_blank" href="./assets/posters/let-occ-flow-poster.pdf">poster</a>]&nbsp;
-					<a href="https://github.com/eliliu2233/occ-flow" target="_blank"><img
-							alt="GitHub stars"
-							src="https://img.shields.io/github/stars/eliliu2233/occ-flow?style=social"></a>
-				</p>
-				<div id="occflow-abs" class="pub-abstract">
-					<p>Accurate perception of the dynamic environment is a fundamental task for autonomous driving and robot systems. This paper introduces Let Occ Flow, the first self-supervised work for joint 3D occupancy and occupancy flow prediction using only camera inputs, eliminating the need for 3D annotations. Utilizing TPV for unified scene representation and deformable attention layers for feature aggregation, our approach incorporates a novel attention-based temporal fusion module to capture dynamic object dependencies, followed by a 3D refine module for fine-grained volumetric representation. Besides, our method extends differentiable rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmentation and optical flow cues for dynamic decomposition and motion optimization. Extensive experiments on nuScenes and KITTI datasets demonstrate the competitive performance of our approach over prior state-of-the-art methods.</p>
-				</div>
-			</div>
-		</div>
-		</template>
 
 		<hr>
 

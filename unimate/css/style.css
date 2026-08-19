@@ -38,8 +38,8 @@
 
   /* The one measure on the page: nothing — prose, teaser, viewer, video —
      is wider than this. --page-gutter is `body`'s 30px padding plus the UA's
-     8px body margin, which this file never resets except on phones (see §11,
-     where both the margin and this token change together). --column is what
+     8px body margin, which this file never resets except on phones (see §11 in
+     css/responsive.css, where both the margin and this token change together). --column is what
      .main-content actually resolves to at the current width, so responsive
      video sizes can be written against the text column instead of the
      viewport; they are not the same thing above the phone breakpoint. */
@@ -631,8 +631,9 @@ button:focus-visible,
 
 /* Under ~720px the operation can no longer share a line with its consequence:
    the row becomes a two-line stack, both hanging off the same line number.
-   Kept with the component rather than in §11 — the TOC does the same at line
-   96, and splitting a figure system across two files is how it drifts. */
+   Kept with the component rather than in §11 (css/responsive.css) — the TOC
+   keeps its breakpoint in §3 the same way, and splitting a figure system
+   across two files is how it drifts. */
 @media (max-width: 720px) {
   .algo,
   .algo tbody,
@@ -1047,8 +1048,8 @@ button:focus-visible,
 
 /* The embedded rail is a RULED REGISTER: rows running full-bleed from panel
    edge to panel edge, separated by one hairline each, so the rail draws as
-   ruled paper with fifteen lines written on it. It used to be a sheet of
-   fifteen framed cells, and that is what a register replaced — fifteen equal
+   ruled paper with sixteen lines written on it. It used to be a sheet of
+   framed cells, and that is what a register replaced — a column of equal
    outlines each holding one short label in a lot of air read as an unfinished
    table. Rules and mono type with no frames is also how this page sets every
    other list it has: the Dataset section's `.algo` float and the `.toc`.
@@ -1059,9 +1060,9 @@ button:focus-visible,
 
    `flex-start` + zero gap is what keeps the rules evenly spaced;
    `space-between` would push the rows apart into bands. `flex: 1 1 auto` then
-   shares the column's length between them the way a ledger's lines do, and past
-   fifteen they compress to the 34px floor and the rail scrolls, top-aligned and
-   reachable. */
+   shares the column's length between them the way a ledger's lines do, and once
+   they outgrow it they compress to the 34px floor and the rail scrolls,
+   top-aligned and reachable. */
 .interactive-showcase .example-sidebar {
   box-sizing: border-box;
   flex: 1 1 auto;
@@ -1175,7 +1176,7 @@ button:focus-visible,
 /* Names only. The rig count was tried in this rail, set as a table of contents
    sets a page number — a tabular numeral on a common right edge — and taken
    back out: a line in a register is a NAME you pick, and a second column turns
-   fifteen controls into a table you read. viewer.js still writes the numeral
+   sixteen controls into a table you read. viewer.js still writes the numeral
    into the markup and still puts the same fact in words on every row's
    aria-label and title, so this takes it off the screen without taking it away
    from a screen reader. The lab hides it too (css/interactive.css), so the two
