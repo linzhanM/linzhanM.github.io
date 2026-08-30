@@ -406,8 +406,8 @@ button:focus-visible,
   user-select: none;
 }
 
-/* All three marks are inline SVG, as .resume-pdf's is on the résumé page and
-   for the same reason: this page loads no icon stylesheet, and three glyphs are
+/* All four marks are inline SVG, as .resume-pdf's is on the résumé page and
+   for the same reason: this page loads no icon stylesheet, and four glyphs are
    not worth a font. Nudged down a pixel — the labels are sentence case, so the
    row's optical centre sits at x-height, below the centre of the flex line. */
 .quick-link-icon {
@@ -415,11 +415,12 @@ button:focus-visible,
   transform: translateY(1px);
 }
 
-/* The sheet and the controller are line work; the octocat below is a
+/* The sheet, the controller and the drum are line work; only the octocat is a
    silhouette. Each is sized on its own line, because what matches across the
    row is optical weight, not the bounding boxes. */
 .quick-link-icon-doc,
-.quick-link-icon-pad {
+.quick-link-icon-pad,
+.quick-link-icon-db {
   fill: none;
   stroke: currentColor;
   stroke-width: 1;
@@ -470,6 +471,22 @@ button:focus-visible,
   width: 15px;
   height: 15px;
   fill: currentColor;
+}
+
+/* The database drum — still the one glyph that says "dataset" — but drawn
+   here, no longer Hugging Face's solid original. Their face logo does not
+   survive this size (at 15px the hands break off the head into two specks,
+   and the face alone is just a smiley), and their drum is a silhouette
+   faked into depth with opacity ranks: there is no weight at which that sits
+   on this row — flattened it is a black pill, layered it is a faded second
+   logo arguing with the octocat, which earns solid ink because a logo is
+   only itself in silhouette and a drum is a drum at any weight. In line work
+   the depth is drawn instead: two shelf arcs divide the stack, and every
+   successive curve keeps the sheet's ~3px of open paper, the least that
+   stays open at this size. Portrait, at the sheet's exact box. */
+.quick-link-icon-db {
+  width: 12px;
+  height: 15px;
 }
 
 /* ── 5. Teaser video, figure captions, dataset curation table ──────────────── */
