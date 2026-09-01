@@ -406,18 +406,21 @@ button:focus-visible,
   user-select: none;
 }
 
-/* All four marks are inline SVG, as .resume-pdf's is on the résumé page and
-   for the same reason: this page loads no icon stylesheet, and four glyphs are
-   not worth a font. Nudged down a pixel — the labels are sentence case, so the
-   row's optical centre sits at x-height, below the centre of the flex line. */
+/* The three marks are inline SVG, as .resume-pdf's is on the résumé page and
+   for the same reason: this page loads no icon stylesheet, and three glyphs are
+   not worth a font. Code is deliberately unmarked: the octocat was the row's
+   one silhouette and its only borrowed logo, and a wordmark among drawings
+   read as an intruder — the label alone says what it opens. Nudged down a
+   pixel — the labels are sentence case, so the row's optical centre sits at
+   x-height, below the centre of the flex line. */
 .quick-link-icon {
   flex: none;
   transform: translateY(1px);
 }
 
-/* The sheet, the controller and the drum are line work; only the octocat is a
-   silhouette. Each is sized on its own line, because what matches across the
-   row is optical weight, not the bounding boxes. */
+/* The sheet, the controller and the drum are all line work. Each is sized on
+   its own line, because what matches across the row is optical weight, not the
+   bounding boxes. */
 .quick-link-icon-doc,
 .quick-link-icon-pad,
 .quick-link-icon-db {
@@ -440,9 +443,9 @@ button:focus-visible,
   height: 15px;
 }
 
-/* Landscape where the octocat beside it is square, and wider than it — a
-   controller is a wide object, and squeezing it to the logo's width would
-   only make it unreadable. */
+/* Landscape where the sheet and the drum are portrait, and wider than both —
+   a controller is a wide object, and squeezing it to their width would only
+   make it unreadable. */
 .quick-link-icon-pad {
   width: 20px;
   height: 14px;
@@ -464,26 +467,16 @@ button:focus-visible,
   fill: var(--accent);
 }
 
-/* A logo, not an icon: solid where the controller is line work, because the
-   octocat is only itself in silhouette. A square of solid ink outweighs an
-   outline of the same size, so it is drawn smaller to match it optically. */
-.quick-link-icon-gh {
-  width: 15px;
-  height: 15px;
-  fill: currentColor;
-}
-
 /* The database drum — still the one glyph that says "dataset" — but drawn
    here, no longer Hugging Face's solid original. Their face logo does not
    survive this size (at 15px the hands break off the head into two specks,
    and the face alone is just a smiley), and their drum is a silhouette
    faked into depth with opacity ranks: there is no weight at which that sits
    on this row — flattened it is a black pill, layered it is a faded second
-   logo arguing with the octocat, which earns solid ink because a logo is
-   only itself in silhouette and a drum is a drum at any weight. In line work
-   the depth is drawn instead: two shelf arcs divide the stack, and every
-   successive curve keeps the sheet's ~3px of open paper, the least that
-   stays open at this size. Portrait, at the sheet's exact box. */
+   logo beside line work. In line work the depth is drawn instead: two shelf
+   arcs divide the stack, and every successive curve keeps the sheet's ~3px of
+   open paper, the least that stays open at this size. Portrait, at the
+   sheet's exact box. */
 .quick-link-icon-db {
   width: 12px;
   height: 15px;

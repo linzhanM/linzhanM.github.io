@@ -208,9 +208,17 @@ a:hover {
   padding-top: 0.5625rem;
 }
 
+/* The @, braces and comma are notation, so the line sits at tertiary and the
+   address words come back up to secondary — the same tier drop as the
+   brackets in .pub-links, and for the same reason: the content reads darker
+   than the notation around it. */
 .hero-email {
   margin-top: -5px;
   font-size: var(--text-sm);
+  color: var(--text-tertiary);
+}
+
+.hero-email .email-word {
   color: var(--text-secondary);
 }
 
@@ -383,6 +391,102 @@ a:hover {
   color: var(--text-secondary);
 }
 
+/* --- Service --- */
+/* Two columns: the role on a rail, the bodies served filling the measure
+   beside it. max-content sizes the rail off the longer label, which is what
+   lines the two runs up on one left edge. No rule between the rows — the
+   row-gap is the only thing marking the break, so it has to be wide enough to
+   read as one, and the section's own <hr> stays the only line here. */
+.service-register {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  row-gap: 0.8rem;
+  margin: 0;
+}
+
+.service-register dt,
+.service-register dd {
+  margin: 0;
+}
+
+.service-register dt {
+  padding-right: 2rem;
+}
+
+/* Fraunces at a caption size, primary ink — the same landmark/detail split as
+   .exp-role over .exp-meta directly above, so Experience and Service read as
+   one system. Not an uppercase tracked eyebrow: the page has none. */
+.service-role {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--text-primary);
+  /* Matches .service-bodies so the label and the first line beside it sit on
+     one baseline — the half-leading differs otherwise and the rail goes soft. */
+  line-height: 1.5;
+}
+
+/* 1.5, not the body's 1.6: this is a run of short discrete items, not prose,
+   and the looser leading pulled the wrapped lines apart far enough that they
+   started to read as separate rows once the rule between roles came out. */
+.service-bodies {
+  font-size: var(--text-base);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* A wrapping run, not a bulleted stack: inline items let it fill and break
+   like text, and the label rail gives the wrapped lines their hanging indent
+   for free. .dot-run is the device for any run of short discrete items, so
+   the page separates those exactly one way. */
+.dot-run {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dot-run li {
+  display: inline;
+  /* A venue is one item even when its name has spaces in it: "SIGGRAPH" above
+     "(Asia)" reads as two entries. Same reason .pub-authors u never breaks. */
+  white-space: nowrap;
+}
+
+/* The accent as typography rather than a rule — points measuring out the
+   run, so each item is countable instead of a clause in a long sentence. The
+   colour is on the point, never on a word: this is geometry, which is the
+   only thing --accent is allowed to be. The point belongs to the item before
+   it, so a line can end on one but never start with one. */
+.dot-run li:not(:last-child)::after {
+  content: "\00B7";
+  /* Same point, with empty alt text so it stays out of the accessibility tree
+     — the <li> list already carries the separation, and a screen reader
+     announcing eleven middle dots does not. Declared twice on purpose: the
+     alt-text syntax is dropped whole where unsupported, and losing the
+     separator would run the items together. */
+  content: "\00B7" / "";
+  color: var(--accent);
+  margin-left: 0.3em;
+}
+
+/* Phone: the rail becomes a stacked label, so the row-gap now falls between a
+   label and its own run and has to close right up. The space that separated
+   the columns is what separates the roles instead. */
+@media screen and (max-width: 575.98px) {
+  .service-register {
+    grid-template-columns: 1fr;
+    row-gap: 0.15rem;
+  }
+
+  .service-register dt {
+    padding-right: 0;
+  }
+
+  .service-register dt:not(:first-of-type) {
+    margin-top: 0.8rem;
+  }
+}
+
 /* --- Footer --- */
 .site-footer {
   margin-top: 2.25rem;
@@ -410,12 +514,17 @@ hr {
 
 /* Subsection divider: the row that ends a subsection needs less trailing space
    than rows stacking against each other, so the rule sits evenly between the
-   two groups instead of crowding the heading below it. */
-.pub-row:has(+ hr) {
+   two groups instead of crowding the heading below it.
+   The shelved "Let Occ Flow" <template> renders nothing but is still an element,
+   so sibling combinators see it — both selectors have to step over it, or the
+   last Vision row falls back to the full 2.6em gap. */
+.pub-row:has(+ hr),
+.pub-row:has(+ template + hr) {
   margin-bottom: 1.9em;
 }
 
-.pub-row + hr {
+.pub-row + hr,
+.pub-row + template + hr {
   margin-bottom: 1.4em;
 }
 

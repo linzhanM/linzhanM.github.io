@@ -30,7 +30,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600,0,0;9..144,700,0,0&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
 	<!-- ?v= busts the CDN/browser cache; bump it when editing these files. -->
 	<link rel="stylesheet" href="css/custom-navbar.css?v=40">
-	<link rel="stylesheet" href="css/styles.css?v=47">
+	<link rel="stylesheet" href="css/styles.css?v=50">
 
 	<script type="text/javascript">
 		// The [abs] toggles. `control` is the link itself (passed as `this`), so the
@@ -90,7 +90,11 @@
 			</div>
 			<div class="col-md-9 hero-body">
 				<h1>Linzhan Mou</h1>
-				<p class="hero-email">linzhan [at] &#123;princeton [dot] edu, meta [dot] com&#125;</p>
+				<!-- One line, set-notation. No [at]/[dot] masking: the envelope below
+				     already carries a plain mailto:, so masking hid nothing from a
+				     scraper and cost every reader a decode. The @, braces and comma are
+				     notation and drop a tier; the address words stay darker. -->
+				<p class="hero-email"><span class="email-word">linzhan</span>@&#123;<span class="email-word">princeton.edu</span>, <span class="email-word">meta.com</span>&#125;</p>
 				<p class="hero-bio">
 					I am a first-year CS Ph.D. student at Princeton, advised by <a href="https://www.cs.princeton.edu/~smr/">Prof. Szymon Rusinkiewicz</a>. I also collaborate closely with <a href="https://www.cs.princeton.edu/~af/">Prof.&nbsp;Adam Finkelstein</a>.
 				</p>
@@ -136,7 +140,7 @@
 					[<a target="_blank" href="https://linzhanmou.com/unimate/resources/unimate.pdf">paper</a>]&nbsp;
 					[<a target="_blank" href="https://linzhanmou.com/unimate/">website</a>]&nbsp;
 					[<a target="_blank" href="https://github.com/Friedrich-M/UniMate">code</a>]&nbsp;
-					[<a target="_blank" href="https://linzhanmou.com/unimate/interactive">interactive demo</a>]&nbsp;
+					[<a target="_blank" href="https://linzhanmou.com/unimate/interactive">interactive demo</a>]
 				</p>
 				<div id="unimate-abs" class="pub-abstract">
 					<p>Recent advances in automatic rigging now deliver animation-ready 3D assets at scale, yet generating the motion to drive them remains a bottleneck. Existing learned animators are topology-constrained: they rely on category-specific templates or require per-skeleton fine-tuning and reference motions at inference. We present UniMate, a unified foundation model that synthesizes articulated motion for arbitrary skeletons from a rigged 3D asset and a text prompt, with no test-time optimization or per-skeleton retraining. UniMate relies on a topology-aware diffusion transformer, which integrates skeletal topology into attention via three mechanisms: (1) a graph-aware attention bias from pairwise joint relations and geodesic distances; (2) a spectral rotary position embedding generalizing RoPE to arbitrary kinematic trees via the graph Laplacian; and (3) a global topological conditioner attention-pooled from the rest-pose skeleton. We also curate UniML3D, 13,006 motion sequences spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid objects with unified canonicalization and text pairing. Trained on this dataset, UniMate outperforms state-of-the-art baselines in quality, generalization, and efficiency, and supports zero-shot cross-topology transfer, in-betweening, and text-guided editing.</p>
@@ -170,6 +174,38 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Shelved, not deleted: <template> renders nothing, so the row keeps its
+		     markup and media without appearing on the page. The two selectors in
+		     styles.css that step over a <template> exist for this element. -->
+		<template>
+		<div class="pub-row row align-items-start">
+			<div class="col-md-3">
+				<video class="pub-thumbnail img-thumbnail lazy-video" aria-label="Let Occ Flow teaser video" tabindex="-1"
+					preload="metadata" loop="" muted="muted" playsinline="playsinline" autoplay=""
+					src="assets/videos/let-occ-flow.mp4"></video>
+			</div>
+			<div class="col-md-9">
+				<p class="pub-title">Let Occ Flow: Self-Supervised 3D Occupancy Flow Prediction</p>
+				<p class="pub-authors"><u>Linzhan Mou</u>*, Yili Liu*, Xuan Yu, Chenrui Han, Sitong Mao, Rong Xiong, Yue Wang</p>
+				<p class="pub-venue">CoRL 2024</p>
+				<p class="pub-links">
+					[<a href="javascript:void(0)" onclick="display('occflow-abs', this)" aria-expanded="false" aria-controls="occflow-abs">abs</a>]&nbsp;
+					[<a target="_blank" href="https://arxiv.org/abs/2407.07587">arXiv</a>]&nbsp;
+					[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/">website</a>]&nbsp;
+					[<a target="_blank" href="https://github.com/eliliu2233/occ-flow">code</a>]&nbsp;
+					[<a target="_blank" href="https://eliliu2233.github.io/letoccflow/static/videos/letoccflow.mp4">video</a>]&nbsp;
+					[<a target="_blank" href="./assets/posters/let-occ-flow-poster.pdf">poster</a>]&nbsp;
+					<a href="https://github.com/eliliu2233/occ-flow" target="_blank"><img
+							alt="GitHub stars"
+							src="https://img.shields.io/github/stars/eliliu2233/occ-flow?style=social"></a>
+				</p>
+				<div id="occflow-abs" class="pub-abstract">
+					<p>Accurate perception of the dynamic environment is a fundamental task for autonomous driving and robot systems. This paper introduces Let Occ Flow, the first self-supervised work for joint 3D occupancy and occupancy flow prediction using only camera inputs, eliminating the need for 3D annotations. Utilizing TPV for unified scene representation and deformable attention layers for feature aggregation, our approach incorporates a novel attention-based temporal fusion module to capture dynamic object dependencies, followed by a 3D refine module for fine-grained volumetric representation. Besides, our method extends differentiable rendering to 3D volumetric flow fields, leveraging zero-shot 2D segmentation and optical flow cues for dynamic decomposition and motion optimization. Extensive experiments on nuScenes and KITTI datasets demonstrate the competitive performance of our approach over prior state-of-the-art methods.</p>
+				</div>
+			</div>
+		</div>
+		</template>
 
 		<hr>
 
@@ -271,7 +307,37 @@
 	<section class="container page-section">
 		<h2 id="Service" class="section-h2">Service</h2>
 		<hr>
-		<p>Reviewer: CVPR, ICCV, ECCV, NeurIPS, NeurIPS D&B Track, ICLR, COLM, SIGGRAPH (Asia), Eurographics, RA-L, ICRA, TVCG</p>
+		<!-- A role rail, not prose: each row is a capacity, and what is served sits
+		     beside it. Real <ul>s, so a screen reader announces the count and the
+		     venues are discrete items rather than one long sentence. Reviewing is
+		     one capacity whether the venue is a conference or a journal, so it is
+		     one row and one run, the journals taking their place in it. -->
+		<dl class="service-register">
+			<dt class="service-role">Reviewer</dt>
+			<dd class="service-bodies">
+				<ul class="dot-run">
+					<li>CVPR</li>
+					<li>ICCV</li>
+					<li>ECCV</li>
+					<li>NeurIPS</li>
+					<li>NeurIPS D&amp;B Track</li>
+					<li>ICLR</li>
+					<li>COLM</li>
+					<li>SIGGRAPH (Asia)</li>
+					<li>Eurographics</li>
+					<li>RA-L</li>
+					<li>ICRA</li>
+					<li>TVCG</li>
+				</ul>
+			</dd>
+
+			<dt class="service-role">Teaching</dt>
+			<dd class="service-bodies">
+				<ul class="dot-run">
+					<li>Princeton COS 126: Computer Science &mdash; An Interdisciplinary Approach (Fall 2026)</li>
+				</ul>
+			</dd>
+		</dl>
 	</section>
 
 	<footer class="site-footer">
