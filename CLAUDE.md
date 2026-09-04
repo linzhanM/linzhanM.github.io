@@ -25,7 +25,7 @@ Five pages in two groups. `index.html`, `publications.html`, `resume.html` sit a
 
 ## Root-page architecture
 
-Hand-written HTML on a CDN Bootstrap 4 **CSS** grid — no Bootstrap/jQuery JS anywhere. Third-party loads on the homepage are exactly: Bootstrap CSS, Font Awesome 5, Academicons, Google Fonts, StatCounter, and five `img.shields.io` star badges. Those badges are **plain `<img>`** — don't re-add a script for star counts. `resume.html` and `publications.html` deliberately drop the two icon stylesheets (their links are words).
+Hand-written HTML on a CDN Bootstrap 4 **CSS** grid — no Bootstrap/jQuery JS anywhere. Third-party loads on the homepage are exactly: Bootstrap CSS, Font Awesome 5, Academicons, Google Fonts, StatCounter, and four `img.shields.io` star badges. Those badges are **plain `<img>`** — don't re-add a script for star counts. `resume.html` and `publications.html` deliberately drop the two icon stylesheets (their links are words).
 
 **Design tokens** (`:root` in `styles.css`) are a system — stay on them rather than hard-coding:
 - **Radius** is three fixed-px steps on purpose; percentages resolve against the box and turn non-square elements into shape-shifting ellipses. A circle (the nav keypoint) is a shape, not a step, and stays `50%`.
