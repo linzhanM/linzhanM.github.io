@@ -490,6 +490,10 @@
     border-radius: 10px;
     box-shadow: none;
   }
+  .poster-figure {
+    border-radius: 10px;
+    box-shadow: none;
+  }
 
   /* Translate the desktop algorithm table into numbered mobile steps. Actions
      lead; their effect sits directly below instead of being squeezed into a

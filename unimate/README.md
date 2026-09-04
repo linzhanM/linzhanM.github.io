@@ -42,6 +42,10 @@ resources/
   prompts.json          Prompt labels keyed by model filename
   unimate.pdf           Paper PDF (the project page's "Paper" quick link; the
                         root pages link it by absolute URL too)
+  unimate-poster.png    Poster as an image (3876x2582): the #poster section's
+                        figure, the "Poster" quick link, and the root pages'
+                        poster links by absolute URL. Keep it around 4 MB
+  unimate-poster.pdf    Poster PDF, offered from the #poster caption
 tools/
   render-category.mjs   Offline: render one lab category to a video. Not shipped
                         — nothing under css/ or js/ imports it

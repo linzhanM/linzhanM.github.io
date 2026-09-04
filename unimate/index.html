@@ -39,12 +39,12 @@
   <link rel="canonical" href="https://linzhanmou.com/unimate/" />
   <link rel="icon" type="image/png" sizes="2048x2048" href="assets/images/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/images/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/style.css?v=24" />
+  <link rel="stylesheet" href="css/style.css?v=25" />
   <!-- The Applications schematics: their own figure system (layout, rig, motion),
        kept out of the page sheet. Loaded after it, so it can read the tokens. -->
   <link rel="stylesheet" href="css/schematics.css?v=1" />
   <!-- Breakpoint-specific page and component overrides load last. -->
-  <link rel="stylesheet" href="css/responsive.css?v=11" />
+  <link rel="stylesheet" href="css/responsive.css?v=12" />
 </head>
 
 <body>
@@ -67,6 +67,7 @@
       <li class="toc-subsection"><a href="#motion-inbetweening">Motion In-Betweening</a></li>
       <li class="toc-subsection"><a href="#motion-expansion">Motion Expansion</a></li>
       <li><a href="#dataset">Dataset</a></li>
+      <li><a href="#poster">Poster</a></li>
       <li><a href="#citation">Citation</a></li>
     </ul>
   </nav>
@@ -101,7 +102,7 @@
       <img src="assets/logos/mit.png" alt="Massachusetts Institute of Technology" />
     </div>
 
-    <!-- The three marks are inline SVG: this page loads no icon stylesheet.
+    <!-- The four marks are inline SVG: this page loads no icon stylesheet.
          Code carries none — see .quick-links in style.css. -->
     <div class="quick-links">
       <a class="quick-link" href="resources/unimate.pdf" target="_blank" rel="noopener"><svg
@@ -111,6 +112,14 @@
           <path d="M7.4 0.75V4.6h3.85" />
           <path d="M3.4 8.2h5.2M3.4 11.2h5.2" />
         </svg>Paper</a>
+      <span class="quick-link-sep" aria-hidden="true">&#183;</span>
+      <a class="quick-link" href="resources/unimate-poster.png" target="_blank" rel="noopener"><svg
+          class="quick-link-icon quick-link-icon-poster" viewBox="0 0 15 16" aria-hidden="true"
+          focusable="false">
+          <path d="M0.75 0.75H14.25V11.25H0.75Z" />
+          <path d="M3.75 11.25 2.75 15.25M11.25 11.25 12.25 15.25" />
+          <path d="M3.2 4.2h8.6M3.2 7.8h3.4M8.4 7.8h3.4" />
+        </svg>Poster</a>
       <span class="quick-link-sep" aria-hidden="true">&#183;</span>
       <a class="quick-link" href="interactive.html"><svg
           class="quick-link-icon quick-link-icon-pad" viewBox="0 0 20 14" aria-hidden="true"
@@ -772,10 +781,10 @@
       </div>
     </div>
 
-    <!-- Last content section, after Applications and before the BibTeX block.
-         The paper puts it at Sec. 4, ahead of the results; here it closes the
-         page instead, so a visitor meets the model and what it does first and
-         the corpus it was trained on as the supporting material.
+    <!-- After Applications, before the poster and the BibTeX block. The paper
+         puts it at Sec. 4, ahead of the results; here it comes last of the
+         argument instead, so a visitor meets the model and what it does first
+         and the corpus it was trained on as the supporting material.
          The prose is deliberately short — the figure carries the breadth, and
          the counts (13,006 sequences, 2,140,232 frames, 3,584 prompts) live in
          the abstract and the paper rather than being restated here. Anything
@@ -930,6 +939,25 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- The one-sheet of everything above, placed after it: a visitor who has
+         read the page recognizes every panel, and one who has not gets the
+         whole argument at a glance before the citation. The image is the poster's
+         own PNG export, served as is (3876x2582, the attributes below), and it
+         is the link, to itself full size; the caption offers the PDF. Not a <video>
+         gallery item and not framed like the dataset figure: the sheet is
+         black to the pixel, so its edge is its own frame on the cream. -->
+    <h2 class="tagline" id="poster"><span>Poster.</span></h2>
+    <a class="poster-link" href="resources/unimate-poster.png" target="_blank" rel="noopener"
+      aria-label="Open the UniMate poster full size">
+      <img class="poster-figure" src="resources/unimate-poster.png" width="3876" height="2582"
+        loading="lazy" decoding="async"
+        alt="The UniMate poster: the topology-aware diffusion transformer, generated motions across diverse skeletons, long coherent sequences, in-betweening, editing and expansion, and the UniML3D dataset." />
+    </a>
+    <p class="figure-caption">
+      The SIGGRAPH Asia 2026 poster. Click to open it full size, or as a
+      <a href="resources/unimate-poster.pdf" target="_blank" rel="noopener">PDF</a>.
+    </p>
 
     <div class="bibtex-code" id="citation">
       <div class="bibtex-title">BibTeX</div>

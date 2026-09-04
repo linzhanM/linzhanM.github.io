@@ -406,8 +406,8 @@ button:focus-visible,
   user-select: none;
 }
 
-/* The three marks are inline SVG, as .resume-pdf's is on the résumé page and
-   for the same reason: this page loads no icon stylesheet, and three glyphs are
+/* The four marks are inline SVG, as .resume-pdf's is on the résumé page and
+   for the same reason: this page loads no icon stylesheet, and four glyphs are
    not worth a font. Code is deliberately unmarked: the octocat was the row's
    one silhouette and its only borrowed logo, and a wordmark among drawings
    read as an intruder — the label alone says what it opens. Nudged down a
@@ -418,10 +418,11 @@ button:focus-visible,
   transform: translateY(1px);
 }
 
-/* The sheet, the controller and the drum are all line work. Each is sized on
-   its own line, because what matches across the row is optical weight, not the
-   bounding boxes. */
+/* The sheet, the poster, the controller and the drum are all line work. Each
+   is sized on its own line, because what matches across the row is optical
+   weight, not the bounding boxes. */
 .quick-link-icon-doc,
+.quick-link-icon-poster,
 .quick-link-icon-pad,
 .quick-link-icon-db {
   fill: none;
@@ -441,6 +442,19 @@ button:focus-visible,
 .quick-link-icon-doc {
   width: 12px;
   height: 15px;
+}
+
+/* The poster is a board on an easel — the poster session, not the file — and
+   the one mark in the row drawn as a scene rather than an object, because a
+   landscape sheet on its own reads as a card or a screen (both were tried,
+   as was a pinned sheet, which read as a briefcase). The sheet is the paper's
+   long edge turned sideways; inside, a headline rule over two column stubs is
+   the least layout that still says "poster" and not "slide", and every gap
+   between the rules is the 3px the paper's sheet established. The legs splay
+   only slightly: at this size a wider stance reads as a tripod. */
+.quick-link-icon-poster {
+  width: 15px;
+  height: 16px;
 }
 
 /* Landscape where the sheet and the drum are portrait, and wider than both —
@@ -518,6 +532,28 @@ button:focus-visible,
 
 .dataset-scroll {
   width: 100%;
+}
+
+/* The poster. Same radius and shadow as the dataset figure above it, but no
+   frame: that rule exists because the dataset render is white to the pixel,
+   and this sheet is black to the pixel, so its edge is its own frame and a
+   slate hairline on black would read as a second, lighter edge. The link is
+   the whole sheet (the caption repeats it in words for anyone who reads the
+   image as a picture): a block, so the anchor's box is the image's and there
+   is no inline-descender gap under it for the shadow to reveal. Hover lifts
+   nothing — the sheet is not a clip — and only the caption link says coral. */
+.poster-link {
+  display: block;
+  margin-top: 18px;
+}
+
+.poster-figure {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+  background-color: #000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .figure-caption {
