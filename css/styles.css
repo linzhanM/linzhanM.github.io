@@ -452,6 +452,17 @@ a:hover {
   white-space: nowrap;
 }
 
+/* The nowrap above holds only while an item fits the measure. A course with its
+   term on it does not: the run is ~330px on a 360px phone and that line sets
+   ~343px, and a nowrap item cannot shrink below its own width, so it dragged
+   the grid column past the viewport and gave the whole page a horizontal
+   scroll. An item this long has to be allowed to break — the .nowrap spans in
+   the markup are what then choose *where*, so the one break falls on the comma
+   and the course and the term each stay whole. */
+.dot-run li.is-long {
+  white-space: normal;
+}
+
 /* The accent as typography rather than a rule — points measuring out the
    run, so each item is countable instead of a clause in a long sentence. The
    colour is on the point, never on a word: this is geometry, which is the
