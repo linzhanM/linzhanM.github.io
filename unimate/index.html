@@ -267,7 +267,7 @@
       </div>
     </div>
 
-    <!-- Motion Transfer (UniMate paper, "Motion Transfer Across Topologies" / Fig. 11).
+    <!-- Motion Transfer (UniMate paper, "Text-Mediated Motion Transfer", Sec. 5.5 / Fig. 12).
          VideoMimic "Real-world Demo" gallery pattern: a horizontal .video-gallery row
          with nav buttons + a single bold-lead caption. To add another example, put
          the clip in assets/videos/ and its poster in assets/posters/ — assets/ is
@@ -289,7 +289,7 @@
       </div>
     </div>
 
-    <!-- One Skeleton, Diverse Prompts (UniMate paper, Fig. 7). Same gallery pattern. -->
+    <!-- One Skeleton, Diverse Prompts (UniMate paper, Fig. 5). Same gallery pattern. -->
     <div class="section-subtitle" id="diverse-prompts">3. One Skeleton, Diverse Prompts.</div>
 
     <div class="video-gallery-section" id="promptGallerySection">
@@ -307,12 +307,12 @@
         </div>
         <p class="figure-caption gallery-caption">
           <b>One skeleton, diverse prompts.</b> Given a single skeleton, UniMate
-          synthesizes diverse motions that follow different input text prompts.
+          synthesizes distinct, prompt-faithful motions for different input text prompts.
         </p>
       </div>
     </div>
 
-    <!-- One Skeleton, One Prompt, Diverse Motions (UniMate paper, Fig. 8). Same gallery pattern. -->
+    <!-- One Skeleton, One Prompt, Diverse Motions (UniMate paper, Fig. 6). Same gallery pattern. -->
     <div class="section-subtitle" id="diverse-motions">4. One Skeleton, One Prompt, Diverse Motions.</div>
 
     <div class="video-gallery-section" id="motionGallerySection">
@@ -336,8 +336,16 @@
     </div>
 
     <h2 class="tagline" id="application"><span>Applications.</span></h2>
+    <!-- The paper's own definition (Sec. 5.5), and the sentence the three
+         plates below are drawn to: ink is what is held fixed, accent is what
+         is sampled. -->
+    <div class="section">
+      All three applications are <strong>zero-shot</strong>: they reuse the same pretrained
+      model with no fine-tuning or auxiliary networks, differing only in which
+      motion tokens are held fixed during sampling.
+    </div>
 
-    <!-- Application 1: Motion Editing (UniMate paper, Fig. 10). -->
+    <!-- Application 1: Motion Editing (UniMate paper, Fig. 14). -->
     <div class="section-subtitle" id="motion-editing">1. Motion Editing.</div>
 
     <div class="video-gallery-section" id="editGallerySection">
@@ -351,7 +359,7 @@
              and the rest resampled. So the diagram splits one rig, not a clip. -->
         <figure class="app-diagram">
           <svg viewBox="0 0 200 362" role="img" aria-labelledby="dg-edit-t">
-            <title id="dg-edit-t">A source quadruped shakes its head while standing still. In the edited motion, the original head movement is held in ink while the body and legs, drawn in the accent colour, are regenerated to walk forward from the new prompt.</title>
+            <title id="dg-edit-t">A source rig turns its head to the left while standing still. In the edited motion, the head turn is held in ink while the body and legs, drawn in the accent colour, are regenerated to walk forward from the new prompt.</title>
             <text class="dg-label" x="100" y="12" text-anchor="middle">SOURCE</text>
             <g class="dg-rig dg-ink is-quad-headshake dg-edit-source" transform="translate(42,30) scale(2.1)">
               <g class="dg-body">
@@ -412,8 +420,11 @@
             </g>
 
             <text class="dg-label is-gen" x="100" y="202" text-anchor="middle">EDITED</text>
-            <!-- One quadruped, two authors: the ink head keeps the source shake;
-                 the accent body and legs are regenerated into a forward walk. -->
+            <!-- One rig, two authors: the ink head keeps the source head turn;
+                 the accent body and legs are regenerated into a forward walk.
+                 The drawing is the plate's generic quadruped; the clip itself is
+                 a two-legged box robot (paper Fig. 14), and the caption follows
+                 the clip. -->
             <g class="dg-rig dg-gen is-quad-walk dg-edit-output" transform="translate(42,220) scale(2.1)">
               <g class="dg-body">
                 <path d="M14 24H42"/>
@@ -478,14 +489,15 @@
       </div>
       <div class="gallery-caption-container">
         <p class="figure-caption gallery-caption">
-          <b>Motion editing.</b> Given a standing quadruped that shakes its head, we
-          preserve the head motion and regenerate its body and legs to follow the prompt
-          “walks forward.”
+          <b>Motion editing.</b> Given a robot that turns its head to the left, we hold
+          the head fixed and resample its body and legs under the new prompt
+          “walks forward.” Only the selected joints are regenerated, so an edit
+          completes at interactive rates.
         </p>
       </div>
     </div>
 
-    <!-- Application 2: Motion In-Betweening (UniMate paper, Fig. 9). -->
+    <!-- Application 2: Motion In-Betweening (UniMate paper, Fig. 13). -->
     <div class="section-subtitle" id="motion-inbetweening">2. Motion In-Betweening.</div>
 
     <div class="video-gallery-section" id="inbetweenGallerySection">
@@ -678,12 +690,14 @@
       <div class="gallery-caption-container">
         <p class="figure-caption gallery-caption">
           <b>Motion in-betweening.</b> Given the start and end poses and a text prompt,
-          UniMate synthesizes smooth and plausible intermediate motions.
+          UniMate synthesizes smooth and plausible intermediate motions. The same
+          guidance extends beyond endpoints: keyframes of any number and position can
+          be held fixed as a sampling-time mask.
         </p>
       </div>
     </div>
 
-    <!-- Application 3: Motion Expansion (not in paper; chained-prompt extension). -->
+    <!-- Application 3: Motion Expansion (UniMate paper, Sec. 5.5 / Fig. 15). -->
     <div class="section-subtitle" id="motion-expansion">3. Motion Expansion.</div>
 
     <div class="video-gallery-section" id="expansionGallerySection">
@@ -789,13 +803,15 @@
          the counts (13,006 sequences, 2,140,232 frames, 3,584 prompts) live in
          the abstract and the paper rather than being restated here. Anything
          added back must come from Sec. 4 / Appendix A.1 of the paper itself,
-         resources/unimate.pdf. -->
+         resources/unimate.pdf. (2,140,232 frames is Sec. 4; 3,584 prompts is
+         Sec. 1.) -->
     <h2 class="tagline" id="dataset"><span>Dataset.</span></h2>
     <div class="section">
       Training an animator that generalizes across object categories needs motion
       data with the same breadth, but raw 4D sources are noisy and inconsistent:
       disconnected or scene-level skeletons, broken roots, non-functional joints,
-      physically implausible motion, and mismatched coordinate frames. We curate
+      physically implausible motion, and mismatched coordinate frames or facing
+      directions. We curate
       <strong>UniML3D</strong> by unifying three complementary sources &mdash;
       <em>Truebones</em>, <em>Mixamo</em>, and <em>Objaverse-XL</em>.
     </div>
@@ -812,9 +828,9 @@
     </p>
 
     <!-- One table, three passes — filter, annotate, canonicalize — following
-         the paper's own split (Sec. 4, "Filtering and Annotation" and "Motion
-         Canonicalization"; the five filtering stages are Appendix A.2's, which
-         §4 compresses to four). Set as a paper's algorithm float — rules top
+         the paper's own split (Sec. 4, "Skeleton-Based Filtering" with its five
+         numbered stages, "Motion Canonicalization" with its four; annotation is
+         Appendix A.2–A.5, summarized in Algorithm 1). Set as a paper's algorithm float — rules top
          and bottom, numbered mono lines — rather than a flowchart of boxes and
          arrows: that is the vernacular this content comes from, and HTML keeps
          every stage selectable and searchable where an inline SVG (as the
