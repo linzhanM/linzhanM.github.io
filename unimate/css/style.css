@@ -17,8 +17,9 @@
      9. BibTeX
     10. Footer
 
-   Breakpoint-specific overrides (the old §11) live in css/responsive.css,
-   loaded after this file and schematics.css so they stay the final authority.
+   Breakpoint-specific overrides live in css/responsive.css, loaded after this
+   file and schematics.css so they stay the final authority. It is organized by
+   breakpoint, not by these sections.
    ============================================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Mono:wght@300;700&display=swap');
@@ -38,8 +39,9 @@
 
   /* The one measure on the page: nothing — prose, teaser, viewer, video —
      is wider than this. --page-gutter is `body`'s 30px padding plus the UA's
-     8px body margin, which this file never resets except on phones (see §11 in
-     css/responsive.css, where both the margin and this token change together). --column is what
+     8px body margin, which this file never resets except on phones (see the
+     720px block in css/responsive.css, where both the margin and this token
+     change together). --column is what
      .main-content actually resolves to at the current width, so responsive
      video sizes can be written against the text column instead of the
      viewport; they are not the same thing above the phone breakpoint. */
@@ -684,8 +686,8 @@ button:focus-visible,
 
 /* Under ~720px the operation can no longer share a line with its consequence:
    the row becomes a two-line stack, both hanging off the same line number.
-   Kept with the component rather than in §11 (css/responsive.css) — the TOC
-   keeps its breakpoint in §3 the same way, and splitting a figure system
+   Kept with the component rather than in css/responsive.css — the TOC keeps its
+   breakpoint in §3 of this file the same way, and splitting a figure system
    across two files is how it drifts. */
 @media (max-width: 720px) {
   .algo,
@@ -880,9 +882,10 @@ button:focus-visible,
 }
 
 /* Applications show a single clip each, beside its schematic (.app-row), so the
-   clip takes whatever the flex row leaves — ~696px, near enough to §1's 700 that
-   the two read as one size. 100% is exact where a length would be off by the
-   scrollbar; these rows are definite (the :has rule above), so it resolves. */
+   clip takes whatever the flex row leaves — ~696px, near enough to Experiments
+   §1's 700 that the two read as one size. 100% is exact where a length would be
+   off by the scrollbar; these rows are definite (the :has rule above), so it
+   resolves. */
 #editGallerySection .gallery-video,
 #inbetweenGallerySection .gallery-video,
 #expansionGallerySection .gallery-video {
@@ -901,16 +904,17 @@ button:focus-visible,
   height: auto;
 }
 
-/* §2–4 are two-up. Each of those three is a controlled comparison — same prompt
-   across skeletons, same skeleton across prompts, same both across samples — so
-   what the reader needs on screen is a whole pair, not a pair and the sliver of
-   a third clip that a fixed 523px height happened to leave. Two clips plus one
-   gap is exactly the column, so the strip always rests on a complete pair and
-   §3/§4's third clip is a full page away (gallery.js aligns to the left edge for
-   the same reason — centring the middle of three would halve both neighbours).
-   Width drives height here, not the other way round, and the percentage is
-   against the row rather than --column so a classic scrollbar can't push the
-   pair 15px past the track; the row is definite for these three, below. */
+/* Experiments §2–4 are two-up. Each of those three is a controlled comparison —
+   same prompt across skeletons, same skeleton across prompts, same both across
+   samples — so what the reader needs on screen is a whole pair, not a pair and
+   the sliver of a third clip that a fixed 523px height happened to leave. Two
+   clips plus one gap is exactly the column, so the strip always rests on a
+   complete pair and Experiments §3/§4's third clip is a full page away
+   (gallery.js aligns to the left edge for the same reason — centring the middle
+   of three would halve both neighbours). Width drives height here, not the other
+   way round, and the percentage is against the row rather than --column so a
+   classic scrollbar can't push the pair 15px past the track; the row is definite
+   for these three, below. */
 #transferGallerySection .video-gallery,
 #promptGallerySection .video-gallery,
 #motionGallerySection .video-gallery {

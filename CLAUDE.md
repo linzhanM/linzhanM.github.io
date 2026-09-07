@@ -10,9 +10,11 @@ Personal academic homepage for Linzhan Mou, served by GitHub Pages at `linzhanmo
 
 ## Layout and conventions
 
-Five pages in two groups. `index.html`, `publications.html`, `resume.html` sit at the root and **share** `css/styles.css` + `css/custom-navbar.css` + `js/nav.js` **and the navbar markup**, which differs by exactly two deliberate things: the résumé's rail adds a third link for itself, and About is `#About` on the homepage but `/#About` off it. Any other difference between their navbars is a bug, not a variant. `dimo/` and `unimate/` are fully self-contained and share nothing with them or each other.
+Six pages in two groups. `index.html`, `publications.html`, `resume.html` sit at the root and **share** `css/styles.css` + `css/custom-navbar.css` + `js/nav.js` **and the navbar markup**, which differs by exactly two deliberate things: the résumé's rail adds a third link for itself, and About is `#About` on the homepage but `/#About` off it. Any other difference between their navbars is a bug, not a variant. `dimo/` and `unimate/` are fully self-contained and share nothing with them or each other.
 
-**Media convention, all three trees**: `assets/` is split by type — `videos/`, `images/`, `logos/`, `posters/` — and only the types a page has are present. New media goes in the folder for its type; never loose in an `assets/` root. Every file under `assets/**` is currently referenced, so an unreferenced file is a mistake, not spare inventory.
+**Media convention, all three trees**: `assets/` is split by type — `videos/`, `images/`, `logos/`, `posters/` — and only the types a page has are present. New media goes in the folder for its type; never loose in an `assets/` root.
+
+**Nothing here is spare inventory**, and it was audited on 2026-09-07: every file under `assets/**`, every `.glb`, every CSS class defined in a stylesheet, and every JS declaration is reachable from a page. Root `favicon.ico` is the one file nothing links to — browsers request it at the root by convention. So an unreferenced file or an unused rule is a mistake or a leftover, not a reserve; delete it rather than working around it.
 
 **Directory names are public URLs.** `/dimo/` and `/unimate/` are in `sitemap.xml`, carry `canonical` tags, and are linked off-site; the three root pages must stay at the root for Pages to serve them. Reorganize freely *inside* those directories — moving the directories breaks live links.
 
@@ -20,12 +22,13 @@ Five pages in two groups. `index.html`, `publications.html`, `resume.html` sit a
 - `styles.css`, `custom-navbar.css`, `nav.js` are referenced from **all three root pages — bump N in all three**, and keep the numbers equal so one URL means one cache entry. They drifted once and left the résumé on a stale stylesheet.
 - `resume.css` and `publications.css` are single-page and carry their own counters. `dimo/` uses no `?v=` at all.
 - `unimate/` versions **everything local, including every ES-module import** (entry → `viewer.js` → `examples.js` → `showcase.js`). Bump at each import site and walk the bump up to the HTML — a stale module is a broken viewer, not a stale style. See `unimate/README.md`.
+- A **comment-only edit takes no bump**. The counter exists so a visitor's browser picks up changed *behaviour*; spending one on a reflowed comment invalidates the cache for every visitor and buys nothing.
 
 **Styling**: `index.html` and `resume.html` carry **no inline `style=` and no `<br>` spacers** — both are at zero of each; keep it that way. Sections are `<section class="container page-section">`; the Bootstrap `.container` is required because `.row`'s −15px margins need its padding to cancel them.
 
 ## Root-page architecture
 
-Hand-written HTML on a CDN Bootstrap 4 **CSS** grid — no Bootstrap/jQuery JS anywhere. Third-party loads on the homepage are exactly: Bootstrap CSS, Font Awesome 5, Academicons, Google Fonts, StatCounter, and five `img.shields.io` star badges. Those badges are **plain `<img>`** — don't re-add a script for star counts. `resume.html` and `publications.html` deliberately drop the two icon stylesheets (their links are words).
+Hand-written HTML on a CDN Bootstrap 4 **CSS** grid — no Bootstrap/jQuery JS anywhere. Third-party loads on the homepage are exactly: Bootstrap CSS, Font Awesome 5, Academicons, Google Fonts, StatCounter, and one `img.shields.io` star badge per publication with a repo (six today, so **count them rather than trusting this number**). Those badges are **plain `<img>`** — don't re-add a script for star counts. `resume.html` and `publications.html` deliberately drop the two icon stylesheets (their links are words).
 
 **Design tokens** (`:root` in `styles.css`) are a system — stay on them rather than hard-coding:
 - **Radius** is three fixed-px steps on purpose; percentages resolve against the box and turn non-square elements into shape-shifting ellipses. A circle (the nav keypoint) is a shape, not a step, and stays `50%`.
@@ -79,7 +82,11 @@ Self-contained and custom-designed: dark "latent-space" hero over a light "paper
 
 ## `unimate/`
 
-Two pages over one viewer engine: the project page and `interactive.html` (a full-screen "Motion Lab", dark chrome, `noindex`, not in the sitemap). `css/style.css` is organized into numbered sections; `responsive.css` loads last.
+Two pages over one viewer engine: the project page and `interactive.html` (a full-screen "Motion Lab", dark chrome, `noindex`, not in the sitemap).
+
+**Four stylesheets, three different organizing principles**, so a rule's home is decided by which: `style.css` is the page sheet, in ten numbered sections (§1 tokens … §10 footer); `schematics.css` is the Applications figure system, in four of its own (layout / rig / motion / responsive); `interactive.css` is the lab, including the lab's own breakpoints (900px, 560px); and `responsive.css` loads **last** and is organized by breakpoint, widest first (1000 / 720 / 600 / reduced motion) rather than by section. A component may keep its own breakpoint next to itself — the TOC and the schematics both do — so `responsive.css` is not the only place a media query may live.
+
+**Two things in this tree are numbered with a `§`**, so a comment naming one must say which: `style.css §7` is a section of that stylesheet, `Experiments §1` is one of the page's four numbered Experiments subsections. Unqualified `§N` was ambiguous and is being retired — write the file or the word.
 
 **One measure**: `.main-content` is 960px and *nothing* is wider — `--column` is that measure as a value. Two gotchas: `--column` is off by a classic scrollbar's width (`100vw` counts it, layout doesn't), so anything exact takes a **percentage** instead; and `body` hard-codes its own background rather than using the tokens, so the page background is *not* `--ivory` — check which you mean before "fixing" one to match the other.
 
@@ -118,3 +125,5 @@ Two pages over one viewer engine: the project page and `interactive.html` (a ful
 ## Verification gotchas
 
 An automated tab often isn't painting, so **`IntersectionObserver` never fires there** — below-fold sections look stuck until the 3s failsafe, and gallery clips won't autoplay. A synthetic click carries no user activation, so `requestFullscreen` can reject. For the nav keypoint, read `getAnimations()[0].effect.getKeyframes()` rather than sampling `getComputedStyle().transform`, which sits frozen at the start value and looks like a bug that isn't there. In all three cases: the harness, not the code.
+
+**A stylesheet that silently lost rules is the failure mode to check for after editing comments** — one unterminated `/*` swallows everything to the next `*/`. Two cheap gates, no tooling required: brace and `/*`…`*/` counts must balance per file, and in the page `[...document.styleSheets].map(s => [s.href, s.cssRules.length])` must show every sheet with a plausible rule count (a swallowed section shows up as a short one). `xmllint --noout sitemap.xml` and `node --check` on each `.js` cover the other two file types.

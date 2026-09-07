@@ -238,6 +238,10 @@
   height: auto;
 }
 
+/* ── 2. The rig ─────────────────────────────────────────────────────────────
+   Bones, joints, labels and chips: the vocabulary every plate is drawn in.
+   Colour is a STATE here, not a class — see .dg-gen below. */
+
 /* Bones. The rig is stroked, never filled. non-scaling-stroke so the line weight
    is identical on the big editing rigs (scale 1.4) and the small ones in a
    column (0.8) — one hand drew all of them. */
@@ -371,7 +375,7 @@
    *kind* of figure, which they are not. The ink/signal key is taught on the
    plates themselves: the editing plate's HELD/RESAMPLED legend and the signal
    GENERATED labels.) */
-/* --- Motion -----------------------------------------------------------------
+/* ── 3. Motion ──────────────────────────────────────────────────────────────
    Each plate runs one master clock, and everything on it is a window in that
    clock rather than a track with its own delay: Editing 6.5s, In-betweening 4s,
    Expansion 9s. That is what makes a plate restart AS a plate — at the seam
@@ -405,9 +409,10 @@
 .dg-arm-l, .dg-fore-l, .dg-leg-l, .dg-shin-l { transform-origin: 100% 0%; }
 .dg-arm-r, .dg-fore-r, .dg-leg-r, .dg-shin-r { transform-origin: 0% 0%; }
 
-/* --- Quadruped pivots for Motion Editing. The source stands and shakes its
-       head. In the edited copy that ink motion is retained while the generated
-       body and diagonal leg pairs form a forward trot. */
+/* --- Quadruped pivots for Motion Editing ------------------------------------
+   The source stands and shakes its head. In the edited copy that ink motion is
+   retained while the generated body and diagonal leg pairs form a forward
+   trot. */
 .dg-qleg-1, .dg-qshin-1,
 .dg-qleg-3, .dg-qshin-3 { transform-origin: 100% 0%; }
 .dg-qleg-2, .dg-qshin-2,
@@ -522,8 +527,9 @@
 .is-quad-walk .dg-qshin-2,
 .is-quad-walk .dg-qshin-3 { animation: dg-edit-walk-shin-b 6.5s ease-in-out infinite; }
 
-/* --- Squat: the torso drops, knees travel outward, lower legs fold back, and
-       the arms counterbalance slightly before the figure rises to standing. */
+/* --- Squat, for Motion In-Betweening ----------------------------------------
+   The torso drops, knees travel outward, lower legs fold back, and the arms
+   counterbalance slightly before the figure rises to standing. */
 @keyframes dg-squat-body {
   0% { transform: translateY(0) rotate(0); }
   48%, 56% { transform: translateY(14px) rotate(0); }

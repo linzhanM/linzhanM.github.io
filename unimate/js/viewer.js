@@ -1073,7 +1073,7 @@ renderer.domElement.addEventListener('wheel', () => {
 }, { passive: true });
 
 const GAP = 12;      // px of air between a chip's edge and the rig's silhouette
-const PIN_RADIUS = 2.5; // .viewer-pin's outer radius, incl. its halo (css §8)
+const PIN_RADIUS = 2.5; // .viewer-pin's outer radius, incl. its halo (style.css §8)
 const LEADER_COST = 0.5; // chip-areas charged per 100px of leader when scoring slots
 const MARGIN_REACH = 40; // px a chip's outer edge may pass the outermost rig on the
                          // stage. The margins are for relieving a jam, not for the

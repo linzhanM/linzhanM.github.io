@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Only galleries with enough videos to overflow keep scroll buttons, in DOM
-  // order. `autoCycle` opts a strip into the cycle below: §1, §3 and §4, the
-  // Experiments rows holding more clips than fit. §2 has exactly two, so a cycle
+  // order. `autoCycle` opts a strip into the cycle below: Experiments §1, §3
+  // and §4, the rows holding more clips than fit. §2 has exactly two, so a cycle
   // has nothing to reveal (advance() bails on that too).
   const galleries = [
     {
@@ -91,9 +91,10 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     // Where the track has to sit for `index` to lead the view, clamped to the
-    // ends. Left-aligned, not centred: §2-4 fit exactly two clips in the column
-    // (the two-up rule, css §7), and centring the middle of three would cut both
-    // neighbours in half — a comparison strip has to rest on whole clips.
+    // ends. Left-aligned, not centred: Experiments §2–4 fit exactly two clips in
+    // the column (the two-up rule, style.css §7), and centring the middle of
+    // three would cut both neighbours in half — a comparison strip has to rest
+    // on whole clips.
     const scrollTargetFor = (index) => {
       const item = items[Math.max(0, Math.min(items.length - 1, index))];
       const maxScroll = container.scrollWidth - container.clientWidth;
