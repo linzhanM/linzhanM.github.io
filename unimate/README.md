@@ -41,12 +41,12 @@ resources/
   glbs/                 Runtime 3D model files (compressed — see below)
   prompts.json          Prompt labels keyed by model filename
   unimate.pdf           Camera-ready PDF. Nothing links it any more: the
-                        "Paper" quick link and the root pages both point at
+                        "arXiv" quick link and the root pages both point at
                         arXiv (2609.05415). Kept as the local source for the
                         numbers and wording this page cites
   unimate-poster.png    Poster as an image (3876x2582): the #poster section's
-                        figure, the "Poster" quick link, and the root pages'
-                        poster links by absolute URL. Keep it around 4 MB
+                        figure, the "Poster" quick link, and the homepage's
+                        poster link by absolute URL. Keep it around 4 MB
   unimate-poster.pdf    Poster PDF, offered from the #poster caption
 tools/
   render-category.mjs   Offline: render one lab category to a video. Not shipped
