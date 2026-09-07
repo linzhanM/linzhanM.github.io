@@ -291,7 +291,7 @@ button:focus-visible,
 .venue-line {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
   /* A hairline mark has less optical mass than the old filled box, so it needs
      a little more air below to hold the title off it. */
   margin-bottom: 18px;
@@ -304,8 +304,10 @@ button:focus-visible,
    than a paper colour, so it cannot desync from the background. */
 .venue-rig {
   flex: none;
-  width: 34px;
-  height: 8px;
+  /* Scaled with the label (was 34x8), on the viewBox's own 34:8 so the joints
+     stay circles — the .25 is the price of that, not a stray value. */
+  width: 39.25px;
+  height: 9.25px;
 }
 .venue-rig line {
   stroke: var(--slate-dark);
@@ -322,12 +324,17 @@ button:focus-visible,
 
 .venue {
   font-family: 'Roboto Mono', monospace;
-  font-size: 13px;
+  /* 15px, not the 13px this started at: at 13 the one credential on the page
+     sat below the threshold where anything above a 60px title gets read at all.
+     A size, not a new device — the eyebrow is still an eyebrow. */
+  font-size: 15px;
   font-weight: 700;
   text-transform: uppercase;
   /* Out of the box the label has to hold itself together as a line of record,
-     which takes more tracking than it did as a solid block (was 0.08em). */
-  letter-spacing: 0.14em;
+     which takes more tracking than it did as a solid block (was 0.08em). Two
+     points off that at this size: tracking buys cohesion at small sizes and
+     spends it at larger ones, so the same 0.14em now reads as a gap. */
+  letter-spacing: 0.12em;
   line-height: 1;
   color: var(--slate-dark);
 }
