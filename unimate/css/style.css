@@ -276,15 +276,26 @@ button:focus-visible,
 }
 .affiliations img.logo-lg { height: 112px; }
 
-/* Venue — the page's one credential, set as an eyebrow above the title.
-   It used to be a filled ink box, deliberately the same device as .tagline and
-   .section-subtitle. With eleven of those boxes now on the page, a twelfth at
-   14px stopped reading as authority and started reading as a section heading
-   that had shrunk — and it sat directly above a 60px title, so the two competed.
-   The box is gone; the mark carries the identity instead: a root joint, a bone,
-   a child joint. That is the smallest kinematic chain, the primitive this whole
-   model generalises over, and it is the one element at the top of the page drawn
-   from the paper's own subject.
+/* Venue — the page's one credential, set as a dateline above the title.
+   Two earlier settings are worth not repeating. It was a filled ink box, the
+   same device as .tagline and .section-subtitle; with eleven of those boxes on
+   the page a twelfth at 14px stopped reading as authority and started reading
+   as a section heading that had shrunk, and it sat directly above a 60px title,
+   so the two competed. It was then a tracked-out uppercase mono eyebrow, which
+   put the one line of authority on the page in the same voice as .authors two
+   lines below it and at nearly the same size (15 against 16) — so the
+   credential had no register of its own — and which uppercased "Asia" out of
+   the venue's name, written in mixed case everywhere else on this site.
+   It is now the page's own display face at text size: the precedent
+   .quick-links sets below, for the same reason. The credential speaks in the
+   title's register rather than a label's, the masthead holds three voices and
+   not four, and the line reads as a date of record instead of a badge. Playfair
+   at this size needs no tracking — letter-spacing is a device for small caps,
+   which this no longer is.
+   The mark carries the identity: a root joint, a bone, a child joint. That is
+   the smallest kinematic chain, the primitive this whole model generalises
+   over, and it is the one element at the top of the page drawn from the paper's
+   own subject.
    Still deliberately *not* accent-coloured: coral is reserved on this page for
    interactive state (link hover, focus, active TOC, selection), so a static
    line must not claim it. Flush left so it shares the hero's alignment spine
@@ -293,10 +304,21 @@ button:focus-visible,
 .venue-line {
   display: flex;
   align-items: center;
-  gap: 12px;
+  /* One number drives the line: the label inherits this size, and the mark and
+     the gap are both em, so nothing has to be re-tuned alongside it — the mark
+     and the label used to be separate px pairs that could drift out of
+     proportion. 18px is a step above .authors' 16 and below .quick-link's 21,
+     which is where a credential belongs: it outranks the credits and yields to
+     everything you can act on. It does not need a breakpoint of its own; at
+     18px it still sits under the phone subtitle's 22.
+     It was tried at 22, which is the size .toc-title takes — but the toc is a
+     fixed rail with nothing beside it, and here 22 put a second display line
+     under the title and read as a deck rather than a date. */
+  font-size: 18px;
+  gap: 0.62em;
   /* A hairline mark has less optical mass than the old filled box, so it needs
      a little more air below to hold the title off it. */
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 /* Root solid, child hollow — the distinction rig UIs draw, and at this size the
@@ -306,10 +328,14 @@ button:focus-visible,
    than a paper colour, so it cannot desync from the background. */
 .venue-rig {
   flex: none;
-  /* Scaled with the label (was 34x8), on the viewBox's own 34:8 so the joints
-     stay circles — the .25 is the price of that, not a stray value. */
-  width: 39.25px;
-  height: 9.25px;
+  /* Half the type size tall, and the width is that height taken through the
+     viewBox's own 34:8 — so the joints stay circles at any setting, which is
+     the whole reason the width is not a rounder number. stroke-width is in
+     viewBox units, so it thins with this too: at 9px tall the bone lands near
+     1.1px and the mark stays a hairline drawing beside the label rather than
+     an icon. */
+  height: 0.5em;
+  width: 2.125em;
 }
 .venue-rig line {
   stroke: var(--slate-dark);
@@ -325,26 +351,19 @@ button:focus-visible,
 }
 
 .venue {
-  font-family: 'Roboto Mono', monospace;
-  /* 15px, not the 13px this started at: at 13 the one credential on the page
-     sat below the threshold where anything above a 60px title gets read at all.
-     A size, not a new device — the eyebrow is still an eyebrow. */
-  font-size: 15px;
-  font-weight: 700;
-  text-transform: uppercase;
-  /* Out of the box the label has to hold itself together as a line of record,
-     which takes more tracking than it did as a solid block (was 0.08em). Two
-     points off that at this size: tracking buys cohesion at small sizes and
-     spends it at larger ones, so the same 0.14em now reads as a gap. */
-  letter-spacing: 0.12em;
+  /* Size is inherited from .venue-line, which the mark is measured against too.
+     Playfair rather than the mono the rest of the masthead speaks: see above. */
+  font-family: 'Playfair Display', serif;
+  font-weight: 400;
   line-height: 1;
   color: var(--slate-dark);
 }
 
-/* The venue name is the credential; the year only dates it. Splitting weight
-   and ink says so without adding a separator. */
+/* The venue name is the credential; the year only dates it. One step off the
+   ink says so without adding a separator. It used to split weight as well,
+   which the mono had at 300 and Playfair's @import does not ship — and the two
+   devices were saying one thing twice. */
 .venue-year {
-  font-weight: 300;
   color: var(--slate-light);
 }
 
@@ -759,7 +778,9 @@ button:focus-visible,
   background: var(--slate-dark);
   color: #fff;
   /* Mono set solid on ink needs air between letters to read as one block —
-     the same reasoning as .venue, which is this device one size down. */
+     the same reasoning .section-subtitle below inherits, this plate one size
+     down. (This used to point at .venue as well, back when the credential was
+     a third instance of the plate; it is a dateline now.) */
   letter-spacing: 0.04em;
   /* Right padding is short by the tracking amount: letter-spacing appends a
      trailing gap after the final glyph, so equal padding reads off-center. */
