@@ -15,10 +15,12 @@
 document.addEventListener('DOMContentLoaded', function () {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Only galleries with enough videos to overflow keep scroll buttons, in DOM
-  // order. `autoCycle` opts a strip into the cycle below: Experiments §1, §3
-  // and §4, the rows holding more clips than fit. §2 has exactly two, so a cycle
-  // has nothing to reveal (advance() bails on that too).
+  // Only the strips that overflow carry scroll buttons, in DOM order.
+  // `autoCycle` opts a strip into the cycle below — Experiments §1, §3 and §4,
+  // the rows holding more clips than fit. Experiments §2 has exactly two, so a
+  // cycle would have nothing to reveal (advance() bails on that too).
+  // Experiments §1 fits one column-wide sheet per view, so perView() is 1 there
+  // and a step is a whole sheet.
   const galleries = [
     {
       sectionId: 'demoGallerySection',
@@ -49,8 +51,10 @@ document.addEventListener('DOMContentLoaded', function () {
   galleries.forEach((cfg) => {
     const section = document.getElementById(cfg.sectionId);
     if (!section) return;
-    const container = section.querySelector('.video-gallery-container');
     const inner = document.getElementById(cfg.galleryInnerId);
+    // From the row, not the section: section.querySelector would hand every
+    // config in a two-row section the first scroller.
+    const container = inner && inner.closest('.video-gallery-container');
     const leftBtn = document.getElementById(cfg.scrollLeftBtnId);
     const rightBtn = document.getElementById(cfg.scrollRightBtnId);
     if (!(container && inner && leftBtn && rightBtn)) return;
@@ -58,18 +62,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const items = [...inner.querySelectorAll('.gallery-video')];
     if (!items.length) return;
 
-    // Do not cache a video's width here: at DOMContentLoaded its intrinsic
-    // dimensions may not be known yet, so width:auto can briefly measure as
-    // only a few pixels. Navigate to the live position of a specific item
-    // instead, which also handles galleries whose videos have different widths.
+    // Never cache a video's width: at DOMContentLoaded its intrinsic size may
+    // be unknown, so width:auto can measure as a few pixels. Navigate to an
+    // item's live position instead, which also copes with mixed widths.
     let targetIndex = 0;
     let programmaticScroll = false;
     let scrollTimer;
 
-    // Position of an item inside the container's scrollable content. From the
-    // rects, not offsetLeft: the videos' offsetParent is the position:relative
-    // .video-gallery-section, so any difference between that box and the
-    // scroller would land in every scroll target.
+    // An item's position in the scrollable content. From rects, not offsetLeft:
+    // the videos' offsetParent is the position:relative .video-gallery-section,
+    // and any difference between that box and the scroller would land in every
+    // scroll target.
     const itemLeft = (item) =>
       item.getBoundingClientRect().left
       - container.getBoundingClientRect().left
@@ -90,27 +93,41 @@ document.addEventListener('DOMContentLoaded', function () {
       return lead;
     };
 
-    // Where the track has to sit for `index` to lead the view, clamped to the
-    // ends. Left-aligned, not centred: Experiments §2–4 fit exactly two clips in
-    // the column (the two-up rule, style.css §7), and centring the middle of
-    // three would cut both neighbours in half — a comparison strip has to rest
-    // on whole clips.
+    // Where the track sits for `index` to lead the view, clamped to the ends.
+    // Left-aligned, not centred: Experiments §2–4 fit exactly two clips (the
+    // two-up rule, style.css §7), and centring the middle of three would halve
+    // both neighbours — a comparison strip has to rest on whole clips.
     const scrollTargetFor = (index) => {
       const item = items[Math.max(0, Math.min(items.length - 1, index))];
       const maxScroll = container.scrollWidth - container.clientWidth;
       return Math.max(0, Math.min(maxScroll, itemLeft(item)));
     };
 
-    // The next index in `dir` that actually moves the strip. At the end of a row
-    // the last clips share one clamped position — a two-up strip of three rests
-    // on clips 2 and 3 for both index 1 and index 2 — and stepping onto one of
-    // those would spend a click, or an auto-cycle beat, going nowhere.
+    // How many items fit one view, from the live pitch between the first two
+    // (item plus gap). A click turns a whole page rather than nudging one item,
+    // so the row comes to rest on items the visitor has not seen: 2 on the
+    // two-up strips, 1 on a phone and on the Experiments §1 sheets. Measured on
+    // every step — the page may have been resized since the last one.
+    const perView = () => {
+      if (items.length < 2) return 1;
+      const pitch = itemLeft(items[1]) - itemLeft(items[0]);
+      return pitch > 0 ? Math.max(1, Math.floor((container.clientWidth + 1) / pitch)) : 1;
+    };
+
+    // The next index a page away in `dir` that actually moves the strip. At the
+    // end of a row the last clips share one clamped position (a two-up strip of
+    // three rests on clips 2 and 3 for index 1 and index 2 alike), and stepping
+    // onto one would spend a click, or an auto-cycle beat, going nowhere — so
+    // the walk continues until something moves.
     const stepIndex = (from, dir) => {
       const here = scrollTargetFor(from);
-      for (let i = from + dir; i >= 0 && i < items.length; i += dir) {
+      const page = perView();
+      for (let i = from + dir * page; i >= 0 && i < items.length; i += dir) {
         if (Math.abs(scrollTargetFor(i) - here) >= 1) return i;
       }
-      return from;
+      // A partial last page in `dir`: land on the row's end rather than nowhere.
+      const last = dir > 0 ? items.length - 1 : 0;
+      return Math.abs(scrollTargetFor(last) - here) >= 1 ? last : from;
     };
 
     const showItem = (index) => {
@@ -126,9 +143,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // A row whose clips run past the edge doesn't always read as scrollable, so
     // an on-screen strip walks itself to the far end and back, a page every
-    // AUTO_CYCLE_MS. The visitor always outranks it: any manual input takes the
-    // wheel, and the cycle waits USER_PAUSE_MS from the last one before picking
-    // up from wherever they left it. Never starts under reduced motion.
+    // AUTO_CYCLE_MS. The visitor outranks it: any manual input takes the wheel,
+    // and the cycle waits USER_PAUSE_MS after the last one before resuming from
+    // wherever they left it. Never starts under reduced motion.
     let autoTimer = 0;       // the running cycle, 0 while idle
     let resumeTimer = 0;     // pending restart after the visitor's turn
     let autoStep = 1;        // ping-pong direction; flips at either end of the row
@@ -156,8 +173,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function advance() {
       if (container.scrollWidth - container.clientWidth < 1) return;  // nothing to reveal
-      // stepIndex already skips the positions that would not move; when it
-      // has nothing left in this direction we are at an end, so turn round.
+      // stepIndex skips positions that would not move, so "nothing left in
+      // this direction" means we are at an end: turn round.
       let next = stepIndex(targetIndex, autoStep);
       if (next === targetIndex) {
         autoStep = -autoStep;
@@ -168,16 +185,17 @@ document.addEventListener('DOMContentLoaded', function () {
       showItem(next);
     }
 
-    // Establish the initial item after layout, then keep an explicit target
-    // so rapid clicks during a smooth scroll advance rather than reselecting
-    // the item that is still leading the view.
+    // Read the initial item after layout, then keep an explicit target so rapid
+    // clicks during a smooth scroll advance rather than reselecting the item
+    // still leading the view.
     requestAnimationFrame(() => { targetIndex = leadItemIndex(); });
     leftBtn.addEventListener('click', () => { yieldToUser(); showItem(stepIndex(targetIndex, -1)); });
     rightBtn.addEventListener('click', () => { yieldToUser(); showItem(stepIndex(targetIndex, 1)); });
-    // The container's scrollLeft is the one signal meaning "the visitor took the
-    // strip over" — swipe, trackpad shove, horizontal wheel all land here, while
-    // scrolling the page past the gallery does not. Ignore our own glide:
-    // `programmaticScroll` gives up after 500ms, autoQuietUntil covers the rest.
+    // The container's own scroll is the one signal that the visitor took the
+    // strip over: swipe, trackpad shove and horizontal wheel all land here,
+    // while scrolling the page past the gallery does not (wheel/touchstart
+    // would fire for that too). Our own glide is ignored: `programmaticScroll`
+    // gives up after 500ms, autoQuietUntil covers the rest.
     container.addEventListener('scroll', () => {
       if (programmaticScroll) return;
       if (performance.now() > autoQuietUntil) yieldToUser();
@@ -185,9 +203,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }, { passive: true });
 
     if (autoCycles) {
-      // Run only while the strip is on screen: the hint is for someone looking
-      // at it, and a visitor scrolling back should not find it parked somewhere
-      // they never saw it travel to.
+      // Only while on screen: the hint is for someone looking at it, and a
+      // visitor scrolling back should not find the strip parked somewhere they
+      // never saw it travel to.
       const viewObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           onScreen = entry.isIntersecting;
@@ -198,13 +216,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // Load and play only videos that are actually visible. Off-screen clips
-  // pause immediately, avoiding simultaneous downloads and decoding work.
+  // Play only the videos on screen; off-screen clips pause at once, so the page
+  // never downloads and decodes every clip together.
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       const video = entry.target;
-      // dataset.userPaused is set by the Application control bars below: a
-      // clip the visitor paused stays paused when it scrolls back into view.
+      // userPaused is set by the Application control bars below: a clip the
+      // visitor paused stays paused when it scrolls back into view.
       if (entry.isIntersecting && !reduceMotion && !video.dataset.userPaused) {
         video.play().catch(() => {});
       } else if (!entry.isIntersecting) {
@@ -219,13 +237,13 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // π0.5-style figure controls (pi.website/blog/pi05) on the three Application
-  // clips and only there: hovering fades in a bar along the bottom (play/pause,
-  // seek, full screen), and clicking the clip toggles play/pause. The
-  // Experiments strips are half-column comparison figures, where a bar each
-  // would put chrome on six clips at once. Full screen goes on the CONTAINER,
-  // not the video, so the bar stays usable inside it; iPhone has no element
-  // fullscreen and falls back to the video's native player. Skipped under
-  // reduced motion, where every video already carries native controls.
+  // clips only: hovering fades in a bar along the bottom (play/pause, seek,
+  // full screen) and clicking the clip toggles play/pause. Not on the
+  // Experiments strips — they are comparison figures, and a bar each would put
+  // chrome on six clips at once. Full screen goes on the CONTAINER, not the
+  // video, so the bar stays usable inside it; iPhone has no element fullscreen
+  // and falls back to the native player. Skipped under reduced motion, where
+  // every video already has native controls.
   if (!reduceMotion) {
     const fmt = (t) => (isFinite(t) && t > 0)
       ? Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0')
@@ -252,9 +270,9 @@ document.addEventListener('DOMContentLoaded', function () {
       const time = bar.querySelector('.app-video-time');
       const fsBtn = bar.querySelector('.app-video-fs');
 
-      // A pause the visitor asked for outranks the play-what-is-visible
-      // observer above, which would otherwise restart the clip the next time
-      // it scrolled into view. The flag is only ever set here.
+      // A pause the visitor asked for outranks the visibility observer above,
+      // which would otherwise restart the clip when it next scrolled into view.
+      // The flag is only ever set here.
       const togglePlay = () => {
         if (video.paused) {
           delete video.dataset.userPaused;
@@ -271,9 +289,9 @@ document.addEventListener('DOMContentLoaded', function () {
       video.addEventListener('play', () => { toggleBtn.innerHTML = PAUSE_ICON; });
       video.addEventListener('pause', () => { toggleBtn.innerHTML = PLAY_ICON; });
 
-      // The thumb rides requestAnimationFrame, not `timeupdate` — that fires
-      // ~4×/s, which steps it across a 25s clip in visible jumps. The loop runs
-      // only between play and pause, and leaves the thumb alone while the
+      // The thumb rides requestAnimationFrame, not `timeupdate`, which fires
+      // ~4×/s and steps it across a 25s clip in visible jumps. The loop runs
+      // only between play and pause and leaves the thumb alone while the
       // visitor scrubs, so the two never fight over it.
       let scrubbing = false;
       let rafId = 0;
@@ -287,9 +305,9 @@ document.addEventListener('DOMContentLoaded', function () {
       video.addEventListener('play', () => { cancelAnimationFrame(rafId); loop(); });
       video.addEventListener('pause', () => { cancelAnimationFrame(rafId); rafId = 0; paint(); });
       video.addEventListener('loadedmetadata', paint);
-      // Mid-drag seeks take fastSeek where the browser has it: landing on the
-      // nearest keyframe is what keeps the picture moving under the thumb.
-      // The release (change) seeks precisely.
+      // Mid-drag seeks use fastSeek where available: landing on the nearest
+      // keyframe keeps the picture moving under the thumb. The release seeks
+      // precisely.
       seek.addEventListener('pointerdown', () => { scrubbing = true; });
       seek.addEventListener('input', () => {
         if (!video.duration) return;
@@ -319,10 +337,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Application diagrams are explanations, not ambient decoration. Start each
-  // one at the beginning when it enters the viewport so the reader always sees
-  // the task in order: input first, generated motion second. Off-screen clocks
-  // stay paused instead of consuming work or drifting to an arbitrary phase.
+  // Application diagrams are explanations, not decoration: each restarts from
+  // the beginning as it enters the viewport, so the reader sees the task in
+  // order — input first, generated motion second. Off-screen clocks stay
+  // paused rather than drifting to an arbitrary phase.
   if (!reduceMotion) {
     const diagramObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -339,8 +357,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }, { threshold: 0.2 });
 
     document.querySelectorAll('.app-diagram').forEach((diagram) => {
-      // CSS animations begin running as soon as styles resolve. Pause them
-      // immediately; the observer above owns their visible lifecycle.
+      // CSS animations start as soon as styles resolve; pause them at once —
+      // the observer above owns their lifecycle.
       diagram.getAnimations({ subtree: true }).forEach((animation) => animation.pause());
       diagramObserver.observe(diagram);
     });

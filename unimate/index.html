@@ -13,18 +13,16 @@
   <title>UniMate &mdash; One Unified Model to Animate Diverse Skeletons</title>
 
   <!-- Link preview (iMessage / Slack / Twitter cards). This page's card is the
-       paper's teaser figure; the lab has its own, a frame of the lab itself
-       (see interactive.html). Two pages, two cards, on purpose — each shows
-       what that page actually is.
+       paper's teaser; the lab (interactive.html) has its own, a frame of the
+       lab itself — each shows what that page actually is.
 
-       Rules both cards answer to. Absolute URLs, because scrapers resolve
-       nothing. The width and height must match the file on disk. And an image
-       that changes needs a NEW filename, since scrapers serve a cached copy
-       indefinitely for an unchanged URL. Size limits are the intersection of
-       the platforms': long edge under 4096px and file under 5MB, both X's and
-       the tightest. Aspect is the one neither card meets — anything wider than
-       1.91:1 is centre-cropped by X and Facebook, and these run 2.59:1 and
-       2.39:1, so each loses its outer fifth or so on those two. -->
+       Rules both cards answer to. Absolute URLs: scrapers resolve nothing.
+       Width and height must match the file on disk. A changed image needs a
+       NEW filename: scrapers cache an unchanged URL indefinitely. Limits are
+       the tightest platform's (X): long edge under 4096px, file under 5MB.
+       Aspect is the one neither meets — X and Facebook centre-crop anything
+       wider than 1.91:1, and these run 2.59:1 and 2.39:1, so each loses its
+       outer fifth or so there. -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="UniMate — One Unified Model to Animate Diverse Skeletons" />
   <meta property="og:description"
@@ -39,18 +37,18 @@
   <link rel="canonical" href="https://linzhanmou.com/unimate/" />
   <link rel="icon" type="image/png" sizes="2048x2048" href="assets/images/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/images/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/style.css?v=27" />
-  <!-- The Applications schematics: their own figure system (layout, rig, motion),
-       kept out of the page sheet. Loaded after it, so it can read the tokens. -->
+  <link rel="stylesheet" href="css/style.css?v=28" />
+  <!-- The Applications schematics' own figure system, kept out of the page
+       sheet. Loaded after it so it can read the tokens. -->
   <link rel="stylesheet" href="css/schematics.css?v=1" />
-  <!-- Breakpoint-specific page and component overrides load last. -->
-  <link rel="stylesheet" href="css/responsive.css?v=12" />
+  <!-- Breakpoint overrides load last. -->
+  <link rel="stylesheet" href="css/responsive.css?v=13" />
 </head>
 
 <body>
-  <!-- Fixed table of contents (mirrors videomimic.net). A <nav> landmark, so
-       screen readers can jump straight to it; aria-label names it, since the
-       page has more than one navigable region. -->
+  <!-- Fixed table of contents (after videomimic.net). A <nav> landmark so
+       screen readers can jump to it; aria-label names it because the page has
+       more than one navigable region. -->
   <nav class="toc" aria-label="Contents">
     <div class="toc-title">Content</div>
     <hr />
@@ -73,8 +71,8 @@
   </nav>
 
   <div class="main-content">
-    <!-- The mark is a two-joint kinematic chain — decorative, so it is hidden
-         from assistive tech; the credential itself is the text beside it. -->
+    <!-- The mark is a two-joint kinematic chain — decorative, so hidden from
+         assistive tech; the credential is the text beside it. -->
     <div class="venue-line">
       <svg class="venue-rig" viewBox="0 0 34 8" aria-hidden="true" focusable="false">
         <line x1="4" y1="4" x2="27" y2="4" />
@@ -146,7 +144,7 @@
       width="100%" preload="none" muted playsinline loop></video>
     <p class="figure-caption">
       Given a rigged 3D asset and a text prompt, UniMate generates animations for
-      characters with <em>diverse skeletal topologies</em> within a single <em>unified</em> model.
+      characters with <em>diverse skeletal topologies</em> within a <em>single unified</em> model.
     </p>
 
     <section class="interactive-showcase" aria-labelledby="examples">
@@ -176,10 +174,10 @@
             <span><strong>Scroll</strong> to zoom</span>
           </span>
         </p>
-        <!-- The label has to name the destination, not the effect: worded as a
-             size change ("View larger") it read as a zoom control for the
-             viewer below rather than a link out to the full-window lab. The
-             corners say the same thing a diagonal arrow could not. -->
+        <!-- The label names the destination, not the effect: worded as a size
+             change ("View larger") it read as a zoom control for the viewer
+             below, not a link out to the lab. The corners say the same thing a
+             diagonal arrow could not. -->
         <a class="interactive-expand" href="interactive.html">Open full screen<svg
             class="expand-mark" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
             <path d="M5.2 1H1v4.2M8.8 1H13v4.2M5.2 13H1V8.8M8.8 13H13V8.8" />
@@ -188,9 +186,9 @@
 
       <div class="viewer-layout">
         <aside class="category-panel" aria-label="Motion categories">
-          <!-- One row per stage; filled and kept in sync by viewer.js. The lab
-               keeps a "Categories" heading over this rail; here the section
-               heading directly above already names the block. -->
+          <!-- One row per stage, filled by viewer.js. No "Categories" heading
+               here, unlike the lab: the section heading above already names
+               the block. -->
           <div class="example-sidebar" id="example-sidebar" role="group" aria-label="Example stages"></div>
         </aside>
         <div class="embed-control-bar" aria-label="Display controls">
@@ -236,13 +234,13 @@
 
     <h2 class="tagline" id="experiments"><span>Experiments.</span></h2>
 
-    <!-- Breadth first: these three clips are each a 2x3 grid of prompt + result panels
-         spanning categories, so they carry the section's claim, and §2-4 below decompose
-         it by holding one factor fixed at a time. Styled and numbered exactly like its
-         siblings — two attempts to mark it as a lead-in instead (an outlined box, then
-         no number) both read as broken rather than as a different rank.
-         Its clips run taller than an experiment strip (see #demoGallerySection in
-         style.css): at 300px the prompt text baked into the grid is unreadable. -->
+    <!-- Experiments §1, breadth first: each clip is a 2x4 sheet of prompt +
+         result panels across categories; Experiments §2–4 below hold one factor
+         fixed at a time. One sheet per view — the column-wide clip, the snap and
+         the whole-sheet step are style.css §7 and gallery.js. Styled and
+         numbered exactly like its siblings: marking it as a lead-in (an outlined
+         box, then no number) was tried twice and both read as broken. More
+         breadth means another sheet in this row. -->
     <div class="section-subtitle" id="diverse-skeletons-prompts">1. Diverse Skeletons, Diverse Prompts.</div>
 
     <div class="video-gallery-section" id="demoGallerySection">
@@ -250,7 +248,6 @@
         <div class="video-gallery" id="videoGalleryDemo">
           <video class="gallery-video" src="assets/videos/diverse-1.mp4" poster="assets/posters/diverse-1.jpg" preload="none" muted playsinline loop></video>
           <video class="gallery-video" src="assets/videos/diverse-2.mp4" poster="assets/posters/diverse-2.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/videos/diverse-3.mp4" poster="assets/posters/diverse-3.jpg" preload="none" muted playsinline loop></video>
         </div>
       </div>
       <div class="gallery-caption-container">
@@ -259,19 +256,16 @@
           <button class="gallery-nav right" id="scrollRightBtnDemo">&gt;</button>
         </div>
         <p class="figure-caption gallery-caption">
-          <b>Diverse skeletons, diverse prompts.</b> One model, no per-skeleton
-          retraining: animals, plants, humanoids, robots, and everyday rigged objects,
-          each animated from the prompt shown above its panel. The three studies below
-          hold one factor fixed at a time.
+          <b>Diverse skeletons, diverse prompts.</b> A single unified model generates
+          prompt-faithful, temporally coherent motion across heterogeneous rigs,
+          adapting to each skeleton's structure.
         </p>
       </div>
     </div>
 
-    <!-- Motion Transfer (UniMate paper, "Text-Mediated Motion Transfer", Sec. 5.5 / Fig. 12).
-         VideoMimic "Real-world Demo" gallery pattern: a horizontal .video-gallery row
-         with nav buttons + a single bold-lead caption. To add another example, put
-         the clip in assets/videos/ and its poster in assets/posters/ — assets/ is
-         split by type — then add another <video class="gallery-video"> below. -->
+    <!-- Experiments §2: Motion Transfer (paper "Text-Mediated Motion Transfer",
+         Sec. 5.5 / Fig. 12). The gallery pattern is VideoMimic's "Real-world
+         Demo": a horizontal .video-gallery row and one bold-lead caption. -->
     <div class="section-subtitle" id="one-prompt-diverse-skeletons">2. One Prompt, Diverse Skeletons.</div>
 
     <div class="video-gallery-section" id="transferGallerySection">
@@ -283,13 +277,14 @@
       </div>
       <div class="gallery-caption-container">
         <p class="figure-caption gallery-caption">
-          <b>One prompt, diverse skeletons.</b> Given a single text prompt, UniMate
-          generates plausible motions across heterogeneous skeletons.
+          <b>One prompt, diverse skeletons.</b> A source behavior is abstracted into a text
+          prompt; the same prompt then animates rigs of differing topology,
+          conditioned directly on each target skeleton.
         </p>
       </div>
     </div>
 
-    <!-- One Skeleton, Diverse Prompts (UniMate paper, Fig. 5). Same gallery pattern. -->
+    <!-- Experiments §3 (paper Fig. 5). Same gallery pattern, with nav buttons. -->
     <div class="section-subtitle" id="diverse-prompts">3. One Skeleton, Diverse Prompts.</div>
 
     <div class="video-gallery-section" id="promptGallerySection">
@@ -306,13 +301,14 @@
           <button class="gallery-nav right" id="scrollRightBtnPrompt">&gt;</button>
         </div>
         <p class="figure-caption gallery-caption">
-          <b>One skeleton, diverse prompts.</b> Given a single skeleton, UniMate
-          synthesizes distinct, prompt-faithful motions for different input text prompts.
+          <b>One skeleton, diverse prompts.</b> Given a single skeleton, UniMate synthesizes
+          distinct, prompt-faithful motions for different input text prompts,
+          reflecting the controllability of the model.
         </p>
       </div>
     </div>
 
-    <!-- One Skeleton, One Prompt, Diverse Motions (UniMate paper, Fig. 6). Same gallery pattern. -->
+    <!-- Experiments §4 (paper Fig. 6). Same gallery pattern, with nav buttons. -->
     <div class="section-subtitle" id="diverse-motions">4. One Skeleton, One Prompt, Diverse Motions.</div>
 
     <div class="video-gallery-section" id="motionGallerySection">
@@ -329,8 +325,9 @@
           <button class="gallery-nav right" id="scrollRightBtnMotion">&gt;</button>
         </div>
         <p class="figure-caption gallery-caption">
-          <b>One skeleton, one prompt, diverse motions.</b> Given the same skeleton and
-          text prompt, UniMate generates diverse plausible motion samples.
+          <b>One skeleton, one prompt, diverse motions.</b> Given the same skeleton and text
+          prompt, UniMate generates diverse yet prompt-consistent motion samples,
+          reflecting its generative diversity.
         </p>
       </div>
     </div>
@@ -355,8 +352,8 @@
             <video class="gallery-video" src="assets/videos/editing.mp4" poster="assets/posters/editing.jpg" preload="none" muted playsinline loop></video>
           </div>
         </div>
-        <!-- Editing is the spatial one: the same span of time, some joints held
-             and the rest resampled. So the diagram splits one rig, not a clip. -->
+        <!-- Editing is the spatial one: same span of time, some joints held and
+             the rest resampled — so the diagram splits one rig, not a clip. -->
         <figure class="app-diagram">
           <svg viewBox="0 0 200 362" role="img" aria-labelledby="dg-edit-t">
             <title id="dg-edit-t">A source rig turns its head to the left while standing still. In the edited motion, the head turn is held in ink while the body and legs, drawn in the accent colour, are regenerated to walk forward from the new prompt.</title>
@@ -422,8 +419,8 @@
             <text class="dg-label is-gen" x="100" y="202" text-anchor="middle">EDITED</text>
             <!-- One rig, two authors: the ink head keeps the source head turn;
                  the accent body and legs are regenerated into a forward walk.
-                 The drawing is the plate's generic quadruped; the clip itself is
-                 a two-legged box robot (paper Fig. 14), and the caption follows
+                 The drawing is the plate's generic quadruped; the clip is a
+                 two-legged box robot (paper Fig. 14), and the caption follows
                  the clip. -->
             <g class="dg-rig dg-gen is-quad-walk dg-edit-output" transform="translate(42,220) scale(2.1)">
               <g class="dg-body">
@@ -489,10 +486,9 @@
       </div>
       <div class="gallery-caption-container">
         <p class="figure-caption gallery-caption">
-          <b>Motion editing.</b> Given a robot that turns its head to the left, we hold
-          the head fixed and resample its body and legs under the new prompt
-          “walks forward.” Only the selected joints are regenerated, so an edit
-          completes at interactive rates.
+          <b>Motion editing.</b> Given a source motion (left), a subset of joints stays
+          fixed while the rest are resampled under a new prompt (right): here the
+          head keeps its turn while the body walks forward.
         </p>
       </div>
     </div>
@@ -507,9 +503,9 @@
             <video class="gallery-video" src="assets/videos/inbetweening.mp4" poster="assets/posters/inbetweening.jpg" preload="none" muted playsinline loop></video>
           </div>
         </div>
-        <!-- In-betweening is temporal and symmetric: both ends are given, the
-             middle is filled. The rigs sit on one axis so the column reads as a
-             span of time rather than as three separate figures. -->
+        <!-- In-betweening is temporal and symmetric: both ends given, the middle
+             filled. The rigs sit on one axis so the column reads as a span of
+             time, not three separate figures. -->
         <figure class="app-diagram">
           <svg viewBox="0 0 200 362" role="img" aria-labelledby="dg-btw-t">
             <title id="dg-btw-t">Three human skeletons down one timeline: a standing key pose at the top, a generated skeleton squatting as it travels down the span, and the final return to standing at the bottom. The prompt reads “squats and then rises back up.”</title>
@@ -520,8 +516,8 @@
             <path class="dg-rig dg-ink" d="M10 46h12M10 316h12"/>
 
             <!-- The keys are the only still figures on the plate: they are what
-                 you gave. One generated skeleton travels down the span while
-                 changing continuously from the opening to the closing pose. -->
+                 you gave. One generated skeleton travels down the span, morphing
+                 from the opening to the closing pose. -->
             <g class="dg-rig dg-ink" transform="translate(58,16) scale(0.8)">
               <g class="dg-body">
                 <path d="M22 38V26"/>
@@ -690,9 +686,8 @@
       <div class="gallery-caption-container">
         <p class="figure-caption gallery-caption">
           <b>Motion in-betweening.</b> Given the start and end poses and a text prompt,
-          UniMate synthesizes smooth and plausible intermediate motions. The same
-          guidance extends beyond endpoints: keyframes of any number and position can
-          be held fixed as a sampling-time mask.
+          UniMate synthesizes smooth, plausible in-betweens, holding the boundary
+          poses fixed while the prompt sets the transition's style.
         </p>
       </div>
     </div>
@@ -713,7 +708,7 @@
           <svg viewBox="0 0 200 362" role="img" aria-labelledby="dg-exp-t">
             <title id="dg-exp-t">The bird skeleton follows three prompts down one timeline. It takes off, strikes forward, and lands, with each new motion continuing from the last pose of the preceding motion.</title>
             <!-- The bar is the sequence: it steps down one third per prompt and
-                 never retreats, and the arrow at the foot only arrives with the
+                 never retreats, and the arrow at the foot arrives only with the
                  last one, because the chain could go on. -->
             <path class="dg-axis" d="M16 14V340"/>
             <path class="dg-rig dg-gen dg-seq-axis" pathLength="1" d="M16 14V340"/>
@@ -732,8 +727,8 @@
               <path class="dg-pose-link-head" d="m86 286 7-4v8z"/>
             </g>
 
-            <!-- A bird gives Expansion its own skeleton vocabulary. The same
-                 rig continues through three new, non-repeated motion examples. -->
+            <!-- A bird gives Expansion its own skeleton vocabulary; one rig
+                 continues through three different motions. -->
             <g class="dg-rig dg-gen dg-seq-in is-seq is-bird is-t1" transform="translate(28,24)">
               <g class="dg-body dg-bird-body">
                 <path d="M8 30 28 30"/>
@@ -789,22 +784,20 @@
       </div>
       <div class="gallery-caption-container">
         <p class="figure-caption gallery-caption">
-          <b>Motion expansion.</b> UniMate chains a sequence of text prompts to extend a
-          motion into a longer, temporally coherent sequence.
+          <b>Motion expansion.</b> Given sequential text prompts, UniMate extends a
+          motion segment by segment, each new segment continuing from the boundary
+          frames of the last with a smooth transition.
         </p>
       </div>
     </div>
 
-    <!-- After Applications, before the poster and the BibTeX block. The paper
-         puts it at Sec. 4, ahead of the results; here it comes last of the
-         argument instead, so a visitor meets the model and what it does first
-         and the corpus it was trained on as the supporting material.
-         The prose is deliberately short — the figure carries the breadth, and
-         the counts (13,006 sequences, 2,140,232 frames, 3,584 prompts) live in
-         the abstract and the paper rather than being restated here. Anything
-         added back must come from Sec. 4 / Appendix A.1 of the paper itself,
-         the local copy at resources/unimate.pdf. (2,140,232 frames is Sec. 4;
-         3,584 prompts is Sec. 1.) -->
+    <!-- Dataset comes after Applications though the paper puts it at Sec. 4:
+         the visitor meets the model first and the corpus as supporting
+         material. The prose is deliberately short — the figure carries the
+         breadth, and the counts (13,006 sequences, 2,140,232 frames, 3,584
+         prompts) stay in the abstract and the paper. Anything added back must
+         come from Sec. 4 / Appendix A.1 of resources/unimate.pdf (2,140,232
+         frames is Sec. 4; 3,584 prompts is Sec. 1). -->
     <h2 class="tagline" id="dataset"><span>Dataset.</span></h2>
     <div class="section">
       Training an animator that generalizes across object categories needs motion
@@ -822,34 +815,28 @@
         alt="Sample rigs and motion sequences from UniML3D, spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid skeletons." />
     </div>
     <p class="figure-caption">
-      Samples from <em>UniML3D</em>, spanning bipedal, quadrupedal, avian, marine,
-      insectoid, serpentine, and articulated rigid objects &mdash; each with detailed
-      skeleton annotations and a coherent text prompt paired to its motion.
+      Samples from <em>UniML3D</em>, spanning bipedal, quadrupedal, avian, marine, insectoid,
+      serpentine, and articulated rigid objects, with detailed skeleton annotations and coherent
+      text prompts paired with motion sequences.
     </p>
 
-    <!-- One table, three passes — filter, annotate, canonicalize — following
-         the paper's own split (Sec. 4, "Skeleton-Based Filtering" with its five
-         numbered stages, "Motion Canonicalization" with its four; annotation is
-         Appendix A.2–A.5, summarized in Algorithm 1). Set as a paper's algorithm float — rules top
-         and bottom, numbered mono lines — rather than a flowchart of boxes and
-         arrows: that is the vernacular this content comes from, and HTML keeps
-         every stage selectable and searchable where an inline SVG (as the
-         Applications schematics use) would not.
+    <!-- One table, three passes — filter, annotate, canonicalize — following the
+         paper's own split: Sec. 4 "Skeleton-Based Filtering" (five numbered
+         stages) and "Motion Canonicalization" (four); annotation is Appendix
+         A.2–A.5, summarized in Algorithm 1. Every line must trace to one of
+         those. Why it is a ruled <table> set as an algorithm float, and why the
+         sigil is per line, is at .algo in style.css.
 
-         The three <tbody> groups are identical in form; what varies is the
-         sigil, PER LINE, because the steps differ in kind — "−" removes,
-         "+" adds, "→" re-expresses (see the note at .algo in style.css for why
-         it is not per pass). Numbering runs 1..15 unbroken, and the signature
-         rows chain (raw clip → kept clip → captioned clip → training sample),
-         so this reads as one pass over a clip and not as three unrelated
-         lists.
+         Numbering runs 1..15 unbroken and the signature rows chain (raw clip →
+         kept clip → captioned clip → training sample), so it reads as one pass
+         over a clip, not three unrelated lists.
 
-         Canonicalize opens with the two steps from Sec. 3.1 — BFS serialization
-         and topology-diameter normalization — because Sec. 4 says the mapping
-         builds on them, and the later lines are meaningless without them: there
-         is no "one kinematic basis across topologies" until the joints have a
-         shared ordering and the rigs a shared scale. They live in a different
-         section of the paper, not a different pipeline. -->
+         Canonicalize opens with two steps from Sec. 3.1 — BFS serialization and
+         topology-diameter normalization — because Sec. 4 says the mapping
+         builds on them and the later lines are meaningless without them: there
+         is no "one kinematic basis across topologies" until the joints share
+         an ordering and the rigs a scale. A different section of the paper,
+         not a different pipeline. -->
     <table class="algo">
       <caption class="algo-caption">Three passes over every asset. Each line removes (&minus;), adds (+), or re-expresses (&rarr;) what the pass was handed.</caption>
       <tbody>
@@ -957,12 +944,11 @@
     </table>
 
     <!-- The one-sheet of everything above, placed after it: a visitor who has
-         read the page recognizes every panel, and one who has not gets the
-         whole argument at a glance before the citation. The image is the poster's
-         own PNG export, served as is (3876x2582, the attributes below), and it
-         is the link, to itself full size; the caption offers the PDF. Not a <video>
-         gallery item and not framed like the dataset figure: the sheet is
-         black to the pixel, so its edge is its own frame on the cream. -->
+         read the page recognizes every panel; one who has not gets the whole
+         argument at a glance before the citation. The PNG export is served as
+         is (3876x2582) and links to itself full size; the caption offers the
+         PDF. Unframed, unlike the dataset figure: the sheet is black to the
+         pixel, so its edge is its own frame on the cream. -->
     <h2 class="tagline" id="poster"><span>Poster.</span></h2>
     <a class="poster-link" href="resources/unimate-poster.png" target="_blank" rel="noopener"
       aria-label="Open the UniMate poster full size">
@@ -998,7 +984,7 @@
     <a href="https://github.com/videomimic-1/videomimic-1.github.io" target="_blank">VideoMimic</a> template.
   </div>
 
-  <!-- Interactive 3D viewer (Three.js) — drives #example-sidebar / #viewer-wrapper above. -->
+  <!-- Interactive 3D viewer (Three.js): #example-sidebar / #viewer-wrapper above. -->
   <script type="importmap">
     {
       "imports": {
@@ -1011,7 +997,7 @@
   <script type="module" src="js/index-viewer.js?v=73"></script>
 
   <!-- Galleries: scroll buttons + play-only-what-is-visible. -->
-  <script src="js/gallery.js?v=6"></script>
+  <script src="js/gallery.js?v=7"></script>
 
   <!-- TOC rail: scroll-spy + the gutter-collision watcher. -->
   <script src="js/toc.js?v=2"></script>

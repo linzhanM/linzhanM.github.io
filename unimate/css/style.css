@@ -1,9 +1,9 @@
 /* ============================================================================
    UniMate — project page styles.
 
-   Built on the VideoMimic template, then trimmed to only the rules this page
-   uses. Palette tokens live in :root; fonts are Playfair Display (headings) and
-   Roboto Mono (labels/mono), over a Georgia serif body.
+   Fonts: Playfair Display (display), Roboto Mono (labels), Georgia body. The
+   @import ships mono at 300 and 700 only — see style.css §4 (.quick-links)
+   for why that constrains every mono rule on the page.
 
    Sections:
      1. Design tokens
@@ -17,9 +17,10 @@
      9. BibTeX
     10. Footer
 
-   Breakpoint-specific overrides live in css/responsive.css, loaded after this
-   file and schematics.css so they stay the final authority. It is organized by
-   breakpoint, not by these sections.
+   Breakpoint overrides live in css/responsive.css, loaded after this file and
+   schematics.css, and organized by breakpoint rather than by these sections.
+   A component may still keep its own breakpoint beside itself (the TOC in
+   style.css §3 and the .algo table in style.css §5 do).
    ============================================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto+Mono:wght@300;700&display=swap');
@@ -32,24 +33,22 @@
   --slate-dark: #141413;
   --slate-light: #5e5d59;
   --accent: #d97757;
-  /* Hairline for structural rules. Tinted ink rather than --ivory-dark, which
-     is a *surface* tone: at 1px on cream it disappears, and the rule beside a
-     solid ink plate has to register as a line. */
+  /* Hairline for structural rules. Tinted ink, not --ivory-dark: that is a
+     surface tone and at 1px on cream it disappears. */
   --rule: rgba(20, 20, 19, 0.18);
 
-  /* The one measure on the page: nothing — prose, teaser, viewer, video —
-     is wider than this. --page-gutter is `body`'s 30px padding plus the UA's
-     8px body margin, which this file never resets except on phones (see the
-     720px block in css/responsive.css, where both the margin and this token
-     change together). --column is what
-     .main-content actually resolves to at the current width, so responsive
-     video sizes can be written against the text column instead of the
-     viewport; they are not the same thing above the phone breakpoint. */
+  /* The one measure on the page — nothing is wider than .main-content, and
+     --column is what it resolves to at the current width, so video sizes can
+     be written against the text column rather than the viewport.
+     --page-gutter is body's 30px padding plus the UA's 8px body margin, which
+     is never reset except on phones (responsive.css, 720px block, where the
+     margin and this token change together). --column is off by a classic
+     scrollbar's width (100vw counts it, layout does not); anything exact takes
+     a percentage instead — see style.css §7. */
   --page-gutter: 38px;
   --column: min(960px, calc(100vw - 2 * var(--page-gutter)));
-  /* Air between two clips in a gallery row. A token because the two-up strips
-     size themselves to "half the column minus one gap" — the two numbers are
-     one decision. */
+  /* A token because the two-up strips size themselves to "half the column
+     minus one gap" — the two numbers are one decision. */
   --gallery-gap: 15px;
 }
 
@@ -63,13 +62,11 @@ body {
 
 html { scroll-behavior: smooth; }
 
-/* On-brand text selection. */
 ::selection {
   background: rgba(217, 119, 87, 0.28); /* --accent */
   color: var(--slate-dark);
 }
 
-/* Visible keyboard focus (quality floor), in the accent. */
 a:focus-visible,
 button:focus-visible,
 .example-item:focus-visible {
@@ -79,17 +76,17 @@ button:focus-visible,
 }
 
 /* ── 3. Table of contents (fixed left rail, shown ≥1400px) ──────────────────── */
-/* The list is a progress rail: a hairline track whose segment lights up coral
-   beside the section you're currently reading (see the scroll-spy script). */
+/* A progress rail: a hairline track whose segment lights up beside the section
+   being read (js/toc.js). */
 .toc {
   width: 192px;
   font-family: 'Roboto Mono', monospace;
   position: fixed;
-  top: calc(50% - 20px);        /* centered, with slight upward clearance */
+  top: calc(50% - 20px);        /* centered, nudged up */
   transform: translateY(-50%);
   max-height: 90vh;
   overflow-y: auto;
-  display: none;                /* revealed by the media query below */
+  display: none;                /* shown by the media query below */
   z-index: 1000;
   transition: opacity 0.2s ease;
 }
@@ -101,20 +98,18 @@ button:focus-visible,
   }
 }
 
-/* Set while a gallery clip reaches into the gutter under the rail; see the
-   collision watcher in js/toc.js for when that happens. Opacity rather than
-   display or visibility, so the element keeps its box and the watcher can go on
-   measuring it while hidden. */
+/* Set by js/toc.js while a gallery clip reaches under the rail. Opacity, not
+   display or visibility: the element must keep its box so the watcher can go
+   on measuring it while hidden. */
 .toc.is-eclipsed {
   opacity: 0;
   pointer-events: none;
 }
 
-/* Deliberately not a heading element: this labels a navigation rail, it is not
-   a section of the document. As an <h3> it was the page's first heading and
-   sat above every <h2>, which inverts the outline a screen reader reads out.
-   font-weight is therefore explicit — it used to come free from the h3 UA
-   default, and a plain <div> would drop to regular. */
+/* Not a heading element on purpose: as an <h3> it was the page's first
+   heading, above every <h2>, which inverts the outline a screen reader reads
+   out. font-weight is explicit because a <div> no longer gets it from the
+   UA. */
 .toc-title {
   font-family: 'Playfair Display', serif;
   font-size: 22px;
@@ -145,8 +140,7 @@ button:focus-visible,
   margin-bottom: 7px;
 }
 
-/* Give each top-level section a little air above it, so its sub-items below
-   read as a group (the first item needs none). */
+/* Air above each top-level section so it groups with its sub-items. */
 .toc li:not(.toc-subsection) {
   margin-top: 14px;
 }
@@ -165,7 +159,7 @@ button:focus-visible,
   transition: color 0.18s ease;
 }
 
-/* The playhead segment — fills the rail next to the active item. */
+/* The playhead segment beside the active item. */
 .toc a::before {
   content: '';
   position: absolute;
@@ -193,8 +187,8 @@ button:focus-visible,
   transform: scaleY(1);
 }
 
-/* Subsections stay flush to the shared rail; the text is indented instead, so
-   every progress marker lines up on one track. */
+/* Subsections indent the text, not the item, so every playhead segment sits
+   on the one track. */
 .toc-subsection {
   margin-bottom: 5px;
 }
@@ -216,8 +210,8 @@ button:focus-visible,
   margin: 0 auto;
 }
 
-/* The page's <h1>. margin-top is pinned because h1's UA default is 0.67em —
-   at this size that is a 40px drop nobody asked for. */
+/* The <h1>. margin-top is pinned: the UA's 0.67em is a 40px drop at this
+   size. */
 .hero-text {
   font-size: 60px;
   font-weight: 700;
@@ -258,7 +252,6 @@ button:focus-visible,
   text-decoration-color: var(--accent);
 }
 
-/* Affiliation logos — no figure border. */
 .affiliations {
   display: flex;
   flex-wrap: wrap;
@@ -276,64 +269,46 @@ button:focus-visible,
 }
 .affiliations img.logo-lg { height: 112px; }
 
-/* Venue — the page's one credential, set as a dateline above the title.
-   Two earlier settings are worth not repeating. It was a filled ink box, the
-   same device as .tagline and .section-subtitle; with eleven of those boxes on
-   the page a twelfth at 14px stopped reading as authority and started reading
-   as a section heading that had shrunk, and it sat directly above a 60px title,
-   so the two competed. It was then a tracked-out uppercase mono eyebrow, which
-   put the one line of authority on the page in the same voice as .authors two
-   lines below it and at nearly the same size (15 against 16) — so the
-   credential had no register of its own — and which uppercased "Asia" out of
-   the venue's name, written in mixed case everywhere else on this site.
-   It is now the page's own display face at text size: the precedent
-   .quick-links sets below, for the same reason. The credential speaks in the
-   title's register rather than a label's, the masthead holds three voices and
-   not four, and the line reads as a date of record instead of a badge. Playfair
-   at this size needs no tracking — letter-spacing is a device for small caps,
-   which this no longer is.
-   The mark carries the identity: a root joint, a bone, a child joint. That is
-   the smallest kinematic chain, the primitive this whole model generalises
-   over, and it is the one element at the top of the page drawn from the paper's
-   own subject.
-   Still deliberately *not* accent-coloured: coral is reserved on this page for
-   interactive state (link hover, focus, active TOC, selection), so a static
-   line must not claim it. Flush left so it shares the hero's alignment spine
-   with .hero-text / .sub-hero-text / .authors — centered under the logo cluster
-   it just floated between two blocks with nothing to anchor to. */
+/* Venue — the page's one credential, set as a dateline above the title in the
+   display face at text size (the same move .quick-links makes, below). Two
+   settings were tried and rejected: a filled ink box like .tagline, which among
+   eleven such plates read as a shrunken section heading competing with the 60px
+   title under it; and a tracked uppercase mono eyebrow, which put the line in
+   .authors' voice at nearly its size (15 against 16) and uppercased "Asia" out
+   of a name written in mixed case everywhere else on the site. No tracking:
+   letter-spacing is a small-caps device and this is no longer small caps.
+   The mark is root joint, bone, child joint — the smallest kinematic chain,
+   the primitive the model generalises over. Not accent-coloured: coral here is
+   reserved for interactive state (hover, focus, active TOC, selection). Flush
+   left so it shares the hero's spine with .hero-text / .sub-hero-text /
+   .authors; centred under the logos it floated with nothing to anchor to. */
 .venue-line {
   display: flex;
   align-items: center;
-  /* One number drives the line: the label inherits this size, and the mark and
-     the gap are both em, so nothing has to be re-tuned alongside it — the mark
-     and the label used to be separate px pairs that could drift out of
-     proportion. 18px is a step above .authors' 16 and below .quick-link's 21,
-     which is where a credential belongs: it outranks the credits and yields to
-     everything you can act on. It does not need a breakpoint of its own; at
-     18px it still sits under the phone subtitle's 22.
-     It was tried at 22, which is the size .toc-title takes — but the toc is a
-     fixed rail with nothing beside it, and here 22 put a second display line
-     under the title and read as a deck rather than a date. */
+  /* One number drives the line: the label inherits it and the mark and gap are
+     em, so nothing else needs re-tuning. 18 sits between .authors' 16 and
+     .quick-link's 21 — above the credits, below anything you can act on — and
+     needs no breakpoint (still under the phone subtitle's 22). 22, the
+     .toc-title size, was tried: under the title it read as a deck, not a
+     date. */
   font-size: 18px;
   gap: 0.62em;
-  /* A hairline mark has less optical mass than the old filled box, so it needs
-     a little more air below to hold the title off it. */
+  /* A hairline mark has less mass than a filled box, so it takes more air below
+     to hold the title off. */
   margin-bottom: 14px;
 }
 
-/* Root solid, child hollow — the distinction rig UIs draw, and at this size the
-   thing that makes the mark read as two nodes joined by a bone rather than as a
-   bullet followed by a dash. The bone stops at the child's stroke (x2=27, not
-   29) so nothing shows through the open joint; the joint is fill:none rather
-   than a paper colour, so it cannot desync from the background. */
+/* Root solid, child hollow — the distinction rig UIs draw, and what makes this
+   read as joints on a bone rather than a bullet and a dash. The bone stops at
+   the child's stroke (x2=27, not 29) so nothing shows through the open joint;
+   the joint is fill:none, not a paper colour, so it cannot desync from the
+   background. */
 .venue-rig {
   flex: none;
-  /* Half the type size tall, and the width is that height taken through the
-     viewBox's own 34:8 — so the joints stay circles at any setting, which is
-     the whole reason the width is not a rounder number. stroke-width is in
-     viewBox units, so it thins with this too: at 9px tall the bone lands near
-     1.1px and the mark stays a hairline drawing beside the label rather than
-     an icon. */
+  /* Half the type size tall; the width is that height through the viewBox's
+     own 34:8, so the joints stay circles — the reason the width is not a
+     rounder number. stroke-width is in viewBox units and thins with it (about
+     1.1px at 9px tall), so the mark stays a hairline, not an icon. */
   height: 0.5em;
   width: 2.125em;
 }
@@ -351,40 +326,33 @@ button:focus-visible,
 }
 
 .venue {
-  /* Size is inherited from .venue-line, which the mark is measured against too.
-     Playfair rather than the mono the rest of the masthead speaks: see above. */
+  /* Size inherits from .venue-line, which the mark is measured against too. */
   font-family: 'Playfair Display', serif;
   font-weight: 400;
   line-height: 1;
   color: var(--slate-dark);
 }
 
-/* The venue name is the credential; the year only dates it. One step off the
-   ink says so without adding a separator. It used to split weight as well,
-   which the mono had at 300 and Playfair's @import does not ship — and the two
-   devices were saying one thing twice. */
+/* The name is the credential; the year only dates it. One step off the ink
+   says so without a separator. Not weight as well: the @import has no light
+   Playfair, and two devices would say one thing twice. */
 .venue-year {
   color: var(--slate-light);
 }
 
-/* Quick links — one quiet line of type, after anthropic.com, whose nav is set
-   the same way: plain, sentence case, no box, no fill, ink on cream and nothing
-   else until you point at it. An enclosure here reads as something the row is
-   not (plates as buttons, a ruled band as a table); the dot does the only job
-   an enclosure was needed for, which is marking where one item ends.
+/* Quick links — one quiet line of type, after anthropic.com's nav: plain,
+   sentence case, no box, no fill, nothing until you point at it. An enclosure
+   reads as something the row is not (plates as buttons, a ruled band as a
+   table); the dot alone marks where an item ends.
 
-   Playfair, not the mono the rest of the masthead speaks, and it is a font
-   *availability* constraint rather than taste: the @import loads mono at 300
-   and 700 only, so at text size the whole choice is 300 — which renders
-   identically to the credits line above — or 700, which is dense and wide.
-   There is no 500 to reach for; adding one to the @import re-resolves every
-   unweighted mono rule on the page, since CSS matches an unavailable 400 to
-   500 before 300. The serif is the page's own display face, so it borrows the
-   title's register without introducing a fourth voice.
+   Playfair, not mono, is a font-AVAILABILITY constraint, not taste: the @import
+   loads mono at 300 and 700 only, so at text size the choice is 300 (identical
+   to the credits line) or 700 (dense and wide). Don't add a 500 to the @import
+   to fix it — CSS matches an unavailable 400 to 500 before 300, so every
+   unweighted mono rule on the page would re-resolve.
 
-   The hover is .authors' — coral plus a thin underline — because these are
-   text links in the same block and there is no reason for two behaviours.
-   Order is read it, try it, then take it. */
+   Hover is .authors' — coral plus a thin underline — because text links in one
+   block get one behaviour. Order: read it, try it, take it. */
 .quick-links {
   display: flex;
   flex-wrap: wrap;
@@ -398,8 +366,8 @@ button:focus-visible,
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  /* 21px, not the 18px the mono setting took: Playfair's x-height is smaller,
-     so the two match on the page even though the numbers do not. */
+  /* 21, not the 18 mono took: Playfair's x-height is smaller, so the two match
+     on the page though the numbers do not. */
   font-family: 'Playfair Display', serif;
   font-size: 21px;
   font-weight: 400;
@@ -411,9 +379,8 @@ button:focus-visible,
   transition: color 0.18s ease;
 }
 
-/* :focus-visible, not :focus — a mouse click leaves focus on the anchor, so with
-   plain :focus the coral stayed lit after returning from the opened tab.
-   Keyboard users still get the state (and the global focus ring above). */
+/* :focus-visible, not :focus — a click leaves focus on the anchor, so :focus
+   kept the coral lit after returning from the opened tab. */
 .quick-link:hover,
 .quick-link:focus-visible {
   color: var(--accent);
@@ -421,11 +388,10 @@ button:focus-visible,
   text-decoration-color: var(--accent);
 }
 
-/* A real element, not ::after on an anchor, which would drag the dot inside the
-   link's own underline and hit area. --slate-light and not --rule: --rule is
-   18% ink, a value tuned for a hairline running the width of the column, and a
-   single glyph at it is invisible. Not full ink either — the dot separates the
-   labels, it is not one of them. */
+/* A real element, not ::after on the anchor, which would put the dot inside
+   the link's underline and hit area. --slate-light, not --rule: 18% ink is
+   tuned for a column-wide hairline and a single glyph at it is invisible. Not
+   full ink either — the dot separates the labels, it is not one of them. */
 .quick-link-sep {
   font-family: 'Playfair Display', serif;
   font-size: 21px;
@@ -434,21 +400,18 @@ button:focus-visible,
   user-select: none;
 }
 
-/* The four marks are inline SVG, as .resume-pdf's is on the résumé page and
-   for the same reason: this page loads no icon stylesheet, and four glyphs are
+/* Inline SVG because this page loads no icon stylesheet and four glyphs are
    not worth a font. Code is deliberately unmarked: the octocat was the row's
-   one silhouette and its only borrowed logo, and a wordmark among drawings
-   read as an intruder — the label alone says what it opens. Nudged down a
-   pixel — the labels are sentence case, so the row's optical centre sits at
-   x-height, below the centre of the flex line. */
+   only silhouette and only borrowed logo, and read as an intruder among line
+   drawings. Nudged down a pixel: sentence-case labels put the row's optical
+   centre at x-height, below the flex line's centre. */
 .quick-link-icon {
   flex: none;
   transform: translateY(1px);
 }
 
-/* The sheet, the poster, the controller and the drum are all line work. Each
-   is sized on its own line, because what matches across the row is optical
-   weight, not the bounding boxes. */
+/* All line work. Each mark is sized on its own below, because what matches
+   across the row is optical weight, not bounding boxes. */
 .quick-link-icon-doc,
 .quick-link-icon-poster,
 .quick-link-icon-pad,
@@ -458,77 +421,63 @@ button:focus-visible,
   stroke-width: 1;
   stroke-linecap: round;
   stroke-linejoin: round;
-  /* Drawn larger than it is shown, so without this the hairline thins below
-     1px and the mark goes grey beside 700-weight type. */
+  /* Drawn larger than shown; without this the hairline thins below 1px and
+     goes grey. */
   vector-effect: non-scaling-stroke;
 }
 
-/* Portrait, and the narrowest mark in the row: a page is a page, and an
-   outline that is mostly empty sheet already weighs what its neighbours do.
-   Two rules inside it, not four — at this size 3px of gap is the least that
-   stays open, and a stack of hairlines closer than that fills into a block. */
+/* The narrowest mark: an outline that is mostly empty sheet already weighs
+   what its neighbours do. Two rules inside, not four — 3px is the least gap
+   that stays open at this size; closer hairlines fill into a block. */
 .quick-link-icon-doc {
   width: 12px;
   height: 15px;
 }
 
-/* The poster is a board on an easel — the poster session, not the file — and
-   the one mark in the row drawn as a scene rather than an object, because a
-   landscape sheet on its own reads as a card or a screen (both were tried,
-   as was a pinned sheet, which read as a briefcase). The sheet is the paper's
-   long edge turned sideways; inside, a headline rule over two column stubs is
-   the least layout that still says "poster" and not "slide", and every gap
-   between the rules is the 3px the paper's sheet established. The legs splay
-   only slightly: at this size a wider stance reads as a tripod. */
+/* A board on an easel — the poster session, not the file. A landscape sheet
+   alone read as a card or a screen, and a pinned sheet as a briefcase; all
+   three were tried. A headline rule over two column stubs is the least layout
+   that says "poster" and not "slide"; gaps keep the doc's 3px. The legs splay
+   only slightly — wider reads as a tripod. */
 .quick-link-icon-poster {
   width: 15px;
   height: 16px;
 }
 
-/* Landscape where the sheet and the drum are portrait, and wider than both —
-   a controller is a wide object, and squeezing it to their width would only
-   make it unreadable. */
+/* Landscape and wider than the rest — a controller squeezed to the sheet's
+   width is unreadable. */
 .quick-link-icon-pad {
   width: 20px;
   height: 14px;
 }
 
-/* The d-pad and buttons are drawn at ~1px on screen, so the buttons are discs
-   and not rings: at this size an outlined circle fills in and reads as a
-   smudge, and a ring thin enough not to fill is thinner than the body it sits
-   in. */
+/* Discs, not rings: at ~1px an outlined circle fills in and reads as a smudge,
+   and a ring thin enough not to fill is thinner than the body around it. */
 .quick-link-icon-pad circle {
   fill: currentColor;
   stroke: none;
 }
 
-/* One lit button — the row's only colour at rest, and it earns it: coral is
-   this page's interaction ink and this is the one link that opens something
-   you operate rather than something you read. */
+/* The row's only colour at rest: coral is the page's interaction ink, and this
+   is the one link that opens something you operate rather than read. */
 .quick-link-icon-pad .quick-link-icon-key {
   fill: var(--accent);
 }
 
-/* The database drum — still the one glyph that says "dataset" — but drawn
-   here, no longer Hugging Face's solid original. Their face logo does not
-   survive this size (at 15px the hands break off the head into two specks,
-   and the face alone is just a smiley), and their drum is a silhouette
-   faked into depth with opacity ranks: there is no weight at which that sits
-   on this row — flattened it is a black pill, layered it is a faded second
-   logo beside line work. In line work the depth is drawn instead: two shelf
-   arcs divide the stack, and every successive curve keeps the sheet's ~3px of
-   open paper, the least that stays open at this size. Portrait, at the
-   sheet's exact box. */
+/* The database drum, drawn here rather than Hugging Face's own marks: their
+   face breaks into specks at 15px, and their solid drum fakes depth with
+   opacity ranks — flattened it is a black pill, layered it is a faded second
+   logo beside line work. Two shelf arcs draw the depth instead, keeping the
+   doc's 3px of open paper. Same box as the doc. */
 .quick-link-icon-db {
   width: 12px;
   height: 15px;
 }
 
 /* ── 5. Teaser video, figure captions, dataset curation table ──────────────── */
-/* The teaser is the one video with no frame. It runs the full column directly
-   under the title block, where a border would draw a box around the first thing
-   on the page; the gallery clips below are framed (see .gallery-video) because
-   they sit in rows and a row needs its figures separated from each other. */
+/* The one video with no frame: it opens the page under the title block, where
+   a border would box the first thing on it. Everything below is framed — see
+   .gallery-video (style.css §7) for why. */
 #teaser-video {
   width: 100%;
   border-radius: 15px;
@@ -536,17 +485,13 @@ button:focus-visible,
   display: block;
 }
 
-/* The UniML3D overview figure. Framed, unlike the teaser directly above it,
-   and the rule is the one already written at .gallery-video rather than a new
-   one: this render is white to the pixel at all four edges (measured off the
-   PNG) against the page's #fdfaf4 — 1.03:1 — so with no border it dissolves
-   into the paper, and its shadow is offset 4px down, which reads at the bottom
-   edge and does nothing for the top. The teaser gets away with no frame
-   because it opens the page; this sits mid-document among framed figures.
+/* The UniML3D overview figure. Framed with .gallery-video's exact frame, for
+   its reason: the render is white to the pixel at all four edges (measured off
+   the PNG) against #fdfaf4, and would dissolve into the paper.
 
-   width/height are the file's real pixels (4654x946). They are here to reserve
-   the aspect ratio before the 3.5MB decodes, so the section below it doesn't
-   jump — the CSS width overrides the attribute for layout. */
+   The width/height attributes in the markup are the file's real pixels
+   (4654x946): they reserve the aspect ratio before the 3.5MB decodes so the
+   section below does not jump; the CSS width wins for layout. */
 .dataset-figure {
   display: block;
   width: 100%;
@@ -562,14 +507,12 @@ button:focus-visible,
   width: 100%;
 }
 
-/* The poster. Same radius and shadow as the dataset figure above it, but no
-   frame: that rule exists because the dataset render is white to the pixel,
-   and this sheet is black to the pixel, so its edge is its own frame and a
-   slate hairline on black would read as a second, lighter edge. The link is
-   the whole sheet (the caption repeats it in words for anyone who reads the
-   image as a picture): a block, so the anchor's box is the image's and there
-   is no inline-descender gap under it for the shadow to reveal. Hover lifts
-   nothing — the sheet is not a clip — and only the caption link says coral. */
+/* The poster. Same radius and shadow as the dataset figure, but no frame: that
+   sheet is black to the pixel, so its edge is its own frame and a slate
+   hairline on it would read as a second, lighter edge. The link is the whole
+   sheet (the caption repeats it in words) and a block, so the anchor's box is
+   the image's — no inline-descender gap under it for the shadow to reveal.
+   Hover lifts nothing; only the caption link says coral. */
 .poster-link {
   display: block;
   margin-top: 18px;
@@ -595,25 +538,19 @@ button:focus-visible,
 }
 
 /* --- Dataset curation table ------------------------------------------------
-   The whole pipeline as one table, set the way a paper sets an algorithm
-   float: a caption above, heavy rules top and bottom, numbered mono lines.
-   Rules and not a frame, deliberately — everything else in the Dataset section
-   is media that needs a border to separate it from the cream (see
-   .dataset-figure), but this is type, and type on paper is ruled, not boxed.
-   It is a real <table> because the content is genuinely tabular (step, action,
-   consequence), which buys row and column association for free, and it is HTML
-   rather than an inline SVG like the Applications schematics because the
-   content is words, and words should stay selectable and searchable.
+   The pipeline as one table, set as a paper sets an algorithm float: caption
+   above, heavy rules top and bottom, numbered mono lines. Rules, not a frame —
+   the section's media needs a border against the cream, but this is type, and
+   type on paper is ruled. A real <table>, not an SVG like the schematics,
+   because the content is tabular words that must stay selectable.
 
-   THE SIGIL IS PER LINE, NOT PER PASS, and it is the design. "−" removes,
-   "+" adds, "→" re-expresses — so the column states what each step actually
-   does to the clip. An earlier version keyed the sigil to the pass (filter
-   subtracts, canonicalize transforms), which was tidier and wrong: root
-   realignment *corrects* a root rather than deleting one, and the hand review
-   inside annotate *discards* pairs. Don't collapse it back to two.
+   THE SIGIL IS PER LINE, NOT PER PASS. "−" removes, "+" adds, "→" re-expresses,
+   so the column states what each step does to the clip. Keying the sigil to
+   the pass (filter subtracts, canonicalize transforms) was tried and was wrong:
+   root realignment corrects a root rather than deleting one, and the hand
+   review inside annotate discards pairs. Don't collapse it back to two.
 
-   Roboto Mono throughout at the two weights the @import already requests. The
-   accent appears on the sigils and nowhere else, because that is where the
+   The accent appears on the sigils and nowhere else — that is where the
    meaning is. */
 .algo {
   width: 100%;
@@ -625,8 +562,7 @@ button:focus-visible,
   font-size: 13.5px;
 }
 
-/* Above the rule, as a paper sets a table caption — figures caption below,
-   tables above. */
+/* Above the rule: figures caption below, tables above. */
 .algo-caption {
   caption-side: top;
   padding: 0 1px 8px;
@@ -636,9 +572,8 @@ button:focus-visible,
   color: var(--slate-light);
 }
 
-/* Each group opens with its own signature on a tinted band. The band alone
-   delimits the group — it had a hairline under it as well, which was the same
-   job done twice. */
+/* Each group opens with its signature on a tinted band. The band alone
+   delimits the group; a hairline under it as well was the same job twice. */
 .algo-sig > th {
   padding: 8px 10px;
   background: var(--ivory-medium);
@@ -647,14 +582,14 @@ button:focus-visible,
   text-align: left;
 }
 
-/* Air before the second pass, so the two groups read apart inside one table. */
+/* Air before the second pass. */
 .algo tbody + tbody .algo-sig > th {
   border-top: 14px solid #fdfaf4;
 }
 
-/* filter(raw clip) → kept clip. A signature, not a title: it states what the
-   pass takes and returns, and the two chain — `kept clip` is the return of the
-   first and the argument of the second, which is the pipeline in two lines. */
+/* filter(raw clip) → kept clip. A signature, not a title: the two chain —
+   `kept clip` is the first's return and the second's argument — so the
+   numbering runs unbroken across them. */
 .algo-name {
   font-weight: 700;
   color: var(--slate-dark);
@@ -672,8 +607,8 @@ button:focus-visible,
   line-height: 1.5;
 }
 
-/* Right-aligned so 1–9 and 10–15 line up on the units, the way an algorithm
-   float numbers its lines. Quiet: they index the lines, they aren't content. */
+/* Right-aligned so 1–9 and 10–15 line up on the units. Quiet: they index the
+   lines, they aren't content. */
 .algo-n {
   width: 2.6em;
   padding-right: 0;
@@ -690,10 +625,9 @@ button:focus-visible,
   white-space: nowrap;
 }
 
-/* Left-aligned, NOT right. Ragged-right against the measure is fine; what
-   matters is that every sigil stacks on one vertical rail, because the
-   −/→ column is the device the whole table turns on. Right-aligning this
-   scattered them across four different x positions and the reader lost it. */
+/* Left-aligned, NOT right: every sigil must stack on one rail, because the
+   −/+/→ column is the device the table turns on. Right-aligned, they scattered
+   across four x positions and the reader lost them. */
 .algo-out {
   font-weight: 300;
   color: var(--slate-light);
@@ -703,11 +637,11 @@ button:focus-visible,
   color: var(--accent);
 }
 
-/* Under ~720px the operation can no longer share a line with its consequence:
-   the row becomes a two-line stack, both hanging off the same line number.
-   Kept with the component rather than in css/responsive.css — the TOC keeps its
-   breakpoint in §3 of this file the same way, and splitting a figure system
-   across two files is how it drifts. */
+/* Under 720px the operation and its consequence stack on two lines under one
+   line number. Kept with the component rather than in css/responsive.css, as
+   the TOC keeps its breakpoint in style.css §3 — splitting a figure system
+   across two files is how it drifts. (responsive.css's 600px block then
+   re-proportions it for phones.) */
 @media (max-width: 720px) {
   .algo,
   .algo tbody,
@@ -746,44 +680,37 @@ button:focus-visible,
 }
 
 /* ── 6. Section headings ────────────────────────────────────────────────────── */
-/* Warm ink boxes: near-black (not pure #000) carries a hint of warmth on cream.
-   Both ranks use that box; what separates them is the hairline the section rank
-   trails across the column. Size alone did not — at 24px vs 20px "Experiments."
+/* Both ranks are ink plates; what tells them apart is the hairline rank 1
+   trails across the column. Size alone did not — at 24 vs 20px "Experiments."
    and "1. Diverse Skeletons, Diverse Prompts." scanned as the same object.
-   scroll-margin keeps a heading clear of the top edge on TOC anchor jumps. */
+   scroll-margin keeps a heading clear of the top edge on TOC jumps. */
 
-/* Rank 1 (h2). The flex row is the heading; the plate is the <span> inside it.
-   Splitting them is what lets ::after trail a hairline from the plate to the
-   edge of the text column — the device that makes this read as a chapter
-   division rather than a sticker floating on the page. */
+/* Rank 1 (h2). The flex row is the heading and the plate is the <span> inside
+   it — the split is what lets ::after trail the hairline to the column edge. */
 .tagline {
   display: flex;
   align-items: center;
   gap: 16px;
   font-family: 'Roboto Mono', monospace;
   font-size: 24px;
-  /* Explicit, because h2's UA default is bold and the @import ships only 300
-     and 700 — an unset weight would snap the plate to a much heavier face. */
+  /* Explicit: h2's UA default is bold and the @import ships only 300 and
+     700. */
   font-weight: 300;
-  /* More room above (separate from prior section) than below (hug the content
-     this heading introduces). Being block-level, the top margin COLLAPSES with
-     the previous element's bottom margin rather than adding to it, and the
-     tallest of those is .figure-caption's 40px. So any value past 40 sets every
-     section break to exactly itself — 56px for a uniform rhythm. Below 40 the
-     gaps go ragged, each pinned by whatever happens to precede it. */
+  /* The top margin COLLAPSES with the previous element's bottom margin, the
+     tallest of which is .figure-caption's 40px. Any value past 40 sets every
+     section break to exactly itself; below 40 the gaps go ragged, each pinned
+     by whatever precedes it. (responsive.css's 600px block obeys the same
+     floor.) */
   margin: 56px 0 18px;
   scroll-margin-top: 32px;
 }
 .tagline > span {
   background: var(--slate-dark);
   color: #fff;
-  /* Mono set solid on ink needs air between letters to read as one block —
-     the same reasoning .section-subtitle below inherits, this plate one size
-     down. (This used to point at .venue as well, back when the credential was
-     a third instance of the plate; it is a dateline now.) */
+  /* Mono set solid on ink needs air between letters to read as one block. */
   letter-spacing: 0.04em;
-  /* Right padding is short by the tracking amount: letter-spacing appends a
-     trailing gap after the final glyph, so equal padding reads off-center. */
+  /* Right padding is short by the tracking: letter-spacing appends a trailing
+     gap after the final glyph, so equal padding reads off-centre. */
   padding: 8px 16px 8px 17px;
 }
 .tagline::after {
@@ -793,10 +720,9 @@ button:focus-visible,
   background: var(--rule);
 }
 
-/* Rank 2: the same plate one size down, and deliberately still inline-block —
-   an unfilled variant (ink bar in the left margin) was tried and reverted,
-   since the section rule above already tells the ranks apart. Every instance
-   is styled identically on purpose; see the comment above
+/* Rank 2: the same plate one size down. An unfilled variant (ink bar in the
+   left margin) was tried and reverted — the rank-1 rule already tells the ranks
+   apart. Every instance is styled identically on purpose; see the comment above
    #diverse-skeletons-prompts in index.html. */
 .section-subtitle {
   font-family: 'Roboto Mono', monospace;
@@ -820,22 +746,19 @@ button:focus-visible,
 }
 
 /* ── 7. Video galleries ─────────────────────────────────────────────────────── */
-/* The strips sit in the text column like every other figure. They used to be
-   full-bleed (100vw, pulled out with a negative margin) around a 1150px track,
-   so the clips ran ~200px past the prose on either side and nothing on the page
-   shared an edge. Now the section is in normal flow and the track is --column
-   wide: a clip can never be wider than the body text above it, and a row with
-   more clips than fit still scrolls — it just scrolls inside the column. */
+/* The strips sit in the text column like every other figure; a row with more
+   clips than fit scrolls inside it. Don't pull them full-bleed again (100vw
+   around a 1150px track was tried): the clips ran 200px past the prose and
+   nothing on the page shared an edge. */
 .video-gallery-section {
   margin-bottom: 22px;
   position: relative;
   box-sizing: border-box;
 }
 
-/* Scrollable track (scrollbar hidden). No max-width: the section is in the
-   column now, so a plain block already is the column — and it is exact, where
-   --column is off by the classic scrollbar's width (100vw counts it, layout
-   does not). */
+/* Scrollable track, scrollbar hidden. No max-width: a plain block already is
+   the column, and exactly so, where --column is off by a scrollbar
+   (style.css §1). */
 .video-gallery-container {
   box-sizing: border-box;
   margin-left: auto;
@@ -849,11 +772,10 @@ button:focus-visible,
   display: none;              /* Chrome, Safari, Opera */
 }
 
-/* The flex row holding the videos. No side padding: the row is `max-content`,
-   so 20px of it on each end makes the row 40px wider than the track, and a clip
-   sized to the column then scrolls by 40px instead of sitting flush in it. The
-   column's own gutter is the air these need; 10px at the bottom is for the
-   clips' drop shadow, which `overflow-x: auto` would otherwise clip. */
+/* The flex row. No side padding: the row is max-content, so padding widens it
+   past the track and a column-wide clip then scrolls by that much instead of
+   sitting flush. The 10px at the bottom is for the drop shadow, which
+   overflow-x: auto would otherwise clip. */
 .video-gallery {
   display: flex;
   gap: var(--gallery-gap);
@@ -863,11 +785,10 @@ button:focus-visible,
   margin: 0 auto;
 }
 
-/* A single clip has nowhere to scroll, so its row can be the track itself
-   rather than max-content. That makes the row's width *definite*, which is the
-   only way a percentage on the clip resolves — and a percentage is how a clip
-   fills the column exactly on a browser with classic scrollbars, where the
-   viewport arithmetic behind --column overshoots by the scrollbar's width. */
+/* A single clip has nowhere to scroll, so its row can be the track itself.
+   That makes the row's width DEFINITE, which is the only way a percentage on
+   the clip resolves — and a percentage is what fills the column exactly under
+   a classic scrollbar (style.css §1). */
 .video-gallery:has(> .gallery-video:only-child) {
   width: 100%;
   justify-content: center;
@@ -876,13 +797,13 @@ button:focus-visible,
 .gallery-video {
   flex: 0 0 auto;
   height: 220px;
-  width: auto;                /* keep each clip's aspect ratio */
-  /* The clips render on white to the pixel at every edge, against the cool
-     page — 1.03:1 — and their shadow is offset 4px down, so the bottom edge
-     reads and the top dissolves along with the caption baked into it. The frame
-     is what gives each clip an edge. --slate-light, not #000: at this weight
-     pure black is the same ink as the heading plate right above the strip, and
-     two solid blacks stacked read as a fence around the picture. */
+  width: auto;
+  /* The frame is load-bearing: the clips are white to the pixel at every edge
+     against the page (1.03:1), and the shadow is offset 4px down, so without it
+     the top edge dissolves. --slate-light, not #000: pure black is the heading
+     plate's ink, and two solid blacks stacked read as a fence. A 1px --rule
+     hairline was too faint. An inset box-shadow ring does not paint over
+     <video> at all. */
   border: 1.5px solid var(--slate-light);
   border-radius: 15px;
   box-sizing: border-box;
@@ -890,23 +811,20 @@ button:focus-visible,
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Experiments galleries: taller clips. Every gallery below overrides this — it
-   is the size a newly added one inherits. */
+/* A fallback height. Every one of these six is re-sized by width below, so
+   this only takes effect if a rule there is removed. */
 #transferGallerySection .gallery-video,
 #promptGallerySection .gallery-video,
 #motionGallerySection .gallery-video,
-#demoGallerySection .gallery-video,
 #editGallerySection .gallery-video,
 #inbetweenGallerySection .gallery-video,
 #expansionGallerySection .gallery-video {
   height: 300px;
 }
 
-/* Applications show a single clip each, beside its schematic (.app-row), so the
-   clip takes whatever the flex row leaves — ~696px, near enough to Experiments
-   §1's 700 that the two read as one size. 100% is exact where a length would be
-   off by the scrollbar; these rows are definite (the :has rule above), so it
-   resolves. */
+/* Applications show one clip each beside its schematic (.app-row), so the clip
+   fills whatever the flex row leaves. Percentage, not a length (style.css §1);
+   the row is definite via the :has rule above, so it resolves. */
 #editGallerySection .gallery-video,
 #inbetweenGallerySection .gallery-video,
 #expansionGallerySection .gallery-video {
@@ -914,28 +832,36 @@ button:focus-visible,
   height: auto;
 }
 
-/* The overview clips sit between the two sizes: bigger than an experiment strip
-   because each is a 2x3 grid whose prompt text is baked into the frame and needs
-   the pixels, but not application-size — at 875px a single clip read as the
-   biggest thing in Experiments, outweighing the studies it is only meant to
-   introduce. 700px is the smallest size that keeps the baked-in prompts
-   legible. Don't go lower without checking that text. */
+/* Experiments §1 is one sheet per view: each clip (diverse-N.mp4) is a 2x4
+   sheet of prompt + result panels with the prompts baked in, which read at
+   960px and not much below, so a clip is the full column and the strip steps
+   one sheet at a time. The row is 100% so the percentage resolves (a row of two
+   is not the :has(only-child) case); the clips are flex: 0 0 auto and overflow
+   it, which is what the container scrolls — the same construction as the
+   two-up rule below. Snap keeps a swipe from parking half on each sheet. Size
+   by width, never height: a height let an earlier sheet outrun the prose. Two
+   earlier structures were built and replaced (see the comment above
+   #diverse-skeletons-prompts in index.html); don't rebuild either — more
+   breadth means another sheet in this row. */
+#demoGallerySection .video-gallery-container {
+  scroll-snap-type: x mandatory;
+}
+#demoGallerySection .video-gallery {
+  width: 100%;
+}
 #demoGallerySection .gallery-video {
-  width: 700px;
+  width: 100%;
   height: auto;
+  scroll-snap-align: start;
 }
 
-/* Experiments §2–4 are two-up. Each of those three is a controlled comparison —
-   same prompt across skeletons, same skeleton across prompts, same both across
-   samples — so what the reader needs on screen is a whole pair, not a pair and
-   the sliver of a third clip that a fixed 523px height happened to leave. Two
-   clips plus one gap is exactly the column, so the strip always rests on a
-   complete pair and Experiments §3/§4's third clip is a full page away
-   (gallery.js aligns to the left edge for the same reason — centring the middle
-   of three would halve both neighbours). Width drives height here, not the other
-   way round, and the percentage is against the row rather than --column so a
-   classic scrollbar can't push the pair 15px past the track; the row is definite
-   for these three, below. */
+/* Experiments §2–4 are two-up: each is a controlled comparison, so the reader
+   needs a whole pair on screen, not a pair and the sliver of a third (which a
+   fixed height left). Two clips plus one gap is exactly the column, so the
+   strip always rests on a complete pair and Experiments §3/§4's third clip is
+   a full page away (gallery.js left-aligns for the same reason). Width drives
+   height, and the percentage is against the definite row, not --column
+   (style.css §1). */
 #transferGallerySection .video-gallery,
 #promptGallerySection .video-gallery,
 #motionGallerySection .video-gallery {
@@ -948,7 +874,6 @@ button:focus-visible,
   height: auto;
 }
 
-/* Horizontal scroll buttons. */
 .gallery-nav {
   background-color: rgba(40, 40, 40, 0.8);
   color: white;
@@ -972,12 +897,11 @@ button:focus-visible,
 .gallery-nav-controls {
   display: flex;
   align-items: center;
-  margin-right: 15px;         /* space between buttons and caption text */
+  margin-right: 15px;
 }
 
-/* Caption + nav-button row. The section is in the column now, so this needs no
-   measure or gutter of its own — it had both back when it sat inside a 100vw
-   full-bleed block and had to re-find the text column by itself. */
+/* Caption + nav-button row. No measure or gutter of its own: the section is
+   already in the column. */
 .gallery-caption-container {
   margin: 15px auto 0 auto;
   box-sizing: border-box;
@@ -992,12 +916,10 @@ button:focus-visible,
   flex-grow: 1;
 }
 
-/* The Application schematics — the drawn figure beside each Applications clip,
-   and all of their motion — live in their own sheet, css/schematics.css, loaded
-   after this one. Nothing in here styles them; nothing there restyles the page.
-   The one shared surface is the :root tokens above, which is why the SVGs are
-   inline in index.html rather than assets: an <img> would be a separate document
-   and would inherit none of the palette. */
+/* The Application schematics (the drawn plate beside each Applications clip)
+   live entirely in css/schematics.css. The one shared surface is the :root
+   tokens, which is why the SVGs are inline in index.html rather than <img>
+   assets: a separate document would inherit none of the palette. */
 
 /* ── 8. Interactive 3D viewer (sidebar + canvas) ────────────────────────────── */
 .interactive-showcase {
@@ -1106,7 +1028,7 @@ button:focus-visible,
 
 .interactive-showcase .viewer-layout {
   gap: 0;
-  /* Preserve the published viewer's 960 × 623 proportion while expanding. */
+  /* The published viewer's proportion. */
   aspect-ratio: 960 / 623;
 }
 
@@ -1124,23 +1046,16 @@ button:focus-visible,
   background: var(--ivory-medium);
 }
 
-/* The embedded rail is a RULED REGISTER: rows running full-bleed from panel
-   edge to panel edge, separated by one hairline each, so the rail draws as
-   ruled paper with sixteen lines written on it. It used to be a sheet of
-   framed cells, and that is what a register replaced — a column of equal
-   outlines each holding one short label in a lot of air read as an unfinished
-   table. Rules and mono type with no frames is also how this page sets every
-   other list it has: the Dataset section's `.algo` float and the `.toc`.
+/* The embedded rail is a RULED REGISTER: full-bleed rows, one hairline above
+   each, so the rail reads as ruled paper with sixteen lines on it — the same
+   rules-and-mono setting as .algo and .toc. It replaced a sheet of framed
+   cells, which read as an unfinished table. Full bleed is what keeps a row from
+   reading as a prompt chip: a chip is an OBJECT, a row is a LINE.
 
-   Full bleed is what keeps a row from reading as a prompt chip — white, ink
-   hairline, mono text, shrink-to-fit, sitting inside the canvas an arm's length
-   to the right — because a chip is an OBJECT and a row is now a LINE.
-
-   `flex-start` + zero gap is what keeps the rules evenly spaced;
-   `space-between` would push the rows apart into bands. `flex: 1 1 auto` then
-   shares the column's length between them the way a ledger's lines do, and once
-   they outgrow it they compress to the 34px floor and the rail scrolls,
-   top-aligned and reachable. */
+   flex-start + zero gap keeps the rules evenly spaced (space-between would push
+   the rows apart into bands); flex: 1 1 auto shares the column between them,
+   and once they outgrow it they compress to the 34px floor and the rail
+   scrolls. */
 .interactive-showcase .example-sidebar {
   box-sizing: border-box;
   flex: 1 1 auto;
@@ -1149,7 +1064,6 @@ button:focus-visible,
   height: auto;
   justify-content: flex-start;
   gap: 0;
-  /* Full bleed: the register's rules run the panel's full width. */
   padding: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -1158,14 +1072,10 @@ button:focus-visible,
 
 .interactive-showcase .example-sidebar::-webkit-scrollbar { display: none; }
 
-/* A line in the register: no fill, no frame, one hairline above it.
-
-   The 14px inset is a measurement, not a taste. The panel is 190px and its
-   right border takes 1, so 189 − 14 − 12 leaves 163 to hold the longest label
-   in the catalog — "Unitree G1 Robot", 16 characters of Roboto Mono at 12px,
-   about 115px. Treat the insets and that label as one measurement whenever
-   either changes; the label that used to set this width was the 18-character
-   "Unitree Locomotion" at ~130px. */
+/* A line in the register. The insets are a measurement: the panel is 190px
+   less a 1px border, so 189 − 14 − 12 leaves 163 for the longest label in the
+   catalog — "Unitree G1 Robot", 16 characters of 12px Roboto Mono, about
+   115px. Re-measure when either the insets or the longest label change. */
 .interactive-showcase .example-item {
   box-sizing: border-box;
   flex: 1 1 auto;
@@ -1178,50 +1088,37 @@ button:focus-visible,
   border-radius: 0;
   background: transparent;
   transition: background 0.18s ease;
-  /* The global :focus-visible ring is offset 3px OUTWARD, which on a full-bleed
-     row lands outside the panel and is clipped by the rail's own overflow.
-     Inward, it draws just inside the line it belongs to. */
+  /* The global :focus-visible ring is offset 3px outward, which on a full-bleed
+     row is clipped by the rail's overflow. Inward, it draws inside its line. */
   outline-offset: -3px;
 }
 
-/* The header's own bottom rule is already the register's first line, so the
-   first row must not draw a second one — but it has to keep the 1px, because
-   the rows share the column's length with `flex: 1 1 auto` and a border-box
-   row that is missing a border is a row that is 1px shorter than the fifteen
-   below it. Transparent, not removed: every line in the register is then cut
-   from an identical box, which is the whole point of ruling a sheet. */
+/* The header's bottom rule is already the register's first line. Transparent,
+   not removed: the rows share the column with flex: 1 1 auto, so a border-box
+   row missing its border is 1px shorter than the fifteen below it. */
 .interactive-showcase .example-item:first-child {
   border-top-color: transparent;
 }
 
-/* Hover lights the whole line, edge to edge — a ruled sheet has no cell to
-   fill, so the line itself is the highlight. It means "you are pointing at
-   this"; the plate below means "this is the stage on screen". One each. */
+/* Hover lights the whole line — a ruled sheet has no cell to fill. Hover means
+   "you are pointing at this"; the plate below means "this is on screen". */
 .interactive-showcase .example-item:hover,
 .interactive-showcase .example-item:focus-visible {
   z-index: 1;
   background: var(--ivory);
 }
 
-/* The one line that leaves the register, and the whole signature of this rail:
-   a π0.5 control (pi.website/blog/pi05, the same source the Applications figure
-   bar comes from) — a hard frame and a solid offset shadow with NO blur, so the
-   selected stage reads as a plate lifted off the ruled sheet rather than as a
-   highlighted row.
+/* The selected stage's plate — a π0.5 control (pi.website/blog/pi05, the same
+   source as the Applications control bar): hard frame, solid offset shadow, no
+   blur, so the row reads as a plate lifted off the sheet.
 
-   Three things are load-bearing. The frame is `#000` at 1.5px —
-   `.viewer-wrapper`'s exact frame, so the selected row wears the frame of the
-   thing it drives; that is the only reason to reach for black here. The shadow
-   has zero blur, because a blurred one is a soft-UI dialect this page doesn't
-   speak. And the plate is drawn by a PSEUDO-ELEMENT inset inside the row, never
-   by a border or a margin on the row itself: both of those change how much
-   main-axis space the row asks for, so selecting a stage would re-cut all
-   sixteen lines and shift every label by a few px — the one thing a register
-   must not do. Inset this way nothing moves; a frame simply appears around a
-   line that is already where it belongs.
-
-   No accent: frame, shadow and the 700 --slate-dark ink are three signals
-   already. */
+   Three things are load-bearing. The frame is #000 at 1.5px, .viewer-wrapper's
+   exact frame — the only reason to reach for black here. The shadow has zero
+   blur; a blurred one is a soft-UI dialect this page doesn't speak. And the
+   plate is a PSEUDO-ELEMENT inset inside the row, never a border or margin on
+   the row: both change the row's main-axis size, so selecting a stage would
+   re-cut all sixteen lines and shift every label. No accent: frame, shadow and
+   700 ink are three signals already. */
 .interactive-showcase .example-item::before {
   content: '';
   position: absolute;
@@ -1243,30 +1140,26 @@ button:focus-visible,
   opacity: 1;
 }
 
-/* The plate is positioned, so it paints over the row's in-flow text unless the
-   text is positioned too. */
+/* The plate is positioned, so it paints over in-flow text unless the text is
+   positioned too. */
 .interactive-showcase .example-name {
   position: relative;
   z-index: 1;
   font-size: 12px;
 }
 
-/* Names only. The rig count was tried in this rail, set as a table of contents
-   sets a page number — a tabular numeral on a common right edge — and taken
-   back out: a line in a register is a NAME you pick, and a second column turns
-   sixteen controls into a table you read. viewer.js still writes the numeral
-   into the markup and still puts the same fact in words on every row's
-   aria-label and title, so this takes it off the screen without taking it away
-   from a screen reader. The lab hides it too (css/interactive.css), so the two
-   rails agree. */
+/* Names only. The rig count was tried here as a right-edge numeral and taken
+   out: a second column turns sixteen controls into a table you read. viewer.js
+   still writes it and puts the fact in every row's aria-label and title, so
+   this hides it from the screen, not from a screen reader. The lab hides it
+   too (css/interactive.css). */
 .interactive-showcase .example-count {
   display: none;
 }
 
 
-/* The bar's only control, so it is sized second in the bar — behind the 21px
-   heading, ahead of the 9.5px instructions. Below about 11px it drops under the
-   hints and reads as a footnote instead of the one thing you can act on. */
+/* The bar's only control, sized between the 21px heading and the 9.5px hints.
+   Below about 11px it reads as a footnote, not the one thing you can act on. */
 .interactive-showcase-header a {
   display: inline-flex;
   align-items: center;
@@ -1285,8 +1178,7 @@ button:focus-visible,
   transition: color 0.18s ease, border-color 0.18s ease;
 }
 
-/* Grows on hover rather than sliding: the mark means "make this bigger", so the
-   corners pushing apart is the gesture that answers it. The paths are drawn in
+/* Grows on hover: the mark means "make this bigger". The paths are drawn in
    the root viewBox and scale about its centre, so unlike the rigs in
    schematics.css this one wants transform-box left at its default. */
 .interactive-showcase-header .expand-mark {
@@ -1320,13 +1212,11 @@ button:focus-visible,
 }
 
 
-/* Rail shell — layout and type only. Every visual decision (frame, fill, states,
-   sizes) lives in the .interactive-showcase block above, which is the rail's one
-   and only consumer: this stylesheet is loaded by index.html alone, and the rail
-   there is always inside that section. The motion lab styles its own copy in
-   css/interactive.css and never loads this file. So nothing the showcase block
-   already sets is repeated here — a second layer for a single consumer is how
-   the previous version ended up with ~70 lines that could not render. */
+/* Rail shell — layout and type only. Every visual decision lives in the
+   .interactive-showcase block above, the rail's only consumer (the lab styles
+   its own copy in css/interactive.css and never loads this file). Don't repeat
+   anything the showcase block sets: a second layer for a single consumer is how
+   an earlier version grew ~70 lines that could not render. */
 .example-sidebar {
   position: relative;
   display: flex;
@@ -1346,15 +1236,11 @@ button:focus-visible,
   cursor: pointer;
 }
 
-/* Weight and ink carry the state, the way .venue / .venue-year split one line
-   into credential and date. 300/700 are the two weights the @import actually
-   requests — asking for 400 here would get a synthesized face. */
-/* One step off --slate-light toward the ink. At 300 weight and 12px, the token
-   itself sat at 5.6:1 on the panel and read as a disabled control rather than
-   as a list of sixteen things you can press; this lands near 7:1 and still
-   leaves daylight between an idle line and the --slate-dark of hover. Hover
-   also lights the whole row, so the state ladder loses nothing by narrowing
-   here. Not a new token — the two ends are the page's, this is the blend. */
+/* Weight and ink carry the state. 300/700 are the two weights the @import
+   requests; 400 would be synthesized. The idle colour is one step off
+   --slate-light toward the ink: at 300 and 12px the token itself sat at 5.6:1
+   and read as a disabled control; this lands near 7:1 and still leaves
+   daylight to the --slate-dark of hover. Not a new token — a blend of two. */
 .example-name {
   font-weight: 300;
   color: color-mix(in srgb, var(--slate-dark) 30%, var(--slate-light));
@@ -1412,15 +1298,13 @@ button:focus-visible,
   text-align: left;
 }
 
-/* Prompt chips. Each model's prompt is pinned to it the way an annotation is
-   pinned on a figure plate: a chip of the typed text, a dot on the model's crown,
-   and a leader line between them. The leader is the load-bearing part — the chips
-   dodge each other, so without it a chip that has been lifted clear of its own
-   model would read as belonging to whatever it ended up over.
+/* Prompt chips: a chip of the typed text, a dot on the model, and a leader
+   between them. The leader is load-bearing — the chips dodge each other, so
+   without it a lifted chip reads as belonging to whatever it ended up over.
 
-   The layer spans the canvas and clips at its edges; viewer.js moves every piece
-   with a transform (never top/left, which would re-layout every frame) and stacks
-   them by depth. Click-through, so a drag that starts on a chip still orbits. */
+   The layer spans the canvas and clips at its edges; viewer.js moves every
+   piece with a transform (never top/left, which would re-layout every frame).
+   Click-through, so a drag that starts on a chip still orbits. */
 #viewer-labels {
   position: absolute;
   inset: 0;
@@ -1433,12 +1317,12 @@ button:focus-visible,
   position: absolute;
   top: 0;
   left: 0;
-  /* Wide enough that a prompt in the paper's format — one sentence, under 12
-     words — stays on ONE line. Single-line chips are what let the forty read as
-     one series instead of forty differently-shaped blocks. */
+  /* Wide enough that a prompt in the paper's format (one sentence, under 12
+     words) stays on ONE line, so a stage's chips read as one series rather
+     than differently shaped blocks. */
   max-width: 250px;
   padding: 4px 9px 5px;
-  /* Mono for the one thing on this page that was literally typed. */
+  /* Mono: the one thing on the page that was literally typed. */
   font-family: 'Roboto Mono', monospace;
   font-size: 10.5px;
   font-weight: 500;
@@ -1446,33 +1330,24 @@ button:focus-visible,
   line-height: 1.45;
   text-align: center;
   color: var(--slate-dark);
-  /* The chip is not a card laid over the scene — it is a LENS onto it. Rather than
-     a fill of its own it blurs and lifts whatever is behind, so it takes the tone of
-     the ground it happens to sit on: invisible against the backdrop, a soft calm
-     patch over the checkered floor, and never the lighter rectangle a fixed fill
-     stamps on top of both. The faint tint is only a floor for browsers without
-     backdrop-filter, where it alone still carries the type. */
+  /* A LENS, not a card: it blurs and lifts whatever is behind it rather than
+     stamping a lighter rectangle over backdrop and floor alike. The faint tint
+     is only a floor for browsers without backdrop-filter. */
   background: rgba(240, 238, 230, 0.18);
   backdrop-filter: blur(3px) brightness(1.07) saturate(0.9);
   -webkit-backdrop-filter: blur(3px) brightness(1.07) saturate(0.9);
   border-radius: 3px;
-  /* Insurance, not effect. A lens has no opaque ground of its own, so on the rare
-     frame where a chip does end up over a dark rig this halo is what keeps the
-     glyphs apart from it. On the light grounds it normally sits on, it is invisible. */
+  /* Insurance: a lens has no opaque ground, so over a dark rig this halo keeps
+     the glyphs legible. Invisible on the light grounds it normally sits on. */
   text-shadow: 0 0 4px rgba(240, 238, 230, 0.85);
   will-change: transform;
   animation: chip-in 0.22s ease-out both;
 }
 
-/* The connector is a BONE, in the same vocabulary the rest of the page uses for
-   rigs: the venue mark is a bone between two joints, and the sidebar is a spine of
-   hollow joint nodes that fill coral on the active one. Drawing the chip's tie to
-   its model the same way makes the annotation layer part of the page rather than
-   an overlay bolted onto it.
-
-   Anchored at the chip's centre, offset out to whichever edge faces the joint, then
-   rotated onto it — so it reads the same whether the chip sits above its model,
-   below it, or off to one side. viewer.js writes all four properties each frame. */
+/* The leader is a BONE, in the vocabulary the venue mark uses. Anchored at the
+   chip's centre, offset to whichever edge faces the joint, then rotated onto
+   it, so it reads the same on any side of the model. viewer.js writes all four
+   custom properties each frame. */
 
 .viewer-label::after {
   content: '';
@@ -1483,11 +1358,9 @@ button:focus-visible,
   margin-top: var(--leader-y, 0px);
   width: 1px;
   height: var(--leader, 0px);
-  /* Tapered, and tinted ink rather than the accent. The bone runs chip → joint, so
-     the gradient starts at nothing and only gains weight as it approaches the rig:
-     it never draws a hard line into the type, and on a nine-rig stage nine of these
-     recede into the scene instead of ruling it. The accent is spent on the joint
-     alone — one warm mark per label, on the thing being named. */
+  /* Tapered, tinted ink: the gradient starts at nothing by the type and gains
+     weight toward the rig, so on a crowded stage the leaders recede rather than
+     rule the scene. */
   background: linear-gradient(to bottom,
     rgba(20, 20, 19, 0) 0%,
     rgba(20, 20, 19, 0.16) 45%,
@@ -1496,12 +1369,10 @@ button:focus-visible,
   transform: rotate(var(--leader-angle, 0rad));
 }
 
-/* Where the leader lands on the rig. It was a hollow accent ring, echoing the
-   sidebar's joint nodes — but on a scene this quiet it was the only saturated thing
-   in the frame and read as a UI hotspot stuck onto the render rather than the end of
-   a drawn line. It is now simply the leader's own terminus: same tinted ink, just
-   given enough weight to register, with a whisper of the scene's tone around it so
-   it still separates on fur or a dark mech. One material from chip to rig. */
+/* Where the leader lands. A hollow accent ring was tried: on a scene this quiet
+   it was the only saturated thing in frame and read as a UI hotspot, not the
+   end of a drawn line. Now the leader's own terminus in the same ink, with a
+   halo of the scene's tone so it still separates on fur or a dark mech. */
 .viewer-pin {
   position: absolute;
   top: 0;
@@ -1565,7 +1436,7 @@ button:focus-visible,
 
 /* ── 9. BibTeX ──────────────────────────────────────────────────────────────── */
 .bibtex-code {
-  background-color: var(--slate-dark);   /* warm ink — matches the heading boxes */
+  background-color: var(--slate-dark);   /* the heading plates' ink */
   color: var(--ivory-dark);
   padding: 22px 24px;
   border-radius: 10px;
