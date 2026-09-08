@@ -1,11 +1,12 @@
-// Side navigation: reveal once the hero scrolls away, and highlight the
-// section currently in view. Links work without JS; this is pure enhancement.
+// Side navigation: reveal once the hero scrolls away, highlight the section
+// in view, and grow the progress fill to it. Pure enhancement — the links are
+// plain anchors and work without JS.
 (function () {
   const sidenav = document.querySelector('.sidenav');
   const hero = document.querySelector('.hero');
   if (!sidenav) return;
 
-  // Each tracked section element -> its nav link, kept in document order.
+  // Section element -> its nav link; a link whose id is missing is not tracked.
   const links = new Map();
   sidenav.querySelectorAll('a[href^="#"]').forEach((a) => {
     const el = document.getElementById(a.getAttribute('href').slice(1));
@@ -15,14 +16,16 @@
 
   const list = sidenav.querySelector('ul');
 
-  // Grow the spectrum progress fill down to the active node's centre.
+  // Grow the progress fill (.sidenav ul::after) to the active node's centre.
+  // 17 is that rule's `top` offset — change them together.
   const setProgress = (link) => {
     if (!list) return;
     const center = link.offsetTop + link.offsetHeight / 2;
     list.style.setProperty('--nav-progress', `${Math.max(0, center - 17)}px`);
   };
 
-  // Highlight the section nearest the viewport's vertical middle.
+  // The active section is the one crossing a thin band at the viewport's
+  // vertical middle (the rootMargin below).
   const spy = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
@@ -35,7 +38,7 @@
 
   links.forEach((_, section) => spy.observe(section));
 
-  // Reveal the nav only after the hero leaves the viewport.
+  // Reveal the nav only once the hero has left the viewport.
   if (hero) {
     new IntersectionObserver((entries) => {
       sidenav.classList.toggle('is-visible', !entries[0].isIntersecting);

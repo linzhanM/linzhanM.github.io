@@ -1,12 +1,12 @@
 // The whole driver: Node 22's global WebSocket speaks CDP directly, so no npm
-// package is involved. `CDP` is the socket; `Page` binds one attached target so
-// callers stop threading a session id through every call.
+// package is involved. `CDP` is the socket (id-matched replies, flat
+// sessions); `Page` binds one attached target so callers stop threading a
+// session id through every call.
 
 import { once } from 'node:events';
 
 import { waitUntil } from './util.mjs';
 
-// Minimal CDP client. One socket, id-matched replies, flat sessions.
 export class CDP {
   static async connect(url) {
     const ws = new WebSocket(url);
@@ -52,8 +52,8 @@ export class CDP {
   }
 }
 
-// One attached target, with the two calls this tool actually makes of a page:
-// evaluate an expression and poll one until it is true.
+// One attached target, with the two calls this tool makes of a page: evaluate
+// an expression, and poll one until it is true.
 export class Page {
   constructor(cdp, sessionId) {
     this.cdp = cdp;
@@ -77,8 +77,8 @@ export class Page {
   }
 }
 
-// A fresh tab, sized for the capture and wired to report page errors — a broken
-// module is otherwise a silent ten seconds of black frames.
+// A fresh tab, sized for the capture and wired to report page errors; a broken
+// module is otherwise a silent run of black frames.
 export async function openPage(cdp, opts) {
   const { targetId } = await cdp.send('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await cdp.send('Target.attachToTarget', { targetId, flatten: true });

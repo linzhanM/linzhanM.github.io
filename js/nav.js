@@ -1,39 +1,28 @@
-/* Navbar behaviour: the mobile burger toggle, plus the keypoint that marks
-   which section you're reading. The keypoint is positioned by writing --kp-x
-   (its offset along the rail) and --kp-o (its opacity) onto .navbar-sections,
-   so all the easing stays in CSS. Links are plain anchors — without JS the nav
-   still navigates, it just doesn't track.
-
-   Also the section reveal shared by all three root pages — see
-   revealSections(). */
+/* Shared by the three root pages: the mobile burger, the section reveal, and
+   the keypoint that marks the section you're reading. The keypoint is driven
+   by writing --kp-x (offset along the rail) and --kp-o (opacity) onto
+   .navbar-sections, so all easing stays in CSS. Links are plain anchors —
+   without JS the nav still navigates, it just doesn't track. */
 
 /* Unfold each .page-section as it comes on screen. The hidden state is CSS
    (styles.css, gated behind .js-anim); this only decides *when* each one is
    let go.
 
-   The split between the two halves is the important part. Sections already in
-   the viewport at load are revealed **here, from their own measured position**,
-   stepped 90ms apart so the page assembles top-down. Only what starts below
-   the fold is handed to the observer, where it unfolds the moment it is
-   scrolled to.
+   The split is the important part. Sections already in the viewport at load
+   are revealed here, from their own measured position, stepped 90ms apart so
+   the page assembles top-down (the first at 0 — nothing above it animates, so
+   there is nothing to wait behind). Only what starts below the fold goes to
+   the observer.
 
-   The first one starts at 0. It used to wait 140ms for the hero's own entrance
-   to get clear; the hero doesn't animate any more, so there is nothing left to
-   wait behind and the delay was pure latency on the first thing under the fold
-   line.
+   Not "let the observer's first callback handle whatever is visible": that
+   makes every pixel above the fold depend on the observer firing, and if
+   anything ever stops it the cost is a blank page. Below the fold nothing is
+   on screen to be missing, and by the time it is, the page is demonstrably
+   rendering.
 
-   That split is deliberately not "let the observer's first callback handle
-   whatever is visible", which is the obvious way to write this and makes every
-   pixel above the fold depend on the observer firing. It does fire, in a real
-   visible tab — but if anything ever stops it, the cost of being wrong is a
-   blank page, and there is no reason for the content someone is already
-   looking at to depend on it at all. Below the fold the stakes are different:
-   nothing is on screen to be missing, and by the time it is, the page is
-   demonstrably rendering.
-
-   Nothing may stay hidden. The CSS only hides under .js-anim, so JS-off is
-   already safe; the guards below cover JS running with an observer that can't
-   be trusted — unsupported, reduced motion, or simply never firing. */
+   Nothing may stay hidden. JS-off is already safe (the CSS hides only under
+   .js-anim); the guards below cover an observer that can't be trusted —
+   unsupported, reduced motion, or simply never firing. */
 function revealSections() {
 	var sections = Array.prototype.slice.call(document.querySelectorAll('.page-section'));
 	if (!sections.length) return;
@@ -120,20 +109,17 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	// --- Keypoint ---------------------------------------------------------
-	// All three root pages carry the rail in the same place, with the same
-	// labels in the same order — the résumé's simply adds a third for itself —
-	// so moving between them should read as the one dot travelling along it
-	// rather than as separate dots blinking on and off. Each page records the
-	// label the dot ended under; the next page starts the dot there and then
-	// lets its own first move glide it across, which is the whole trick — the
-	// animation is the ordinary CSS transition, it just gets a different
-	// starting point.
+	// All three root pages carry the same rail (the résumé's adds a third link),
+	// so moving between pages should read as one dot travelling along it, not
+	// separate dots blinking on and off. Each page records the label the dot
+	// ended under; the next page starts the dot there and lets its own first
+	// move glide it across. The animation is the ordinary CSS transition with a
+	// different starting point.
 	//
-	// Stored by **label text**, not by index: an index silently means the wrong
-	// link the moment one page's rail differs from another's, and the label is
-	// what the visitor was actually looking at. sessionStorage rather than
-	// localStorage, because this is continuity within one visit — a dot sliding
-	// in from a link you clicked yesterday is noise, not motion.
+	// Stored by label text, not index: an index means the wrong link as soon as
+	// one rail differs from another. sessionStorage, not localStorage: this is
+	// continuity within one visit — a dot sliding in from yesterday's click is
+	// noise.
 	var KP_KEY = 'nav-keypoint';
 	var entered = false;
 
@@ -159,26 +145,23 @@ document.addEventListener('DOMContentLoaded', function () {
 	function moveKeypoint(link) {
 		if (!entered) {
 			entered = true;
-			// Where the dot should come *from*. Falling back to the destination
-			// means no travel — a first visit, or a reload of the page it is
-			// already on, where a zero-length glide would just be a flicker.
+			// Where the dot comes *from*. No history (first visit, or a reload of
+			// this page) falls back to the destination: no travel, no flicker.
 			var from = recall() || link;
 
-			// .is-instant kills the dot's transitions for this placement only,
-			// so arriving at the start point isn't itself animated. The forced
+			// .is-instant zeroes the transitions for this placement only, so
+			// arriving at the start point isn't itself animated. The forced
 			// reflow between the two writes is load-bearing: without it the
-			// browser coalesces them into one style change and there is nothing
-			// left for the transition to run between. Opacity is only forced
-			// when there *is* a journey — otherwise it stays 0 here and fades
-			// in below, which is how a page with no history still introduces
-			// the dot rather than snapping it on.
+			// browser coalesces them into one style change and nothing animates.
+			// Opacity is forced only when there is a journey; otherwise it stays
+			// 0 and fades in below, so a page with no history still introduces
+			// the dot rather than snapping it on. Under reduced motion the CSS
+			// transitions are off and all of this collapses to a plain placement.
 			rail.classList.add('is-instant');
 			place(from);
 			if (from !== link) rail.style.setProperty('--kp-o', '1');
 			void rail.offsetWidth;
 			rail.classList.remove('is-instant');
-			// Under prefers-reduced-motion the transitions are off in CSS, so
-			// all of the above collapses to placing the dot at its destination.
 		}
 
 		place(link);
@@ -187,8 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	// --- Scroll spy -------------------------------------------------------
-	// Everything above is per-page; what follows only applies to a rail whose
-	// links resolve to sections of *this* document.
+	// Only for a rail whose links resolve to sections of *this* document.
 	var targets = links
 		.map(function (link) {
 			var id = link.getAttribute('href').slice(1);
@@ -198,12 +180,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	var active = null;
 
-	// Pages other than the homepage carry the same rail, but every link on it
-	// points at a section of *another* page — nothing here to scroll past. The
-	// current page marks its own link `is-active` in the markup instead, and the
-	// dot parks there and stays. Re-measured on load and resize because the rail
-	// moves when the webfont lands and when the row rewraps; only the first of
-	// those measurements runs the cross-page glide, the rest are corrections.
+	// Off the homepage every rail link points at another page, so there is
+	// nothing to track: the page marks its own link `is-active` in the markup
+	// and the dot parks there. Re-measured on load and resize because the rail
+	// moves when the webfont lands and when the row rewraps; only the first
+	// measurement runs the cross-page glide, the rest are corrections. This
+	// branch calls moveKeypoint(), so the keypoint block must stay above it.
 	if (!targets.length) {
 		var here = rail.querySelector('.nav-section.is-active');
 		if (!here) return;
@@ -234,13 +216,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		var offset = navHeight + 24;
 
 		// A section is "current" once its heading passes the probe line. A line
-		// fixed under the navbar only works while there's page left to scroll:
-		// the last section sits close enough to the bottom that its heading can
-		// never climb that high, so it would never activate. Instead the line
-		// sweeps down as you approach the end — parked under the navbar at the
-		// top of the page, at the viewport's bottom edge once you've hit the
-		// last scroll position — giving each section a window roughly
-		// proportional to its height.
+		// fixed under the navbar would never activate the last section — its
+		// heading can't climb that high — so the line sweeps down as you near
+		// the end: under the navbar at the top of the page, at the viewport's
+		// bottom edge at the last scroll position. Each section gets a window
+		// roughly proportional to its height.
 		var progress = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 1;
 		var probe = window.scrollY + offset + progress * (viewport - offset);
 		var current = null;
@@ -271,11 +251,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		update();
 	});
 
-	// Expanding an abstract changes the page height, which moves every section
-	// below it — the dot would otherwise stay wrong until the next scroll.
-	// Those toggles are clicks, so re-measure after any click. This is a
-	// timeout rather than requestAnimationFrame on purpose: rAF is suspended
-	// in background tabs, and update() forces its own layout read regardless.
+	// Expanding an abstract changes the page height and moves every section
+	// below it, so re-measure after any click or the dot stays wrong until the
+	// next scroll. A timeout, not requestAnimationFrame, on purpose: rAF is
+	// suspended in background tabs, and update() forces its own layout read.
 	document.addEventListener('click', function () {
 		window.setTimeout(update, 0);
 	}, true);

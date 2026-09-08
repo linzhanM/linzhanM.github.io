@@ -1,5 +1,4 @@
-// The command line: usage text and the parser, kept together so a new flag is
-// one edit in one file.
+// The command line: usage text and parser together, so a new flag is one edit.
 
 import { fail } from './util.mjs';
 
@@ -116,8 +115,7 @@ export function parseArgs(argv) {
   return o;
 }
 
-// "transparent" is a value of --background, not a flag, and three separate
-// decisions read it (alpha in the encoder, the page's own fills, PNG over
-// JPEG), so it is normalized once here.
+// "transparent" is a value of --background, not a flag, and three decisions
+// read it (encoder alpha, the page's own fills, PNG over JPEG) — normalized once.
 export const wantsAlpha = (opts) =>
   !!opts.background && opts.background.trim().toLowerCase() === 'transparent';

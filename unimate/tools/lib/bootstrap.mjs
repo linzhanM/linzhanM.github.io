@@ -1,10 +1,10 @@
-// The page-side bootstrap: injected with Page.addScriptToEvaluateOnNewDocument,
-// so it runs before any of the lab's own scripts, in every document. This is the
-// only channel this tool has into the page — the shipped viewer must never grow
-// a capture-only branch.
+// The page-side bootstrap. bootstrapSource() is stringified into
+// Page.addScriptToEvaluateOnNewDocument, so it runs before any lab script in
+// every document — and it must stay plain source: no imports, and nothing it
+// needs may leak into the shipped viewer. It is the tool's only channel into
+// the page; the viewer itself never grows a capture-only branch.
 
-// Config overrides the lab does not offer as UI. Everything else about the
-// scene (framing, lighting, layout) stays in examples.js / stage-tuning.js.
+// Config overrides the lab does not offer as UI.
 export function viewerConfigFor(opts) {
   return {
     ...(opts.labels ? { hoverPrompts: false } : {}),
@@ -27,16 +27,16 @@ export function bootstrapSource(config, zoom) {
     return getContext.call(this, type, attrs);
   };
 
-  // interactive.js assigns the whole config object, so the overrides are folded
-  // in as it lands rather than written before or after it.
+  // interactive.js assigns the whole config object, so the overrides are
+  // folded in as it lands rather than written before or after it.
   let cfg;
   Object.defineProperty(window, 'UNIMATE_VIEWER_CONFIG', {
     configurable: true,
     get: () => cfg,
     set: (value) => {
       cfg = Object.assign(value || {}, CONFIG);
-      // Zoom divides the GLOBAL padding and leaves the per-category multipliers
-      // alone, so every stage keeps the relative framing the lab gave it.
+      // Zoom divides the GLOBAL padding only; the per-category multipliers
+      // stay, so every stage keeps the relative framing the lab gave it.
       if (ZOOM !== 1) {
         cfg.cameraPadding = (cfg.cameraPadding || 1) / ZOOM;
         cfg.mobileCameraPadding = (cfg.mobileCameraPadding || 1) / ZOOM;
@@ -44,11 +44,11 @@ export function bootstrapSource(config, zoom) {
     },
   });
 
-  // Reaching the live scene. three dispatches every Scene and WebGLRenderer it
-  // constructs to window.__THREE_DEVTOOLS__ when that object exists, and
-  // defining it here — before any module loads — is the only way in: the viewer
-  // exports nothing, and WebGLRenderer.render is an OWN property of each
-  // instance, so patching the prototype from outside silently does nothing.
+  // The way into the live scene. three dispatches every Scene and
+  // WebGLRenderer it constructs to window.__THREE_DEVTOOLS__ if that exists,
+  // and defining it here, before any module loads, is the only way in: the
+  // viewer exports nothing, and WebGLRenderer.render is an OWN property of
+  // each instance, so patching the prototype does nothing.
   const scenes = [];
   const renderers = [];
   const devtools = new EventTarget();
@@ -61,8 +61,7 @@ export function bootstrapSource(config, zoom) {
   window.__THREE_DEVTOOLS__ = devtools;
 
   // Which rigs this stage pulled. The catalog is not exported to the page, so
-  // the fetches are the reliable list — and the driver reads the clip lengths
-  // off those files to decide how long the video runs.
+  // the fetches are the reliable list; clip.mjs reads clip lengths off them.
   const assets = [];
   const realFetch = window.fetch.bind(window);
   window.fetch = function (input, init) {
@@ -72,7 +71,7 @@ export function bootstrapSource(config, zoom) {
   };
 
   // Virtual clock. Passthrough until begin(): the stage loads, compiles and
-  // frames itself in real time, and only the capture runs on stepped time.
+  // frames itself in real time; only the capture runs on stepped time.
   const realRAF = window.requestAnimationFrame.bind(window);
   const realCAF = window.cancelAnimationFrame.bind(window);
   const realPerfNow = performance.now.bind(performance);
@@ -94,10 +93,10 @@ export function bootstrapSource(config, zoom) {
 
   window.__labCapture = {
     assets: () => assets.slice(),
-    // Repaint what is behind the stage; null clears to transparent instead. The
-    // Color constructor is borrowed off the background already there, since the
-    // module itself is out of reach from here. Returns the number of scenes
-    // repainted, or -1 if the way in stopped working — never silence.
+    // Repaint what is behind the stage; null clears to transparent. The Color
+    // constructor is borrowed off the background already there, since the
+    // module is out of reach from here. Returns the number of scenes repainted,
+    // or -1 if the way in stopped working — never silence.
     setBackground(css) {
       if (!scenes.length) return 0;
       for (const scene of scenes) {
@@ -109,15 +108,15 @@ export function bootstrapSource(config, zoom) {
       if (css === null) for (const renderer of renderers) renderer.setClearAlpha(0);
       return scenes.length;
     },
-    // Start from the real clock's current value so the first delta is ~0 rather
-    // than a jump the mixers would swallow as one huge step.
+    // Start from the real clock's current value so the first delta is ~0, not
+    // a jump the mixers would swallow as one huge step.
     begin() { if (virtual === null) virtual = realPerfNow(); },
     // Callbacks waiting on the virtual clock. Zero right after begin() only
-    // means the loop's real rAF has not come back around yet — the driver waits
+    // means the loop's real rAF has not come back around yet; the driver waits
     // on this before stepping, or the first frames step an empty queue.
     pending() { return queue.size; },
-    // Advance one frame and run everything waiting on it. The return value is
-    // how many callbacks re-registered: 0 means the render loop stopped.
+    // Advance one frame and run everything waiting on it. Returns how many
+    // callbacks re-registered: 0 means the render loop stopped.
     step(ms) {
       virtual += ms;
       const due = queue;

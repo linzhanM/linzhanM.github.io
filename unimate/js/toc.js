@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // TOC rail (.toc) — two independent jobs, both keyed to scroll position.
-// Neither is required to navigate: the rail's links are plain anchors, and the
-// rail itself is hidden below 1400px.
+// Neither is needed to navigate: the links are plain anchors, and the rail is
+// hidden below 1400px.
 //
 //   1. scrollSpy()        — light up the link beside the section being read
 //   2. collisionWatcher() — fade the rail out while a gallery clip reaches into
@@ -12,10 +12,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const toc = document.querySelector('.toc');
   if (!toc) return;
 
-  /* 1. Scroll-spy — light up the link beside the section being read. */
+  /* 1. Scroll-spy. */
   (function scrollSpy() {
     const links = [...toc.querySelectorAll('a')];
-    // Each tracked section element -> its link, kept in document order.
+    // Section element -> its link, in document order.
     const sections = new Map();
     links.forEach((a) => {
       const el = document.getElementById(a.getAttribute('href').slice(1));
@@ -39,10 +39,10 @@ document.addEventListener('DOMContentLoaded', function () {
     sections.forEach((_, el) => observer.observe(el));
     setActive(sections.values().next().value);   // default to the first section
 
-    // The last entry (Citation) can never light up through the observer: its
+    // The last entry (Citation) can never light up through the observer: the
     // band is the top 22% of the viewport and the page ends too soon after the
-    // BibTeX block for it to climb that high. The page bottom IS the signal
-    // here — scrolled to the end, the last link is the right one.
+    // BibTeX block for it to climb that high. The page bottom is the signal
+    // instead.
     const lastLink = links[links.length - 1];
     addEventListener('scroll', () => {
       const bottom = window.innerHeight + window.scrollY
@@ -52,29 +52,29 @@ document.addEventListener('DOMContentLoaded', function () {
   })();
 
   /* 2. Collision watcher — the rail is fixed in the left gutter, so anything
-     that reaches past the text column runs underneath it. Fade the rail out
+     reaching past the text column runs underneath it; fade the rail out
      (.toc.is-eclipsed) while that lasts. With the galleries capped at the
-     column it only fires in the first few px above the rail's own 1400px
-     breakpoint, and it is what keeps the rail safe if one is ever widened past
-     the column again. Measured rather than breakpointed: whether a gallery
-     reaches the gutter depends on how wide its clips are. */
+     column this fires only in the first few px above the rail's 1400px
+     breakpoint, but it is what keeps the rail safe if one is ever widened past
+     the column again. Measured, not breakpointed: whether a gallery reaches
+     the gutter depends on how wide its clips are. */
   (function collisionWatcher() {
     const strips = [...document.querySelectorAll('.video-gallery-container')]
       .map((el) => ({ frame: el, clips: [...el.querySelectorAll('.gallery-video')] }))
       .filter((strip) => strip.clips.length);
     if (!strips.length) return;
 
-    // Grow each strip vertically so the rail doesn't blink back on in the
-    // short caption/heading gap between two consecutive galleries.
+    // Grow each strip vertically so the rail doesn't blink back on in the short
+    // caption/heading gap between two consecutive galleries.
     const BLEED = 90;
-    // getBoundingClientRect stops at the border box, but the clips' 12px
-    // drop shadow is just as visible over the rail.
+    // getBoundingClientRect stops at the border box, but the clips' 12px drop
+    // shadow is just as visible over the rail.
     const SHADOW = 12;
 
-    // What a strip actually paints. NOT its frame: that is the full width of
-    // the text column, so on the single-clip Applications galleries the frame
-    // is wider than the clip inside it. Measure the clips, then clamp to the
-    // frame, which is what crops them once the strip is scrolled horizontally.
+    // What a strip actually paints — NOT its frame, which is the full column
+    // width and so wider than the clip on the single-clip Applications
+    // galleries. Measure the clips, then clamp to the frame, which crops them
+    // once the strip is scrolled horizontally.
     function paintedRect(strip) {
       const frame = strip.frame.getBoundingClientRect();
       let left = Infinity, right = -Infinity;
@@ -115,8 +115,8 @@ document.addEventListener('DOMContentLoaded', function () {
     addEventListener('scroll', schedule, { passive: true });
     addEventListener('resize', schedule);
     addEventListener('load', schedule);        // posters settle the clips' widths
-    // rAF is suspended in a background tab, so a scroll that lands while
-    // the tab is hidden leaves the rail stale. Re-check on the way back.
+    // rAF is suspended in a background tab, so a scroll that lands while the
+    // tab is hidden leaves the rail stale; re-check on the way back.
     addEventListener('visibilitychange', schedule);
     update();
   })();

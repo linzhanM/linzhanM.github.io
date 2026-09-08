@@ -1,9 +1,7 @@
 /* ============================================================
    DIMO — Diverse 3D Motion Generation for Arbitrary Objects
-   Concept: one input → diverse trajectories sampled from a
-   continuous motion latent space (blue → violet → pink).
-   Dark "latent space" hero, light "paper" body. The only script is
-   js/nav.js, which reveals and tracks the side nav.
+   Dark "latent space" hero over a light "paper" body; the tokens
+   split the same way. The only script is js/nav.js.
    ============================================================ */
 
 /* ---------- Design tokens ---------- */
@@ -21,7 +19,12 @@
   --mute: #6B7280;
   --line: #E6E8EC;
 
-  /* Latent-space spectrum */
+  /* Latent-space spectrum. --spectrum is one 90deg gradient and is used
+     on exactly three horizontal runs: the title words, the 3px hairline
+     at the page top, and the kicker rule. The side nav composes its own
+     gradients from the three stops because its runs are at other angles
+     (180deg down the progress fill, 135deg across the active keypoint).
+     Reach for the token only when the run is horizontal. */
   --blue: #3B82F6;
   --violet: #8B5CF6;
   --pink: #FF5C8A;
@@ -86,7 +89,6 @@ a:hover {
   border-radius: 4px;
 }
 
-/* Spectrum hairline framing the very top of the page. */
 body::before {
   content: "";
   display: block;
@@ -106,7 +108,7 @@ body::before {
   padding: 52px 0;
 }
 
-/* Alternating tint separates sections; no border needed between them. */
+/* Alternating tint is the section separator — no rules between sections. */
 .section--alt {
   background: var(--paper-2);
 }
@@ -166,7 +168,7 @@ body::before {
     var(--space);
   color: var(--on-space);
   overflow: hidden;
-  /* Fill the first screen so the landing view is entirely dark. */
+  /* Fill the first screen so the landing view is all dark. */
   min-height: 100vh;
   min-height: 100svh;
   display: flex;
@@ -185,8 +187,8 @@ body::before {
   padding: 56px 0;
 }
 
-/* Give the copy room for a single-line author list, then push the
-   signature right into the gutter so it keeps presence. */
+/* The grid gives the copy room for a one-line author list; the figure
+   is then scaled up and pushed right into the gutter to keep its presence. */
 .hero__figure {
   transform: translateX(34px) scale(1.18);
   transform-origin: right center;
@@ -216,7 +218,7 @@ body::before {
   box-shadow: 0 0 12px var(--pink);
 }
 
-/* The "Highlight" distinction carries the accent. */
+/* The "Highlight" distinction carries the accent (also used in #poster). */
 .hero__eyebrow-hl {
   background: linear-gradient(90deg, var(--violet), var(--pink));
   -webkit-background-clip: text;
@@ -234,14 +236,15 @@ body::before {
   margin: 0 0 22px;
 }
 
-/* Each phrase sits on its own line so wrapping never orphans a word. */
+/* One phrase per line, so wrapping never orphans a word. */
 .hero__title .hero__name,
 .hero__title .hero__plain,
 .hero__title .word {
   display: block;
 }
 
-/* The project name anchors the hero as a wordmark. */
+/* The name is set as a wordmark; the phrases under it as a subordinate
+   subtitle. */
 .hero__title .hero__name {
   font-size: 1.5em;
   line-height: 0.95;
@@ -249,7 +252,6 @@ body::before {
   margin-bottom: 0.18em;
 }
 
-/* The descriptive phrases read as a subordinate subtitle. */
 .hero__title .hero__plain,
 .hero__title .word {
   font-size: 0.82em;
@@ -264,7 +266,7 @@ body::before {
   width: fit-content;
 }
 
-/* Editorial deck: the serif reading voice introduced up front. */
+/* Editorial deck — introduces the serif reading voice of the body. */
 .hero__lede {
   font-family: var(--serif);
   font-style: italic;
@@ -307,14 +309,14 @@ body::before {
 }
 
 /* ============================================================
-   Side navigation — a vertical "trajectory" of section nodes
-   sitting in the left gutter. Right-anchored so the labels
-   always show yet stop with a clear gap before the content.
+   Side navigation — a vertical "trajectory" of section nodes in
+   the left gutter. Revealed and tracked by js/nav.js.
    ============================================================ */
 .sidenav {
   position: fixed;
   top: 50%;
-  /* Right edge sits this far to the left of the content column. */
+  /* Anchored by its right edge, 88px short of the content column, so the
+     labels can grow leftward and still stop clear of the text. */
   left: calc((100vw - var(--container)) / 2 - 88px);
   transform: translate(-100%, -50%);
   z-index: 50;
@@ -350,8 +352,8 @@ body::before {
   border-radius: 2px;
 }
 
-/* Spectrum progress fill — a sample travelling down the trajectory
-   as far as the section currently in view (height set in nav.js). */
+/* Progress fill down the trajectory as far as the active node. nav.js sets
+   --nav-progress and subtracts this rule's `top` from the node's centre. */
 .sidenav ul::after {
   content: "";
   position: absolute;
@@ -411,7 +413,6 @@ body::before {
   border-color: var(--violet);
 }
 
-/* Active section: a glowing keypoint on the trajectory. */
 .sidenav a.is-active .sidenav__label {
   color: var(--ink);
 }
@@ -423,7 +424,7 @@ body::before {
   transform: scale(1.18);
 }
 
-/* Not enough gutter for a labelled rail — hide it. */
+/* Below this there is no gutter for a labelled rail — hide it outright. */
 @media (max-width: 1480px) {
   .sidenav {
     display: none;
@@ -522,7 +523,7 @@ body::before {
   stroke-linecap: round;
 }
 
-/* Soft atmosphere so the manifold floats in latent space. */
+/* Soft atmosphere so the manifold floats rather than sits. */
 .field .manifold-glow {
   fill: url(#manifoldGlow);
 }
@@ -586,7 +587,9 @@ body::before {
   fill: var(--on-space);
 }
 
-/* Pivot rotations resolve against viewBox coordinates. */
+/* Each limb's pivot is an inline transform-origin in index.html given in
+   root viewBox coordinates, so the box must be view-box — fill-box would
+   put every pivot off the body. Reduced motion freezes these below. */
 .field .limb {
   transform-box: view-box;
 }
@@ -652,7 +655,7 @@ body::before {
   60% { transform: rotate(-58deg); }
 }
 
-/* Flip across the vertical axis reads as the figure turning around. */
+/* A flip across the vertical axis reads as the figure turning around. */
 @keyframes skel-turn {
   0%, 12% { transform: scaleX(1); }
   50%, 62% { transform: scaleX(-1); }
@@ -677,12 +680,10 @@ body::before {
   box-shadow: 0 18px 40px rgba(14, 19, 32, 0.12);
 }
 
-/* Space between one figure and the next. `.media + .media` on its own never
-   matched anything on this page — in Applications a .caption always sits
-   between the two videos — so the second video ended up flush against the
-   first one's caption, 0px, and the caption read as a label on the video below
-   it rather than the one it describes. Both cases are listed so the gap is
-   the same whether or not the first figure is captioned. */
+/* 40px between figures whether or not the first is captioned. `.media +
+   .media` alone matched nothing here — a .caption sits between the two
+   Applications videos — so the second sat flush under the first's caption,
+   which then read as a label for the wrong video. */
 .media + .media,
 .caption + .media {
   margin-top: 40px;
@@ -706,20 +707,15 @@ body::before {
   border: 0;
 }
 
-/* A caption belongs to the figure above it, so what binds it there is being
-   nearer to that figure than to the next one: 14px up against the 40px down.
-   The old 18/0 said the opposite. The scale it sits in — 14 within a figure,
-   40 between figures, 52 between sections — keeps each boundary louder than
-   the one inside it. It spans the container, so it already lines up with the
-   figure's own left and right edges; no rule is needed for that.
+/* A caption belongs to the figure above it, so it must sit nearer that
+   figure than the next: 14px up against 40px down (an earlier 18/0 said the
+   opposite). The scale — 14 within a figure, 40 between figures, 52 between
+   sections — keeps each boundary louder than the one inside it.
 
-   Size: a caption is *content* — it says what you are looking at — but at
-   0.82rem it was set as chrome. That put it at 13.1px against the .kicker
-   eyebrow's 12.5px, so a sentence was reading at the size of a tag while the
-   prose beside it ran at 18.9px. 0.95rem gives it its own step: clearly above
-   the labels, clearly below the prose. Tracking comes down with the size going
-   up — the wider the setting, the more the counters open on their own, and
-   Space Mono is a wide face before any tracking is added. */
+   Size: a caption is content, not chrome. At 0.82rem it read as a tag
+   beside the 0.78rem .kicker; 0.95rem gives it its own step, above the
+   labels and below the prose. Tracking is light because Space Mono is
+   already a wide face and its counters open further with size. */
 .caption {
   font-family: var(--mono);
   font-size: 0.95rem;
@@ -729,10 +725,9 @@ body::before {
   margin: 14px 0 0;
 }
 
-/* Run-in application name, the way the paper's own figure captions are set:
-   the name in full ink, the mechanism behind it in --mute. It is what lets the
-   two captions be scanned as a pair before either is read. Space Mono 700 is
-   already in the font request, so this costs no extra weight. */
+/* Run-in name in full ink, mechanism behind it in --mute, so the two
+   Applications captions scan as a pair before either is read (form of the
+   text: see index.html). Space Mono 700 is already in the font request. */
 .caption b {
   color: var(--ink);
   font-weight: 700;
@@ -815,8 +810,9 @@ body::before {
 }
 
 /* ============================================================
-   Reduced motion — keep the static trajectory composition,
-   drop the traveling keypoints.
+   Reduced motion — keep the static composition, freeze the limbs
+   and the latent pulse, and hide the travelling keypoints: those
+   are SMIL <animateMotion>, which `animation: none` cannot stop.
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   html {

@@ -1,37 +1,30 @@
 /* Resume page only (resume.html). Loads after styles.css and reuses its tokens
-   and base typography; what it adds is the document layer the homepage has no
-   use for — the masthead, the two-sided entry row, the section rules, and the
-   print sheet. It holds no navbar rules: the page carries the site nav
-   unchanged, so custom-navbar.css already styles it.
+   and base typography; this layer adds the masthead, the two-sided entry row,
+   the section rules, and the print sheet. Its only navbar rule is the print
+   hide — the nav is shared markup styled by custom-navbar.css.
 
-   Type, and why it is not the homepage's: three serif voices were doing two
-   jobs here — Fraunces on the section headers, Fraunces again on the entry
-   titles, Palatino on the paper titles. This page now spends each face once:
+   Type: each face is spent exactly once, so two similar 18px lines are telling
+   you something true — Source Serif names a place you were, Palatino a work
+   you made.
 
-     Fraunces (display)  the name, and nothing else on the page
+     Fraunces (display)  the name, and nothing else
      Source Serif        section labels, institutions, roles, prose
      Palatino            publication titles only
 
-   So the two 18px semibold lines that look alike are telling you something
-   true: Source Serif names a place you were, Palatino names a work you made.
-
-   Measure: not the usual prose measure. The rows are two-sided — role on the
-   left, dates on the right — and the source PDF fits each on one line. At 47rem
-   the longest ("Graduate Research Assistant · Advisors: …") wrapped and pushed
-   its date onto a line of its own, which reads as a different entry. 60rem is
-   what that row needs, and it stays inside Bootstrap's 1140px container. */
+   Measure: 60rem, wider than prose. The rows are two-sided (role left, dates
+   right) and each must fit one line. At 47rem the longest ("Graduate Research
+   Assistant · Advisors: …") wrapped and pushed its date onto its own line,
+   which reads as a different entry. Stays inside Bootstrap's 1140px container. */
 .resume-page {
   max-width: 60rem;
   margin: 0 auto;
 }
 
 /* --- Masthead --- */
-/* The page's first entry, not a title above the page: name left, where to find
-   it right, on one shared baseline — the same two-sided row every degree and
-   position below is set in. A centred masthead over a left-aligned document was
-   two axes doing the work of one. Baseline (not centre) alignment is what makes
-   the 36px name and the 15px links read as one line rather than two stacked
-   boxes. No bottom rule: the first section's own top rule closes it. */
+/* The page's first entry, not a title above it: name left, where to find it
+   right — the same two-sided row every entry below is set in. Baseline (not
+   centre) alignment makes the 36px name and 15px links read as one line. No
+   bottom rule: the first section's top rule closes it. */
 .resume-masthead {
   display: flex;
   align-items: baseline;
@@ -45,11 +38,9 @@
   margin: 0;
 }
 
-/* The masthead's right-hand side, so it takes the aside's size and ink rather
-   than the body's. Separators drop one tier below the links they divide — the
-   same relationship .pub-links has with its brackets. The mark is "·", matching
-   the one already separating the clauses inside every .resume-what below;
-   the old "|" was a heavier rule than anything else on the page. */
+/* The masthead's aside, so it takes the aside's size and ink. Separators sit a
+   tier below the links they divide, like .pub-links and its brackets; the mark
+   is "·", matching the clause separator inside .resume-what. */
 .resume-contact {
   margin: 0;
   font-size: var(--text-sm);
@@ -57,8 +48,7 @@
   text-align: right;
 }
 
-/* nowrap so a narrow screen never breaks a single address across two lines —
-   the line breaks between items instead. */
+/* nowrap: the line breaks between items, never inside an address. */
 .resume-contact a:link,
 .resume-contact a:visited {
   color: var(--text-secondary);
@@ -78,36 +68,26 @@
 }
 
 /* --- The résumé as a file --- */
-/* Last in the line and outside the "·" list on purpose: every other item is
-   somewhere else to find the author, and this one is the same document in
-   another format. So it is set as an object rather than as another name, and
-   the gap to its left does the separating a "·" would.
+/* A control, not a link. Every other item on the line is somewhere else to
+   find the author; this one hands you the same document in another format, so
+   it is set as a filled plate you press rather than a name you follow, last in
+   the line and outside the "·" list — the gap does the separating. An
+   outlined label still reads as text.
 
-   A filled plate, not an outline — modelled on ying-hui-he.github.io/cv.html,
-   where the CV's download sits as a soft accent-tinted pill with a document
-   mark and a verb. The reasoning transfers: everything else on this line is a
-   name you follow, and the one item that hands you a file should read as a
-   control you press. A plate says that; an outlined label still reads as text.
-
-   The fill is a 9% wash of --accent rather than --accent-bg. That token is the
-   page's tinted surface and would be the obvious pick, but #fdf6ee on this
-   page's #faf9f5 is about a 1.02:1 difference — the plate simply never
-   appears. Same hue, taken far enough to read. The ink stays --text-primary,
-   so the accent still never colours a glyph.
-
-   --radius-md, not --radius-sm: the reference's softness is most of what makes
-   it read as pressable, and 3px on a 30px plate reads as a hairline box again.
+   The fill is a 9% wash of --accent, NOT --accent-bg: that token on this
+   page's #faf9f5 is ~1.02:1 and the plate simply never appears. Ink stays
+   --text-primary, so the accent still never colours a glyph. --radius-md, not
+   --radius-sm: 3px on a 30px plate reads as a hairline box.
 
    Every rule carries the .resume-contact prefix to outrank the generic link
-   rules above, which would otherwise repaint the label accent and underline it. */
+   rules above, which would otherwise recolour and underline the label. */
 .resume-contact a.resume-pdf:link,
 .resume-contact a.resume-pdf:visited {
   display: inline-block;
   margin-left: 1.15rem;
   padding: 0.34em 0.78em;
   border-radius: var(--radius-md);
-  /* Flat fallback first, for anything without color-mix; the wash below wins
-     wherever it parses, and stays derived from the one accent token. */
+  /* Flat fallback first for anything without color-mix. */
   background-color: #fdf1e4;
   background-color: color-mix(in srgb, var(--accent) 9%, var(--ivory-light));
   font-size: var(--text-xs);
@@ -118,9 +98,8 @@
   transition: background-color 160ms ease-out, box-shadow 160ms ease-out;
 }
 
-/* A page with its corner turned, in one weight of line. Sized in em so it
-   tracks the label, and nudged off the baseline so its optical centre sits on
-   the label's x-height rather than its descender line. */
+/* A page with its corner turned. Sized in em to track the label; nudged off
+   the baseline so its optical centre sits on the x-height. */
 .resume-pdf-mark {
   width: 0.82em;
   height: 0.94em;
@@ -132,9 +111,8 @@
   stroke-linejoin: round;
 }
 
-/* Hover deepens the wash and draws the accent ring *inside* the plate, so the
-   control gains an edge without gaining a pixel — a border here would reflow
-   the whole contact line by 2px on every hover. */
+/* Hover deepens the wash and draws the ring with an inset box-shadow, not a
+   border — a border would reflow the whole contact line on every hover. */
 .resume-contact a.resume-pdf:hover {
   background-color: #fce7d2;
   background-color: color-mix(in srgb, var(--accent) 16%, var(--ivory-light));
@@ -149,19 +127,17 @@
 }
 
 /* --- Sections --- */
-/* A hairline opens each section instead of an <hr> closing each header: one
-   element fewer, and the rule lands where the meaning changes rather than
-   between a header and the entries it already belongs to. */
+/* A hairline opens each section instead of an <hr> under each header: the rule
+   lands where the meaning changes, not between a header and its entries. */
 .resume-page .page-section {
   margin-top: 0;
   padding: 1.6rem 0 2rem;
   border-top: 1px solid var(--ivory-dark);
 }
 
-/* Section headers are wayfinding, not content. At 27px display they outranked
-   the institutions underneath — inverted, for a document you scan by employer
-   and school. Demoted to the eyebrow this site already speaks in (.section-h3,
-   .nav-section): uppercase, tracked, one size below the body. */
+/* Section headers are wayfinding, not content: at 27px display they outranked
+   the institutions, inverted for a document scanned by employer and school. So
+   they take the site's eyebrow (.section-h3, .nav-section). */
 .resume-page .section-h2 {
   font-family: var(--font-serif);
   font-size: var(--text-sm);
@@ -183,9 +159,8 @@
   margin-bottom: 0;
 }
 
-/* Title left, place/date right — the row this whole page is built from.
-   baseline alignment keeps the date sitting on the title's line even though the
-   two sides run at different sizes. */
+/* Title left, place/date right — the row this page is built from. Baseline
+   alignment keeps the date on the title's line at a different size. */
 .resume-row {
   display: flex;
   align-items: baseline;
@@ -197,23 +172,18 @@
   margin-top: 0.15rem;
 }
 
-/* Institutions: Source Serif, not the display face. See the type note at the
-   top — Fraunces is spent on the name. It also sets narrower than Fraunces at
-   the same size, which buys the two-sided rows a little more room before they
-   wrap. */
+/* Source Serif, not Fraunces (spent on the name — see the type note above). It
+   also sets narrower, which buys the two-sided rows room before they wrap. */
 .resume-where {
   font-size: var(--text-lg);
   font-weight: var(--weight-semibold);
   color: var(--text-primary);
 }
 
-/* A lab name may link to the lab, but dressed as the text it sits in: the
-   institution line is this page's landmark rank, and an accent rule under
-   half of it would demote the name to link text and unbalance the rows whose
-   institutions link against those whose don't. So the global underline comes
-   off and the row reads identically everywhere; hover draws it back, which is
-   exactly the contact line's grammar — quiet at rest, the accent as the
-   acknowledgement. */
+/* A linked lab name is dressed as the text it sits in: an accent rule under
+   half the landmark line would demote it to link text and unbalance linked
+   rows against unlinked ones. Hover draws the underline back — the contact
+   line's grammar, quiet at rest. */
 .resume-where a:link,
 .resume-where a:visited {
   color: var(--text-primary);
@@ -234,7 +204,7 @@
   color: var(--text-secondary);
 }
 
-/* Right rail — city on the title row, dates on the role row. Never wraps:
+/* Right rail — city on the title row, dates on the role row. nowrap because
    "Aug. 2025 – Present" broken across two lines reads as two dates. */
 .resume-aside {
   flex-shrink: 0;
@@ -243,8 +213,7 @@
   white-space: nowrap;
 }
 
-/* Detail bullets. Dashes rather than discs, matching the PDF and leaving the
-   page without a single filled dot of decoration. */
+/* Dashes rather than discs, matching the PDF. */
 .resume-bullets {
   margin: 0.4rem 0 0;
   padding: 0;
@@ -267,12 +236,9 @@
 }
 
 /* --- Publications --- */
-/* Reuses .pub-title / .pub-authors / .pub-links from styles.css, Palatino and
-   all — these are the same papers the homepage sets that way, and holding the
-   face across every page that lists them is worth more than flattening it here
-   (publications.css does the same). Only the spacing changes: those rules are
-   tuned for a row with a video thumbnail beside them, and here the entries
-   stack directly on one another. */
+/* Reuses the .pub-* classes from styles.css, Palatino and all, so the papers
+   hold one face on every page that lists them. Only the spacing changes: those
+   margins are tuned for a row beside a thumbnail, and here entries stack. */
 .resume-pub .pub-title {
   margin-top: 0;
 }
@@ -309,19 +275,12 @@
   color: var(--text-secondary);
 }
 
-/* --- Entrance --- */
-/* There isn't one here, and that is the decision: the masthead renders with
-   the page. It briefly carried a staggered rise (name, then contact line) and
-   it was the wrong thing to animate — the name is what the page is, and the
-   only block certain to be on screen at load, so delaying it delays the one
-   thing that should already be there. The entrance starts at Education, on the
-   shared section reveal in styles.css. Nothing here needs a rule; this note
-   exists so the absence reads as a choice rather than an oversight. */
+/* No entrance on the masthead, by decision — see the section reveal in
+   styles.css. The entrance starts at Education. */
 
 /* --- Narrow --- */
-/* Under 768px the container is 540px or less, which the name and the contact
-   line can no longer share. The masthead stacks and both sides go left — the
-   contact line stays the aside, it just sits under the name. */
+/* Under 768px the container is ≤540px, which the name and the contact line
+   can no longer share: the masthead stacks and both sides go left. */
 @media screen and (max-width: 767px) {
   .resume-masthead {
     display: block;
@@ -333,9 +292,8 @@
     text-align: left;
   }
 
-  /* On the stacked masthead the plate's left margin no longer separates it
-     from anything — it just indents a wrapped line. It takes its own row,
-     flush with the links it follows. */
+  /* Stacked, the plate's left margin only indents a wrapped line, so it takes
+     its own row flush with the links. */
   .resume-contact a.resume-pdf:link,
   .resume-contact a.resume-pdf:visited {
     display: block;
@@ -344,14 +302,12 @@
   }
 }
 
-/* Phones: the right rail has nowhere to go on a 320px line. Giving each aside
-   a line of its own read as stray body text — a bare "2025" under an award,
-   a date floating under a role. Instead the row degrades into the clause form
-   this page already speaks: the place or date joins the end of its line behind
-   the same "·" that separates clauses inside .resume-what and the contact
-   line, and the aside's smaller tertiary ink is what marks it as the aside.
-   The dot lives on the aside's ::before, inside its nowrap, so a date that
-   wraps carries its separator with it and still never breaks internally. */
+/* Phones: the right rail has nowhere to go on a 320px line, and an aside on
+   its own line read as stray body text (a bare "2025" under an award). So the
+   row degrades into the page's clause form: the aside joins its line behind a
+   "·", marked as the aside by its smaller tertiary ink. The dot is on the
+   aside's ::before, inside its nowrap, so a wrapping date carries its
+   separator with it. */
 @media screen and (max-width: 575px) {
   .resume-row {
     display: block;
@@ -363,14 +319,11 @@
 }
 
 /* --- Print --- */
-/* Cmd-P on this page should produce the resume, not a screenshot of a website:
-   drop the chrome, flatten the tinted background, and keep entries whole across
-   page breaks. The section rules stay — they are the document's structure, not
-   its decoration. */
+/* Cmd-P should produce the résumé, not a screenshot of a website: drop the
+   chrome, flatten the background, keep entries whole across page breaks. The
+   section rules stay — they are the document's structure. */
 @media print {
-  /* .resume-pdf joins the chrome here: on paper you are already holding the
-     PDF, so a button offering it is the one item in the contact line that
-     means nothing to the reader in front of it. */
+  /* .resume-pdf is chrome here: on paper you are already holding the PDF. */
   .navbar,
   .site-footer,
   .resume-contact a.resume-pdf {
@@ -401,9 +354,6 @@
   .resume-list > li {
     break-inside: avoid;
   }
-
-  /* The masthead carries no entrance to suppress; the sections are covered by
-     the matching print block in styles.css. */
 
   a:link,
   a:visited {

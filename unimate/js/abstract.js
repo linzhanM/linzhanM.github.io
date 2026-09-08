@@ -1,10 +1,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Abstract fold — the phone-width "Read full abstract" toggle.
 //
-// The whole abstract is always in the document; this folds only its
-// presentation. The button ships `hidden` and the fold styles are gated behind
-// `.has-abstract-toggle` (css/responsive.css), both set here — so with JS off
-// the abstract is a plain paragraph, never a clipped one.
+// The whole abstract is always in the document; only its presentation folds.
+// The button ships `hidden` and the fold styles are gated behind
+// `.has-abstract-toggle` (css/responsive.css), both flipped here — so with JS
+// off the abstract is a plain paragraph, never a clipped one.
 // ─────────────────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', function () {

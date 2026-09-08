@@ -1,12 +1,12 @@
-/* Navbar — a section index, not a branding bar.
+/* Navbar — a section index, not a branding bar. All navbar chrome lives here;
+   styles.css loads after this file and must carry none.
    Structure: .navbar > .navbar-inner > (.navbar-brand > .brand-link + .navbar-burger)
                                       + (.navbar-menu > .navbar-sections)
 
-   Full-bleed: the brand is pinned to the left edge, the section index to the
-   right. The labels reuse the uppercase eyebrow treatment of .section-h3
-   (styles.css) so the nav reads as an index of the page's own structure.
-   A single accent keypoint rides the rail to mark the section you're in —
-   nav.js sets --kp-x / --kp-o. Colors come from the tokens in styles.css. */
+   Full-bleed: brand pinned left, section index right. The labels reuse the
+   eyebrow treatment of .section-h3 so the nav reads as an index of the page's
+   own structure. One accent keypoint rides the rail to mark the section you're
+   in — nav.js sets --kp-x / --kp-o. Tokens come from styles.css. */
 
 .navbar {
   position: sticky;
@@ -14,9 +14,8 @@
   z-index: 30;
   min-height: 4.25rem;
   /* Bootstrap ships `.navbar { padding: 0.5rem 1rem }`; the gutter is
-     .navbar-inner's job, so this would double it. */
+     .navbar-inner's job and this would double it. */
   padding: 0;
-  /* Translucent so content reads through, with a hairline for separation. */
   background-color: rgba(250, 249, 245, 0.86);
   border-bottom: 1px solid var(--ivory-dark);
 }
@@ -28,8 +27,8 @@
   }
 }
 
-/* Bootstrap sets `.navbar { display: flex }`, which makes this a flex item that
-   would otherwise shrink to its content. Full width, so the rail can sit right. */
+/* Bootstrap sets `.navbar { display: flex }`, so this is a flex item and would
+   shrink to its content without the explicit width. */
 .navbar-inner {
   width: 100%;
   padding-left: 3rem;
@@ -43,8 +42,8 @@
   min-height: 4.25rem;
 }
 
-/* --- Brand: display face, matching the h1 it sits above.
-       No left padding, so the logo starts on the container's edge. --- */
+/* --- Brand: display face, matching the h1 below it. No left padding, so the
+   logo starts on the container's edge. --- */
 .brand-link {
   display: flex;
   align-items: center;
@@ -52,7 +51,7 @@
   cursor: pointer;
 }
 
-/* Navbar links never take the global accent colour or underline. */
+/* Navbar links never take the global underline. */
 .navbar a:link,
 .navbar a:visited {
   color: var(--text-primary);
@@ -134,20 +133,18 @@
   transition: color 160ms ease-out;
 }
 
-/* Two classes deep so it outranks the generic `a:hover` in styles.css, which
-   loads after this file and would otherwise set the colour for these links. */
+/* Two classes deep to outrank the generic `a:hover` in styles.css, which loads
+   after this file. */
 .navbar .nav-section:hover,
 .navbar .nav-section.is-active {
   color: var(--text-primary);
 }
 
-/* The keypoint: one dot, parked under the active label. nav.js drives the
-   custom properties; opacity stays 0 until a section is actually in view.
-
-   The travel is deliberately longer and springier than a UI easing: the dot is
-   a physical marker sliding along a rail, and the slight overshoot at the end
-   is what sells it as having momentum rather than being redrawn. It is also
-   what carries the dot between pages — see .is-instant below. */
+/* The keypoint: one dot under the active label. nav.js drives the custom
+   properties; opacity stays 0 until a section is in view. The travel is longer
+   and springier than a UI easing on purpose — the overshoot sells the dot as a
+   marker with momentum rather than something redrawn. The section reveal in
+   styles.css is timed off this transition; retime them together. */
 .nav-keypoint {
   position: absolute;
   bottom: -2px;
@@ -163,19 +160,16 @@
   pointer-events: none;
 }
 
-/* Moving between pages is two documents, so the dot would ordinarily just
-   appear under the new page's label. Instead nav.js puts it back where the
-   previous page left it and lets the transition above carry it across — one
-   dot continuing its journey, not a second one switched on.
-
-   That initial placement must not animate, or the dot would fly in from the
-   rail's left edge on every load. nav.js adds this class for exactly that one
-   write and removes it in the same task, with a forced reflow in between. */
+/* Cross-page continuity: nav.js first places the dot where the previous page
+   left it, then lets the transition above carry it to this page's label. That
+   first placement must not animate, or the dot flies in from the rail's left
+   edge on every load — nav.js adds this class for that one write and removes
+   it in the same task (see moveKeypoint there for the forced reflow). */
 .navbar-sections.is-instant .nav-keypoint {
   transition: none;
 }
 
-/* --- Keyboard focus (quality floor, not decoration) --- */
+/* --- Keyboard focus --- */
 .navbar a:focus-visible,
 .navbar-burger:focus-visible {
   outline: 2px solid var(--accent);
@@ -183,8 +177,8 @@
   border-radius: var(--radius-sm);
 }
 
-/* Phones: match the 20px page gutter in styles.css, so the brand lines up with
-   the content under it instead of sitting 48px in. */
+/* Phones: match the 20px page gutter in styles.css so the brand lines up with
+   the content under it. */
 @media screen and (max-width: 767px) {
   .navbar-inner {
     padding-left: 20px;
@@ -200,7 +194,7 @@
     border-top: 1px solid var(--ivory-dark);
   }
 
-  /* Stacked, so a horizontal rail has nothing to travel along. */
+  /* Stacked, so the keypoint has no rail to travel along. */
   .navbar-sections {
     flex-direction: column;
     align-items: flex-start;
@@ -229,7 +223,6 @@
     display: none;
   }
 
-  /* Menu takes the remaining width; the rail sits at its right edge. */
   .navbar-menu {
     flex-grow: 1;
     align-items: center;
@@ -240,7 +233,7 @@
   }
 }
 
-/* --- Reduced motion: the keypoint still marks position, it just doesn't travel --- */
+/* --- Reduced motion: the keypoint still marks position, it just doesn't travel. --- */
 @media (prefers-reduced-motion: reduce) {
   .nav-keypoint,
   .navbar-burger span {

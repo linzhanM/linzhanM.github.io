@@ -1,5 +1,4 @@
-// Finding and starting the browser. Everything after the handshake is CDP —
-// see cdp.mjs.
+// Finding and starting the browser. Everything after the handshake is cdp.mjs.
 
 import { spawn } from 'node:child_process';
 import { access, mkdtemp } from 'node:fs/promises';
@@ -34,16 +33,16 @@ export async function launchChrome(opts) {
     '--hide-scrollbars', '--mute-audio',
     '--disable-extensions', '--disable-background-networking',
     '--disable-features=Translate,MediaRouter',
-    // WebGL must work even where the GPU process is unavailable (headless, CI,
-    // an SSH session): this is the switch that lets ANGLE fall back to software.
+    // Lets ANGLE fall back to software, so WebGL works where the GPU process is
+    // unavailable (headless, CI, an SSH session).
     '--enable-unsafe-swiftshader',
     `--window-size=${opts.width},${opts.height}`,
   ];
   if (!opts.headful) args.push('--headless=new');
 
   const child = spawn(bin, args, { stdio: ['ignore', 'ignore', 'pipe'] });
-  // Chrome prints its own port when asked for 0. Reading stderr beats polling
-  // /json/version, which needs the port we are trying to learn.
+  // Chrome prints its port when asked for 0; polling /json/version would need
+  // the port we are trying to learn.
   const wsUrl = await new Promise((res, rej) => {
     let buf = '';
     const timer = setTimeout(() => rej(new Error('Chrome did not report a DevTools endpoint in 30s')), 30_000);

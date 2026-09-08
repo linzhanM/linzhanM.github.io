@@ -1,5 +1,5 @@
-// The lab is ES modules fetching .glb over HTTP, so file:// is not an option.
-// Serves the repo root read-only on the loopback interface.
+// The repo root, served read-only on loopback. The lab is ES modules fetching
+// .glb over HTTP, so file:// is not an option.
 
 import { once } from 'node:events';
 import { createReadStream } from 'node:fs';
@@ -22,7 +22,7 @@ const MIME = {
 
 export async function serveRepo() {
   const server = createServer(async (req, res) => {
-    // Strip the ?v= cache-buster and the hash before touching the disk.
+    // .pathname drops the ?v= cache-buster before the path touches the disk.
     const url = new URL(req.url, 'http://127.0.0.1');
     let rel = normalize(decodeURIComponent(url.pathname)).replace(/^(\.\.[/\\])+/, '');
     if (rel.endsWith('/')) rel += 'index.html';

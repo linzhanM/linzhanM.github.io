@@ -1,7 +1,6 @@
 /* ============================================================
-   Design tokens
-   Palette built on an ivory/slate base (extracted from anthropic.com)
-   with a single Princeton-orange accent. Edit colors here, not inline.
+   Design tokens — an ivory/slate base with one Princeton-orange accent.
+   Stay on these rather than hard-coding values.
    ============================================================ */
 :root {
   /* Surfaces */
@@ -16,41 +15,36 @@
   --text-secondary: #5e5d59; /* authors, bios, abstracts         6.1:1 */
   --text-tertiary:  #6f6d66; /* captions, footer, [] punctuation 4.8:1 */
 
-  /* Surfaces — radius. Three steps, all fixed px. Percentages resolve against
-     the box, so on anything non-square they round to an ellipse that changes
-     shape with the element: .hero-photo's old 6% came out ~16x17px, twice as
-     round as the 8px thumbnails it was meant to match. A circle (the nav
-     keypoint) is a shape, not a step on this scale, and stays 50%. */
+  /* Radius: three fixed-px steps. Never percentages — they resolve against the
+     box, so a non-square element gets an ellipse that changes shape with its
+     size (.hero-photo at 6% came out ~16x17px, twice as round as the 8px
+     thumbnails it was meant to match). A circle (the nav keypoint) is a shape,
+     not a step, and stays 50%. */
   --radius-sm: 3px;  /* small chrome: focus rings */
   --radius-md: 8px;  /* anything holding content: media plates, panels */
   --radius-lg: 16px; /* the portrait only — see .hero-photo */
 
-  /* Surfaces — elevation. Two layers each. A single wide blur reads as a soft
-     blob floating over the page; a tight contact shadow at the edge plus a
-     diffuse ambient one reads as an object set *onto* paper. Both layers grow
-     on the lift, which is what makes the hover feel like the plate rising
-     rather than its blur changing. */
+  /* Elevation: two layers each. One wide blur reads as a blob floating over
+     the page; a tight contact shadow plus a diffuse ambient one reads as an
+     object set *onto* paper. Both layers grow on the lift, so the hover reads
+     as the plate rising rather than its blur changing. */
   --shadow-plate: 0 1px 2px rgba(20, 20, 19, 0.05), 0 4px 14px rgba(20, 20, 19, 0.09);
   --shadow-lift:  0 2px 4px rgba(20, 20, 19, 0.06), 0 14px 30px rgba(20, 20, 19, 0.12);
 
   /* Accent (Princeton orange). Geometry only — rules, borders, the nav
-     keypoint, the underline beneath a link. Never the colour of running text:
-     orange dark enough to pass AA on ivory is orange gone brown, so links
-     carry their meaning in an accent rule and keep primary ink for the glyphs.
-     Used as a shape, the colour stays the true Princeton orange. */
+     keypoint, link underlines. Never the colour of running text: orange dark
+     enough to pass AA on ivory is orange gone brown. Links carry their meaning
+     in an accent rule and keep primary ink for the glyphs. */
   --accent: #E77500;
 
-  /* Type — family. --font-display is for the name and the section headers;
-     --font-serif carries the prose (bio, authors, venues, abstracts, footer).
-     Paper titles are the third voice and are set in Palatino locally, on
-     .pub-title — see the note there. Keep new elements on these two tokens
-     rather than reaching for a fourth face. */
+  /* Type — family. Display for the name and section headers, serif for the
+     prose. Paper titles are a third voice, Palatino, set locally on .pub-title
+     — see the note there. Don't reach for a fourth face. */
   --font-serif:   'Source Serif 4', 'Georgia Pro', Georgia, serif; /* body */
   --font-display: 'Fraunces', 'Source Serif 4', Georgia, serif;    /* name + section headers */
 
-  /* Type — scale (root = 16px). --text-xl matches --text-lg by intent: a paper
-     title outranks the prose around it through the Palatino face and the
-     semibold weight, not through size. */
+  /* Type — scale (root = 16px). --text-xl equals --text-lg on purpose: a paper
+     title outranks the prose through face and weight, not size. */
   --text-xs:   0.875rem;   /* 14px — footer / fine print */
   --text-sm:   0.9375rem;  /* 15px — email, captions */
   --text-base: 1rem;       /* 16px — publication metadata */
@@ -60,9 +54,8 @@
   --text-h3:   1.3rem;     /* 21px — subsection headers */
   --text-h1:   2.25rem;    /* 36px — name */
 
-  /* Type — weight. Only these three are loaded; a 500 here rendered as 400
-     while claiming to be medium, so it is not a token. Check the Google Fonts
-     URL in index.html before introducing a new weight. */
+  /* Type — weight. Only these three are loaded (a 500 silently rendered as
+     400). Check the Google Fonts URL in the HTML before adding a weight. */
   --weight-regular:  400;
   --weight-semibold: 600;
   --weight-bold:     700;
@@ -84,15 +77,14 @@ body {
   line-height: 1.6;
 }
 
-/* Prose only — keeps the last line of a paragraph from stranding one word.
-   Ignored where unsupported, so nothing depends on it. */
+/* Keeps a paragraph's last line from stranding one word; harmless where
+   unsupported. */
 p {
   text-wrap: pretty;
 }
 
 /* --- Headings --- */
-/* Tracking scales with size: the larger the setting, the more the counters
-   open up, so the big display sizes want to be pulled tighter than the small. */
+/* Tracking tightens with size: larger settings open the counters up. */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   color: var(--text-primary);
@@ -105,10 +97,9 @@ h2 { font-size: var(--text-h2); font-weight: var(--weight-semibold); letter-spac
 h3 { font-size: var(--text-h3); font-weight: var(--weight-semibold); letter-spacing: -0.01em; }
 
 /* --- Links --- */
-/* Ink text, accent rule. The orange sits under the word rather than in it,
-   which keeps the hue vivid and the text at 16.9:1. skip-ink is on here so the
-   rule breaks around descenders and reads as an underline — the opposite of
-   the unbroken mark under the author's own name in .pub-authors u. */
+/* Ink text, accent rule: the orange sits under the word, not in it, so the hue
+   stays vivid and the text at 16.9:1. skip-ink stays on so the rule reads as
+   an underline — the opposite of the unbroken mark in .pub-authors u. */
 a:link,
 a:visited {
   color: var(--text-primary);
@@ -119,15 +110,13 @@ a:visited {
   transition: text-decoration-thickness 120ms ease-out;
 }
 
-/* Icon-only links: no underline */
 a:has(> i):link,
 a:has(> i):visited,
 a:has(> i):hover {
   text-decoration: none;
 }
 
-/* Hover thickens the rule instead of recolouring the word: the text stays
-   readable through the interaction, and the accent does the acknowledging. */
+/* Hover thickens the rule instead of recolouring the word. */
 a:hover {
   color: var(--text-primary);
   text-decoration-thickness: 2px;
@@ -137,14 +126,15 @@ a:hover {
   white-space: nowrap;
 }
 
-/* --- Section headings (scroll-margin clears the sticky navbar on anchor jumps) --- */
+/* --- Section headings --- */
+/* scroll-margin-top clears the sticky navbar on anchor jumps. */
 .section-h2 {
   margin-top: 10px;
   margin-bottom: 0.1em;
   scroll-margin-top: 5rem;
 }
 
-/* Thematic sub-group label — an eyebrow, clearly subordinate to the serif h2. */
+/* Sub-group label: an eyebrow, subordinate to the h2. */
 .section-h3 {
   font-family: var(--font-serif);
   font-size: var(--text-sm);
@@ -157,14 +147,13 @@ a:hover {
   scroll-margin-top: 5rem;
 }
 
-/* Navbar chrome lives entirely in custom-navbar.css — this file loads after it,
-   so rules here would silently win. Keep it that way. */
+/* No navbar rules here. This file loads after custom-navbar.css, so a .navbar
+   rule placed here would silently win. */
 
 /* --- Hero --- */
-/* 2.125rem = 34px below the navbar, matching the pre-refactor spacing. */
-/* No bottom padding: the first section's margin-top already sets that gap,
-   and stacking both put 56px between the photo caption and "Recent Research". */
-/* Also the #About anchor target — scroll-margin clears the sticky navbar. */
+/* Also the #About anchor target, hence the scroll-margin. No bottom padding:
+   the first section's margin-top already sets that gap, and stacking both put
+   56px between the photo caption and "Recent Research". */
 .hero {
   padding-top: 2.125rem;
   padding-bottom: 0;
@@ -176,11 +165,10 @@ a:hover {
   padding-top: 0;
 }
 
-/* The portrait takes --radius-lg rather than the thumbnails' --radius-md: it
-   is a photograph of a person, not a media plate, and at 280px tall the 8px
-   step reads as a barely-softened rectangle. 16px is the largest corner that
-   still leaves the frame square-shouldered — past ~20px the crop starts
-   clipping into the shoulders and it reads as a UI avatar. */
+/* --radius-lg, not the thumbnails' --radius-md: a portrait, not a media
+   plate, and at 280px tall 8px reads as a barely-softened rectangle. 16px is
+   the largest corner that stays square-shouldered — past ~20px it clips into
+   the shoulders and reads as a UI avatar. */
 .hero-photo {
   max-height: 280px;
   max-width: 100%;
@@ -196,12 +184,10 @@ a:hover {
   color: var(--text-tertiary);
 }
 
-/* 0.5625rem = 9px, putting the name that far below the photo's top edge —
-   the same offset the pre-refactor layout had. */
 /* 45px is the gutter from the photo. The right padding stays at Bootstrap's
    15px: a column's padding is what cancels .row's -15px margins, so zeroing it
    pushes the text past the container edge — invisible on a centred desktop
-   container, but flush against the glass on a phone. */
+   container, flush against the glass on a phone. */
 .hero-body {
   padding-left: 45px;
   padding-right: 15px;
@@ -210,8 +196,7 @@ a:hover {
 
 /* The @, braces and comma are notation, so the line sits at tertiary and the
    address words come back up to secondary — the same tier drop as the
-   brackets in .pub-links, and for the same reason: the content reads darker
-   than the notation around it. */
+   brackets in .pub-links: content reads darker than its notation. */
 .hero-email {
   margin-top: -5px;
   font-size: var(--text-sm);
@@ -235,7 +220,6 @@ a:hover {
   padding-top: 1.75rem;
 }
 
-/* Icon row: inherit the body colour, accent only on hover. */
 .hero-links a:link,
 .hero-links a:visited {
   color: var(--text-primary);
@@ -245,13 +229,13 @@ a:hover {
   color: var(--accent);
 }
 
-/* Narrow screens: the photo stacks above the text, so the 45px side gutter is
-   dead space — but it drops to the standard column padding, not to zero, or
-   the hero bleeds off both edges while every section below stays inset. */
+/* Narrow screens: the photo stacks above the text, so the 45px gutter is dead
+   space — but it drops to the standard column padding, not zero, or the hero
+   bleeds off both edges while every section below stays inset. */
 @media screen and (max-width: 767px) {
-  /* One gutter for the whole page. 15px is Bootstrap's default and too tight
-     for an 18px serif at arm's length; the columns inside still supply their
-     own 15px, so text lands 20px off each edge. */
+  /* One gutter for the whole page. Bootstrap's 15px is too tight for an 18px
+     serif at arm's length; the columns inside supply their own 15px, so text
+     lands 20px off each edge. */
   .container {
     padding-left: 20px;
     padding-right: 20px;
@@ -266,8 +250,8 @@ a:hover {
     padding-right: 15px;
   }
 
-  /* Stacked columns get no vertical gap from the grid, so the thumbnail would
-     sit on the title with only the title's own 4px above it. */
+  /* Stacked columns get no vertical gap from the grid; without this the
+     thumbnail sits on the title. */
   .pub-row .col-md-3 {
     margin-bottom: 1rem;
   }
@@ -275,47 +259,38 @@ a:hover {
 
 /* --- Section reveal --- */
 /* Shared by all three root pages, and it covers the sections *only*. What sits
-   above the first one — .hero here, the mastheads over in publications.css and
-   resume.css — renders immediately, with nothing applied to it at all.
+   above the first one — .hero here, the mastheads in publications.css and
+   resume.css — renders immediately with nothing applied. That block is what
+   the visitor came for and the only thing certain to be on screen at load;
+   animating it delays the one thing that should already be there. So the
+   entrance begins at Recent Research, at 2026, and at Education. (The résumé
+   masthead once had its own staggered rise; it was removed for this reason.)
 
-   That division is the point. The top block is what the visitor came for and
-   the only thing certain to be on screen at load; animating it delays the one
-   thing that should already be there, and buys nothing, since there is no
-   scroll position to reveal it at. So the entrance begins at Recent Research,
-   at 2026, and at Education. This is also exactly what the reference does
-   (ying-hui-he.github.io/cv.html): its sections carry
-   `.fade-in { opacity: 0; transform: translateY(16px) }` and pick up a
-   `.visible` class as they scroll into view, while its masthead has neither.
+   Sections wait until they are on screen rather than running a fixed load
+   stagger, which spends its later steps below the fold and leaves a fast
+   scroller arriving at a section already half-finished.
 
-   Sections wait until they are actually on screen rather than running a fixed
-   load stagger, which spends its later steps on content below the fold and
-   leaves a fast scroller arriving at a section already half-finished.
-
-   TIMING IS DERIVED, NOT PICKED. This site owns one piece of travel — the nav
+   TIMING IS DERIVED, NOT PICKED. The site owns one piece of travel — the nav
    keypoint, `transform 420ms cubic-bezier(0.34, 1.2, 0.64, 1), opacity 220ms`
-   — and everything else it does is a 120–250ms colour or hover change. A
-   reveal is the only other thing here that moves, so it moves on the
-   keypoint's clock: 420ms for the travel, 220ms for the fade, same split, same
-   tempo. The curve is that curve with the overshoot taken out (y1 1.2 -> 0.9).
-   A dot may spring past its mark and come back; a section springing past its
-   own resting position would shove the page it is part of.
+   in custom-navbar.css — so the reveal runs on that clock: 420ms travel, 220ms
+   fade, and the same curve with the overshoot taken out (y1 1.2 -> 0.9). A
+   dot may spring past its mark; a section springing past its resting position
+   would shove the page it is part of. Retime the two together or they visibly
+   disagree.
 
-   The two numbers that are *not* the keypoint's, and why:
-     10px of travel, not the 16px the reference uses and every template
-     repeats. Nothing else on this site moves further than a few px — the
-     burger's bars go 5 — and the shadow tokens exist so media reads as set
-     *onto* paper. 10px settles; 16px slides.
-     220ms fade against 420ms travel means a section is legible well before it
-     stops moving, which is what keeps this from feeling like waiting.
+   10px of travel, not the 16px every template repeats: nothing else here moves
+   further than a few px (the burger's bars go 5), and the shadow tokens exist
+   so media reads as set *onto* paper. 10px settles; 16px slides. The 220ms
+   fade against 420ms travel means a section is legible well before it stops
+   moving, which is what keeps this from feeling like waiting.
 
-   The hidden state is gated behind .js-anim, which a one-line inline script in
-   each page's <head> sets before any body markup is parsed. Two failure modes
-   that gate closes: with JS off, .js-anim is never added and every section
-   renders normally, where the reference's own `.fade-in { opacity: 0 }` would
-   leave the page permanently blank; and because the class lands before first
-   paint, there is no frame where the sections show and are then hidden.
-   nav.js carries the matching failsafes — no IntersectionObserver, or an
-   observer that never fires, reveals everything. */
+   The hidden state exists only under .js-anim, which an inline script in each
+   page's <head> adds before any body markup is parsed. With JS off the class
+   is never added and every section renders normally — an unconditional
+   `opacity: 0` would leave the page blank. Because the class lands before
+   first paint, there is no frame where sections show and are then hidden.
+   nav.js carries the matching failsafes: no IntersectionObserver, or one that
+   never fires, reveals everything. */
 .js-anim .page-section {
   opacity: 0;
   transform: translateY(10px);
@@ -328,10 +303,9 @@ a:hover {
   transform: none;
 }
 
-/* Paper gets the finished page. A section the visitor never scrolled to is
-   still legitimately at opacity 0 when they hit Cmd-P, and paper has no
-   second chance — so the print sheet overrides the hidden state outright
-   rather than trusting the observer to have reached it. */
+/* Paper gets the finished page. A section never scrolled to is still at
+   opacity 0 when the visitor hits Cmd-P, and paper has no second chance — so
+   print overrides the hidden state outright. */
 @media print {
   .js-anim .page-section {
     opacity: 1;
@@ -339,8 +313,7 @@ a:hover {
   }
 }
 
-/* The arrival is decoration. Without it the page is simply already there —
-   and nav.js reveals every section up front rather than on scroll. */
+/* The arrival is decoration; nav.js also reveals every section up front. */
 @media (prefers-reduced-motion: reduce) {
   .js-anim .page-section {
     opacity: 1;
@@ -354,14 +327,12 @@ a:hover {
   margin-top: 2.25rem;
 }
 
-/* The full rhythm is for section-against-section, where the previous section
-   ends in dense content. The hero ends in a short caption with the photo
-   column's slack above it, so it needs less on top of that, not more. */
+/* The full rhythm is for section-against-section. The hero ends in a short
+   caption with the photo column's slack above it, so it needs less. */
 .hero + .page-section {
   margin-top: 1.75rem;
 }
 
-/* Every section header is followed by its rule; no need to say so inline. */
 .section-h2 + hr {
   margin-top: 0.4em;
 }
@@ -392,11 +363,10 @@ a:hover {
 }
 
 /* --- Service --- */
-/* Two columns: the role on a rail, the bodies served filling the measure
-   beside it. max-content sizes the rail off the longer label, which is what
-   lines the two runs up on one left edge. No rule between the rows — the
-   row-gap is the only thing marking the break, so it has to be wide enough to
-   read as one, and the section's own <hr> stays the only line here. */
+/* Role on a rail, the bodies served beside it. max-content sizes the rail off
+   the longer label, which lines the runs up on one left edge. No rule between
+   rows — the row-gap alone marks the break, so it has to be wide enough to
+   read as one; the section's <hr> stays the only line here. */
 .service-register {
   display: grid;
   grid-template-columns: max-content 1fr;
@@ -414,31 +384,30 @@ a:hover {
 }
 
 /* Fraunces at a caption size, primary ink — the same landmark/detail split as
-   .exp-role over .exp-meta directly above, so Experience and Service read as
-   one system. Not an uppercase tracked eyebrow: the page has none. */
+   .exp-role over .exp-meta, so Experience and Service read as one system. Not
+   a tracked eyebrow — that treatment belongs to the subsection label. */
 .service-role {
   font-family: var(--font-display);
   font-size: var(--text-base);
   font-weight: var(--weight-semibold);
   color: var(--text-primary);
-  /* Matches .service-bodies so the label and the first line beside it sit on
-     one baseline — the half-leading differs otherwise and the rail goes soft. */
+  /* Matches .service-bodies, or the label and its first line drift off one
+     baseline. */
   line-height: 1.5;
 }
 
-/* 1.5, not the body's 1.6: this is a run of short discrete items, not prose,
-   and the looser leading pulled the wrapped lines apart far enough that they
-   started to read as separate rows once the rule between roles came out. */
+/* 1.5, not the body's 1.6: short discrete items, not prose, and the looser
+   leading made wrapped lines read as separate rows. */
 .service-bodies {
   font-size: var(--text-base);
   color: var(--text-secondary);
   line-height: 1.5;
 }
 
-/* A wrapping run, not a bulleted stack: inline items let it fill and break
-   like text, and the label rail gives the wrapped lines their hanging indent
-   for free. .dot-run is the device for any run of short discrete items, so
-   the page separates those exactly one way. */
+/* A wrapping run, not a bulleted stack: inline items fill and break like
+   text, and the label rail gives wrapped lines their hanging indent for free.
+   Use .dot-run for any run of short discrete items, so the page separates
+   them exactly one way. */
 .dot-run {
   list-style: none;
   margin: 0;
@@ -447,42 +416,38 @@ a:hover {
 
 .dot-run li {
   display: inline;
-  /* A venue is one item even when its name has spaces in it: "SIGGRAPH" above
-     "(Asia)" reads as two entries. Same reason .pub-authors u never breaks. */
+  /* "SIGGRAPH" above "(Asia)" reads as two entries — same reason .pub-authors
+     u never breaks. */
   white-space: nowrap;
 }
 
-/* The nowrap above holds only while an item fits the measure. A course with its
-   term on it does not: the run is ~330px on a 360px phone and that line sets
-   ~343px, and a nowrap item cannot shrink below its own width, so it dragged
-   the grid column past the viewport and gave the whole page a horizontal
-   scroll. An item this long has to be allowed to break — the .nowrap spans in
-   the markup are what then choose *where*, so the one break falls on the comma
-   and the course and the term each stay whole. */
+/* The nowrap above holds only while an item fits the measure. The course with
+   its term sets ~343px on a ~330px phone run, and a nowrap item cannot shrink,
+   so it dragged the grid column past the viewport and gave the page a
+   horizontal scroll. It has to be allowed to break; the .nowrap spans in the
+   markup choose *where*, so the break falls on the comma. */
 .dot-run li.is-long {
   white-space: normal;
 }
 
-/* The accent as typography rather than a rule — points measuring out the
-   run, so each item is countable instead of a clause in a long sentence. The
-   colour is on the point, never on a word: this is geometry, which is the
-   only thing --accent is allowed to be. The point belongs to the item before
-   it, so a line can end on one but never start with one. */
+/* Accent points measuring out the run, so each item is countable. The colour
+   is on the point, never a word — geometry, the only thing --accent may be.
+   The point belongs to the item before it, so a line can end on one but never
+   start with one. */
 .dot-run li:not(:last-child)::after {
   content: "\00B7";
-  /* Same point, with empty alt text so it stays out of the accessibility tree
-     — the <li> list already carries the separation, and a screen reader
-     announcing eleven middle dots does not. Declared twice on purpose: the
-     alt-text syntax is dropped whole where unsupported, and losing the
-     separator would run the items together. */
+  /* Declared twice on purpose. The second has empty alt text so a screen
+     reader doesn't announce eleven middle dots (the <li>s already separate);
+     where that syntax is unsupported the declaration is dropped whole, and the
+     first keeps the separator. */
   content: "\00B7" / "";
   color: var(--accent);
   margin-left: 0.3em;
 }
 
 /* Phone: the rail becomes a stacked label, so the row-gap now falls between a
-   label and its own run and has to close right up. The space that separated
-   the columns is what separates the roles instead. */
+   label and its own run and closes up; the roles are separated by margin
+   instead. */
 @media screen and (max-width: 575.98px) {
   .service-register {
     grid-template-columns: 1fr;
@@ -523,12 +488,11 @@ hr {
   margin-bottom: 2.6em;
 }
 
-/* Subsection divider: the row that ends a subsection needs less trailing space
-   than rows stacking against each other, so the rule sits evenly between the
-   two groups instead of crowding the heading below it.
-   The shelved "Let Occ Flow" <template> renders nothing but is still an element,
-   so sibling combinators see it — both selectors have to step over it, or the
-   last Vision row falls back to the full 2.6em gap. */
+/* The row that ends a subsection needs less trailing space, so the rule sits
+   evenly between the two groups. The shelved "Let Occ Flow" <template> in
+   index.html renders nothing but is still an element, so sibling combinators
+   see it — both selectors must step over it, or the last Vision row falls
+   back to the full 2.6em gap. */
 .pub-row:has(+ hr),
 .pub-row:has(+ template + hr) {
   margin-bottom: 1.9em;
@@ -539,12 +503,10 @@ hr {
   margin-bottom: 1.4em;
 }
 
-/* One frame for every piece of media on the page: the same hairline, tint and
-   warm-ink shadow as .hero-photo, so the thumbnails and the profile photo read
-   as the same object. These were a #000 hairline over a cold rgba(0,0,0,.15)
-   shadow — the only pure black on an ivory page whose darkest ink is #141413,
-   and heaviest exactly when a video hadn't loaded yet and the frame stood empty.
-   The shadow already turned warm on hover; now it starts that way. */
+/* One frame for every piece of media: the same hairline, tint and warm-ink
+   shadow as .hero-photo. Not a #000 hairline — the only pure black on a page
+   whose darkest ink is #141413, and heaviest exactly when a video hadn't
+   loaded and the frame stood empty. */
 .pub-thumbnail {
   width: 100%;
   object-fit: cover;
@@ -563,7 +525,7 @@ hr {
   box-shadow: var(--shadow-lift);
 }
 
-/* The lift is decoration; the shadow still marks the hover without it. */
+/* The lift is decoration; the shadow still marks the hover. */
 @media (prefers-reduced-motion: reduce) {
   .pub-thumbnail {
     transition: box-shadow 0.25s ease;
@@ -574,11 +536,10 @@ hr {
   }
 }
 
-/* Palatino, deliberately its own voice — distinct from both the Fraunces
-   landmarks and the Source Serif prose. It is the one face here that is never
-   downloaded, so it renders as Palatino on macOS, Palatino Linotype on Windows,
-   and falls through to Georgia (~15% wider) elsewhere; the rules below are
-   sized so the line still sits correctly under any of the three. */
+/* Palatino, deliberately a third voice beside Fraunces and Source Serif. It is
+   never downloaded: Palatino on macOS, Palatino Linotype on Windows, Georgia
+   (~15% wider) elsewhere, and the rules below must sit correctly under all
+   three. */
 .pub-title {
   font-family: 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
   font-size: var(--text-xl);
@@ -587,25 +548,19 @@ hr {
   margin-bottom: 4px;
   margin-top: 4px;
   line-height: 1.4;
-  /* pretty, NOT balance. Balance minimises the longest line for the line count
-     it lands on, so it picks a split out of the text alone and then holds it:
-     UniMate's title breaks after "Model" at a 335px measure and at every
-     measure through 481px — the same two lines, 242|245, at six widths that
-     span a phone to a laptop. The column grows and the title doesn't, so at
-     767px it fills half its measure while the author line directly beneath it
-     fills all of it, and the title reads as wrapped early for no reason. Even
-     lines are what balance is for, and what they suit is a display heading
-     standing alone; these are bibliography titles set flush left above a
-     full-measure line. Greedy alone only trades the problem for orphans
-     (406|81, 495|45, 337|354|48 — a word stranded on the last line). pretty
-     fills the measure the way greedy does and pulls a word down only when the
-     last line would be a stub, which is exactly those cases. Unsupported, it
-     falls back to plain greedy wrapping — what a bibliography does on paper. */
+  /* pretty, NOT balance. Balance picks a split from the text alone and holds
+     it as the column grows: UniMate's title broke after "Model" at every
+     measure from 335px to 481px, so at 767px it filled half its measure while
+     the author line beneath filled all of it, and read as wrapped early for no
+     reason. Even lines suit a display heading standing alone, not bibliography
+     titles set flush left above a full-measure line. Greedy alone trades that
+     for orphans (406|81, 495|45). pretty fills like greedy and pulls a word
+     down only when the last line would be a stub. Unsupported, it falls back
+     to greedy — what a bibliography does on paper. */
   text-wrap: pretty;
   text-decoration: none;
 }
 
-/* pub-title is typically not a link, but if it is, no underline */
 .pub-title a:link,
 .pub-title a:visited {
   text-decoration: none;
@@ -618,17 +573,13 @@ hr {
   margin-bottom: 4px;
 }
 
-/* Own name in author lists. Marked, not linked: the text stays slate so it
-   never reads as clickable (orange = link elsewhere on the page); a solid
-   accent rule underneath does the identifying. skip-ink is off so the rule
-   runs unbroken under descenders, reading as a mark rather than an underline.
-   And the mark never breaks across a line — a rule under "Linzhan" with
-   another under "Mou" two lines down is two half-marks, which read as two
-   people, and it undoes the one thing the mark is for. It happens at any
-   width where the name lands near the end of a line, so this is not a narrow
-   screen's problem: on a phone it hits the publications page's author lists,
-   and on a desktop the homepage's, whose column is cut by the thumbnail.
-   Eleven characters can't overflow anything they are set in. */
+/* Own name in author lists. Marked, not linked: ink text, so it never reads
+   as clickable, with a solid accent rule doing the identifying. skip-ink is
+   off so the rule runs unbroken under descenders and reads as a mark, not an
+   underline. nowrap because a rule under "Linzhan" with another under "Mou" a
+   line down reads as two people — and it happens at any width where the name
+   lands near a line end, desktop included. Eleven characters can't overflow
+   anything. */
 .pub-authors u {
   font-weight: var(--weight-semibold);
   color: var(--text-primary);
@@ -640,8 +591,7 @@ hr {
   white-space: nowrap;
 }
 
-/* Semibold, not the old phantom 500 — the venue is the credibility line, and
-   this is the weight that was actually rendering everywhere else on the page. */
+/* The venue is the credibility line, so it takes primary ink and semibold. */
 .pub-venue {
   font-size: var(--text-base);
   color: var(--text-primary);
@@ -649,9 +599,9 @@ hr {
   margin-bottom: 20px;
 }
 
-/* The [ ] punctuation is chrome, so it drops a tier; the link labels inside
-   stay at secondary. Same trick as the row above — the target reads darker
-   than its own brackets, which is what tells you where to click. */
+/* The [ ] punctuation is chrome, so it drops a tier; the labels inside stay
+   at secondary. The target reads darker than its brackets, which is what
+   tells you where to click. */
 .pub-links {
   font-size: var(--text-base);
   margin-bottom: 4px;
@@ -686,7 +636,7 @@ hr {
   margin-bottom: 0;
 }
 
-/* --- Venue highlight (Highlight / Oral badges) --- */
+/* --- Venue highlight (Highlight / Oral) --- */
 .venue-highlight {
   color: var(--accent);
   font-weight: var(--weight-bold);

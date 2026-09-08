@@ -1,12 +1,11 @@
 // Driving the lab: open it, pick a category, and get the page into the state
-// the capture expects. Every step here is something a visitor could do — the
-// tool clicks the real controls rather than reaching into the viewer.
+// the capture expects. Where a real control exists (theme, stage) the tool
+// clicks it rather than reaching into the viewer.
 
 import { LAB_PATH, REPO_ROOT } from './paths.mjs';
 import { fail, slugify } from './util.mjs';
 
-// Returns the category labels the lab currently shows, which is also all
-// --list needs.
+// Returns the category labels the lab currently shows — also what --list prints.
 export async function openLab(page, origin, slug) {
   const url = `${origin}${LAB_PATH}${slug ? '#' + slug : ''}`;
   process.stderr.write(`serving ${REPO_ROOT}\nopening ${url}\n`);
@@ -16,8 +15,8 @@ export async function openLab(page, origin, slug) {
   return page.eval('[...document.querySelectorAll("#example-sidebar .example-name")].map((el) => el.textContent)');
 }
 
-// The hash resolves by slug, and an unknown one silently falls back to the
-// first stage — which would render the wrong category without a word.
+// The lab resolves an unknown hash to the first stage without a word, which
+// would render the wrong category silently.
 export function resolveStage(stages, opts, slug) {
   const match = stages.find((label) => slugify(label) === slug);
   if (!match) {
@@ -41,8 +40,8 @@ export function waitForStageLoaded(page) {
   })()`, 180_000, 'the stage to finish loading');
 }
 
-// Repaints only what is BEHIND the stage: the floor, lights and skeleton stay on
-// the theme. Returned as a function because it runs twice — the stage reload on
+// Repaints only what is BEHIND the stage; floor, lights and skeleton stay on
+// the theme. Returned as a function because it runs twice: the stage reload on
 // the virtual clock must not repaint over it.
 export function backgroundPainter(page, opts, alpha) {
   return async function applyBackground() {
@@ -52,8 +51,8 @@ export function backgroundPainter(page, opts, alpha) {
     if (painted === 0) fail('could not reach the scene to set --background (no scene was observed)');
     if (painted < 0) fail(`could not read a colour from "${opts.background}" — is it a valid CSS colour?`);
     // The canvas is not the only thing painting: `body` carries a gradient and
-    // `.viewer-wrapper` its own `--stage` fill, so an inline style on body
-    // leaves the wrapper opaque underneath a cleared canvas.
+    // `.viewer-wrapper` its own `--stage` fill, so a style on body alone leaves
+    // the wrapper opaque under a cleared canvas.
     const pageBackground = alpha ? 'transparent' : opts.background;
     await page.eval(`(() => {
       const id = 'lab-capture-background';
@@ -66,13 +65,13 @@ export function backgroundPainter(page, opts, alpha) {
   };
 }
 
-// Chrome composites the page over its own opaque white unless told not to,
-// which would fill the alpha the canvas just cleared.
+// Chrome composites the page over opaque white unless told not to, which
+// would fill the alpha the canvas just cleared.
 export function clearDefaultBackground(page) {
   return page.send('Emulation.setDefaultBackgroundColorOverride', { color: { r: 0, g: 0, b: 0, a: 0 } });
 }
 
-// Call AFTER waitForStageLoaded, which reads the loading overlay.
+// Call AFTER waitForStageLoaded, which reads the loading overlay this hides.
 export function hideChrome(page) {
   return page.eval(`(() => {
     const style = document.createElement('style');
@@ -83,22 +82,21 @@ export function hideChrome(page) {
 
 export async function beginVirtualClock(page) {
   await page.eval('window.__labCapture.begin()');
-  // The render loop hands itself over one real frame after the clock flips;
-  // stepping before that lands on an empty queue and burns frames.
+  // The render loop joins the virtual queue one real frame after the flip;
+  // stepping before that burns frames on an empty queue.
   await page.waitFor('window.__labCapture.pending() > 0', 10_000, 'the render loop to join the virtual clock');
 }
 
-// Frame 0 is the stage as the lab first shows it — opening orbit angle, every
-// motion at t=0 — and the way to get there is to load it again now that the
-// clock is virtual. Loading runs on fetch and promises, not on frames, so it
-// completes while time is frozen: no mixer advances and the camera does not
-// orbit between the fit and the first captured frame. (Resetting in place
-// cannot do this — nothing rewinds a running mixer.)
+// Frame 0 must be the stage as the lab first shows it: opening orbit angle,
+// every motion at t=0. Nothing rewinds a running mixer, so the stage is loaded
+// again now that the clock is virtual. Loading runs on fetch and promises, not
+// frames, so it completes while time is frozen — no mixer advances and the
+// camera does not orbit between the fit and the first captured frame.
 export async function reloadStageOnVirtualClock(page, stageIndex) {
   await page.eval(`document.querySelectorAll('#example-sidebar button')[${stageIndex}].click()`);
-  // The INLINE style, not the computed one: hiding the chrome put a
-  // `display: none !important` on the overlay, so computed says "hidden" from
-  // the first poll. loadStage writes 'flex' then 'none' on the element itself.
+  // The INLINE style, not the computed one: hideChrome put `display: none
+  // !important` on the overlay, so computed reads "hidden" from the first
+  // poll. loadStage writes 'flex' then 'none' on the element itself.
   await page.waitFor(`document.getElementById('loading-overlay').style.display === 'none'`,
     180_000, 'the stage to reload on the virtual clock');
 }

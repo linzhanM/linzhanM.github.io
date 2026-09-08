@@ -4,10 +4,10 @@ import { extname, join } from 'node:path';
 
 import { REPO_ROOT } from './paths.mjs';
 
-// One pass of a rig's motion, straight out of the .glb: the JSON chunk carries
-// every animation sampler's input accessor, and an input accessor's `max` is its
-// last keyframe time. Only the header and that chunk are read, so a 40 MB rig
-// costs a few hundred bytes.
+// One pass of a rig's motion, straight out of the .glb: each animation
+// sampler's input accessor has a `max`, which is its last keyframe time. Only
+// the header and the JSON chunk are read, so a 40 MB rig costs a few hundred
+// bytes.
 export async function glbClipSeconds(file) {
   const { open } = await import('node:fs/promises');
   const fh = await open(file, 'r');
@@ -36,9 +36,9 @@ export async function glbClipSeconds(file) {
   }
 }
 
-// Every rig in the stage loops on its own clip, so the video is as long as the
-// LONGEST one times --loops: the longest rig gets exactly that many passes and
-// the shorter ones more, and no rig is ever cut mid-motion.
+// Each rig loops on its own clip, so the video runs the LONGEST one times
+// --loops: that rig gets exactly that many passes, shorter ones more, and none
+// is cut mid-motion.
 export async function stageSeconds(page, origin, opts) {
   if (opts.seconds != null) return opts.seconds;
 

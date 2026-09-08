@@ -1,42 +1,29 @@
 /* Publications page only (publications.html). Loads after styles.css and reuses
-   its tokens, base typography, and the .pub-* entry classes — these are the same
-   papers the homepage and résumé set, and holding one voice across the three
-   pages is the point of sharing the sheet. What this layer adds is the record's
-   own structure: the masthead row and the year spine.
+   its tokens, base typography and the .pub-* entry classes, so the papers hold
+   one voice across the three pages. This layer adds the record's own
+   structure: the masthead row and the year spine.
 
-   The spine is the page's one device, and it is the site's own motif turned
-   vertical: the nav rail carries a single accent keypoint that marks where you
-   are, so here a hairline rail runs down the left of each year's entries with
-   one accent joint at the year — a marker on a rail, not a bullet. Reverse
-   chronology is the only ordering on the page, and the spine is what encodes
-   it; don't add entry numbering on top, it would say the same thing twice.
-   One joint per paper was tried and taken out: it turned the rail into a list
-   of markers, and the year is the only thing on this page that needs marking. */
-/* 63rem rather than the résumé's 60rem, and the extra 3 are the year column's
-   fault, not a change of measure: this page spends 7.5rem + 2rem of its width
-   on the spine before a word is set, so at 60rem the entries column is 807px
-   and the two longest author lines (TTT-Parkour's eight names, DuQuant's nine
-   — 819px and 828px unbroken) each wrapped a single trailing name onto a line
-   of its own. An author list is one run to be read across, not a paragraph, so
-   a widow there is worse than a wider page. 62rem is the exact threshold; 63
-   leaves ~27px so a font-rendering difference or one more co-author doesn't
-   put it back. Titles fit at either width, so nothing else on the page moves.
-   The ceiling is Bootstrap's: .container is 1140px at ≥1200px viewports, less
-   its 15px gutters, so 1008px is inside it and 69rem would be the real limit.
-   Below 1200px the container is 960px and the long lines wrap again — that is
-   the narrow window doing its job, not a regression to chase. */
+   The spine is the page's one device — the nav rail's keypoint turned
+   vertical: a hairline down the left of each year's entries with one accent
+   joint at the year, a marker on a rail rather than a bullet. It encodes the
+   reverse chronology; don't add entry numbering on top. One joint per paper
+   was tried and taken out — it turned the rail into a list of markers, and
+   the year is the only thing here that needs marking. */
+/* 63rem, not the résumé's 60rem, and the extra is the year column's: the spine
+   spends 7.5rem + 2rem before a word is set, so at 60rem the two longest
+   author lines (TTT-Parkour, DuQuant — 819px and 828px unbroken) each widowed
+   a trailing name. 62rem is the exact threshold; 63 leaves ~27px of slack for
+   font-rendering differences or one more co-author. Below 1200px Bootstrap's
+   container drops to 960px and the long lines wrap again — the narrow window
+   doing its job, not a regression to chase. */
 .pubs-page {
   max-width: 63rem;
   margin: 0 auto;
 }
 
-/* The rail's ink, measured against this page's background and so not in
-   styles.css. --ivory-dark is the site's border token and the obvious pick,
-   and it cannot do this job: #e8e6dc on the page's #faf9f5 is 1.19:1, so the
-   rail was never actually drawn and the year's accent joint sat in white space
-   reading as a loose bullet — the exact failure the unimate stage rail had
-   before it was rebuilt. 1.67:1 is still a hairline; it is just one that
-   renders. */
+/* The rail's ink. Not --ivory-dark: #e8e6dc on #faf9f5 is 1.19:1, so the rail
+   never rendered and the accent joint sat in white space as a loose bullet.
+   1.67:1 is still a hairline; it is just one that renders. */
 :root {
   --spine: #cac3b2;   /* 1.67:1 on --ivory-light */
 }
@@ -44,21 +31,17 @@
 /* --- Masthead --- */
 /* The résumé masthead's two-sided row: what this page is on the left, the same
    record in its other database on the right. One baseline, so the 36px title
-   and the 15px link read as one line. Renders with the page — nothing above the
-   first year group animates (see the Entrance note in resume.css; the same
-   reasoning holds here and needs no rule). */
+   and 15px link read as one line. No entrance — see the section reveal in
+   styles.css. */
 .pubs-masthead {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 2rem;
   padding-top: 3.25rem;
-  /* This is the gap *above* .pubs-note, and the note's own margin is the gap
-     below it — the two together are what put the note in the masthead's block
-     rather than in 2026's. So it is set small on purpose: 17px above against
-     47px below, where 0.85rem used to make it 29 against 47 and the note
-     floated between the two. Read them as a pair; changing one alone moves
-     which block the line belongs to. */
+  /* The gap *above* .pubs-note; the note's own margin is the gap below. Small
+     on purpose (17px against 47px) so the note belongs to the masthead's
+     block, not 2026's. Change the two as a pair. */
   padding-bottom: 0.15rem;
 }
 
@@ -85,23 +68,19 @@
 }
 
 /* --- Year spine --- */
-/* Grid, not floats: the year is a landmark in its own column, and the entries
-   column carries the rail. Each group is a .page-section, so it takes the
-   shared section reveal from styles.css — which is also the reason the rail
-   stops at each year instead of running the whole record as one bone: the
-   reveal translates a group 10px, and a rail spanning two of them would
-   visibly tear on the way in. The break lands on the year boundary, which is
-   the one place a break says something. */
+/* The year is a landmark in its own column; the entries column carries the
+   rail. Each group is a .page-section and takes the shared reveal — which is
+   why the rail stops at each year instead of running the whole record: the
+   reveal translates a group 10px, and one rail spanning two would visibly
+   tear on the way in. */
 .pubs-year-group {
   display: grid;
   grid-template-columns: 7.5rem minmax(0, 1fr);
 }
 
-/* Fraunces numerals as a landmark — the display face's one appearance here,
-   matching the discipline in resume.css (each face spent once). Sticky, so on
-   a year with several entries the numeral keeps its group company; 5rem clears
-   the sticky navbar. align-self is required — a stretched grid item has no
-   room left to stick in. */
+/* Fraunces numerals — the display face's one appearance here. Sticky, so the
+   numeral keeps a long group company; 5rem clears the navbar. align-self is
+   required — a stretched grid item has no room to stick in. */
 .pubs-year {
   position: sticky;
   top: 5rem;
@@ -116,8 +95,8 @@
 }
 
 /* The rail. Its joint (::before) is the nav keypoint's twin — same 5px, same
-   accent, used as a shape, never as text colour. left: -3px centres the dot on
-   the 1px rule; top aligns it with the year numeral's optical centre. */
+   accent as a shape. left: -3px centres the dot on the 1px rule; top aligns it
+   with the numeral's optical centre. */
 .pubs-entries {
   position: relative;
   border-left: 1px solid var(--spine);
@@ -136,9 +115,8 @@
 }
 
 /* --- Entries --- */
-/* The .pub-* classes arrive styled from styles.css; only the spacing changes.
-   Those margins are tuned for the homepage's rows-with-thumbnails, and here
-   the entries stack directly, like the résumé's publications section. */
+/* .pub-* arrives styled from styles.css; only the spacing changes, since those
+   margins are tuned for a row beside a thumbnail and here entries stack. */
 .pubs-entry {
   margin-bottom: 1.7rem;
 }
@@ -156,13 +134,10 @@
 }
 
 /* --- Note --- */
-/* The equal-contribution note leads the record rather than closing it, so it
-   belongs to the masthead block above and not to 2026 below: it sits tight
-   under the title and takes over the masthead's own separation from the first
-   year group (hence the small padding-bottom there, which this margin
-   replaces — don't set both, and see the note at that rule for the ratio the
-   two hold). Still chrome ink at --text-sm: promoting it in position is not
-   promoting it in voice. */
+/* The equal-contribution note leads the record, so it belongs to the masthead
+   block, not to 2026: this margin is the masthead's separation from the first
+   year group (see .pubs-masthead's padding-bottom — the two are a pair). Still
+   chrome ink at --text-sm: promoted in position, not in voice. */
 .pubs-note {
   margin: 0 0 2rem;
   font-size: var(--text-sm);
@@ -170,10 +145,9 @@
 }
 
 /* --- Keyboard focus --- */
-/* The same ring custom-navbar.css draws, because the page's own links had
-   nothing: .pub-links strips the underline, so a tabbing visitor was left with
-   whatever the UA happened to paint over ivory. Quality floor, not decoration
-   — and there are ~25 of these links, which is a long way to tab blind. */
+/* The same ring custom-navbar.css draws. .pub-links strips the underline, so
+   without this a tabbing visitor gets whatever the UA paints over ivory — and
+   there are ~25 links to tab through. */
 .pubs-page a:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
@@ -181,18 +155,13 @@
 }
 
 /* --- Narrow --- */
-/* The year column has no room on a phone: the numeral moves above its group
-   and the rail stays — at 1.1rem of inset it is a margin note's rule. Sticky
-   is pointless in block flow and is dropped with the grid.
-   THE RAIL MOVES UP A LEVEL WITH IT. Drawn where the wide layout draws it, on
-   .pubs-entries, it begins *below* the stacked numeral, so the accent joint
-   lands beside the first paper's title and reads as a bullet on that one entry
-   — the list-of-markers this page rejected (see the top of this sheet),
-   arrived at by breakpoint rather than by choice, and with the year left off
-   the rail it marks nothing. So the rule and the joint go on the group, whose
-   top edge *is* the numeral's: same hairline, same 5px joint at the same
-   0.55rem, still marking the one thing here that needs marking, and now the
-   numeral is inside the rail with its entries instead of hanging beside it. */
+/* No room for the year column on a phone: the numeral moves above its group
+   and sticky goes with the grid. THE RAIL MOVES UP A LEVEL WITH IT. Left on
+   .pubs-entries it would begin *below* the stacked numeral, so the joint lands
+   beside the first paper's title and reads as a bullet on that entry — the
+   list-of-markers this page rejected. So the rule and joint go on the group,
+   whose top edge *is* the numeral's: same hairline, same 5px joint at the same
+   0.55rem, with the numeral inside the rail with its entries. */
 @media screen and (max-width: 767px) {
   .pubs-masthead {
     display: block;
@@ -226,7 +195,7 @@
     margin-bottom: 0.75rem;
   }
 
-  /* Handed back: the group carries both now. */
+  /* The group carries both now. */
   .pubs-entries {
     border-left: 0;
     padding-left: 0;
@@ -236,20 +205,17 @@
     content: none;
   }
 
-  /* The bracketed links are this page's only touch targets and they stand
-     22px tall — a line of 16px text, sized for a cursor. Vertical padding on
-     an inline element grows the hit box without moving a pixel of layout, and
-     the row's line-height is opened just past that box so the wrapped second
-     line a long link set produces at 320px doesn't overlap the first's
-     targets. 35px is not the 44px of a button; it is what a link in running
-     prose can take without the row turning into a menu. */
+  /* The bracketed links are the page's only touch targets and stand 22px
+     tall, sized for a cursor. Vertical padding on an inline element grows the
+     hit box without moving layout; the line-height opens just past that box
+     so a wrapped second line at 320px doesn't overlap the first's targets.
+     35px, not a button's 44px — what a link in running prose can take. */
   .pub-links {
     line-height: 2.2;
   }
 
-  /* The padding is that hit box; nowrap keeps the label whole, since
-     "[interactive / demo]" would leave an opening bracket on one line and its
-     closing one on the next, and half a target is worse than a small one. */
+  /* The padding is that hit box; nowrap keeps a label's brackets on one line
+     — half a target is worse than a small one. */
   .pub-links a {
     padding-block: 0.4em;
     white-space: nowrap;

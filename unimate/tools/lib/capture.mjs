@@ -1,6 +1,6 @@
 // The frame loop: step the virtual clock, screenshot, hand the buffer to the
-// sink. Screenshotting is slow (~5-10 fps) and that is fine — the page only
-// advances when it is stepped, so the result is a perfect --fps regardless.
+// sink. Screenshotting is slow (~5-10 fps) and that is fine: the page advances
+// only when stepped, so the result is a perfect --fps regardless.
 
 import { frameName } from './output.mjs';
 

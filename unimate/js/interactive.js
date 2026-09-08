@@ -1,7 +1,7 @@
-// Standalone entry point for the full-screen UniMate motion lab. The catalog is
-// the shared examples.js — same stages, same order on both pages. What differs
-// is the VIEWER: everything below is lab-only presentation (fullscreen chrome,
-// camera paddings, hover prompts, theme).
+// Entry point for the full-screen motion lab. The catalog is the shared
+// examples.js — same stages, same order on both pages; everything below is
+// lab-only presentation (fullscreen chrome, camera paddings, hover prompts,
+// theme).
 import { HIDDEN_CATEGORIES } from './viewer-presets.js?v=3';
 import { LAB_TUNING } from './stage-tuning.js?v=12';
 
@@ -12,9 +12,9 @@ window.UNIMATE_VIEWER_CONFIG = {
   cameraPadding: 1.32,
   mobileCameraPadding: 0.96,
   cameraPaddingByCategory: {
-    // Multiplies the stage's own pad in stage-tuning.js — together they are the
-    // lab's framing. Wide enough that the flanks of that file's one-row Welcome
-    // never reach the panel or the frame edge as their clips swing out.
+    // Multiplies the stage's pad in stage-tuning.js — together they are the
+    // lab's framing. Wide enough that the flanks of the one-row Welcome never
+    // reach the panel or the frame edge as their clips swing out.
     'Welcome': 1.37,
     'Bipedal': 1.5,
     'Articulated': 1.34,
@@ -24,7 +24,7 @@ window.UNIMATE_VIEWER_CONFIG = {
     'Quadrupedal': 1.40,
   },
   mobileCameraPaddingByCategory: {
-    // A phone frames this row on its width alone; under 1.0 the two flanks sit
+    // A phone frames the row on its width alone; under 1.0 the two flanks sit
     // on the frame edges. Every entry here stays under its desktop counterpart.
     'Welcome': 1.02,
     'Bipedal': 1.08,
@@ -44,11 +44,11 @@ window.UNIMATE_VIEWER_CONFIG = {
 
 await import('./viewer.js?v=171');
 
-// Category-panel collapse — lab-only chrome, so it is wired here, not in the
-// shared engine. The canvas never resizes: only the floating panel and its
-// handle move, so camera and stage layout are untouched. The state is kept for
-// the visit (sessionStorage) and restored via .is-instant, so a returning
-// visitor's hidden panel is simply hidden rather than seen leaving.
+// Category-panel collapse — lab-only chrome, so wired here, not in the shared
+// engine. The canvas never resizes: only the floating panel and its handle
+// move, so camera and layout are untouched. The state lasts the visit
+// (sessionStorage) and is restored under .is-instant, so a returning visitor's
+// hidden panel is simply hidden rather than seen leaving.
 {
   const panel = document.getElementById('category-panel');
   const toggle = document.querySelector('.panel-toggle');

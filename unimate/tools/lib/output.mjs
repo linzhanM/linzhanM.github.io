@@ -1,6 +1,6 @@
 // Where the pixels go: frame geometry, the ffmpeg command, and the sink the
-// capture loop writes each frame to. Nothing here touches the disk except the
-// output itself — ffmpeg reads the frames off stdin.
+// capture loop writes each frame to. ffmpeg reads the frames off stdin, so
+// nothing touches the disk except the output itself.
 
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
@@ -14,15 +14,15 @@ import { fail } from './util.mjs';
 const even = (n) => Math.max(2, Math.round(n / 2) * 2);
 
 // What Chrome paints versus what is written: the lab renders at --scale times
-// the output size and the frames are filtered back down (see the lanczos pass
-// below), unless --no-downsample keeps the captured pixels.
+// the output size and the frames are filtered back down, unless
+// --no-downsample keeps the captured pixels.
 export function frameGeometry(opts) {
   const captured = { width: even(opts.width * opts.scale), height: even(opts.height * opts.scale) };
   const size = opts.downsample ? { width: even(opts.width), height: even(opts.height) } : captured;
   return { captured, size };
 }
 
-// JPEG has no alpha, so a transparent render captured as JPEG is just a black
+// JPEG has no alpha, so a transparent render captured as JPEG would be a black
 // backdrop — the one option that silently undoes the request.
 export function frameFormat(opts, alpha) {
   if (alpha && opts.jpeg) console.error('warning: --jpeg carries no alpha — capturing PNG frames instead');
@@ -39,22 +39,22 @@ function ffmpegArgs(opts, out, size, alpha) {
       + ' Use .mov (ProRes 4444) or a .png sequence.');
   };
 
-  // Two things happen in this one filter, and both are why an untagged encode
-  // comes back soft and off-colour:
-  //   · the supersampled frames are filtered down with lanczos, which is the
-  //     resolution the thin skeleton lines actually need;
-  //   · the RGB screenshots are converted to Rec.709 limited-range explicitly.
-  //     ffmpeg otherwise picks BT.601 coefficients and leaves the stream
-  //     untagged, while every player assumes 709 — that mismatch IS the colour
-  //     shift, greens and the terracotta chips drifting against the browser.
-  const scale = `scale=${size.width}:${size.height}:flags=lanczos`;
+  // One filter does two things, and both are why an untagged encode comes back
+  // soft and off-colour:
+  //   · lanczos filters the supersampled frames down, which is the resolution
+  //     the thin skeleton lines need;
+  //   · the RGB screenshots are converted to Rec.709 limited range explicitly.
+  //     ffmpeg otherwise picks BT.601 coefficients and tags nothing, while
+  //     every player assumes 709 — that mismatch IS the colour shift (greens
+  //     and the terracotta chips drifting against the browser).
   // setparams, not the -color_* output options alone: the filter chain hands
   // ffmpeg frames whose primaries and transfer are "unspecified", and frame
-  // metadata wins — the stream ends up tagged bt709/unknown/unknown, which is
-  // the half-tagged state QuickTime guesses its way through.
-  // `format` comes AFTER scale on purpose: filter negotiation makes scale itself
-  // produce that pixel format, so the colour options above are what performs the
-  // conversion. A format filter placed elsewhere would redo it on its own terms.
+  // metadata wins, so the stream ends up tagged bt709/unknown/unknown — the
+  // half-tagged state QuickTime guesses its way through.
+  // `format` comes AFTER scale on purpose: negotiation then makes scale itself
+  // produce that pixel format, so the colour options above perform the
+  // conversion. Placed elsewhere, format would redo it on its own terms.
+  const scale = `scale=${size.width}:${size.height}:flags=lanczos`;
   const toRec709 = (pixelFormat) =>
     `${scale}:in_range=full:out_range=tv:in_color_matrix=bt709:out_color_matrix=bt709,`
     + `format=${pixelFormat},setparams=range=tv:color_primaries=bt709:color_trc=bt709:colorspace=bt709`;
@@ -66,9 +66,9 @@ function ffmpegArgs(opts, out, size, alpha) {
       '-pix_fmt', 'yuv420p', ...tags, '-movflags', '+faststart', '-y', out];
   }
   if (ext === '.webm') {
-    // libvpx-vp9 advertises yuva420p, but this build drops the alpha plane
-    // without a word — the file decodes back as plain yuv420p. Refuse instead of
-    // handing over an opaque render that was asked to be transparent.
+    // libvpx-vp9 advertises yuva420p but drops the alpha plane without a word;
+    // the file decodes back as plain yuv420p. Refuse rather than hand over an
+    // opaque render that was asked to be transparent.
     needsAlpha('libvpx-vp9 in .webm (it drops the alpha plane silently)');
     return [...input, '-vf', toRec709('yuv420p'), '-c:v', 'libvpx-vp9', '-crf', String(opts.crf), '-b:v', '0',
       '-pix_fmt', 'yuv420p', '-row-mt', '1', ...tags, '-y', out];
@@ -81,8 +81,8 @@ function ffmpegArgs(opts, out, size, alpha) {
   }
   if (ext === '.gif') {
     needsAlpha('gif');
-    // Stays in RGB, so no colour conversion — but a rig against a flat backdrop
-    // banners badly on the default 216-colour web palette, hence a per-clip one.
+    // Stays in RGB, so no colour conversion. A rig against a flat backdrop
+    // bands badly on the default 216-colour web palette, hence a per-clip one.
     return [...input, '-vf', `${scale},split[a][b];[a]palettegen=stats_mode=diff[p];[b][p]paletteuse=dither=sierra2_4a`,
       '-loop', '0', '-y', out];
   }
@@ -98,9 +98,9 @@ function startEncoder(opts, out, size, alpha) {
   return ff;
 }
 
-// The capture loop hands every frame to this and knows nothing else about the
-// destination: a .png output is a directory of numbered frames, anything else is
-// an ffmpeg process fed on stdin. --keep-frames mirrors either one to disk.
+// The capture loop knows only write() and finish(): a .png output is a
+// directory of numbered frames, anything else an ffmpeg process fed on stdin.
+// --keep-frames mirrors either one to disk.
 export async function openSink(opts, { slug, size, alpha }) {
   const sequence = !!opts.out && extname(opts.out).toLowerCase() === '.png';
   const path = opts.out ? resolve(process.cwd(), opts.out) : join(DEFAULT_OUT_DIR, `${slug}.mp4`);

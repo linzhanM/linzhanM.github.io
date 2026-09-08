@@ -1,10 +1,9 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// Interactive viewer — scene catalog (data only, no engine code).
+// Interactive viewer — scene catalog. Data only; the engine is viewer.js and
+// the per-page framing is stage-tuning.js.
 //
-// EXAMPLES drives the viewer's sidebar: each entry is one "stage", a window of
-// one or more models laid out together. Edit this file to add, reorder or
-// reposition characters; the rendering engine lives in viewer.js and the
-// per-page framing in stage-tuning.js.
+// EXAMPLES drives the sidebar: each entry is one "stage", a window of one or
+// more models laid out together. Add, reorder or reposition rigs here.
 //
 // ── Stage options ────────────────────────────────────────────────────────────
 //   label      sidebar button text; also the key stage-tuning.js and
@@ -18,25 +17,24 @@
 //              Files it omits follow the ones it names, in catalog order.
 //   scale      multiplies every model's normalized size in this stage.
 //   pad        camera zoom-out margin (>1 pulls the camera back). Default 1.0.
-//   lighting   per-stage light-intensity multiplier (1 = default look).
+//   lighting   light-intensity multiplier (1 = default look).
 //   evenGaps   true = constant gap between model EDGES, so a wide model doesn't
-//              crowd a narrow one; false = uniform center spacing.
+//              crowd a narrow one; false = uniform centre spacing.
 //   sizeBy     'height' (default), or 'maxdim' to normalize to the largest bbox
 //              dimension — pose-stable for elongated animals (eagles, sharks)
-//              whose height swings wildly across clips.
+//              whose height swings across clips.
 //   stagger    peak depth offset: alternating models step forward/back along Z
 //              so the row zig-zags instead of sitting on one line.
 //   rowDepth   Z gap between rows when files use `row` (default 2.6).
 //   fileOffsets { index: [x, y, z] } — one rig's nudge, in the same normalized
-//              units as a file's own `offset` and added on top of it. The
+//              units as the file's own `offset` and added on top of it. The
 //              stage-level way to move a single rig, so a page can place one
 //              without forking the shared file entry.
-//   singleRow  collapse every `row` onto the front rank, so a two-rank diorama
-//              lays out as one row. Presentation, not content — it belongs in
-//              stage-tuning.js, for the page whose frame is wide enough to
-//              carry the members side by side.
-//   stageShift [x, y, z] slides the GROUP off-center while the camera and floor
-//              stay locked on the ground center. Held out of the auto-framing.
+//   singleRow  collapse every `row` onto the front rank. Presentation, not
+//              content — it belongs in stage-tuning.js, for the page whose
+//              frame is wide enough to carry the members side by side.
+//   stageShift [x, y, z] slides the GROUP off-centre while the camera and floor
+//              stay locked on the ground centre. Held out of the auto-framing.
 //   floor      multiplier on the auto-sized checker floor (default 1). The floor
 //              pads itself by 2×|stageShift|, which a deep shift inflates until
 //              the models read lost — shrink it here.
@@ -44,24 +42,24 @@
 // ── File entry ───────────────────────────────────────────────────────────────
 //   Either a path string, or an object { url, ...opts }:
 //     url          .glb / .gltf via GLTFLoader, .fbx via FBXLoader.
-//     prompt       OVERRIDE only. The prompts live in ../resources/prompts.json
-//                  keyed by filename, with the house style documented there —
-//                  edit them there. Use this to show one glb under a different
-//                  prompt in one stage; `prompt: ''` suppresses the chip.
+//     prompt       OVERRIDE only. Prompts live in ../resources/prompts.json,
+//                  keyed by filename, with the house style documented there.
+//                  Use this to show one glb under a different prompt in one
+//                  stage; `prompt: ''` suppresses the chip.
 //     labelSlot    initial chip position; the collision solver may still move it.
 //     lockLabelSlot hold `labelSlot` instead of letting the solver re-choose.
 //     labelOffset  [x, y] pixel nudge on the chip's chosen screen position.
 //     labelPinOffset [x, y] pixel nudge on the leader's endpoint only.
 //     material     PBR override { roughness, metalness, emissiveIntensity,
-//                  emissive?, colorScale? }. Lowering roughness and lifting
-//                  emissive rescues rigs that render dark; pass a flat
+//                  emissive?, colorScale? }. Lower roughness and higher
+//                  emissive rescue rigs that render dark; a flat
 //                  `emissive: 0xRRGGBB` for near-black rigs (eagles).
-//                  `colorScale` multiplies the base color and its texture.
+//                  `colorScale` multiplies the base colour and its texture.
 //     scale        size multiplier, stacking with the stage `scale`.
-//     row          front-to-back row (0 = front, default). Rows are centered on
+//     row          front-to-back row (0 = front, default). Rows are centred on
 //                  X and pushed back by `rowDepth` per step.
 //     groundToMesh ground the lowest MESH vertex instead of the lowest joint —
-//                  for rigs whose spine joints float above the belly.
+//                  for rigs whose joints float above (or sit inside) the body.
 //     groundFrame  ground on a SINGLE frame (0..1) instead of the lowest point
 //                  across all frames — for a limb that dips below the feet
 //                  mid-clip and floats the body (stego-attack → groundFrame: 0).
@@ -75,7 +73,7 @@
 import { SHOWCASE_EXAMPLE } from './showcase.js?v=5';
 
 // The mixamo rigs all render dark and matte the same way, so they share one
-// material. Every other glb carries its own inline `material`.
+// material.
 const MIXAMO = { roughness: 0.8, emissiveIntensity: 0.5 };
 
 export const EXAMPLES = [
@@ -84,51 +82,51 @@ export const EXAMPLES = [
   // viewer-presets.js filters the hidden labels. Four rigs built as differently
   // as possible (70 bones on tracks, a 7-bone floating robot, a 29-DOF
   // humanoid, a 19-bone quadruped) greeting on one beat is the paper's claim in
-  // a single frame. All four clips are 48 frames at 24fps and hold their peak
-  // across the middle third, so the gestures arrive together with no stagger.
+  // one frame. All four clips are 48 frames at 24fps and hold their peak across
+  // the middle third, so the gestures arrive together.
   {
     label: 'Welcome',
     files: [
-      // Row 0 (front): WALL-E · EVE.  Row 1 (back): G1 · Go2 — how the embedded
-      // project page shows them; the lab flattens the two (singleRow, in
-      // stage-tuning.js). Two ranks here because side by side the reared dog
-      // leans into its neighbour — evenGaps sizes its slot from a quadruped's
-      // sprawl, not the narrow column it becomes rearing — and the row has to
-      // spread until it stops reading as a group. Depth buys that room without
-      // the spread; the lab's wider frame doesn't need it. Both readings of the
-      // stage are live, so change one deliberately.
+      // Row 0 (front): WALL-E · EVE.  Row 1 (back): G1 · Go2 — as the embedded
+      // page shows them; the lab flattens the ranks (singleRow, stage-tuning.js).
+      // Two ranks because side by side the reared dog leans into its neighbour
+      // (evenGaps sizes its slot from a quadruped's sprawl, not the narrow
+      // column it becomes rearing), and the row would have to spread until it
+      // stopped reading as a group. Depth buys the room without the spread; the
+      // lab's wider frame doesn't need it. Both readings are live, so change
+      // one deliberately.
       //
       // groundToMesh throughout: EVE's root joint sits inside her shell, the
       // G1's and Go2's ankle joints above their foot shells, WALL-E's tracks
       // below his — joint-grounding buries the first and hovers the rest.
       //
-      // The two front chips are pushed out to the flanks, where at rest they
-      // crowded the G1's into one block in the middle; the leaders keep each
-      // attached to its rig once they part. Free for the lab, which shows one
-      // prompt at the cursor and never runs the anchored solver these feed.
+      // The two front chips are pushed to the flanks: at rest they crowded the
+      // G1's into one block in the middle, and the leaders keep each attached
+      // to its rig once they part. Moot in the lab, which shows one prompt at
+      // the cursor and never runs the anchored solver.
       //
       // The -open cut of the greet, not the one the WALL-E Robot stage runs:
-      // same rig, arms swinging out to the sides instead of lifting a little.
-      // At this size a small gesture reads as nothing happening.
+      // arms swinging out to the sides instead of lifting a little. At this
+      // size a small gesture reads as nothing happening.
       { url: 'resources/glbs/wall_e-greet_open.glb', groundToMesh: true, labelOffset: [-60, 0] },
-      // The waving cut, chosen over the plain one: the arms come up and then
-      // swing while the head rocks with them, so EVE keeps moving through the
-      // middle of the loop instead of parking at her peak like the other three.
+      // The waving cut over the plain one: the arms come up and swing while the
+      // head rocks, so EVE keeps moving through the middle of the loop instead
+      // of parking at her peak like the other three.
       { url: 'resources/glbs/eve-greet_wave.glb', groundToMesh: true, labelOffset: [60, 0] },
-      // Both scales correct for the gesture rather than art-direct the rig:
-      // height normalization sizes a rig by its OWN tallest frame, so a clip
-      // whose peak is a raised arm or a rear-up is sized by the gesture and the
-      // body stands short for the rest of the loop.
+      // Both scales correct for the gesture, not art-direct the rig: height
+      // normalization sizes a rig by its OWN tallest frame, so a clip whose
+      // peak is a raised arm or a rear-up leaves the body standing short for
+      // the rest of the loop.
       { url: 'resources/glbs/g1-wave.glb', groundToMesh: true, scale: 1.3, row: 1 },
-      // Here the multiplier lands on the top of the rear, so it reads about
-      // double what the number suggests. 1.3 put the dog's reared head above
-      // every other rig, which is backwards — it is the small one here.
+      // The multiplier lands on the top of the rear, so it reads about double
+      // the number. 1.3 put the dog's reared head above every other rig, which
+      // is backwards — it is the small one here.
       { url: 'resources/glbs/go2-rear_up.glb', groundToMesh: true, scale: 1.1, row: 1 },
     ],
     // rowDepth under the 2.6 default: the ranks only have to be told apart, and
-    // further back the pair stands off across empty floor as a separate group.
-    // Both pages override the pad in stage-tuning.js, so these values frame
-    // nothing on their own — they are what a new page would inherit.
+    // further back the pair stands off as a separate group. Both pages override
+    // the pad in stage-tuning.js, so these values frame nothing on their own —
+    // they are what a new page would inherit.
     spacing: 1.15,
     pad: 1.2, evenGaps: true, rowDepth: 1.8,
   },
@@ -160,16 +158,16 @@ export const EXAMPLES = [
       { url: 'resources/glbs/chicken-attack.glb', scale: 0.7, material: { roughness: 0.6, emissiveIntensity: 0.8 }, above: [2, 0], offset: [1.5, 0, 0] },         // 8  on the ground under the bird (same anchor and offset as 4)
     ],
     // pad leaves the flanks the chips need and no more: they take side and
-    // corner slots, so the camera need not stand back to clear a band above and
-    // below everything.
+    // corner slots, so the camera need not stand back to clear a band above
+    // and below.
     spacing: 1.05, pad: 1.02, evenGaps: true, rowDepth: 2.8, stageShift: [-0.3, 0, 0],
   },
-  // Three desk-sized bodies of three kinds: a small biped robot that nods, a
-  // Franka Panda arm on a fixed base, and a Luxo-style lamp — the one rig here
-  // that travels. The lamp hops about a base-width toward the visitor and holds
-  // the landing; centring on the all-frame bbox already starts it behind the
-  // row's line and lands it ahead, so it takes no offset. Its yaw turns the head
-  // to three-quarter view, where the hop reads as a hop and not a bounce.
+  // Three desk-sized bodies: a small biped robot that nods, a Franka Panda arm
+  // on a fixed base, and a Luxo-style lamp — the one rig here that travels. The
+  // lamp hops about a base-width toward the visitor and holds the landing;
+  // centring on the all-frame bbox already starts it behind the row's line and
+  // lands it ahead, so it takes no offset. Its yaw turns the head to
+  // three-quarter view, where the hop reads as a hop and not a bounce.
   {
     label: 'Tabletop',
     files: [
@@ -194,25 +192,25 @@ export const EXAMPLES = [
     files: [
       'resources/glbs/quadruped_spot-walk.glb',
       'resources/glbs/quadruped_green-run.glb',
-      // Both numbers are derived, not eyed. scale: the raised arm is 18% of this
-      // rig's tallest frame, so unit-height normalization would leave the DOG at
-      // 0.82 of the two beside it — 1.54 puts its body at their height. offset:
-      // rigs are centred on their mesh bbox, and this one's arm reaches forward
-      // AND it walks 0.3m, so centring shoves the body back; 0.069 of the offset
-      // is the measured gap that puts its root joint on the row's line, the rest
-      // stages it just ahead. Re-measure both if the clip is ever replaced.
+      // Both numbers are measured, not eyed. scale: the raised arm is 18% of
+      // this rig's tallest frame, so unit-height normalization would leave the
+      // DOG at 0.82 of its neighbours — 1.54 puts its body at their height.
+      // offset: rigs are centred on their mesh bbox, and this one's arm reaches
+      // forward AND it walks 0.3m, so centring shoves the body back; 0.069 of
+      // the offset puts its root joint on the row's line, the rest stages it
+      // just ahead. Re-measure both if the clip is ever replaced.
       { url: 'resources/glbs/quadruped_spot_arm-step_reach.glb', groundToMesh: true, scale: 1.54, offset: [0, 0, 0.22] },
     ],
     spacing: 1.35, scale: 0.6, pad: 0.9,
   },
-  // The two Unitree machines walking out of the depth of the stage toward the
-  // viewer — real locomotion, not in-place, so the layout must account for
-  // travel. scale is not cosmetic: the pair spans less than the camera's
-  // MIN_FRAME_WIDTH, so growing the models grows them on screen rather than
-  // just refitting. stageShift starts the pair at the BACK so the walk ENDS at
-  // the floor centre — largest exactly when centred, never close enough to crop
-  // — which holds only while it stays near the G1's scaled travel. floor reins
-  // in the checker that deep shift would otherwise inflate.
+  // The two Unitree machines walk out of the depth toward the viewer — real
+  // travel, not in place, so the layout must allow for it. scale is not
+  // cosmetic: the pair spans less than the camera's MIN_FRAME_WIDTH, so growing
+  // the models grows them on screen rather than just refitting. stageShift
+  // starts the pair at the BACK so the walk ENDS at the floor centre — largest
+  // exactly when centred, never close enough to crop — and holds only while it
+  // stays near the G1's scaled travel. floor reins in the checker that deep
+  // shift would otherwise inflate.
   {
     label: 'Locomotion',
     files: [
@@ -231,8 +229,8 @@ export const EXAMPLES = [
     spacing: 1.35, pad: 1.12, evenGaps: true,
   },
   // EVE's rig is 7 bones with its root well inside the body shell, so
-  // joint-grounding buries her to the waist. The three clips are gestures
-  // rather than locomotion — nothing travels, so the row holds its spacing.
+  // joint-grounding buries her to the waist. All three clips are gestures —
+  // nothing travels, so the row holds its spacing.
   {
     label: 'EVE Robot',
     files: [
@@ -244,8 +242,8 @@ export const EXAMPLES = [
   },
   // groundToMesh throughout: the G1's ankle joints sit above its foot shells,
   // so joint-grounding leaves the feet hovering. The wave's scale corrects for
-  // its raised arm setting the bbox height (1.28 against the others' ~1.04),
-  // putting the three bodies back at one size.
+  // its raised arm setting the bbox height (1.28 against the others' ~1.04), so
+  // the three bodies stand at one size.
   {
     label: 'Unitree G1 Robot',
     files: [

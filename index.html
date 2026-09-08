@@ -9,16 +9,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="Linzhan Mou - CS Ph.D. student at Princeton University. Research in vision, robot learning, and machine learning.">
 	<meta name="google-site-verification" content="NuEyhuuWvzGLfbaE0h8C3MTRPtbPKXqqTj97tCe16r4" />
-	<!-- linzhanmou.com is the one canonical host. www, http, and linzhanm.github.io
-	     all 301 here, so this tag is belt-and-braces: it also pins the canonical for
-	     ?query / #fragment variants and for any scraped or proxied copy. -->
+	<!-- linzhanmou.com is the one canonical host; the others 301 here. This tag
+	     also pins the canonical for ?query / #fragment variants and scraped copies. -->
 	<link rel="canonical" href="https://linzhanmou.com/" />
 
-	<!-- Gate for the section reveal in styles.css. It has to run here, in the
-	     head, for both of its jobs: it lands before any section is parsed, so
-	     there is no frame where they show and are then hidden, and it means the
-	     hidden state exists *only* when JS is running — with JS off the page is
-	     simply a page. nav.js does the revealing. -->
+	<!-- Gate for the section reveal (styles.css hides, nav.js reveals). It must
+	     run here in the head: the class lands before any section is parsed, so
+	     there is no frame where sections show and are then hidden, and the hidden
+	     state exists only when JS runs — with JS off the page is simply a page. -->
 	<script>document.documentElement.classList.add('js-anim');</script>
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
@@ -28,16 +26,16 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600,0,0;9..144,700,0,0&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
-	<!-- ?v= busts the CDN/browser cache; bump it when editing these files. -->
+	<!-- ?v= busts the Pages cache. These two files are shared by all three root
+	     pages — bump the number in all three and keep them equal. -->
 	<link rel="stylesheet" href="css/custom-navbar.css?v=40">
 	<link rel="stylesheet" href="css/styles.css?v=51">
 
 	<script type="text/javascript">
-		// The [abs] toggles. `control` is the link itself (passed as `this`), so the
-		// open/closed state reaches assistive tech through aria-expanded — the same
-		// thing the navbar burger and unimate's abstract fold do. The CSS ships the
-		// panel display:none, so the first click has to read the computed value:
-		// el.style.display is still empty at that point.
+		// The [abs] toggles. `control` is the link itself (passed as `this`), so
+		// the state reaches assistive tech through aria-expanded. The panel ships
+		// display:none from CSS, so the first click has to read the computed value
+		// — el.style.display is still empty then.
 		function display(id, control) {
 			var el = document.getElementById(id);
 			if (!el) return;
@@ -51,7 +49,6 @@
 
 <body>
 	<nav class="navbar" role="navigation" aria-label="Main">
-		<!-- Full-bleed: brand pinned left, section index pushed right. -->
 		<div class="navbar-inner">
 			<div class="navbar-brand">
 				<a class="brand-link" href="/">
@@ -66,15 +63,14 @@
 				</button>
 			</div>
 			<div class="navbar-menu" id="navbar-main">
-				<!-- Two links, and only About resolves to a section here, so the
-				     keypoint parks under it rather than riding the rail. Resume is
-				     deliberately absent from this rail AND from publications.html's:
-				     only the résumé's own rail carries it, and the page is otherwise
-				     reached directly at /resume.html. -->
+				<!-- The rail is a section index. Only About resolves to a section
+				     here (the hero's id), so the keypoint parks under it; Publications
+				     is a page, so nav.js skips it when tracking. Resume is deliberately
+				     absent from this rail and publications.html's — only the résumé's
+				     own rail carries it. The other two pages share this markup and
+				     differ only in that link and in About being /#About. -->
 				<div class="navbar-sections">
 					<a class="nav-section" href="#About">About</a>
-					<!-- A page, not a section on this one, so nav.js skips it when
-					     tracking and the keypoint never parks there. -->
 					<a class="nav-section" href="/publications.html">Publications</a>
 					<span class="nav-keypoint" aria-hidden="true"></span>
 				</div>
@@ -90,10 +86,8 @@
 			</div>
 			<div class="col-md-9 hero-body">
 				<h1>Linzhan Mou</h1>
-				<!-- One line, set-notation. No [at]/[dot] masking: the envelope below
-				     already carries a plain mailto:, so masking hid nothing from a
-				     scraper and cost every reader a decode. The @, braces and comma are
-				     notation and drop a tier; the address words stay darker. -->
+				<!-- No [at]/[dot] masking: the envelope below carries a plain mailto:,
+				     so masking would hide nothing and cost every reader a decode. -->
 				<p class="hero-email"><span class="email-word">linzhan</span>@&#123;<span class="email-word">princeton.edu</span>, <span class="email-word">meta.com</span>&#125;</p>
 				<p class="hero-bio">
 					I am a first-year CS Ph.D. student at Princeton, advised by <a href="https://www.cs.princeton.edu/~smr/">Prof. Szymon Rusinkiewicz</a>. I also collaborate closely with <a href="https://www.cs.princeton.edu/~af/">Prof.&nbsp;Adam Finkelstein</a>.
@@ -179,8 +173,7 @@
 			</div>
 		</div>
 
-		<!-- Shelved, not deleted: <template> renders nothing, so the row keeps its
-		     markup and media without appearing on the page. The two selectors in
+		<!-- Shelved, not deleted: <template> renders nothing. The two selectors in
 		     styles.css that step over a <template> exist for this element. -->
 		<template>
 		<div class="pub-row row align-items-start">
@@ -311,11 +304,9 @@
 	<section class="container page-section">
 		<h2 id="Service" class="section-h2">Service</h2>
 		<hr>
-		<!-- A role rail, not prose: each row is a capacity, and what is served sits
-		     beside it. Real <ul>s, so a screen reader announces the count and the
-		     venues are discrete items rather than one long sentence. Reviewing is
-		     one capacity whether the venue is a conference or a journal, so it is
-		     one row and one run, the journals taking their place in it. -->
+		<!-- Real <ul>s, so a screen reader announces the count and the venues are
+		     discrete items. Reviewing is one capacity whether conference or journal,
+		     so it is one row and one run. -->
 		<dl class="service-register">
 			<dt class="service-role">Reviewer</dt>
 			<dd class="service-bodies">
@@ -338,10 +329,8 @@
 			<dt class="service-role">Teaching</dt>
 			<dd class="service-bodies">
 				<ul class="dot-run">
-					<!-- The one item in either run too long to hold a phone line, so it
-					     opts out of .dot-run's nowrap. The two spans put the break back
-					     under control: it falls on the comma, never inside the course
-					     name or the term. -->
+					<!-- Too long for a phone line, so it opts out of .dot-run's nowrap
+					     (see styles.css); the spans put the one break on the comma. -->
 					<li class="is-long"><span class="nowrap"><a target="_blank" href="https://www.cs.princeton.edu/courses/archive/fall26/cos126/">Princeton COS 126</a> (Java Programming)</span>, <span class="nowrap">Fall 2026</span></li>
 				</ul>
 			</dd>
@@ -356,11 +345,10 @@
 	<script>document.getElementById("copyright-year").textContent = new Date().getFullYear();</script>
 
 	<script>
-		// Play each publication clip while it is on screen and pause it otherwise.
-		// The two groups differ in the markup, not here: the Vision ones are above
-		// the fold, so they carry `autoplay` and preload their metadata, while the
-		// Robotics ones below it carry `preload="none"` — nothing is fetched for
-		// those until this observer reaches them.
+		// Play each clip while on screen, pause otherwise. The two groups differ
+		// in markup: the Vision clips are above the fold and carry `autoplay` +
+		// metadata preload; the Robotics ones carry `preload="none"`, so nothing
+		// is fetched until this observer reaches them.
 		(function () {
 			var vids = document.querySelectorAll('video.lazy-video');
 			if (!('IntersectionObserver' in window)) {

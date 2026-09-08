@@ -2,16 +2,16 @@
    UniMate — Application schematics.
 
    One drawn plate beside each Applications clip: the clip is the evidence, the
-   plate is the claim. Kept out of style.css on purpose — this is a self-contained
-   figure system (layout, rig, motion) with its own vocabulary, and the page sheet
-   should not have to carry it. It reads the :root tokens from style.css and adds
-   nothing to the page's own elements.
+   plate is the claim. A self-contained figure system (layout, rig, motion) kept
+   out of style.css; it reads the :root tokens and touches no page element.
 
-   One convention runs through all three plates, and it is the only thing the
-   three tasks differ in: INK is what you hand the model, ACCENT is what it
-   returns. Editing splits one figure (held joints / resampled joints),
-   in-betweening splits a timeline (two keys / the span between), expansion
-   leaves the timeline open (a source / a prompt at a time).
+   ONE CONVENTION on all three plates: INK is what you hand the model, ACCENT is
+   what it returns. It is the only thing the three tasks differ in — editing
+   splits one figure (held / resampled joints), in-betweening splits a timeline
+   (two keys / the span between), expansion leaves the timeline open (a source /
+   a prompt at a time). Colour is therefore a STATE, not a class: a part is
+   accent only while its motion is being generated (see .dg-gen and the editing
+   handover).
 
    Sections:
      1. Layout — the row, and the plate beside the clip
@@ -21,25 +21,23 @@
    ============================================================================ */
 
 /* ── 1. Layout ──────────────────────────────────────────────────────────────
-   The plates are drawn in the viewer's own vocabulary — a rig of bones and
-   hollow joints, mono micro-labels, a chip for a text prompt — so the three read
-   as a set. The SVGs are inline in index.html rather than assets, so the tokens
-   below reach them (an <img> would be a separate document and take none of the
-   palette). */
+   The plates are drawn in the viewer's own vocabulary — bones and hollow
+   joints, mono micro-labels, a chip for a prompt — so the three read as a set.
+   The SVGs are inline in index.html, not assets: an <img> is a separate
+   document and would take none of the tokens below. */
 .app-row {
-  /* The stage is white on purpose: the renders beside it are white to the
-     pixel, so the filmed figure and the drawn one share a ground and the two
-     frames do the separating — the same rule the galleries run on. Ink and
-     muted are the PAGE'S ink, not a private near-black: the plate is a figure
-     in this document, and only the signal pair is allowed to be foreign. */
+  /* White stage on purpose: the renders beside it are white to the pixel, so
+     both figures share a ground and the frames do the separating — the rule the
+     galleries run on. Ink and muted are the PAGE'S ink; only the signal pair is
+     foreign. */
   --app-stage: #ffffff;
   --app-ink: var(--slate-dark);
   --app-muted: var(--slate-light);
   --app-signal: #3f718e;
   --app-signal-soft: #cfe1eb;
   --app-grid: rgba(94, 93, 89, 0.14);
-  /* Existing motion keyframes use the page tokens. Scope them to the app rows
-     so all three plates share this clearer state system. */
+  /* The keyframes below were written against the page's --accent; re-pointing
+     it here makes them read as signal on every plate. */
   --accent: var(--app-signal);
   --rule: #c0bdad;
   display: flex;
@@ -49,22 +47,20 @@
 .app-row .video-gallery-container {
   flex: 1 1 auto;
   min-width: 0;               /* a flex item's default min-width is its content */
-  /* One clip — nothing to scroll, so don't be a scroll container: overflow-x
-     auto turns overflow-y auto with it and shaves the drop shadow off at the
-     clip's own edges, leaving the plate beside it with a fuller shadow than
-     the clip's. Visible lets the two figures cast the same shadow. */
+  /* One clip, nothing to scroll — and a scroll container would clip the drop
+     shadow (overflow-x auto forces overflow-y auto), leaving the plate beside
+     it with a fuller shadow than the clip's. */
   overflow: visible;
-  position: relative;         /* anchors the full-screen affordance below */
+  position: relative;         /* anchors .app-video-bar */
 }
 /* The control bar (built by gallery.js, π0.5-style): hidden until the pointer
-   is over the clip — or focus is inside it, which is the keyboard's hover —
-   then a 200ms fade, the same reveal pi05 uses. It sits along the clip's
-   bottom edge INSIDE the frame, over the render's own dead white band, so it
-   covers nothing. Ink on translucent paper, mono time, no accent: it is
-   chrome, not content. pointer-events off while hidden, so an idle bar never
-   steals a click meant for the video. */
+   is over the clip or focus is inside it, then a 200ms fade. It sits INSIDE the
+   frame along the bottom edge, over the render's own dead white band, so it
+   covers nothing. Ink on translucent paper, mono time, no accent: chrome, not
+   content. pointer-events off while hidden, so an idle bar never steals a click
+   meant for the video. */
 .app-row .gallery-video {
-  cursor: pointer;            /* click = play/pause, pi05's own gesture */
+  cursor: pointer;            /* click = play/pause */
 }
 .app-video-bar {
   position: absolute;
@@ -136,11 +132,11 @@
   white-space: nowrap;
 }
 
-/* Full screen is the CONTAINER, not the video, so the bar rides along (pi05
-   does the same). The clip drops its page chrome — frame, radius, shadow are
-   paper furniture — and letterboxes in white, the render's own margin, not the
-   OS's black. The title patch is content-editing, so it does NOT come along:
-   full screen shows the full record, headline included. */
+/* Full screen is the CONTAINER, not the video, so the bar rides along. The clip
+   drops its page chrome (frame, radius, shadow are paper furniture) and
+   letterboxes in white, the render's own margin, not the OS's black. The title
+   patch is content-editing, so it stays behind: full screen shows the full
+   record, headline included. */
 .app-row .video-gallery-container:fullscreen {
   background: #fff;
   display: flex;
@@ -169,22 +165,19 @@
   bottom: 0;
   border-radius: 0;
 }
-/* Each clip was rendered as a SLIDE, with its own serif headline baked into the
-   pixels ("Applications – Text-Guided Motion Editing"), which on this page sits
-   directly under a black heading plate saying the same thing. The headline
-   can't be cropped away — the clip's height is paired to the plate's, and a
-   zoom-crop would cut into the stages — but it sits on paper-white pixels, so a
-   white patch over it turns the slide back into a figure. The geometry is
-   MEASURED off the frames, not eyeballed: all three titles end at 8.4% of the
-   frame's height (expansion's prompt-pill row starts at 9.8%, the nearest
-   content on any of the three), and titles run at most 60% of the width. A
-   full-clip temporal scan (tblend difference) confirmed nothing ever moves
-   through x<63%, y<9.3% on any clip, so the patch can be static. 9% of this
-   box (which is the video plus the 10px shadow room, so ~9.2% of the video)
-   lands in the title→pill gap with ~2px clear on both sides — re-measure
-   before changing it, and drop the patch entirely if the videos are ever
-   re-rendered without their slide titles. Fullscreen shows the full record:
-   the patch stays behind in the page when the video is promoted. */
+/* The title patch. Each clip was rendered as a SLIDE with a serif headline
+   baked in ("Applications – Text-Guided Motion Editing"), which here sits
+   directly under a heading plate saying the same thing. It can't be cropped
+   away (the clip's height is paired to the plate's, and a zoom-crop cuts into
+   the stages), but it sits on paper-white pixels, so a white patch turns the
+   slide back into a figure. The geometry is MEASURED, not eyeballed: all three
+   titles end at 8.4% of the frame height (expansion's prompt-pill row, the
+   nearest content, starts at 9.8%) and run at most 60% of the width; a
+   full-clip tblend scan showed nothing ever moves through x<63%, y<9.3%, so
+   the patch can be static. 9% of this box (video + 10px shadow room, so ~9.2%
+   of the video) lands in the title→pill gap with ~2px clear each side.
+   Re-measure before changing it; delete it if the clips are ever re-rendered
+   without titles. */
 .app-row .video-gallery {
   position: relative;
 }
@@ -208,13 +201,11 @@
   object-fit: contain;
   background: #fff;           /* letterbox in the render's own white, not ivory */
 }
-/* A framed plate, the same frame as the clip — border, radius and shadow are
-   the .gallery-video declarations verbatim: two figures side by side, one
-   filmed and one drawn, not a picture with a note stuck beside it. The grid is
-   what marks this one as DRAWN — a drafting sheet against the clip's footage —
-   and it is the plate's only chrome. The plate is portrait, so the drawings
-   inside are too: a vertical time axis, which is the TOC rail's reading
-   direction anyway. */
+/* The plate wears the clip's frame — border, radius and shadow are the
+   .gallery-video declarations verbatim — so the two read as figures side by
+   side, not a picture with a note beside it. The grid is what marks this one as
+   DRAWN, and is its only chrome. Portrait, so the drawings run a vertical time
+   axis, the TOC rail's reading direction. */
 .app-diagram {
   flex: 0 0 240px;
   margin: 0 0 10px;           /* same shadow room as the clip's padding */
@@ -239,12 +230,10 @@
 }
 
 /* ── 2. The rig ─────────────────────────────────────────────────────────────
-   Bones, joints, labels and chips: the vocabulary every plate is drawn in.
-   Colour is a STATE here, not a class — see .dg-gen below. */
+   Bones, joints, labels and chips: the vocabulary every plate is drawn in. */
 
-/* Bones. The rig is stroked, never filled. non-scaling-stroke so the line weight
-   is identical on the big editing rigs (scale 1.4) and the small ones in a
-   column (0.8) — one hand drew all of them. */
+/* Bones: stroked, never filled. non-scaling-stroke keeps the line weight equal
+   on the big editing rigs (scale 1.4) and the small column ones (0.8). */
 .dg-rig {
   fill: none;
   stroke-width: 2;
@@ -255,32 +244,28 @@
 .dg-ink { stroke: var(--app-ink); }
 .dg-gen { stroke: var(--app-signal); }
 
-/* Colour is a STATE on these plates (ink = given, signal = returned), so it has
-   to change the way a state does: over a moment, not between two frames. An
-   unregistered custom property animates DISCRETELY — it flips at the midpoint of
-   the interval no matter how wide the ramp — so the editing plate's ink→signal
-   →ink handover snapped however gently it was written. Registering it as a
-   <color> is what makes the ramp real; browsers without @property fall back to
-   the old flip, which is what this looked like before. */
+/* A state change happens over a moment, not between two frames — but an
+   UNREGISTERED custom property animates discretely (it flips at the interval's
+   midpoint however wide the ramp), so the editing plate's ink→signal→ink
+   handover snapped however gently it was written. Registering it as a <color>
+   makes the ramp real; browsers without @property get the flip. */
 @property --edit-region-stroke {
   syntax: '<color>';
   inherits: true;
   initial-value: #141413;
 }
 
-/* A figure here is the page's rig representation, not a stick man: every
-   articulation is a joint node and every bone is the segment between two of
-   them — root, chest, neck, head, and a shoulder/elbow/hand, hip/knee/foot chain
-   per limb. Joints are hollow, like the viewer's and like the venue mark's; the
-   fill is the diagram stage, so a bone passing under one is punched out rather
-   than crossing it.
+/* Joints. A figure is the page's rig representation, not a stick man: every
+   articulation is a node and every bone the segment between two — root, chest,
+   neck, head, and a shoulder/elbow/hand, hip/knee/foot chain per limb. Joints
+   are hollow, like the viewer's and the venue mark's; filled with the stage so a
+   bone passing under one is punched out.
 
-   Node size and stroke are a pair: the bones keep a non-scaling stroke, so a
-   ring's hole is `2r x scale - stroke` and shrinks with the rig. At r 1.6 and a
-   1.2px ring the 0.8-scale figures had a 1.4px hole and read as solid dots — the
-   hollow/solid distinction survived only on the big editing plate. r 2 with a
-   1.1px ring holds the hole open at every scale used here (0.8 / 0.85 / 1.4).
-   Check that arithmetic before changing either number or the rig scales. */
+   Radius and ring are a PAIR: the ring stroke doesn't scale, so the hole is
+   `2r × scale − stroke` and shrinks with the rig. At r 1.6 / 1.2px the
+   0.8-scale figures had a 1.4px hole and read as solid dots. The current pair
+   holds the hole open at every scale used (0.8 / 0.85 / 1.4) — redo that
+   arithmetic before changing either number or a rig's scale. */
 .dg-joint {
   fill: var(--app-stage);
   stroke-width: 1.45;
@@ -290,10 +275,9 @@
 .dg-gen .dg-joint {
   fill: var(--app-signal-soft);
 }
-/* Exactly one node per figure is solid: the root. The venue mark in the masthead
-   fills its root joint the same way — in a kinematic tree one joint is the parent
-   of every other, and the drawing should say which. Nothing else is ever filled;
-   if a second node looks solid, its ring has closed up (see above). */
+/* Exactly one node per figure is solid: the root, the parent of every other
+   joint (the venue mark fills its root the same way). If a second node looks
+   solid, its ring has closed up — see the arithmetic above. */
 .dg-root.dg-ink { fill: var(--app-ink); }
 .dg-root.dg-gen,
 .dg-gen .dg-root { fill: var(--app-signal); }
@@ -317,15 +301,12 @@
 .dg-label.is-gen { fill: var(--app-signal); }
 
 /* Prompt chips carry the action, so their type is a step larger than the state
-   labels above. A tighter mono setting keeps the longer prompts calm without
-   making them look squeezed into their pills.
+   labels; the tighter tracking keeps long prompts calm in their pills.
 
-   The pill is white with an ink hairline — the exact form the clips beside
-   these plates use for their own baked-in prompts, so the drawing quotes the
-   film. It also keeps the plates' one convention honest: a prompt is what you
-   HAND the model, so it wears ink, not a colour of its own. (They were yellow
-   once — a third accent on a two-colour system, and the one hue on the page
-   that appeared nowhere else.) */
+   White with an ink hairline — the form the clips use for their own baked-in
+   prompts, so the drawing quotes the film — and ink because a prompt is what
+   you HAND the model. They were yellow once: a third accent on a two-colour
+   system, and the one hue that appeared nowhere else on the page. */
 .dg-chip {
   fill: #fff;
   stroke: var(--app-ink);
@@ -350,10 +331,9 @@
   letter-spacing: -0.025em;
 }
 
-/* Each plate has a different text density. Keep the shared hierarchy above,
-   then tune only the places where that density changes: the editing legend
-   needs breathing room, the in-between prompt needs a clear two-line rhythm,
-   and Expansion's numbered prompts should read as one aligned series. */
+/* Per-plate text density, on top of the shared hierarchy: the editing legend
+   gets room, the in-between prompt a two-line rhythm, Expansion's numbered
+   prompts one aligned series. */
 #editGallerySection .dg-label {
   letter-spacing: 0.09em;
 }
@@ -368,51 +348,45 @@
   font-size: 7.8px;
 }
 
-/* No caption rule of its own: the app rows take the house .gallery-caption
-   exactly as every other figure on the page does. (A console version gave them
-   a private caption — muted ink, a border-top, a signal-blue key dot — and
-   three captions dressed differently from the other twelve read as a different
-   *kind* of figure, which they are not. The ink/signal key is taught on the
-   plates themselves: the editing plate's HELD/RESAMPLED legend and the signal
-   GENERATED labels.) */
+/* No caption rule here: the app rows take the house .gallery-caption like every
+   other figure. A private caption (muted ink, border-top, a signal key dot) was
+   tried, and three captions dressed unlike the other twelve read as a different
+   KIND of figure. The ink/signal key is taught on the plates themselves. */
+
 /* ── 3. Motion ──────────────────────────────────────────────────────────────
-   Each plate runs one master clock, and everything on it is a window in that
-   clock rather than a track with its own delay: Editing 6.5s, In-betweening 4s,
-   Expansion 9s. That is what makes a plate restart AS a plate — at the seam
-   every figure, chip and tick resets together instead of drifting out of step.
+   ONE MASTER CLOCK per plate — Editing 6.5s, In-betweening 4s, Expansion 9s —
+   and everything on it is an explicit window in that clock, never a track with
+   its own period or delay. That is what makes a plate restart AS a plate: at
+   the seam every figure, chip and tick resets together. (Delays were the
+   obvious way to stagger Expansion's turns, and cost exactly this: three clocks
+   3s out of step, a figure still standing from the last round while the first
+   started over.)
 
-   Within a plate, a rig is animated bone by bone. Every limb is two bones with a
-   real joint between them and each bone carries its own track, so the shin can
-   lag the thigh and only flex on the lift, and the forearm lag the upper arm.
-   The axis strokes carry `pathLength="1"` in the markup, which is what lets one
-   dash rule drive strokes of different real lengths. */
+   Rigs animate bone by bone: every limb is two bones on two tracks, so a shin
+   can lag its thigh. The axis strokes carry `pathLength="1"` in the markup,
+   which lets one dash rule drive strokes of different real lengths. */
 
-/* The in-betweening span: the accent stretch of the axis fills as the generated
-   rig travels down it, on the one 4s clock (see dg-inbetween-progress below). */
+/* The in-betweening span, filled by dg-inbetween-progress below. */
 .dg-draw {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   animation: dg-inbetween-progress 4s linear infinite;
 }
 
-/* Every bone rotates about its own joint. The pivot is given as a corner of the
-   bone's own box (transform-box: fill-box) rather than in rig coordinates: a
-   length like `22px 20px` would need transform-box: view-box, and that resolves
-   against the ROOT viewBox, not the rig's local space — inside a translated,
-   scaled group every pivot then lands off the body and the limbs fan out from
-   nowhere. Each bone is drawn so its joint IS a corner of its box: the left
-   side's joints are the top-right of theirs, the right side's the top-left. That
-   holds for the two-segment chains too, whose box is the union with the bone
-   below — the forearm never swings past the shoulder's x, so the corner is a
-   fixed point even while the elbow moves. Keep it that way when editing a pose. */
+/* PIVOTS — the trap that cost a rebuild. Every bone rotates about its own
+   joint, and the pivot is a corner of the bone's own box (transform-box:
+   fill-box), never a length in rig coordinates: that would need transform-box:
+   view-box, which resolves against the ROOT viewBox, not the rig's local space
+   — inside a translated, scaled group every pivot lands off the body and the
+   limbs fan out from nowhere. So each bone is drawn so its joint IS a corner of
+   its box: left-side joints top-right, right-side top-left. It holds for the
+   two-segment chains too (the box is the union with the bone below, and the
+   forearm never swings past the shoulder's x). Keep it true when editing a pose. */
 .dg-limb { transform-box: fill-box; }
 .dg-arm-l, .dg-fore-l, .dg-leg-l, .dg-shin-l { transform-origin: 100% 0%; }
 .dg-arm-r, .dg-fore-r, .dg-leg-r, .dg-shin-r { transform-origin: 0% 0%; }
 
-/* --- Quadruped pivots for Motion Editing ------------------------------------
-   The source stands and shakes its head. In the edited copy that ink motion is
-   retained while the generated body and diagonal leg pairs form a forward
-   trot. */
+/* --- Quadruped pivots, for Motion Editing ----------------------------------- */
 .dg-qleg-1, .dg-qshin-1,
 .dg-qleg-3, .dg-qshin-3 { transform-origin: 100% 0%; }
 .dg-qleg-2, .dg-qshin-2,
@@ -420,14 +394,11 @@
 .dg-qneck { transform-origin: 0% 100%; }
 .dg-qtail { transform-origin: 100% 100%; }
 
-/* Editing is staged as an edit, not shown fully resolved from frame one:
-   source first, selected body/legs second, prompt third, edited result last.
-   Only the region to be changed takes the temporary signal colour; it remains
-   still and returns to ink as the generated lower rig arrives. */
-/* Both handovers are the SAME 3.077% (0.2s) ramp — the selection turning signal
-   and the selection returning to ink are one gesture played twice, so a snap on
-   the way back read as a glitch against a fade on the way out. Keep the two
-   widths equal if either landmark moves. */
+/* Editing is staged as an edit: source first, the selected region turns signal,
+   the prompt appears, the edited result arrives and the selection returns to
+   ink. Both handovers are the SAME 3.077% (0.2s) ramp — one gesture played
+   twice; a snap on the way back read as a glitch against a fade on the way
+   out. Keep the two widths equal if either landmark moves. */
 @keyframes dg-edit-source-tone {
   0%, 27.692% { --edit-region-stroke: var(--app-ink); }
   30.769%, 46.154% { --edit-region-stroke: var(--app-signal); }
@@ -443,8 +414,8 @@
   36%, 95.385% { opacity: 1; transform: translateY(0); }
   100% { opacity: 0; transform: translateY(0); }
 }
-/* The edited rig arrives ACROSS 44.615%, not at it: a 0.2s cross, the same width
-   as the tone handover above, centred on the landmark it used to snap on. */
+/* The edited rig crosses in over 0.2s centred on 44.615% — the tone handover's
+   width, not a snap. */
 @keyframes dg-edit-output-in {
   0%, 43.077% { opacity: 0; }
   46.154%, 95.385% { opacity: 1; }
@@ -474,9 +445,8 @@
 .dg-edit-source .dg-edit-region-root {
   animation: dg-edit-source-root 6.5s ease-in-out infinite;
 }
-/* The head-shake is the motion being PRESERVED, so both rigs run the identical
-   track on the identical clock — the source's and the ink half of the output's.
-   That they never drift apart is the claim the plate is making. */
+/* The head-shake is the motion PRESERVED: source and the ink half of the output
+   run the identical track, and that they never drift apart is the plate's claim. */
 .is-quad-headshake .dg-qneck {
   animation: dg-edit-source-head 6.5s ease-in-out infinite;
 }
@@ -488,10 +458,9 @@
 .dg-edit-output {
   animation: dg-edit-output-in 6.5s ease-in-out infinite both;
 }
-/* The edited rig crosses in over 43.077–46.154%, and SOURCE starts handing its
-   selection back to ink on the frame it lands — one exchange, not two events —
-   finishing at 49.231%. Both rigs then hold for 0.3s, three compact walking
-   cycles run from 53.846–95.385%, and the closing hold follows. */
+/* The trot's windows: the output lands at 46.154% and the source's selection
+   starts back to ink on that frame (one exchange, not two events), both hold
+   0.3s, three walking cycles run 53.846–95.385%, then the closing hold. */
 @keyframes dg-edit-walk-body {
   0%, 53.846%, 67.692%, 81.538%, 95.385%, 100% { transform: translateY(0); }
   57.308%, 64.231%, 71.154%, 78.077%, 85%, 91.923% { transform: translateY(-0.8px); }
@@ -515,8 +484,6 @@
   63.077%, 76.923%, 90.769% { transform: rotate(-2deg); }
 }
 
-/* The trot is on the plate's own 6.5s master, not a gait cycle of its own, so it
-   starts on the frame the edited rig lands and stops with the loop. */
 .is-quad-walk .dg-body { animation: dg-edit-walk-body 6.5s ease-in-out infinite; }
 .is-quad-walk .dg-qleg-1,
 .is-quad-walk .dg-qleg-4 { animation: dg-edit-walk-leg-a 6.5s ease-in-out infinite; }
@@ -527,9 +494,7 @@
 .is-quad-walk .dg-qshin-2,
 .is-quad-walk .dg-qshin-3 { animation: dg-edit-walk-shin-b 6.5s ease-in-out infinite; }
 
-/* --- Squat, for Motion In-Betweening ----------------------------------------
-   The torso drops, knees travel outward, lower legs fold back, and the arms
-   counterbalance slightly before the figure rises to standing. */
+/* --- Squat, for Motion In-Betweening ---------------------------------------- */
 @keyframes dg-squat-body {
   0% { transform: translateY(0) rotate(0); }
   48%, 56% { transform: translateY(14px) rotate(0); }
@@ -578,8 +543,6 @@
   100% { transform: rotate(-6deg); }
 }
 
-/* On the plate's own 4s clock, so the pose the rig is in is always the pose that
-   belongs at the point of the span it has reached. */
 .is-squat .dg-body { animation: dg-squat-body 4s ease-in-out infinite; }
 .is-squat .dg-head { animation: dg-squat-head 4s ease-in-out infinite; }
 .is-squat .dg-leg-l { animation: dg-squat-leg-l 4s ease-in-out infinite; }
@@ -591,15 +554,13 @@
 .is-squat .dg-fore-l { animation: dg-squat-fore-l 4s ease-in-out infinite; }
 .is-squat .dg-fore-r { animation: dg-squat-fore-r 4s ease-in-out infinite; }
 
-/* One generated skeleton travels down the interpolation span while its joints
-   perform the complete Start → squat → End motion. */
-/* The pass ends 138px below where it starts and in a different pose, so the loop
-   used to teleport: bottom-of-span end pose → top-of-span standing, on one frame,
-   every 4s. It now dissolves at both ends of the span instead, and the accent
-   stretch of the axis clears with it — the reset happens while there is nothing
-   on screen to see it happen to. The intermediate stops are the travel and the
-   fill sampled AT the fade times (138px and one dash unit over 100%), so the
-   linear timing still carries a constant speed straight through them. */
+/* The generated rig travels down the span performing Start → squat → End. The
+   pass ends 138px lower and in a different pose, so a plain loop teleported it
+   back every 4s; instead it dissolves at both ends of the span and the axis fill
+   clears with it, so the reset happens with nothing on screen. The 6% / 91%
+   stops are the travel and the fill sampled AT the fade times (138px and one
+   dash unit over 100%), so linear timing still runs a constant speed through
+   them. */
 @keyframes dg-squat-travel {
   0% { opacity: 0; transform: translate(58px, 85px) scale(.8); }
   6% { opacity: 1; transform: translate(58px, 93.3px) scale(.8); }
@@ -616,8 +577,9 @@
   animation: dg-squat-travel 4s linear infinite both;
 }
 
-/* The final key is a clearly different recovered stance: weight shifts right,
-   the left foot finishes forward, and the arms settle asymmetrically. */
+/* The End key, held still. Each value is the 100% stop of the matching
+   dg-squat-* track above — change one and change the other, or the travelling
+   rig arrives in a pose the End figure isn't holding. */
 .is-squat-end .dg-body { transform: translate(2px, -2px) rotate(2deg); }
 .is-squat-end .dg-head { transform: translateX(2px); }
 .is-squat-end .dg-leg-l { transform: rotate(-12deg); }
@@ -630,20 +592,17 @@
 .is-squat-end .dg-fore-r { transform: rotate(-6deg); }
 
 /* --- Expansion is a chain, not a chorus -------------------------------------
-   The other two plates show one motion at several moments, so their figures all
-   move at once. Expansion shows something else: prompt 1 produces a stretch of
-   motion, that stretch STOPS, and prompt 2 carries on from where it stopped.
-   So the figures here run one at a time, and a figure that has had its turn
-   holds its last pose for the rest of the loop rather than looping on its own.
+   The other two plates show one motion at several moments, so their figures
+   move at once. Here prompt 1 produces a stretch of motion, that stretch STOPS,
+   and prompt 2 carries on from where it stopped: the figures take turns, and a
+   figure that has had its turn holds its last pose for the rest of the loop.
+   Between turns a motion finishes, its connector runs, the plate breathes a
+   beat, and only then does the next begin. */
 
-   One 9s master gives the bird three motion windows separated by explicit
-   hand-offs. A motion finishes, its dashed connector runs, the diagram breathes
-   for a beat, and only then does the next motion begin. */
-/* The bar fills downward, reaching exactly one third more at the end of each
-   turn. It grows by dash LENGTH, not by dashoffset: with `dasharray: 1` on a
-   pathLength-1 stroke, an offset of 1 does not hide the dash, it slides the
-   pattern's next repeat onto the path's last point — which showed up as a stray
-   dot parked at the bottom of the plate. Linear, because it is a clock. */
+/* The bar fills one third per turn, by dash LENGTH, not dashoffset: with
+   `dasharray: 1` on a pathLength-1 stroke an offset of 1 doesn't hide the dash,
+   it slides the pattern's next repeat onto the path's last point — a stray dot
+   parked at the bottom of the plate. Linear, because it is a clock. */
 @keyframes dg-seq-axis {
   0%      { stroke-dasharray: 0 1; }
   24%     { stroke-dasharray: 0.3333 1; }
@@ -654,15 +613,14 @@
   100%    { stroke-dasharray: 1 1; }
 }
 
-/* The pose hand-off borrows Pi's compact connector language: short 2/5 dashes,
-   round caps, and a separate solid triangular head. The dash motion travels
-   toward the receiving pose instead of pulsing the whole connector. */
+/* The hand-off connector: dashes that travel toward the receiving pose rather
+   than a pulse, with a separate solid head. */
 @keyframes dg-pose-flow {
   to { stroke-dashoffset: -7; }
 }
-/* 1% of 9s is 90ms — long enough to be seen arriving and too short to be seen
-   arriving smoothly, which is the worst of both. Every fade on this plate is at
-   least 2.5% (~0.22s), the width the other two plates hand things over in. */
+/* Every fade on this plate is at least 2.5% (~0.22s), the width the other two
+   plates hand over in. 1% (90ms) is long enough to be seen arriving and too
+   short to be seen arriving smoothly. */
 @keyframes dg-pose-link-1 {
   0%, 22.5% { opacity: 0; }
   25%, 32% { opacity: 1; }
@@ -699,36 +657,26 @@
 }
 
 /* --- The chain, on one clock -----------------------------------------------
-   Three prompts, three motions you can name at a glance, and every motion's
-   LAST pose is the next one's FIRST — that shared pose is the join, so these
-   numbers are the specification of it:
+   Three prompts, three motions, and every motion's LAST pose is the next one's
+   FIRST — that shared pose is the join:
 
      1  takes off         wings beat down as the body rises and the legs fold
      2  strikes forward   coil, then head, wings and legs all fire on one beat
      3  lands             wings brake, legs open, and the body settles
 
-   Every track on this plate is the SAME 9s animation with NO delay: each motion
-   and hand-off owns an explicit window in the master. That is what makes
-   the plate restart as a plate — at 9s every figure, chip and tick resets
-   together and the chain rebuilds from an empty timeline. (Delays were the
-   obvious way to stagger the turns, and they cost exactly this: three clocks
-   each 3s out of step, so a figure was still standing there from the last round
-   while the first one started over.) Before its turn a figure already holds its
-   opening pose, so when it fades in it appears in the pose the figure above it
-   is holding; after its turn it holds its closing pose, which is what "that
-   motion has stopped" looks like. Edit a motion's opening stop and you must edit
-   the previous one's closing stop with it, or the chain comes apart there.
-
-   The easing is per segment: the take-off has a strong downstroke, the strike
-   holds still and then fires, and the landing decelerates as the legs unfold. */
+   Every track is the same 9s animation with NO delay (see the section banner).
+   Before its turn a figure already holds its opening pose, so it fades in
+   wearing the pose the figure above is holding; after its turn it holds its
+   closing pose, which is what "stopped" looks like. Edit a motion's opening
+   stop and edit the previous one's closing stop with it, or the chain comes
+   apart there. */
 
 @keyframes dg-in-1 { 0% { opacity: 0; } 2.5%, 24% { opacity: 1; } 31%, 100% { opacity: 0.88; } }
 @keyframes dg-tone-1 { 0%, 24% { stroke: var(--accent); } 31%, 100% { stroke: var(--app-ink); } }
 @keyframes dg-root-1 { 0%, 24% { fill: var(--accent); } 31%, 100% { fill: var(--app-ink); } }
 @keyframes dg-chip-1 { 0% { opacity: 0; transform: translateX(-5px); } 6% { opacity: 1; transform: translateX(0); } 100% { opacity: 1; transform: translateX(0); } }
 /* Turn 2 is turn 1 shifted by exactly 36% — same fade widths, same 7% handover
-   to ink while the connector runs. They were 7% and 1%, which made the second
-   hand-off look like a different event from the first. */
+   to ink. Unequal widths made the second hand-off look like a different event. */
 @keyframes dg-in-2 { 0%, 22.5% { opacity: 0; } 25%, 60% { opacity: 1; } 67%, 100% { opacity: 0.88; } }
 @keyframes dg-tone-2 { 0%, 60% { stroke: var(--accent); } 67%, 100% { stroke: var(--app-ink); } }
 @keyframes dg-root-2 { 0%, 60% { fill: var(--accent); } 67%, 100% { fill: var(--app-ink); } }
@@ -738,22 +686,21 @@
 @keyframes dg-root-3 { 0%, 100% { fill: var(--accent); } }
 @keyframes dg-chip-3 { 0%, 58.5% { opacity: 0; transform: translateX(-5px); } 61%, 100% { opacity: 1; transform: translateX(0); } }
 
-/* The seam is where the plate's argument sits: the bar reaches the tick at the
-   same instant the motion above stops and the one below takes its pose. One
-   accent flash as it passes, then back to a hairline — the plate's one flourish. */
+/* The seam tick: the bar reaches it as the motion above stops and the one below
+   takes its pose. One accent flash, then back to a hairline — the plate's one
+   flourish. */
 @keyframes dg-seam-2 { 0%, 32.83% { stroke: var(--rule); } 34.83% { stroke: var(--accent); } 44.33%, 100% { stroke: var(--rule); } }
 @keyframes dg-seam-3 { 0%, 66.17% { stroke: var(--rule); } 68.17% { stroke: var(--accent); } 77.67%, 100% { stroke: var(--rule); } }
 
-/* One line assigns a figure its whole turn: when it appears, what it plays,
-   when it goes ink. Nothing on this plate carries an animation-delay. */
+/* Shared timing; one animation-name line below then assigns a figure its whole
+   turn. Nothing on this plate carries an animation-delay. */
 .dg-seq-in, .dg-chip-in, .dg-seam, .is-seq .dg-limb, .is-seq .dg-body, .is-seq .dg-root {
   animation-duration: 9s;
   animation-iteration-count: infinite;
   animation-fill-mode: both;
 }
 .dg-seq-in, .dg-seam { animation-timing-function: ease-out; }
-/* The bar is the only thing here that runs continuously rather than in turns —
-   it is the clock the turns are measured against. */
+/* The bar runs continuously — it is the clock the turns are measured against. */
 .dg-seq-axis {
   stroke-dasharray: 0 1;
   animation: dg-seq-axis 9s linear infinite both;
@@ -773,14 +720,13 @@
 .dg-seam.is-t2 { animation-name: dg-seam-2; }
 .dg-seam.is-t3 { animation-name: dg-seam-3; }
 
-/* Expansion uses a bird rather than repeating In-betweening's humanoid. Its
-   three turns also use a separate motion vocabulary: take-off, strike, landing.
-   The wing and neck pivots meet at the root, while the legs fold from the hips.
-   The neck is its own bone group for the same reason the wings are: turn 2 is a
-   strike, and a strike is a head thrown forward — with the head welded into the
-   spine path the only forward cue left was the body sliding sideways, which
-   reads as a glide. Its pivot is the root corner of its own box (the path starts
-   at the root, and nothing in the group reaches left of or below it). */
+/* The bird (Expansion doesn't repeat In-betweening's humanoid). Wing and neck
+   pivots meet at the root; the legs fold from the hips. The neck is its own
+   bone group because turn 2 is a strike, and a strike is a head thrown forward
+   — welded into the spine path, the only forward cue left was the body sliding
+   sideways, which reads as a glide. Its pivot is the root corner of its own box
+   (the path starts at the root and nothing in the group reaches left of or
+   below it). */
 .is-bird .dg-wing-up {
   transform-box: fill-box;
   transform-origin: 100% 100%;
@@ -798,13 +744,13 @@
   transform-origin: 50% 0%;
 }
 
-/* Per-keyframe easing, and it is not decoration. The group's ease-in-out applies
-   to EVERY interval, so a track that passes THROUGH its waypoints decelerated to
-   a dead stop at each one: the take-off climbed in three visible lurches. Easing
-   per segment is right where a value reverses — a wingbeat really does stop at
-   the top of the stroke — and wrong where it passes through, so the wings keep
-   the default and the body tracks below spell out one accelerate → carry →
-   settle. Check which kind a track is before touching its timing. */
+/* EASING IS PER KEYFRAME, not per track. The group's ease-in-out applies to
+   every interval, so a track that passes THROUGH its waypoints stopped dead at
+   each one — the take-off climbed in three lurches. A stop is right where a
+   value reverses (a wingbeat really does stop at the top of the stroke) and
+   wrong where it passes through, so the wings keep the default and the body
+   tracks spell out one accelerate → carry → settle. Check which kind a track is
+   before touching its timing. */
 @keyframes dg-bird-takeoff {
   0% { transform: translateY(14px) rotate(7deg); animation-timing-function: ease-in; }
   8% { transform: translateY(8px) rotate(2deg); animation-timing-function: linear; }
@@ -828,48 +774,36 @@
   18%, 100% { transform: rotate(0deg) scaleY(.52) translateY(-2px); }
 }
 
-/* Turn 2 is a STRIKE, and a strike is three beats, not a trajectory: coil, snap,
-   hold. It was written first as a drift — the body sliding 24px right at an even
-   speed — and a body moving forward at constant speed is a glide however far it
-   goes, which is why the chip and the drawing disagreed. What names this motion
-   is the timing and the fact that every bone fires on the same beat: the wings
-   spread and sweep back, the head cocks back and is thrown forward, the legs
-   tuck and reach out. The coil is a reversal, so it eases into its stop; the
-   beat is a flat hold; the snap decelerates into full extension and settles
-   back out of a small overshoot. Do not smooth the 44→47% hold away — without
-   that stillness the coil and the snap merge into one continuous swing, and it
-   is a glide again.
+/* Turn 2 is a STRIKE: three beats — coil, snap, hold — not a trajectory. It was
+   first written as a drift (the body sliding 24px right at even speed), and a
+   body moving forward at constant speed is a glide however far it goes. What
+   names the motion is that every bone fires on the same beat: wings spread and
+   sweep back, head cocks and is thrown, legs tuck and reach. Do not smooth the
+   44→47% hold away — without that stillness coil and snap merge into one swing
+   and it is a glide again.
 
-   THE WIND-UP IS THE LONGEST PHASE AND THE RELEASE THE SHORTEST — 0.72s drawing
-   back, a 0.27s dead beat, 0.22s out, 0.22s to settle. It used to be the other
-   way round (0.36s back, a 0.3s beat, 0.4s out), and a release slower than its
-   own wind-up reads as a swing however hard the curve front-loads it.
+   WIND-UP LONGEST, RELEASE SHORTEST: 0.72s back, a 0.27s dead beat, 0.22s out,
+   0.22s to settle. Reversed (0.36s back, 0.4s out) it read as a swing however
+   hard the curve was front-loaded.
 
-   Amplitude was raised to match, and the room for it was MEASURED off the plate
-   rather than guessed — three walls, all in viewBox units:
+   The amplitude's room was MEASURED off the plate, three walls in viewBox units:
      · the timeline axis at x=16   the coil's tail stops at 17.6
      · the prompt chip at x=104    the snap's leading edge stops at 96.2
-     · the hand-off connector, which runs from (91,170) down to turn 3
-   The head now covers 70→93 across the snap where it covered 72→89: that span
-   IS the event, and at 17 units it was shorter than the fade that introduces
-   the figure. The connector is the subtle one. It is invisible during the
-   strike itself (opacity 0 until 61%), so the transient peak may cross x=91 and
-   the pose the bird HOLDS may not — the held pose stops at 90.7, and its beak
-   sits above y=170, so the dashes start just clear of it. Check that corner
-   after any change to the settle: it is the only place on this plate where two
-   things that are never on screen together can still end up on top of one
-   another. */
+     · the hand-off connector, from (91,170) down to turn 3
+   The connector is the subtle one: it is invisible during the strike (opacity 0
+   until 61%), so the transient peak may cross x=91 but the pose the bird HOLDS
+   may not — the held pose stops at 90.7 with its beak above y=170. Check that
+   corner after any change to the settle; it is the one place two things never
+   on screen together can still end up on top of one another. */
 @keyframes dg-bird-strike {
   0%, 36% { transform: translate(0, -13px) rotate(-3deg); animation-timing-function: ease-out; }
   44%, 47% { transform: translate(-8.5px, -6px) rotate(-15deg); animation-timing-function: cubic-bezier(.1,.85,.3,1); }
   49.5% { transform: translate(19px, -18px) rotate(9deg); animation-timing-function: ease-out; }
   52%, 100% { transform: translate(12px, -15px) rotate(5deg); }
 }
-/* Wings: spread wide on the coil, then swept back along the body and LOCKED there
-   for the thrust and the hold. Beating wings were tried first and are wrong here —
-   a wingbeat is a cycle, and a cycle reads as flight no matter how hard it is
-   thrown; a strike is ballistic, so the limbs stop and the whole body goes. Wide
-   → swept is also a one-way silhouette change, which a flap is not. */
+/* Wings: spread on the coil, then swept back and LOCKED for the thrust and hold.
+   Beating wings were tried and are wrong here — a cycle reads as flight however
+   hard it is thrown; a strike is ballistic, so the limbs stop and the body goes. */
 @keyframes dg-bird-strike-up {
   0%, 36% { transform: rotate(-10deg); animation-timing-function: ease-out; }
   44%, 47% { transform: rotate(32deg); animation-timing-function: cubic-bezier(.1,.85,.3,1); }
@@ -882,16 +816,16 @@
   49.5% { transform: rotate(-42deg); animation-timing-function: ease-out; }
   52%, 100% { transform: rotate(-37deg); }
 }
-/* The head is the point of the strike: cocked back and up on the coil, thrown
-   through the body's own forward pitch on the snap, held out at the end. */
+/* The head is the point of the strike: cocked back on the coil, thrown through
+   the body's own pitch on the snap, held out at the end. */
 @keyframes dg-bird-strike-neck {
   0%, 36% { transform: rotate(0deg); animation-timing-function: ease-out; }
   44%, 47% { transform: rotate(-31deg); animation-timing-function: cubic-bezier(.1,.85,.3,1); }
   49.5% { transform: rotate(25deg); animation-timing-function: ease-out; }
   52%, 100% { transform: rotate(19deg); }
 }
-/* Tucked tighter under the coil, then thrown forward with everything else — the
-   legs are the one track the landing inherits mid-motion, so it opens from here. */
+/* Legs: tucked tighter on the coil, thrown forward with everything else. The
+   landing opens from this closing stop. */
 @keyframes dg-bird-strike-legs {
   0%, 36% { transform: rotate(0deg) scaleY(.52) translateY(-2px); animation-timing-function: ease-out; }
   44%, 47% { transform: rotate(-18deg) scaleY(.46) translateY(-2px); animation-timing-function: cubic-bezier(.1,.85,.3,1); }
@@ -899,19 +833,17 @@
   52%, 100% { transform: rotate(22deg) scaleY(.75) translateY(0); }
 }
 
-/* The descent is a fall, so it accelerates the whole way down and only the touch
-   settles — the 90→92% step back up is the weight arriving, and IS a reversal,
-   so it keeps an ease. The braking wings open through their waypoint rather than
-   stopping on it. */
+/* The descent is a fall: it accelerates all the way down and only the touch
+   settles — the 90→92% step back up is the weight arriving, a reversal, so it
+   keeps an ease. The braking wings open through their waypoint. */
 @keyframes dg-bird-land {
   0%, 70% { transform: translate(12px, -15px) rotate(5deg); animation-timing-function: ease-in; }
   79% { transform: translate(12px, -2px) rotate(10deg); animation-timing-function: cubic-bezier(.4,0,.5,1); }
   90% { transform: translate(11px, 13px) rotate(0); }
   92%, 100% { transform: translate(11px, 11px) rotate(0); }
 }
-/* The brake is the strike's sweep run backwards: the locked wings open wide
-   again, which is why turn 3 opens on turn 2's swept angles rather than on the
-   authored rest pose. */
+/* The brake is the strike's sweep run backwards, so turn 3 opens on turn 2's
+   swept angles, not the authored rest pose. */
 @keyframes dg-bird-land-up {
   0%, 70% { transform: rotate(-39deg); animation-timing-function: ease-in; }
   79% { transform: rotate(16deg); animation-timing-function: cubic-bezier(.2,.6,.35,1); }
@@ -922,8 +854,8 @@
   79% { transform: rotate(4deg); animation-timing-function: cubic-bezier(.2,.6,.35,1); }
   90%, 100% { transform: rotate(20deg); }
 }
-/* The head comes back level as the weight arrives — the strike is over, and the
-   bird ends the chain standing rather than still reaching. */
+/* The head comes back level as the weight arrives: the bird ends the chain
+   standing, not still reaching. */
 @keyframes dg-bird-land-neck {
   0%, 70% { transform: rotate(19deg); animation-timing-function: ease-in; }
   79% { transform: rotate(4deg); }
@@ -949,11 +881,11 @@
 .is-bird.is-t3 .dg-wing-down { animation-name: dg-bird-land-down; }
 .is-bird.is-t3 .dg-bird-neck { animation-name: dg-bird-land-neck; }
 .is-bird.is-t3 .dg-bird-legs { animation-name: dg-bird-open-legs; }
-/* Turn 1 gives the neck no track at all: it holds the authored neutral pose, so
-   the chain's first neck stop is 0deg and turn 2 opens on it. */
+/* Turn 1 gives the neck no track: it holds the authored 0deg, and turn 2 opens
+   on it. */
 
-/* The arrow and its label belong to the third turn, and to the fact that the
-   chain could go on — they arrive with the last prompt and clear with the rest. */
+/* The arrow and its label say the chain could go on — they arrive with the last
+   prompt and clear with the rest. */
 @keyframes dg-extension-in {
   0%, 86% { opacity: 0; }
   89.5%, 100% { opacity: 1; }
@@ -962,14 +894,12 @@
   animation: dg-extension-in 9s ease-out infinite both;
 }
 
-/* The plate's own loop seam, and the one cut on these three plates that cannot
-   be eased away track by track: at 9s the bar is full, two birds hold ink poses
-   and the third has just landed — every one of those end poses IS the statement
-   being held, so none of them can drift toward the opening pose to meet it. The
-   plate clears instead, and rebuilds from an empty timeline with nothing on
-   screen to see it rebuild. One rule on the <svg>, not a fade per track: each
-   track already animates its own opacity, and a second animation on the same
-   property would simply replace it. Keep the arrow's arrival above clear of the
+/* The loop seam — the one cut on these plates that can't be eased away track by
+   track: at 9s every end pose IS the statement being held, so none can drift
+   toward its opening pose. The whole plate clears instead and rebuilds from an
+   empty timeline. One rule on the <svg>, not a fade per track: each track
+   already animates its own opacity, and a second animation on the same
+   property would replace it. Keep the arrow's arrival (86–89.5%) clear of this
    fade-out — it is the last thing to land, not something to flash. */
 @keyframes dg-plate-clear {
   0% { opacity: 0; }
@@ -981,37 +911,32 @@
   animation: dg-plate-clear 9s linear infinite both;
 }
 
-/* Reduced motion: the diagrams are content, so they stay — they just arrive
-   already finished and hold still. */
+/* Reduced motion: the diagrams are content, so they stay — arrived, finished,
+   still. */
 @media (prefers-reduced-motion: reduce) {
-  /* One rule over the whole plate, and `!important` on purpose. This block used
-     to name the animated parts one selector at a time, and it silently fell out
-     of date: the tracks that drive these plates are FAR more specific than
-     anything a list like that carries — a bird's limb sits at
-     `.is-bird.is-t1 .dg-bird-body` (0,3,0), the squat rig at `.is-squat .dg-body`
-     (0,2,0), and the edit plate's used to be `#id`-scoped (1,3,0) — so ten of
-     them kept animating straight through a stated "hold still". Specificity is
-     the wrong tool here: the intent is an override of everything below it, which
-     is exactly what `!important` means. dimo/css/style.css settles its own figure
-     the same way. Note `*` reaches the <svg> too, which is what stops the
-     expansion plate's loop-seam fade — with the loop stopped there is no seam to
-     hide, and left running it would be the only thing still moving. */
+  /* One rule over the whole plate, `!important` on purpose. A list naming the
+     animated parts one selector at a time silently fell out of date — the
+     tracks are far more specific (`.is-bird.is-t1 .dg-bird-body` is (0,3,0)),
+     so ten of them kept animating through a stated "hold still". The intent is
+     an override of everything, which is what `!important` means; dimo's figure
+     is settled the same way. `*` reaches the <svg> too, which stops the
+     expansion plate's loop-seam fade — with the loop stopped there is no seam,
+     and it would be the only thing still moving. */
   .app-diagram * {
     animation: none !important;
     opacity: 1 !important;
     stroke-dashoffset: 0 !important;
   }
-  /* The expansion plate is the one that says something by moving, so it has to
-     say it standing still: every figure visible, the bar full, the chain read
-     off the three poses down the column instead of off the clock. */
+  /* The expansion plate says its piece by moving, so standing still it needs
+     every figure visible and the bar full: the chain read off the three poses
+     down the column. */
   .dg-seq-axis { stroke-dasharray: 1 1 !important; }
 }
 
 /* ── 4. Responsive ──────────────────────────────────────────────────────────
-   Below this the column can no longer hold a clip and a 240px plate side by
-   side, so the plate drops under its clip and centres. It stays visible: it is
-   the explanation of the task, not an ornament, and unlike the clip it reads at
-   any size. */
+   Below 1000px the column can't hold a clip and a 240px plate side by side, so
+   the plate drops under its clip and centres. It stays: it is the explanation
+   of the task, and unlike the clip it reads at any size. */
 @media (max-width: 1000px) {
   .app-row {
     flex-direction: column;

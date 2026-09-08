@@ -11,34 +11,26 @@
 	<meta name="robots" content="index, follow">
 	<link rel="canonical" href="https://linzhanmou.com/publications.html" />
 
-	<!-- Gate for the section reveal in styles.css. It has to run here, in the
-	     head, for both of its jobs: it lands before any section is parsed, so
-	     there is no frame where they show and are then hidden, and it means the
-	     hidden state exists *only* when JS is running — with JS off the page is
-	     simply a page. nav.js does the revealing. -->
+	<!-- Section-reveal gate; must stay in the head. See index.html. -->
 	<script>document.documentElement.classList.add('js-anim');</script>
 
-	<!-- No Font Awesome / Academicons here: every link on this page is a word,
-	     same as the résumé — the icons would label what is already labelled. -->
+	<!-- No Font Awesome / Academicons: every link on this page is a word. -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
 		crossorigin="anonymous">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600,0,0;9..144,700,0,0&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
-	<!-- ?v= busts the CDN/browser cache; bump it when editing these files.
-	     The first two are shared with index.html and resume.html — keep all
-	     three pages' numbers equal, so they hit one cache entry per file.
-	     publications.css is only ours and carries its own counter. -->
+	<!-- ?v= busts the Pages cache. The first two are shared with the other root
+	     pages — keep the numbers equal across all three. publications.css has
+	     its own counter. -->
 	<link rel="stylesheet" href="css/custom-navbar.css?v=40">
 	<link rel="stylesheet" href="css/styles.css?v=51">
 	<link rel="stylesheet" href="css/publications.css?v=7">
 </head>
 
 <body>
-	<!-- The site nav, the same two links as the homepage's; only the résumé's
-	     rail carries a third. Its About link points at the homepage's hero, so
-	     nav.js finds no section to track here and parks the keypoint under the
-	     link marked is-active below. -->
+	<!-- Same navbar markup as index.html (see the note there). Every link points
+	     off-page, so nav.js parks the keypoint under the is-active link. -->
 	<nav class="navbar" role="navigation" aria-label="Main">
 		<div class="navbar-inner">
 			<div class="navbar-brand">
@@ -54,8 +46,6 @@
 				</button>
 			</div>
 			<div class="navbar-menu" id="navbar-main">
-				<!-- No Resume link here either — the homepage and this page both run
-				     About + Publications; the résumé is reachable at /resume.html. -->
 				<div class="navbar-sections">
 					<a class="nav-section" href="/#About">About</a>
 					<a class="nav-section is-active" aria-current="page" href="/publications.html">Publications</a>
@@ -67,8 +57,6 @@
 
 	<div class="container">
 		<div class="pubs-page">
-			<!-- Two-sided masthead, the résumé's row grammar: what this page is
-			     on the left, the same record in its other database on the right. -->
 			<header class="pubs-masthead">
 				<h1>Publications</h1>
 				<p class="pubs-scholar">
@@ -76,9 +64,6 @@
 				</p>
 			</header>
 
-			<!-- Reads as one note on the whole record, so it leads it instead of
-			     closing it: the asterisk shows up in all three year groups, and
-			     this way the convention is stated before the first one. -->
 			<p class="pubs-note">* denotes equal contribution.</p>
 
 			<section class="page-section pubs-year-group">

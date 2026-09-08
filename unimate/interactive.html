@@ -8,12 +8,10 @@
   <meta name="theme-color" content="#151817" />
   <title>UniMate Motion Lab</title>
 
-  <!-- Link preview. This page gets its own card rather than the project page's
-       teaser figure, and it is the lab itself — Welcome stage, dark theme,
-       chrome and all — because the card should read as something you can open
-       rather than as a render of the paper. See the note in index.html for the
-       rules both cards answer to (matching width/height, a new filename on
-       every change, and the platform size and aspect limits). -->
+  <!-- Link preview. Its own card, not the project page's teaser: a frame of the
+       lab itself — Welcome stage, dark theme, chrome and all — so it reads as
+       something you can open rather than a render of the paper. The rules both
+       cards answer to are in index.html. -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="UniMate Motion Lab" />
   <meta property="og:description" content="Explore UniMate's generated 3D character animations in an interactive motion lab." />
@@ -52,13 +50,12 @@
           <div id="loading-overlay"><span class="spinner"></span><span>Building scene</span></div>
           <div id="drop-hint">Release to inspect your model</div>
           <div class="drop-note"><span aria-hidden="true"></span> Drop GLB, GLTF, or FBX to inspect</div>
-          <!-- The catalog's rigs are third-party art — WALL-E, EVE, Baymax, a
-               Gundam — shown as motion targets, not as ours. The academic
-               convention for third-party character assets is two clauses and no
-               more: whose they are, and that the use is research. Both survive
-               here at their shortest; what must NOT come back is licence
-               language ("under fair use", "with permission") we were never
-               granted. Stays one line — see the clearance note in the CSS. -->
+          <!-- The rigs are third-party art (WALL-E, EVE, Baymax, a Gundam) shown
+               as motion targets. The academic convention is two clauses and no
+               more: whose they are, and that the use is research. Do NOT add
+               licence language ("under fair use", "with permission") we were
+               never granted. Stays one line — see .asset-notice in
+               interactive.css. -->
           <p class="asset-notice">Models &copy; their respective owners<i>&middot;</i>research use only</p>
           <div class="control-bar" aria-label="Display controls">
             <div class="control-status" aria-live="polite">

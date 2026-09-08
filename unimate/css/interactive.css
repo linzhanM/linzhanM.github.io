@@ -4,13 +4,10 @@
 :root {
   --paper: #131413;
   --paper-light: #f2eee8;
-  /* The stage is the page: this is the sky behind every rig. Same warm
-     green-gray hue throughout its history, tuned by eye — #191c1b read as
-     washed, a full step down to #111312 as a void; this is their midpoint,
-     dark enough that the rigs and the checker floor read as the lit things.
-     viewer.js's VIEWER_THEMES.dark (scene background + metaColor) and the
-     theme-color meta in interactive.html carry the SAME value — move all
-     three together. */
+  /* The sky behind every rig, tuned by eye: #191c1b read as washed, #111312 as
+     a void. viewer.js's VIEWER_THEMES.dark (background + metaColor) and the
+     theme-color meta in interactive.html carry the SAME value — move all three
+     together. */
   --stage: #151817;
   --ink: #f2eee8;
   --muted: #9b9993;
@@ -126,11 +123,9 @@ button:focus-visible {
   top: 50%;
   z-index: 5;
   width: 188px;
-  /* The rail is centred, so this bound is what sets its distance from the
-     bottom edge: at the bound it ends 45px up, which is the clearance the
-     asset notice below it needs. It was 36px (an 18px gutter, matching the
-     left inset) before that line existed. Only short viewports feel the
-     difference, and only as the rail's existing scroll starting sooner. */
+  /* The rail is centred, so this bound sets its distance from the bottom edge:
+     45px, the clearance .asset-notice needs below it. Only short viewports feel
+     it, as the rail's scroll starting sooner. */
   max-height: calc(100% - 90px);
   display: flex;
   flex-direction: column;
@@ -144,11 +139,11 @@ button:focus-visible {
   transition: transform 260ms ease, opacity 200ms ease;
 }
 
-/* Collapse: the panel slides off the left edge; the handle below stays behind
-   to bring it back. Chrome only moves — the canvas underneath never resizes,
-   so the camera and layout are untouched. .is-instant suppresses the slide for
-   the restored-from-sessionStorage first paint, so a returning visitor's
-   hidden panel is simply hidden rather than seen leaving. */
+/* Collapse: the panel slides off the left edge and the handle stays behind to
+   bring it back. Only chrome moves — the canvas never resizes, so camera and
+   layout are untouched. .is-instant suppresses the slide on the
+   restored-from-sessionStorage first paint, so a returning visitor's hidden
+   panel is simply hidden rather than seen leaving. */
 .category-panel.is-collapsed {
   transform: translate(-240px, -50%);
   opacity: 0;
@@ -160,9 +155,6 @@ button:focus-visible {
   transition: none;
 }
 
-/* The handle: a slim vertical pill in the panel's own chrome, parked on its
-   right edge, sliding to the screen edge when the panel hides. The chevron is
-   inline SVG stroked with currentColor, flipped by the collapsed state. */
 .panel-toggle {
   position: absolute;
   left: 214px;
@@ -371,11 +363,10 @@ button:focus-visible {
 .control-bar {
   top: 12px;
   right: 12px;
-  /* Wide enough that the catalog's longest label — "Unitree G1 Robot" at
-     13px sans, after the mono "Category" and the 16px gap — fits without
-     the ellipsis. The ellipsis is insurance for drop-in FILE names only
-     (viewer.js promises exactly that, and puts the full name in a title);
-     at 194px it was also eating catalog names. */
+  /* Wide enough that the catalog's longest label ("Unitree G1 Robot", 13px
+     sans, after the mono "Category" and 16px gap) fits without the ellipsis.
+     The ellipsis is insurance for drop-in FILE names only (viewer.js puts the
+     full name in a title); at 194px it was also eating catalog names. */
   width: 216px;
   flex-direction: column;
   align-items: stretch;
@@ -674,8 +665,8 @@ html[data-theme='light'] #loading-overlay { color: var(--ink); background: rgba(
 html[data-theme='light'] #drop-hint { color: var(--signal); background: rgba(249, 216, 205, 0.88); }
 html[data-theme='light'] .drop-note { color: rgba(23, 25, 22, 0.54); }
 html[data-theme='light'] .asset-notice { color: rgba(23, 25, 22, 0.44); }
-/* More alpha than the solid ring this replaced: a 1px dash is half ink and half
-   gap, so it needs the extra to carry the weight of the text beside it. */
+/* More alpha than a solid ring would take: a 1px dash is half gap, and needs
+   the extra to carry the weight of the text beside it. */
 html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34); }
 
 #viewer-labels { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
@@ -727,8 +718,8 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
   animation: label-in 180ms ease-out both;
 }
 
-/* Full-screen prompts are hover feedback, not persistent annotations. The rig
-   itself identifies the target, so the usual leader and pin are unnecessary. */
+/* The lab shows one prompt at a time beside the cursor (hoverPrompts): the rig
+   under the pointer is the target, so leader and pin are dropped. */
 .interactive-viewer-page .viewer-label::after,
 .interactive-viewer-page .viewer-pin {
   display: none !important;
@@ -774,17 +765,13 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
 
 #drop-hint { display: none; margin: 14px; border: 1px dashed var(--signal); color: var(--paper-light); background: rgba(59, 40, 28, 0.94); }
 
-/* The two bottom corners are the stage's fine print, and they are the only text
-   on this page not carried on a plate. They share a 14px line box and a 16px
-   bottom inset so they sit on ONE baseline across the width — at unequal box
-   heights the band visibly wobbles. What they don't share is a voice, because
-   they aren't the same kind of thing: the right corner is something you can do,
-   so it takes the page's label register (mono, caps, tracked — the register of
-   the rail's CATEGORIES heading and the drop overlay's own line; the control
-   bar's "Category" is mono but neither caps nor tracked, so it is not the
-   model here); the left corner is a sentence, so it takes the sans. Mono set
-   that 50-character sentence as a bar of even texture, 20% wider and less
-   legible than the same line in the body face. Keep the split. */
+/* The two bottom corners are the stage's fine print, the only text on the page
+   not carried on a plate. They share a 14px line box and 16px bottom inset so
+   they sit on ONE baseline — at unequal box heights the band wobbles. They do
+   not share a voice: the right corner is something you can do, so it takes the
+   label register (mono, caps, tracked, like the rail's CATEGORIES heading); the
+   left is a sentence, so it takes the sans — in mono that 50-character line set
+   as a bar of even texture, 20% wider and less legible. Keep the split. */
 .drop-note {
   position: absolute;
   bottom: 16px;
@@ -802,25 +789,22 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
   text-transform: uppercase;
 }
 
-/* The mark is #drop-hint in miniature: same 1px dash, same hard corners, same
-   landscape frame that drag draws inset 14px from the viewport edge. So the mark
-   predicts the interaction — start dragging and this box becomes the stage. It
-   was a "+" in a circle, the glyph for "add", on an element that is not a button
-   and cannot be clicked. Restyling #drop-hint's border means restyling this too,
-   or the promise breaks. Below ~18px wide the dashes land mostly on the corners
-   and it reads as a pair of brackets, so this size is a floor, not a preference. */
+/* The mark is #drop-hint in miniature — same 1px dash, hard corners and
+   landscape frame — so it predicts the interaction: start dragging and this box
+   becomes the stage. (A "+" in a circle read as a button on something that
+   can't be clicked.) Restyle #drop-hint's border and restyle this with it, or
+   the promise breaks. Below ~18px wide the dashes land mostly on the corners
+   and it reads as brackets, so this size is a floor. */
 .drop-note span {
   width: 21px;
   height: 13px;
   border: 1px dashed rgba(211, 207, 199, 0.36);
 }
 
-/* Asset attribution, in the bottom-left corner: left-aligned on the rail's own
-   18px edge so it reads as the foot of that column. It must stay ONE line — the
-   clearance below the rail is a single line's worth (see .category-panel's
-   max-height), so the max-width is set clear of the drop note rather than at the
-   corner's full width. Dimmer than the note: fine print you must be shown, not
-   an offer, and the note is the one of the two worth reading first. */
+/* Asset attribution, on the rail's 18px edge as the foot of that column. It
+   must stay ONE line — the clearance below the rail is a single line's worth
+   (.category-panel's max-height) — so the max-width stops clear of the drop
+   note. Dimmer than the note: the note is the one worth reading first. */
 .asset-notice {
   position: absolute;
   bottom: 16px;
@@ -836,12 +820,11 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
   letter-spacing: 0.004em;
 }
 
-/* The sans word-space is too narrow at 10px to seat a middot — "owners·research"
-   closed up into one word. The gap is padding rather than entities in the markup
-   for two reasons: 0.42em is a width no entity gives you, and with no literal
-   whitespace the separator carries no line-break opportunity, which is one fewer
-   way for the notice to go two lines. The cost is real and accepted — copying
-   the line yields "owners·research" closed up. */
+/* The sans word-space is too narrow at 10px to seat a middot ("owners·research"
+   closed up). Padding rather than space entities: 0.42em is a width no entity
+   gives, and with no literal whitespace the separator offers no line break —
+   one fewer way for the notice to go two lines. Accepted cost: copying the line
+   yields it closed up. */
 .asset-notice i {
   padding: 0 0.42em;
   font-style: normal;
@@ -849,8 +832,8 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
 
 @media (max-width: 900px) {
   .viewer-layout { aspect-ratio: auto; }
-  /* The panel is the bottom strip here — primary navigation, never hidden.
-     Neutralize any collapsed state carried over from a desktop-width session. */
+  /* The panel is the bottom strip here — primary navigation, never hidden —
+     so a collapsed state carried over from a desktop-width session is undone. */
   .panel-toggle { display: none; }
   .category-panel.is-collapsed {
     transform: none;
@@ -872,23 +855,21 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
   }
   .category-heading { display: none; }
   .example-sidebar { flex: 1 1 auto; width: auto; flex-direction: row; padding-top: 0; overflow-x: auto; overflow-y: hidden; }
-  /* The theme toggle is desktop chrome: the bottom strip is primary navigation,
-     and every slot it has goes to a category. */
+  /* Every slot in the strip goes to a category; the theme toggle is desktop
+     chrome. */
   .category-theme { display: none; }
   .drop-note { display: none; }
-  /* No free bottom-left here — the category strip is the whole bottom edge, and
-     floating the line above it means a second offset tied to that strip's
-     height, the same coupling the phone console already pays for. Note what
-     that costs: nothing else on the site carries this attribution, so below
-     900px it is shown nowhere — the project page has no notice to fall back
-     to. Give it one before treating this as settled. */
+  /* No free bottom-left: the strip is the whole bottom edge, and floating the
+     line above it would be a second offset tied to the strip's height. The
+     cost: nothing else on the site carries this attribution, so below 900px it
+     is shown nowhere. Give the project page a notice before treating this as
+     settled. */
   .asset-notice { display: none; }
-  /* The dock parks top-LEFT as a compact pill, mirroring the bar top-right —
-     the desktop's own corner grammar. Its previous home, a full-width band a
-     fixed 163px down, was tuned for one portrait height: on a tablet it floated
-     mid-sky with its content bunched left, and in landscape it landed on the
-     category strip. The corners exist at every aspect ratio; a fixed offset
-     does not. max-width keeps it clear of the 216px bar even at 561px wide. */
+  /* The dock parks top-LEFT as a pill, mirroring the bar top-right. Never give
+     it back a fixed vertical offset: a full-width band 163px down was tuned for
+     one portrait height — on a tablet it floated mid-sky, in landscape it landed
+     on the category strip. Corners exist at every aspect ratio. max-width keeps
+     it clear of the 216px bar even at 561px wide. */
   .control-dock {
     left: max(8px, env(safe-area-inset-left));
     right: auto;
@@ -906,8 +887,7 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
   }
   .control-dock::-webkit-scrollbar { display: none; }
   .dock-hint { display: none; }
-  /* Everything at this width is a touch screen: a Space / O / R chip is a
-     promise the hardware can't keep, on a tablet as much as on a phone. */
+  /* Touch screens: a Space / O / R chip is a promise the hardware can't keep. */
   .dock-control kbd { display: none; }
   .dock-control { padding: 2px 9px; }
   .example-item { width: auto; min-width: max-content; min-height: 38px; max-height: 38px; padding: 0 11px; }
@@ -943,18 +923,15 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
   .example-name { font-size: 11px; }
   .viewer-label { max-width: 180px; font-size: 9px; padding: 4px 7px; }
   /* THE CONSOLE. On a phone the bar and the dock fuse into one plate of three
-     ruled registers — readout, display switches, transport — hairline rules
-     and mono type, no chips: the register grammar the rest of this family
-     already sets small controls in (the project page's rail, its embed bar).
-     As two stacked chip plates the same cluster read as one instrument sawn
-     in half, and spent ~175px of a 667px screen saying it.
+     ruled registers — readout, display switches, transport — hairlines and mono
+     type, no chips. As two stacked chip plates the cluster read as one
+     instrument sawn in half and spent ~175px of a 667px screen on it.
 
-     THE TWO ELEMENTS MEET BY ARITHMETIC, so these numbers are one decision:
-     the bar is border 1 + readout 34 + rule 1 + switch row 44 = 80px tall,
-     and the dock hangs at +79 — one px UNDER the bar, so a rounding error
-     shows as nothing instead of a lit seam. Both are flat --chrome (the
-     gradient restarts at the joint and would stripe it). Change any row
-     height and move the dock's offset with it. */
+     THE TWO ELEMENTS MEET BY ARITHMETIC: the bar is border 1 + readout 34 +
+     rule 1 + switch row 44 = 80px tall, and the dock hangs at +79 — one px
+     UNDER the bar, so a rounding error shows as nothing instead of a lit seam.
+     Both are flat --chrome (the gradient would restart at the joint and stripe
+     it). Change any row height and move the dock's offset with it. */
   .control-bar {
     left: max(8px, env(safe-area-inset-left));
     right: max(8px, env(safe-area-inset-right));
@@ -977,8 +954,8 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
     gap: 0;
     border-top: 1px solid var(--chrome-divider);
   }
-  /* A register line, not a chip: the whole third is still the tap target —
-     the rules only draw where one control ends and the next begins. */
+  /* A register line, not a chip: the whole third is the tap target, and the
+     rules draw only where one control ends and the next begins. */
   .status-control {
     box-sizing: border-box;
     height: 44px;
@@ -1009,10 +986,9 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
     max-width: none;
     overflow: visible;
     display: grid;
-    /* The link is the row's longest label, so it buys its extra share from the
-       three one-word controls — and 1.5fr exactly (3 of 4.5 = 2 of 3) lands
-       the divider before it on the switch row's right rule, one column line
-       running through both registers instead of two lines a few px apart. */
+    /* The link is the longest label, and 1.5fr exactly (3 of 4.5 = 2 of 3)
+       lands the divider before it on the switch row's right rule — one column
+       line through both registers instead of two a few px apart. */
     grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.5fr);
     gap: 0;
     padding: 0;
@@ -1029,8 +1005,8 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
     border: 0;
     border-radius: 0;
   }
-  /* Mono, like every other label on the plate: on the console the transport
-     row is a register too, not the desktop's free-floating pill. */
+  /* Mono, like every other label on the plate: the transport row is a register
+     here, not the desktop's pill. */
   .dock-control span,
   .dock-project {
     font-family: var(--mono);
@@ -1043,9 +1019,8 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
   .dock-control + .dock-control,
   .dock-project { border-left: 1px solid var(--chrome-divider); }
   /* State is fill and ink — a border would break the ruling. The end cells
-     round to the plate's own corners (12 outer − 1 border) so an active fill
-     never squares them off; overflow:hidden would do it too, and would clip
-     the focus ring with it. */
+     round to the plate's corners (12 outer − 1 border) so an active fill never
+     squares them off; overflow:hidden would do it too, and clip the focus ring. */
   .dock-control.is-active {
     color: var(--chrome-active-text);
     background: var(--control-accent-soft);

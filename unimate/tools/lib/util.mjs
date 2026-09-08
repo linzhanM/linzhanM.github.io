@@ -1,15 +1,15 @@
-// Shared helpers. `fail` is the one exit path for a bad request or an
-// unusable environment: a single line on stderr, no stack, exit 1. Anything
-// thrown instead reaches the entry point's catch and prints its stack, which
-// is the right shape for a bug rather than a misuse.
+// Shared helpers. `fail` is the exit path for a misuse or an unusable
+// environment: one line on stderr, no stack, exit 1. A thrown error instead
+// reaches the entry point's catch and prints its stack — the right shape for
+// a bug.
 
 export function fail(message) {
   console.error(`render-category: ${message}`);
   process.exit(1);
 }
 
-// The lab's own slug rule (stageSlug in viewer.js), so a --category matches
-// the hash the page resolves.
+// Must match stageSlug in viewer.js, so a --category resolves as the page's
+// own hash would.
 export const slugify = (label) => label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
