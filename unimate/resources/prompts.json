@@ -20,6 +20,10 @@
   "robot_arm-push.glb": "A robot arm pushes forward.",
   "lamp-bend.glb": "A lamp bends backward.",
 
+  "microduck-nod_head.glb": "A robot nods its head.",
+  "panda-place.glb": "A robot arm places an object.",
+  "lamp-hop.glb": "A lamp hops forward.",
+
   "flower-close.glb": "A flower closes its petals.",
   "piranha_plant-bite.glb": "A piranha plant bites forward.",
 

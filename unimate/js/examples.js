@@ -164,6 +164,21 @@ export const EXAMPLES = [
     // below everything.
     spacing: 1.05, pad: 1.02, evenGaps: true, rowDepth: 2.8, stageShift: [-0.3, 0, 0],
   },
+  // Three desk-sized bodies of three kinds: a small biped robot that nods, a
+  // Franka Panda arm on a fixed base, and a Luxo-style lamp — the one rig here
+  // that travels. The lamp hops about a base-width toward the visitor and holds
+  // the landing; centring on the all-frame bbox already starts it behind the
+  // row's line and lands it ahead, so it takes no offset. Its yaw turns the head
+  // to three-quarter view, where the hop reads as a hop and not a bounce.
+  {
+    label: 'Tabletop',
+    files: [
+      { url: 'resources/glbs/microduck-nod_head.glb', groundToMesh: true },
+      { url: 'resources/glbs/panda-place.glb', groundToMesh: true },
+      { url: 'resources/glbs/lamp-hop.glb', groundToMesh: true, rotate: [0, 30, 0] },
+    ],
+    spacing: 1.15, pad: 1.1, evenGaps: true,
+  },
   {
     label: 'Bipedal',
     files: [

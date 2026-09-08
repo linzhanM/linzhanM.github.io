@@ -56,7 +56,7 @@ tools/
 ## Rig compression
 
 `resources/glbs/` ships **meshopt-compressed geometry with 512px WebP textures**
-— 55 rigs, 671 MB down to 50 MB (92.6%), which takes the landing stage from
+— 58 rigs, 736 MB down to 59 MB (92%), which takes the landing stage from
 27 MB to 1 MB. Triangle counts, animation counts and bounding boxes are
 unchanged; the reduction is texture size, vertex welding and buffer encoding.
 
@@ -65,7 +65,7 @@ it every rig fails to parse** — `EXT_texture_webp` and `KHR_mesh_quantization`
 are native to three.js, but `EXT_meshopt_compression` is not.
 
 The uncompressed sources live in `resources/glbs-raw/`, which is gitignored: the
-repo is the deployed artifact and 671 MB of duplicates would put the published
+repo is the deployed artifact and 736 MB of duplicates would put the published
 site near GitHub Pages' 1 GB limit. They used to be recoverable from commit
 `b4ac4c8`, but that history was purged on 2026-08-06 to bring the repo back
 under 1 GB — **the local folder is the only copy left**. To rebuild after adding
@@ -84,9 +84,9 @@ almost nothing and being the one step that visibly changes silhouettes.
 `--resample` drops keyframes that sit on the straight line between their
 neighbours. gltf-transform calls that lossless and for playback it is — but the
 model emits 60 discrete frames per clip, so a dropped key loses a sample that
-was generated, not padding. Leaving it on cost about 0.1 MB across all 55 rigs
-and left every file with a different key count; off, the shipped files carry the
-same 60 keys the sources do.
+was generated, not padding. Leaving it on cost about 0.1 MB across the 55 rigs
+then shipping, and left every file with a different key count; off, the shipped
+files carry the same 60 keys the sources do.
 
 ## What every rig must be
 
@@ -122,7 +122,10 @@ Normalized across the set on 2026-08-06; a new rig has to match before it lands.
   Three known exceptions remain, all decorative bones that stretch by design:
   `bird-flap` (tail and side plumes, up to 15% of rig scale) and
   `wall_e-greet` / `-greet_open` (`Head_02`, WALL-E's telescoping neck, 3.9% and
-  2.0%). Freezing them would edit the motion, not the format.
+  2.0%). Freezing them would edit the motion, not the format. A fourth kind of
+  exception is `panda-place`: its two finger bones translate 28 mm against the
+  hand because a Franka gripper is a prismatic joint — that slide *is* the
+  grasp, and no bone changes length.
 - **Filename `<category>-<action>.glb`**, one hyphen, `_` for every other gap:
   `wall_e-greet_open`, `go2-rear_up`, `quadruped_spot_arm-step_reach`.
   Lowercase, digits and underscore only.
