@@ -7,7 +7,7 @@
 // Config overrides the lab does not offer as UI.
 export function viewerConfigFor(opts) {
   return {
-    ...(opts.labels ? { hoverPrompts: false } : {}),
+    ...(opts.labels ? { pinPrompts: true } : {}),
     ...(opts.orbit ? {} : { autoOrbitControls: false, initialOrbitAngle: 0 }),
   };
 }

@@ -38,6 +38,17 @@
 //   floor      multiplier on the auto-sized checker floor (default 1). The floor
 //              pads itself by 2×|stageShift|, which a deep shift inflates until
 //              the models read lost — shrink it here.
+//   sameRig    Override only. A stage whose files all share the stem before
+//              the dash (g1-pick_up, g1-jump, g1-wave) is ONE character and is
+//              sized alike automatically — by each rig's bind-pose mesh rather
+//              than the tallest frame of its own clip, which shrinks whichever
+//              clip raises an arm; the plainest-posed clip keeps the size the
+//              height rule gives it and the rest match it. A mixed stage keeps
+//              the height rule. `true`/`false` forces either way.
+//   liftScale  lab only: multiplier on how far the pinned prompt stands above
+//              each rig's root joint (default 1). The engine measures that from
+//              the mesh; under 1 lets the chip sit into a silhouette that is
+//              mostly air (a bird's wings), so the leader stays short.
 //
 // ── File entry ───────────────────────────────────────────────────────────────
 //   Either a path string, or an object { url, ...opts }:
@@ -50,6 +61,8 @@
 //     lockLabelSlot hold `labelSlot` instead of letting the solver re-choose.
 //     labelOffset  [x, y] pixel nudge on the chip's chosen screen position.
 //     labelPinOffset [x, y] pixel nudge on the leader's endpoint only.
+//     liftScale    lab only: this rig's own multiplier on the pinned prompt's
+//                  height above its root, on top of the stage's `liftScale`.
 //     material     PBR override { roughness, metalness, emissiveIntensity,
 //                  emissive?, colorScale? }. Lower roughness and higher
 //                  emissive rescue rigs that render dark; a flat
@@ -108,11 +121,11 @@ export const EXAMPLES = [
       // The -open cut of the greet, not the one the WALL-E Robot stage runs:
       // arms swinging out to the sides instead of lifting a little. At this
       // size a small gesture reads as nothing happening.
-      { url: 'resources/glbs/wall_e-greet_open.glb', groundToMesh: true, labelOffset: [-60, 0] },
+      { url: 'resources/glbs/wall_e-spread_wave.glb', groundToMesh: true, labelOffset: [-60, 0] },
       // The waving cut over the plain one: the arms come up and swing while the
       // head rocks, so EVE keeps moving through the middle of the loop instead
       // of parking at her peak like the other three.
-      { url: 'resources/glbs/eve-greet_wave.glb', groundToMesh: true, labelOffset: [60, 0] },
+      { url: 'resources/glbs/eve-spread_wave.glb', groundToMesh: true, labelOffset: [60, 0] },
       // Both scales correct for the gesture, not art-direct the rig: height
       // normalization sizes a rig by its OWN tallest frame, so a clip whose
       // peak is a raised arm or a rear-up leaves the body standing short for
@@ -182,7 +195,7 @@ export const EXAMPLES = [
     files: [
       'resources/glbs/garfield-dance.glb',
       'resources/glbs/gundam-kick.glb',
-      { url: 'resources/glbs/mixamo-flip.glb', material: MIXAMO, labelSlot: 'above', lockLabelSlot: true },
+      { url: 'resources/glbs/mixamo-backflip.glb', material: MIXAMO, labelSlot: 'above', lockLabelSlot: true },
       'resources/glbs/ironman-walk.glb',
     ],
     pad: 1.15, spacing: 0.96,
@@ -190,7 +203,10 @@ export const EXAMPLES = [
   {
     label: 'Quadrupedal',
     files: [
-      'resources/glbs/quadruped_spot-walk.glb',
+      // liftScale: Spot's body is a flat slab, so the measured lift lands the
+      // lab's chip almost on its back, and from the lab's raised camera the
+      // slab's far edge projects above a low chip. Nearly twice the air.
+      { url: 'resources/glbs/quadruped_spot-walk.glb', liftScale: 2.2 },
       'resources/glbs/quadruped_green-run.glb',
       // Both numbers are measured, not eyed. scale: the raised arm is 18% of
       // this rig's tallest frame, so unit-height normalization would leave the
@@ -234,9 +250,9 @@ export const EXAMPLES = [
   {
     label: 'EVE Robot',
     files: [
-      { url: 'resources/glbs/eve-scan.glb', groundToMesh: true },
-      { url: 'resources/glbs/eve-curious.glb', groundToMesh: true },
-      { url: 'resources/glbs/eve-alert.glb', groundToMesh: true },
+      { url: 'resources/glbs/eve-look_around.glb', groundToMesh: true },
+      { url: 'resources/glbs/eve-raise_arm.glb', groundToMesh: true },
+      { url: 'resources/glbs/eve-bend_shake.glb', groundToMesh: true },
     ],
     spacing: 1.25, pad: 1.12, evenGaps: true,
   },
@@ -249,18 +265,20 @@ export const EXAMPLES = [
     files: [
       { url: 'resources/glbs/g1-pick_up.glb', groundToMesh: true },
       { url: 'resources/glbs/g1-jump.glb', groundToMesh: true },
-      { url: 'resources/glbs/g1-wave.glb', groundToMesh: true, scale: 1.23 },
+      { url: 'resources/glbs/g1-wave.glb', groundToMesh: true },
     ],
     spacing: 1.3, scale: 1.1, pad: 1.1,
   },
   {
     label: 'Baymax Robot',
     files: [
-      { url: 'resources/glbs/baymax-walk.glb', labelOffset: [0, -18] },
+      { url: 'resources/glbs/baymax-walk.glb', labelOffset: [0, -18], liftScale: 1.08 },   // the walk's chip alone sat on the horns
       { url: 'resources/glbs/baymax-dance.glb', labelOffset: [0, -18] },
       { url: 'resources/glbs/baymax-punch.glb', labelOffset: [0, -18] },
     ],
-    spacing: 1.0, pad: 1.12,
+    // liftScale: the horns top the head by little, so the measured lift lands
+    // the lab's chip almost on them; a touch more air reads better.
+    spacing: 1.0, pad: 1.12, liftScale: 1.15,
   },
   {
     label: 'Gundam Robot',
@@ -277,7 +295,7 @@ export const EXAMPLES = [
     files: [
       { url: 'resources/glbs/armor-walk.glb' },
       { url: 'resources/glbs/armor-jump.glb' },
-      { url: 'resources/glbs/armor-rotate.glb' },
+      { url: 'resources/glbs/armor-turn.glb' },
       { url: 'resources/glbs/armor-kick.glb', labelSlot: 'above', lockLabelSlot: true, labelOffset: [70, 15] },
     ],
     spacing: 1.1, pad: 1.1,
@@ -297,16 +315,18 @@ export const EXAMPLES = [
     files: [
       { url: 'resources/glbs/eagle-take_off.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 0.4, 0], labelSlot: 'below', lockLabelSlot: true, labelOffset: [24, 0] },
       { url: 'resources/glbs/eagle-strike.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 1.0, 0], labelOffset: [0, -10] },
-      { url: 'resources/glbs/eagle-landing.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 0.4, 0], labelSlot: 'below', lockLabelSlot: true },
+      { url: 'resources/glbs/eagle-land.glb', material: { emissive: 0x6b6455, emissiveIntensity: 0.18 }, offset: [0, 0.4, 0], labelSlot: 'below', lockLabelSlot: true },
     ],
-    sizeBy: 'maxdim', spacing: 1.15, evenGaps: true, lighting: 6.0,
+    // liftScale: a flapping wing tops out well above the head, so the measured
+    // lift leaves the lab's chip on a long leader; the wings are mostly air.
+    sizeBy: 'maxdim', spacing: 1.15, evenGaps: true, lighting: 6.0, liftScale: 0.6,
   },
   {
     label: 'Shark',
     files: [
       { url: 'resources/glbs/jaws-swim_right.glb', offset: [0, 0.4, 0] },
       { url: 'resources/glbs/jaws-bite.glb', offset: [0, 0.4, 0] },
-      { url: 'resources/glbs/jaws-swim_180.glb', offset: [-0.4, 0.4, 0] },
+      { url: 'resources/glbs/jaws-swim_turn.glb', offset: [-0.4, 0.4, 0] },
     ],
     sizeBy: 'maxdim', spacing: 1.0, evenGaps: true, lighting: 6.0, pad: 1.12,
   },

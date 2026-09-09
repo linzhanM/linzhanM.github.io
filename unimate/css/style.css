@@ -1,7 +1,8 @@
 /* ============================================================================
    UniMate — project page styles.
 
-   Fonts: Playfair Display (display), Roboto Mono (labels), Georgia body. The
+   Fonts: Playfair Display (display and the contents rail), Roboto Mono
+   (labels), Georgia body with Optima as its fallback. The
    @import ships mono at 300 and 700 only — see style.css §4 (.quick-links)
    for why that constrains every mono rule on the page.
 
@@ -55,7 +56,9 @@
 /* ── 2. Base ────────────────────────────────────────────────────────────────── */
 body {
   background-color: #fdfaf4;
-  font-family: Georgia, 'Times New Roman', serif;
+  /* Georgia first, Optima behind it for a device without Georgia. Both are
+     system faces, so the body costs no download. */
+  font-family: Georgia, Optima, 'Times New Roman', serif;
   color: #1b1b1b;
   padding: 60px 30px;
 }
@@ -76,14 +79,23 @@ button:focus-visible,
 }
 
 /* ── 3. Table of contents (fixed left rail, shown ≥1400px) ──────────────────── */
-/* A progress rail: a hairline track whose segment lights up beside the section
-   being read (js/toc.js). */
+/* A book's contents page, not a tree diagram: at rest the rail is the eight
+   section names alone, and the section being read unfolds its numbered parts
+   beneath it (js/toc.js sets .is-open on them). The parts are numbered because
+   they are numbered on the page — "1. Diverse Skeletons, Diverse Prompts." —
+   and the numeral is the one piece of mono here, hanging in the gutter the way
+   the page's own labels are mono. The single accent is the numeral of the part
+   being read; everything else is ink against the quiet grey of the rest. Set
+   in Playfair, the masthead's face, at text size. */
 .toc {
   width: 192px;
-  font-family: 'Roboto Mono', monospace;
+  font-family: 'Playfair Display', serif;
   position: fixed;
-  top: calc(50% - 20px);        /* centered, nudged up */
-  transform: translateY(-50%);
+  /* Anchored by its top, not centred: the rail grows when a section unfolds
+     its parts, and a centred rail would shift every resting name to make
+     room. The offset seats the folded list just above the screen's middle;
+     the unfolded one reaches down from there. */
+  top: calc(50% - 200px);
   max-height: 90vh;
   overflow-y: auto;
   display: none;                /* shown by the media query below */
@@ -109,40 +121,32 @@ button:focus-visible,
 /* Not a heading element on purpose: as an <h3> it was the page's first
    heading, above every <h2>, which inverts the outline a screen reader reads
    out. font-weight is explicit because a <div> no longer gets it from the
-   UA. */
+   UA. The rule beneath is the page's hairline, and closes the title the way
+   the section headings' trailing rules do. */
 .toc-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
-  letter-spacing: -0.4px;
-  margin-top: 0;
-  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--rule);
   color: var(--slate-dark);
-}
-
-.toc hr {
-  border: 0;
-  height: 1px;
-  background-color: var(--ivory-dark);
-  margin-bottom: 16px;
 }
 
 .toc ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  position: relative;
-  border-left: 1.5px solid var(--ivory-dark);
 }
 
 .toc li {
-  position: relative;
-  margin-bottom: 7px;
+  margin: 0;
 }
 
-/* Air above each top-level section so it groups with its sub-items. */
+/* Each section resets its parts' count. */
 .toc li:not(.toc-subsection) {
-  margin-top: 14px;
+  counter-reset: part;
+  margin-top: 9px;
 }
 .toc li:first-child {
   margin-top: 0;
@@ -150,58 +154,80 @@ button:focus-visible,
 
 .toc a {
   display: block;
-  position: relative;
   text-decoration: none;
   color: var(--slate-light);
-  font-size: 14px;
-  line-height: 1.4;
-  padding: 2px 0 2px 16px;
+  font-size: 16px;
+  line-height: 1.25;
+  padding: 2px 0;
   transition: color 0.18s ease;
 }
 
-/* The playhead segment beside the active item. */
-.toc a::before {
-  content: '';
-  position: absolute;
-  left: -1.5px;
-  top: 3px;
-  bottom: 3px;
-  width: 2px;
-  background: var(--accent);
-  border-radius: 1px;
-  transform: scaleY(0);
-  transform-origin: top center;
-  transition: transform 0.2s ease;
-}
-
-.toc a:hover {
+.toc a:hover,
+.toc a.active {
   color: var(--slate-dark);
 }
 
-.toc a.active {
-  color: var(--accent);
-  font-weight: 700;
-}
-
-.toc a.active::before {
-  transform: scaleY(1);
-}
-
-/* Subsections indent the text, not the item, so every playhead segment sits
-   on the one track. */
+/* The parts: folded to nothing until their section is the one being read,
+   then unfolded. grid-template-rows animates where height: auto cannot; the
+   link is the single grid item and clips while the row is closed. */
 .toc-subsection {
-  margin-bottom: 5px;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.32s ease;
+}
+.toc-subsection.is-open {
+  grid-template-rows: 1fr;
 }
 .toc-subsection a {
-  font-size: 12px;
-  padding-left: 30px;
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  margin-top: 0;
+  padding: 0 0 0 22px;
+  font-size: 13.5px;
+  line-height: 1.3;
   color: #8a887f;
+  transition: color 0.18s ease, padding 0.32s ease;
 }
-.toc-subsection a.active {
-  color: var(--accent);
+.toc-subsection.is-open a {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+/* The first part of a section stands a little further off its title. */
+.toc li:not(.toc-subsection) + .toc-subsection.is-open a {
+  padding-top: 5px;
+}
+
+/* The numeral, hanging in the gutter: mono because the page's labels are
+   mono, light because it indexes the line rather than reading with it. */
+.toc-subsection a::before {
+  counter-increment: part;
+  content: counter(part);
+  position: absolute;
+  left: 2px;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 300;
+  font-size: 11.5px;
+  line-height: inherit;
+  padding-top: 1px;
+  color: #a5a39a;
+  transition: color 0.18s ease;
 }
 .toc-subsection a:hover {
   color: var(--slate-light);
+}
+.toc-subsection a.active {
+  color: var(--slate-dark);
+}
+.toc-subsection a.active::before {
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toc-subsection,
+  .toc-subsection a {
+    transition: none;
+  }
 }
 
 /* ── 4. Layout + hero ───────────────────────────────────────────────────────── */
@@ -404,7 +430,9 @@ button:focus-visible,
    not worth a font. Code is deliberately unmarked: the octocat was the row's
    only silhouette and only borrowed logo, and read as an intruder among line
    drawings. Nudged down a pixel: sentence-case labels put the row's optical
-   centre at x-height, below the flex line's centre. */
+   centre at x-height, below the flex line's centre. The Dataset section's
+   release line is the one place a host's mark does appear, in colour — there
+   it names the destination (see .inline-mark). */
 .quick-link-icon {
   flex: none;
   transform: translateY(1px);
@@ -739,6 +767,32 @@ button:focus-visible,
   font-size: 20px;
   line-height: 1.7;
   margin-bottom: 24px;
+}
+
+/* Links inside running prose and captions: the footer's treatment — ink,
+   underlined, accent on hover — not the UA's blue, which nothing else on the
+   page wears. */
+.section a,
+.figure-caption a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.18s ease;
+}
+.section a:hover,
+.figure-caption a:hover {
+  color: var(--accent);
+}
+
+/* A host's mark set into a prose link, cap-height tall. text-decoration
+   underlines text only, so the mark sits clear of the link's underline. */
+.inline-mark {
+  display: inline-block;
+  width: auto;
+  height: 0.95em;
+  margin: 0 0.3em 0 0.05em;
+  vertical-align: -0.12em;
 }
 
 .abstract-toggle {

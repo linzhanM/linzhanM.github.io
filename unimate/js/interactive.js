@@ -38,11 +38,14 @@ window.UNIMATE_VIEWER_CONFIG = {
   initialOrbitAngle: 5,
   mobileControlScaleMin: 0.54,
   hoverPrompts: true,
+  // The Text Prompts switch pins every chip over its rig; on from arrival, so
+  // the stage names what each rig is doing before anyone finds the switch.
+  pinPrompts: true,
   playbackControls: true,
   autoOrbitControls: true,
 };
 
-await import('./viewer.js?v=171');
+await import('./viewer.js?v=196');
 
 // Category-panel collapse — lab-only chrome, so wired here, not in the shared
 // engine. The canvas never resizes: only the floating panel and its handle

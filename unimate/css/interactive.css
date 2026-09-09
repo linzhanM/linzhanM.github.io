@@ -675,7 +675,8 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
   position: absolute;
   top: 0;
   left: 0;
-  max-width: 250px;
+  /* No max-width: the pinned chip is one nowrap line, and a cap let a long
+     prompt run out past its own border. The box is as wide as its sentence. */
   padding: 5px 9px;
   border: 1px solid rgba(242, 238, 232, 0.15);
   border-radius: 3px;
@@ -718,14 +719,17 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
   animation: label-in 180ms ease-out both;
 }
 
-/* The lab shows one prompt at a time beside the cursor (hoverPrompts): the rig
-   under the pointer is the target, so leader and pin are dropped. */
-.interactive-viewer-page .viewer-label::after,
-.interactive-viewer-page .viewer-pin {
+/* Text Prompts off: one prompt at a time beside the cursor (hoverPrompts). The
+   rig under the pointer is the target, so leader and pin are dropped and the
+   chip is a card. Text Prompts on (the lab's opening state): viewer.js sets
+   .is-pinned-prompts on the wrapper and the rules above take over — every
+   rig's chip standing over its root joint, leader and pin included. */
+.interactive-viewer-page .viewer-wrapper:not(.is-pinned-prompts) .viewer-label::after,
+.interactive-viewer-page .viewer-wrapper:not(.is-pinned-prompts) .viewer-pin {
   display: none !important;
 }
 
-.interactive-viewer-page .viewer-label {
+.interactive-viewer-page .viewer-wrapper:not(.is-pinned-prompts) .viewer-label {
   max-width: 280px;
   padding: 9px 12px 10px;
   border: 0;
@@ -921,17 +925,20 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
   }
   .example-item.active { padding-left: 11px; }
   .example-name { font-size: 11px; }
-  .viewer-label { max-width: 180px; font-size: 9px; padding: 4px 7px; }
+  .viewer-label { font-size: 9px; padding: 4px 7px; }
   /* THE CONSOLE. On a phone the bar and the dock fuse into one plate of three
      ruled registers — readout, display switches, transport — hairlines and mono
      type, no chips. As two stacked chip plates the cluster read as one
      instrument sawn in half and spent ~175px of a 667px screen on it.
 
      THE TWO ELEMENTS MEET BY ARITHMETIC: the bar is border 1 + readout 34 +
-     rule 1 + switch row 44 = 80px tall, and the dock hangs at +79 — one px
-     UNDER the bar, so a rounding error shows as nothing instead of a lit seam.
-     Both are flat --chrome (the gradient would restart at the joint and stripe
-     it). Change any row height and move the dock's offset with it. */
+     rule 1 + two switch rows 88 = 124px tall, and the dock hangs at +123 — one
+     px UNDER the bar, so a rounding error shows as nothing instead of a lit
+     seam. Both are flat --chrome (the gradient would restart at the joint and
+     stripe it). Change any row height and move the dock's offset with it.
+
+     The four switches run two by two: four across, "Wireframe" and "Skeleton"
+     beside a 34px track do not fit a quarter of a 375px phone even at 9px. */
   .control-bar {
     left: max(8px, env(safe-area-inset-left));
     right: max(8px, env(safe-area-inset-right));
@@ -950,12 +957,14 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
   }
   .control-actions {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0;
     border-top: 1px solid var(--chrome-divider);
   }
-  /* A register line, not a chip: the whole third is the tap target, and the
-     rules draw only where one control ends and the next begins. */
+  /* A register line, not a chip: the whole half is the tap target, and the
+     rules draw only where one control ends and the next begins — a column rule
+     down the centre, a row rule under the first pair. The row rule sits inside
+     the second row's 44px (border-box), so it adds nothing to the arithmetic. */
   .status-control {
     box-sizing: border-box;
     height: 44px;
@@ -971,7 +980,8 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
     background: transparent;
     font-size: 10px;
   }
-  .status-control + .status-control { border-left: 1px solid var(--chrome-divider); }
+  .status-control:nth-child(even) { border-left: 1px solid var(--chrome-divider); }
+  .status-control:nth-child(n + 3) { border-top: 1px solid var(--chrome-divider); }
   .status-control > span:first-child {
     min-width: 0;
     overflow: hidden;
@@ -982,14 +992,14 @@ html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34);
   .control-dock {
     left: max(8px, env(safe-area-inset-left));
     right: max(8px, env(safe-area-inset-right));
-    top: calc(max(8px, env(safe-area-inset-top)) + 79px);
+    top: calc(max(8px, env(safe-area-inset-top)) + 123px);
     max-width: none;
     overflow: visible;
     display: grid;
-    /* The link is the longest label, and 1.5fr exactly (3 of 4.5 = 2 of 3)
-       lands the divider before it on the switch row's right rule — one column
-       line through both registers instead of two a few px apart. */
-    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.5fr);
+    /* The link is the longest label, and 3fr exactly (3 of 6 = 1 of 2) lands
+       the divider before it on the switch grid's centre rule — one column line
+       through both registers instead of two a few px apart. */
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 3fr);
     gap: 0;
     padding: 0;
     border-top: 1px solid var(--chrome-divider);

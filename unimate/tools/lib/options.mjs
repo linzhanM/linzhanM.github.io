@@ -47,8 +47,8 @@ Render one motion-lab category to a video.
                          Transparent needs a format that keeps alpha: .mov
                          (ProRes 4444) or a .png sequence.
   --chrome-ui            Keep the lab's chrome (panel, toolbars). Off by default.
-  --labels               Show every prompt chip anchored, instead of the lab's
-                         one-at-a-time-on-hover behaviour.
+  --labels               Force the lab's Text Prompts switch on (its default
+                         anyway): every chip pinned over its rig.
   --no-orbit             Hold the opening camera instead of auto-orbiting.
   --jpeg                 Capture JPEG frames instead of PNG. Roughly twice as
                          fast, and the h264 pass re-compresses anyway.

@@ -28,7 +28,7 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=87';
+import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=97';
 
 const wrapper = document.getElementById('viewer-wrapper');
 const overlay = document.getElementById('loading-overlay');
@@ -80,6 +80,10 @@ const settings = {
   'show skeleton': true,
   'wireframe': false,
   'show prompts': true,
+  // Lab only: pin every rig's prompt over its root joint (updateLabelsPinned)
+  // instead of the one-at-a-time hover tooltip. The config sets the opening
+  // state; the lab opens with it on.
+  'pin prompts': viewerConfig.pinPrompts === true,
   'paused': false,
   'auto orbit': true,
   // OrbitControls counts this in units of 2π/60 rad/s (one unit = 6°/s), so
@@ -105,6 +109,10 @@ let viewZooming = false; // and while wheel-zooming, which has no pointer to rel
 let hoveredPromptOrder = null; // full-screen lab: prompt under the pointer
 let hoverPromptX = 0;
 let hoverPromptY = 0;
+// The lab's two prompt modes: the Text Prompts switch on pins every chip
+// (updateLabelsPinned); off, one prompt follows the pointer. The project page
+// has neither — it runs the anchored solver.
+const hoverPromptsActive = () => viewerConfig.hoverPrompts === true && !settings['pin prompts'];
 
 let loadToken = 0;     // guards against overlapping async loads
 let activePad = 1.15;  // camera padding of the current example (so Reset view keeps it)
@@ -121,6 +129,11 @@ let activeFrameEnvelope = false;
 const TARGET_HEIGHT = 1.0;          // normalized height, in world units (Blender TARGET_HEIGHT)
 const VERTS_PER_MESH = 1000;        // skinned-vertex budget per mesh per sampled frame
 const MESH_FRAME_BUDGET = 48;       // frames sampled for the mesh bbox (height/centering)
+// Air between a rig's crown and its pinned chip in the lab, in world units at
+// stage scale 1 (updateLabelsPinned) — one distance for every rig on a stage,
+// so a chicken's chip floats as far off its comb as the dragon's off its horns.
+// As a fraction of the rig it went to nothing on the small ones.
+const LIFT_AIR = 0.1;
 const ROW_STEP_MULT = 1.15;         // horizontal spacing between models, in widths
 const MIN_FRAME_WIDTH = 3.0;        // camera always frames >= this world-width, so a 2-model
                                     // group doesn't zoom in and read oversized next to a 9-model one
@@ -276,7 +289,7 @@ function fixMaterials(model, isFbx) {
 }
 
 // Per-model PBR tweak (opt-in via a file's `material` in examples.js). Some rigs
-// (mixamo-flip) ship high-roughness materials that read dark and matte under the
+// (mixamo-backflip) ship high-roughness materials that read dark and matte under the
 // direct lights. Lower roughness sharpens their speculars; an emissive lift
 // brightens the diffuse without touching global lighting or other models. Two
 // flavours of lift:
@@ -357,6 +370,7 @@ function groundAndNormalize(pivot, model, mixer, clip, userScale = 1, groundToMe
     setLabelAnchor(pivot, c.x, c.y, c.z);
     pivot.userData.localBox = b.clone();
     pivot.userData.localBoxFull = b.clone();
+    pivot.userData.rootJoint = null;
     // Normalize + ground it anyway, on that one box: otherwise the model arrives in
     // whatever unit it was authored in (a centimetre export is 100× the stage) and
     // sits wherever its origin puts it. bs.y <= 0 is a flat model (a plane, a
@@ -374,6 +388,23 @@ function groundAndNormalize(pivot, model, mixer, clip, userScale = 1, groundToMe
   const isOriginRoot = (b) => !(b.parent && b.parent.isBone) && b.position.length() < 1e-3;
   const realJoints = bones.filter((b) => !isOriginRoot(b));
   const joints = realJoints.length ? realJoints : bones;
+  // The skeleton's root: the bone with no bone above it — the tree's root node,
+  // NOT the first real joint (an armature-origin root is skipped for grounding
+  // and normalizing above, but it is still where the tree starts, and the lab's
+  // pinned prompts hang from it, live — updateLabelsPinned). A file with several
+  // bone trees (mesh-per-part exports) takes the one with the most joints under
+  // it. The project page never reads this.
+  const treeRoots = bones.filter((b) => !(b.parent && b.parent.isBone));
+  if (treeRoots.length > 1) {
+    const under = new Map(treeRoots.map((r) => [r, 0]));
+    for (const b of bones) {
+      let r = b;
+      while (r.parent && r.parent.isBone) r = r.parent;
+      under.set(r, (under.get(r) || 0) + 1);
+    }
+    treeRoots.sort((a, b) => under.get(b) - under.get(a));
+  }
+  pivot.userData.rootJoint = treeRoots[0] || null;
 
   const gMin = new THREE.Vector3(Infinity, Infinity, Infinity);   // mesh bbox (all frames)
   const gMax = new THREE.Vector3(-Infinity, -Infinity, -Infinity);
@@ -381,6 +412,7 @@ function groundAndNormalize(pivot, model, mixer, clip, userScale = 1, groundToMe
   let maxFrameHeight = 0;                                         // tallest single-frame mesh height
   let maxFrameDim = 0;                                            // largest single-frame bbox dimension
   const frameBounds = [];                                         // per-frame extremes, for the typical envelope
+  const rootGaps = [];                                            // per-frame (mesh top − root joint), for the lab's chip lift
   const v = new THREE.Vector3();
   let meshOK = skinned.length > 0 && typeof skinned[0].getVertexPosition === 'function';
 
@@ -404,6 +436,13 @@ function groundAndNormalize(pivot, model, mixer, clip, userScale = 1, groundToMe
     } catch (e) { meshOK = false; return; }
     if (fMaxY > fMinY) maxFrameHeight = Math.max(maxFrameHeight, fMaxY - fMinY);
     maxFrameDim = Math.max(maxFrameDim, fMaxX - fMinX, fMaxY - fMinY, fMaxZ - fMinZ);
+    // The lab's chip rides the ROOT, so what it must clear is the mesh top
+    // RELATIVE to the root, frame by frame — a rearing quadruped lifts its root
+    // with its head, and an absolute crown would carry the chip up twice.
+    // Measured in the same pass, at the same frames.
+    if (pivot.userData.rootJoint && fMaxY > fMinY) {
+      rootGaps.push(fMaxY - v.setFromMatrixPosition(pivot.userData.rootJoint.matrixWorld).y);
+    }
     if (fMaxX > fMinX) frameBounds.push([fMinX, fMaxX, fMinY, fMaxY, fMinZ, fMaxZ]);
   };
 
@@ -439,6 +478,30 @@ function groundAndNormalize(pivot, model, mixer, clip, userScale = 1, groundToMe
   // brings them back in line.
   const normBy = (sizeBy === 'maxdim' && maxFrameDim > 1e-6) ? maxFrameDim : maxFrameHeight;
   const s = (TARGET_HEIGHT / normBy) * userScale;
+  // For equalizeRigs: the measure this rig was sized by, a POSE-INVARIANT size
+  // for it, and the scale asked for — all in the file's own units. The size is
+  // the mesh at its bind pose: the skinned geometry's own bounding box, before
+  // any bone moves it, so two clips of one character agree on it while their
+  // tallest frames do not. The mesh, not the skeleton — EVE's three exports
+  // carry identical bones under meshes of three sizes, so a bone-length total
+  // called them equal while the eye did not. Bones are the fallback for a rig
+  // with no skinned mesh.
+  const rest = new THREE.Box3();
+  for (const sm of skinned) {
+    if (!sm.geometry.boundingBox) sm.geometry.computeBoundingBox();
+    rest.union(sm.geometry.boundingBox.clone().applyMatrix4(sm.matrixWorld));
+  }
+  let restSize = 0;
+  if (!rest.isEmpty()) {
+    const d = rest.getSize(new THREE.Vector3());
+    restSize = sizeBy === 'maxdim' ? Math.max(d.x, d.y, d.z) : d.y;
+  }
+  if (!(restSize > 1e-6)) {
+    for (const b of bones) if (b.parent && b.parent.isBone) restSize += b.position.length();
+  }
+  pivot.userData.sizeNorm = normBy;
+  pivot.userData.restSize = restSize;
+  pivot.userData.userScale = userScale;
   const cx = (gMin.x + gMax.x) / 2;
   const cz = (gMin.z + gMax.z) / 2;
 
@@ -503,10 +566,69 @@ function groundAndNormalize(pivot, model, mixer, clip, userScale = 1, groundToMe
   // here, and static, so the mark never twitches with the clip.
   setLabelAnchor(pivot, cx, (gMin.y + gMax.y) / 2, cz);
 
+  // How far above the root joint the lab's pinned chip sits, in WORLD units: the
+  // TYPICAL root-to-mesh-top gap over the clip — the 85th percentile of rootGaps,
+  // the same cut localBox takes — at stage scale; the air above it is added per
+  // stage (stageLiftAir). Not the maximum: on a bird that is one wingtip at the
+  // top of one beat, and it held the eagle's chip a body-length over its head
+  // for the rest of the clip. A sustained pose (a quadruped rearing for half its
+  // clip) still counts in full. Root-relative because the chip rides the root,
+  // so each rig sits at its own distance: just clear of what it usually is, with
+  // a wingtip allowed to sweep past for an instant. A world offset, not pixels,
+  // so the chip keeps its place through zoom and orbit. When the mesh could not
+  // be sampled, fall back to the joint envelope's top over its centre.
+  let gap = (gMax.y - gMin.y) / 2;
+  if (rootGaps.length) {
+    rootGaps.sort((a, b) => a - b);
+    gap = rootGaps[Math.round((rootGaps.length - 1) * 0.85)];
+  }
+  pivot.userData.labelLift = gap * s;
+
   // Normalized footprint, used to space models out in a row.
   return new THREE.Vector3(
     (gMax.x - gMin.x) * s, (gMax.y - gMin.y) * s, (gMax.z - gMin.z) * s
   );
+}
+
+// Which character a file is: the catalog names every rig <character>-<action>,
+// so the stem before the first dash is the character, and a stage is ONE
+// character when every file shares it (g1-pick_up, g1-jump, g1-wave). A
+// drop-in carries its file name for the same test.
+const rigFamily = (spec) =>
+  (spec.name || spec.url).split('/').pop().replace(/\.(glb|gltf|fbx)$/i, '').split('-')[0].toLowerCase();
+const oneCharacter = (specs) => specs.length > 1 && new Set(specs.map(rigFamily)).size === 1;
+
+// A stage whose files are one character in several clips — detected from the
+// file names above, or forced either way with `sameRig` in examples.js.
+// groundAndNormalize sizes every rig by the tallest frame of its own clip, so
+// the clip that raises an arm comes out smaller than the one that does not —
+// the G1 waving stood 14% short of the G1 picking up, and a hand-set per-file
+// `scale` chased it. Here the clips are sized alike by their BIND-POSE mesh
+// instead (restSize): the reference is the clip whose tallest frame is nearest
+// its rest size (the plainest pose, so it keeps the size the height rule gave
+// it), and every other clip is scaled so its rest size matches. The pivot's
+// position, the layout footprint and the lab's chip lift all scale with it —
+// each is linear in the pivot's scale.
+function equalizeRigs(list, sizes) {
+  let refRatio = Infinity;
+  for (const pv of list) {
+    const u = pv.userData;
+    if (!(u.restSize > 0) || !(u.sizeNorm > 0)) continue;
+    refRatio = Math.min(refRatio, u.sizeNorm / u.restSize);
+  }
+  if (!Number.isFinite(refRatio)) return;
+  list.forEach((pv, i) => {
+    const u = pv.userData;
+    if (!(u.restSize > 0)) return;
+    const target = (TARGET_HEIGHT * (u.userScale || 1)) / (refRatio * u.restSize);
+    const ratio = target / pv.scale.x;
+    if (Math.abs(ratio - 1) < 1e-4) return;
+    pv.scale.multiplyScalar(ratio);
+    pv.position.multiplyScalar(ratio);
+    if (sizes[i]) sizes[i].multiplyScalar(ratio);
+    if (u.labelLift) u.labelLift *= ratio;
+    pv.updateMatrixWorld(true);
+  });
 }
 
 // ── 7. Stage: framing + teardown ─────────────────────────────────────────────
@@ -869,7 +991,7 @@ const PROMPTS = new Map();
 // The ?v= matters as much as on the imports: Pages caches the JSON, and a new
 // rig's chip would stay missing for returning visitors. Bump it whenever
 // prompts.json changes.
-const promptsReady = fetch('resources/prompts.json?v=21')
+const promptsReady = fetch('resources/prompts.json?v=24')
   .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
   .then((data) => {
     // '_'-prefixed keys document the file; they aren't models.
@@ -913,6 +1035,7 @@ function buildLabels(specs) {
       lockSlot: s.lockLabelSlot || false,
       offset: s.labelOffset || [0, 0],
       pinOffset: s.labelPinOffset || [0, 0],
+      liftScale: s.liftScale || 1,   // lab only — see updateLabelsPinned
       sx: null, sy: null, tx: null, ty: null,
       candidateX: null, candidateY: null, candidateFrames: 0,
       w: 0, h: 0,
@@ -956,7 +1079,7 @@ document.fonts?.ready.then(measureLabels);
 function applyLabels() {
   const layerVisible = settings['show prompts'] && !viewPointerDown && !viewZooming;
   labelLayer.style.display = layerVisible ? '' : 'none';
-  if (viewerConfig.hoverPrompts) {
+  if (hoverPromptsActive()) {
     for (const label of labels) {
       const visible = layerVisible && label.order === hoveredPromptOrder;
       label.el.style.display = visible ? '' : 'none';
@@ -965,9 +1088,21 @@ function applyLabels() {
   }
 }
 
+// Lab: switch between the hover tooltip and pinned chips. The wrapper class is
+// what interactive.css reads to restyle the chips (tooltip card vs anchored chip
+// with leader and pin), so the boxes change size and are re-measured.
+function applyPromptMode() {
+  wrapper.classList.toggle('is-pinned-prompts', settings['pin prompts'] === true);
+  hoveredPromptOrder = null;
+  renderer.domElement.style.cursor = '';
+  measureLabels();
+  applyLabels();
+}
+
 // Lab: show only the prompt of the rig under the pointer. Walking up from the hit
 // mesh resolves any child to its rig root. Picks only on pointermove, so under
 // auto orbit the prompt goes stale until the pointer moves again (known gap).
+// Idle while prompts are pinned — the pick is the hover mode's alone.
 if (viewerConfig.hoverPrompts) {
   const hoverRaycaster = new THREE.Raycaster();
   const hoverPointer = new THREE.Vector2();
@@ -980,7 +1115,7 @@ if (viewerConfig.hoverPrompts) {
   };
 
   renderer.domElement.addEventListener('pointermove', (event) => {
-    if (viewPointerDown || event.pointerType === 'touch') {
+    if (viewPointerDown || event.pointerType === 'touch' || !hoverPromptsActive()) {
       setHoveredPrompt(null);
       return;
     }
@@ -1197,16 +1332,66 @@ function coveredArea(cx, cy, halfW, halfH) {
   return total;
 }
 
+// The lab's pinned prompts: a nameplate, not a solved layout. Each chip stands
+// straight above its rig's ROOT JOINT at a fixed world height (labelLift), the
+// pin sits on the joint itself and the leader runs vertically between them —
+// every frame, wherever the joint has walked to, with no collision pass, no
+// slot choice, no easing and no depth grading. Two chips may overlap; that is
+// the trade for a mark that is always exactly where the skeleton is. The lift
+// is projected as a world point so the plate reads as part of the scene: it
+// grows on zoom and shrinks with distance, like the rig under it.
+const liftWorld = new THREE.Vector3();
+let stageLiftAir = LIFT_AIR;   // LIFT_AIR at the current stage's scale; set by loadStage
+let stageLiftScale = 1;        // the stage's `liftScale` (examples.js); set by loadStage
+function updateLabelsPinned(w, h, viewportScale) {
+  for (const l of labels) {
+    const u = l.pivot.userData;
+    (u.rootJoint || l.anchor).getWorldPosition(labelWorld);
+    labelNdc.copy(labelWorld).project(camera);
+    liftWorld.copy(labelWorld);
+    liftWorld.y += (u.labelLift || 0) * stageLiftScale * l.liftScale + stageLiftAir;
+    liftWorld.project(camera);
+    if (labelNdc.z > 1 || liftWorld.z > 1) {
+      l.el.style.display = 'none';
+      l.pin.style.display = 'none';
+      continue;
+    }
+    l.el.style.display = '';
+    l.pin.style.display = '';
+    l.pin.style.visibility = '';
+    const px = (labelNdc.x * 0.5 + 0.5) * w;
+    const py = (-labelNdc.y * 0.5 + 0.5) * h;
+    // Straight above means the joint's own x: the lifted point's x drifts a few
+    // px with perspective, and a leader that leans reads as pointing elsewhere.
+    const top = (-liftWorld.y * 0.5 + 0.5) * h;
+    const scale = viewportScale;
+    const halfH = l.h * scale / 2;
+    const cy = top - halfH;   // the chip's bottom edge rests on the lifted point
+    l.el.style.opacity = '1';
+    l.el.style.transform =
+      `translate3d(${px.toFixed(1)}px, ${cy.toFixed(1)}px, 0) translate(-50%, -50%) scale(${scale.toFixed(3)})`;
+    // Leader: from the chip's bottom edge down to the pin's rim. The CSS anchors
+    // it at the chip's centre as a child scaled with it, hence the divisions.
+    const len = Math.max(0, py - cy - halfH - PIN_RADIUS);
+    l.el.style.setProperty('--leader-x', '0px');
+    l.el.style.setProperty('--leader-y', `${(l.h / 2).toFixed(1)}px`);
+    l.el.style.setProperty('--leader', len > 5 ? `${(len / scale).toFixed(1)}px` : '0px');
+    l.el.style.setProperty('--leader-angle', '0rad');
+    l.pin.style.opacity = '1';
+    l.pin.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0) translate(-50%, -50%)`;
+  }
+}
+
 function updateLabels(dt) {
   if (!labels.length || !settings['show prompts']) return;
   const w = wrapper.clientWidth;
   const h = wrapper.clientHeight;
   const viewportScale = promptViewportScale(w);
 
-  // The lab shows one prompt as a tooltip beside the cursor — flipped to the other
-  // side near an edge, clamped to the canvas — and returns here, so none of the
-  // anchored solver below runs in the lab. Don't add lab behaviour past this branch.
-  if (viewerConfig.hoverPrompts) {
+  // The lab's hover mode shows one prompt as a tooltip beside the cursor — flipped
+  // to the other side near an edge, clamped to the canvas — and returns here.
+  // Don't add hover behaviour past this branch.
+  if (hoverPromptsActive()) {
     const active = labels.find((label) => label.order === hoveredPromptOrder);
     for (const label of labels) {
       label.el.style.display = label === active ? '' : 'none';
@@ -1224,6 +1409,14 @@ function updateLabels(dt) {
     y = THREE.MathUtils.clamp(y, 10, Math.max(10, h - tooltipH - 10));
     active.el.style.opacity = '1';
     active.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+    return;
+  }
+
+  // The lab's other mode — Text Prompts on — has its own placement and returns
+  // here too, so the anchored solver below is the project page's alone and never
+  // runs in the lab.
+  if (isFullscreenLab) {
+    updateLabelsPinned(w, h, viewportScale);
     return;
   }
 
@@ -1613,12 +1806,13 @@ function loadExample(index) {
       lockLabelSlot: o.lockLabelSlot || false,
       labelOffset: o.labelOffset || null,
       labelPinOffset: o.labelPinOffset || null,
+      liftScale: o.liftScale || null,
     };
   });
   return loadStage(specs, index, {
     scale: ex.scale, spacing: ex.spacing, rowSpacing: ex.rowSpacing, pad: ex.pad, lighting: ex.lighting,
     evenGaps: ex.evenGaps, sizeBy: ex.sizeBy, stagger: ex.stagger, rowDepth: ex.rowDepth, rowOrder: ex.rowOrder, fileOffsets: ex.fileOffsets,
-    stageShift: ex.stageShift, floor: ex.floor,
+    stageShift: ex.stageShift, floor: ex.floor, liftScale: ex.liftScale, sameRig: ex.sameRig,
     cameraPadding: viewerConfig.cameraPaddingByCategory?.[ex.label],
     mobileCameraPadding: viewerConfig.mobileCameraPaddingByCategory?.[ex.label],
   });
@@ -1715,6 +1909,11 @@ async function loadStage(specs, activeIndex, opts = {}) {
       skeletons.push(skeleton);
     }
 
+    // One character in several clips: size them alike before the layout reads
+    // their footprints. A stage that mixes characters keeps the per-clip height
+    // rule — their rest sizes are not comparable.
+    if (opts.sameRig ?? oneCharacter(specs)) equalizeRigs(pivots, sizes);
+
     // Position the stage (order matters — see the Layout helpers header).
     activeShift = opts.stageShift || [0, 0, 0];
     layoutRows(specs, sizes, opts.spacing, opts.evenGaps, opts.rowDepth, opts.rowSpacing, opts.rowOrder);
@@ -1733,6 +1932,8 @@ async function loadStage(specs, activeIndex, opts = {}) {
     activePad = opts.pad || 1.0;
     activeFloor = opts.floor || 1;
     activeFrameEnvelope = !!opts.frameEnvelope;
+    stageLiftAir = LIFT_AIR * TARGET_HEIGHT * (opts.scale || 1);
+    stageLiftScale = opts.liftScale || 1;
     const openingAngle = settings['auto orbit'] ? (viewerConfig.initialOrbitAngle || 0) : 0;
     frameStage(activePad, openingAngle);
     overlay.style.display = 'none';
@@ -1751,7 +1952,7 @@ function loadFiles(fileList) {
   // the flag). A visitor's rig is unknown — a belly-slung spine, a fish, a mech
   // with joints inside the shell all hover — and the lowest MESH vertex is the one
   // rule that grounds any of them without knowing the skeleton.
-  const specs = files.map((f) => ({ url: URL.createObjectURL(f), isFbx: isFbxPath(f.name), groundToMesh: true }));
+  const specs = files.map((f) => ({ url: URL.createObjectURL(f), name: f.name, isFbx: isFbxPath(f.name), groundToMesh: true }));
   // Named after the file: the status line is the only thing saying what is loaded,
   // and two drops in a row are otherwise indistinguishable. The stem is verbatim —
   // prettifying `wall_e-greet` gets it wrong more often than not.
@@ -1795,6 +1996,7 @@ function setDisplaySetting(key, value, buttons) {
     if (key === 'show model') models.forEach((model) => { model.visible = value; });
     if (key === 'show skeleton') skeletons.forEach((skeleton) => { skeleton.visible = value; });
     if (key === 'wireframe') applyWireframe();
+    if (key === 'pin prompts') applyPromptMode();
     if (key === 'auto orbit') controls.autoRotate = value;
 
     for (const button of buttons) {
@@ -1820,6 +2022,9 @@ if (isFullscreenLab) {
   function setDockSetting(key, value) {
     setDisplaySetting(key, value, dockControls);
   }
+  // The Text Prompts switch opens in the state the config asked for; the
+  // markup's is-active is only a first paint.
+  setDockSetting('pin prompts', settings['pin prompts']);
 
   for (const button of dockControls) {
     button.addEventListener('click', () => {
@@ -1851,6 +2056,7 @@ if (isFullscreenLab) {
     ['KeyM', 'show model'],
     ['KeyK', 'show skeleton'],
     ['KeyW', 'wireframe'],
+    ['KeyP', 'pin prompts'],
     ['Space', 'paused'],
     ['KeyO', 'auto orbit'],
   ]);

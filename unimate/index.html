@@ -28,21 +28,21 @@
   <meta property="og:description"
     content="Articulated motion generation for arbitrary skeletons from a rigged 3D asset and a text prompt, with no per-skeleton retraining. SIGGRAPH Asia 2026." />
   <meta property="og:url" content="https://linzhanmou.com/unimate/" />
-  <meta property="og:image" content="https://linzhanmou.com/unimate/assets/images/teaser.jpg" />
+  <meta property="og:image" content="https://linzhanmou.com/unimate/assets/images/og-teaser.jpg" />
   <meta property="og:image:width" content="3787" />
   <meta property="og:image:height" content="1464" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="https://linzhanmou.com/unimate/assets/images/teaser.jpg" />
+  <meta name="twitter:image" content="https://linzhanmou.com/unimate/assets/images/og-teaser.jpg" />
 
   <link rel="canonical" href="https://linzhanmou.com/unimate/" />
   <link rel="icon" type="image/png" sizes="2048x2048" href="assets/images/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/images/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/style.css?v=28" />
+  <link rel="stylesheet" href="css/style.css?v=39" />
   <!-- The Applications schematics' own figure system, kept out of the page
        sheet. Loaded after it so it can read the tokens. -->
   <link rel="stylesheet" href="css/schematics.css?v=1" />
   <!-- Breakpoint overrides load last. -->
-  <link rel="stylesheet" href="css/responsive.css?v=13" />
+  <link rel="stylesheet" href="css/responsive.css?v=17" />
 </head>
 
 <body>
@@ -50,8 +50,7 @@
        screen readers can jump to it; aria-label names it because the page has
        more than one navigable region. -->
   <nav class="toc" aria-label="Contents">
-    <div class="toc-title">Content</div>
-    <hr />
+    <div class="toc-title">Contents</div>
     <ul>
       <li><a href="#examples">Interactive</a></li>
       <li><a href="#abstract">Abstract</a></li>
@@ -246,8 +245,8 @@
     <div class="video-gallery-section" id="demoGallerySection">
       <div class="video-gallery-container">
         <div class="video-gallery" id="videoGalleryDemo">
-          <video class="gallery-video" src="assets/videos/diverse-1.mp4" poster="assets/posters/diverse-1.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/videos/diverse-2.mp4" poster="assets/posters/diverse-2.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/diverse-skeletons-1.mp4" poster="assets/posters/diverse-skeletons-1.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/diverse-skeletons-2.mp4" poster="assets/posters/diverse-skeletons-2.jpg" preload="none" muted playsinline loop></video>
         </div>
       </div>
       <div class="gallery-caption-container">
@@ -271,8 +270,8 @@
     <div class="video-gallery-section" id="transferGallerySection">
       <div class="video-gallery-container">
         <div class="video-gallery" id="videoGalleryTransfer">
-          <video class="gallery-video" src="assets/videos/transfer-walk.mp4" poster="assets/posters/transfer-walk.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/videos/transfer-attack.mp4" poster="assets/posters/transfer-attack.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/one-prompt-walk.mp4" poster="assets/posters/one-prompt-walk.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/one-prompt-attack.mp4" poster="assets/posters/one-prompt-attack.jpg" preload="none" muted playsinline loop></video>
         </div>
       </div>
       <div class="gallery-caption-container">
@@ -290,9 +289,9 @@
     <div class="video-gallery-section" id="promptGallerySection">
       <div class="video-gallery-container">
         <div class="video-gallery" id="videoGalleryPrompt">
-          <video class="gallery-video" src="assets/videos/prompt-bighero.mp4" poster="assets/posters/prompt-bighero.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/videos/prompt-eagle.mp4" poster="assets/posters/prompt-eagle.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/videos/prompt-shark.mp4" poster="assets/posters/prompt-shark.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/diverse-prompts-baymax.mp4" poster="assets/posters/diverse-prompts-baymax.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/diverse-prompts-eagle.mp4" poster="assets/posters/diverse-prompts-eagle.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/diverse-prompts-shark.mp4" poster="assets/posters/diverse-prompts-shark.jpg" preload="none" muted playsinline loop></video>
         </div>
       </div>
       <div class="gallery-caption-container">
@@ -314,9 +313,9 @@
     <div class="video-gallery-section" id="motionGallerySection">
       <div class="video-gallery-container">
         <div class="video-gallery" id="videoGalleryMotion">
-          <video class="gallery-video" src="assets/videos/motion-cat.mp4" poster="assets/posters/motion-cat.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/videos/motion-snake.mp4" poster="assets/posters/motion-snake.jpg" preload="none" muted playsinline loop></video>
-          <video class="gallery-video" src="assets/videos/motion-human.mp4" poster="assets/posters/motion-human.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/diverse-motions-cat.mp4" poster="assets/posters/diverse-motions-cat.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/diverse-motions-snake.mp4" poster="assets/posters/diverse-motions-snake.jpg" preload="none" muted playsinline loop></video>
+          <video class="gallery-video" src="assets/videos/diverse-motions-human.mp4" poster="assets/posters/diverse-motions-human.jpg" preload="none" muted playsinline loop></video>
         </div>
       </div>
       <div class="gallery-caption-container">
@@ -349,7 +348,7 @@
       <div class="app-row">
         <div class="video-gallery-container">
           <div class="video-gallery" id="videoGalleryEdit">
-            <video class="gallery-video" src="assets/videos/editing.mp4" poster="assets/posters/editing.jpg" preload="none" muted playsinline loop></video>
+            <video class="gallery-video" src="assets/videos/motion-editing.mp4" poster="assets/posters/motion-editing.jpg" preload="none" muted playsinline loop></video>
           </div>
         </div>
         <!-- Editing is the spatial one: same span of time, some joints held and
@@ -500,7 +499,7 @@
       <div class="app-row">
         <div class="video-gallery-container">
           <div class="video-gallery" id="videoGalleryInbetween">
-            <video class="gallery-video" src="assets/videos/inbetweening.mp4" poster="assets/posters/inbetweening.jpg" preload="none" muted playsinline loop></video>
+            <video class="gallery-video" src="assets/videos/motion-inbetweening.mp4" poster="assets/posters/motion-inbetweening.jpg" preload="none" muted playsinline loop></video>
           </div>
         </div>
         <!-- In-betweening is temporal and symmetric: both ends given, the middle
@@ -699,7 +698,7 @@
       <div class="app-row">
         <div class="video-gallery-container">
           <div class="video-gallery" id="videoGalleryExpansion">
-            <video class="gallery-video" src="assets/videos/expansion.mp4" poster="assets/posters/expansion.jpg" preload="none" muted playsinline loop></video>
+            <video class="gallery-video" src="assets/videos/motion-expansion.mp4" poster="assets/posters/motion-expansion.jpg" preload="none" muted playsinline loop></video>
           </div>
         </div>
         <!-- Expansion is open-ended: one source, then a chip per chained prompt,
@@ -810,7 +809,7 @@
     </div>
 
     <div class="dataset-scroll">
-      <img class="dataset-figure" src="assets/images/dataset_overview.png" width="4654" height="946"
+      <img class="dataset-figure" src="assets/images/dataset-overview.png" width="4654" height="946"
         loading="lazy" decoding="async"
         alt="Sample rigs and motion sequences from UniML3D, spanning bipedal, quadrupedal, avian, marine, insectoid, serpentine, and articulated rigid skeletons." />
     </div>
@@ -824,10 +823,13 @@
          paper's own split: Sec. 4 "Skeleton-Based Filtering" (five numbered
          stages) and "Motion Canonicalization" (four); annotation is Appendix
          A.2–A.5, summarized in Algorithm 1. Every line must trace to one of
-         those. Why it is a ruled <table> set as an algorithm float, and why the
-         sigil is per line, is at .algo in style.css.
+         those. Checked against arXiv v1 (2609.05415, 4 Sep 2026) on
+         2026-09-09: line 7 is Algorithm 1's line 4 / Appendix A.3, the LLM
+         pick of the symmetric pair that line 14 then uses for facing. Why it
+         is a ruled <table> set as an algorithm float, and why the sigil is per
+         line, is at .algo in style.css.
 
-         Numbering runs 1..15 unbroken and the signature rows chain (raw clip →
+         Numbering runs 1..16 unbroken and the signature rows chain (raw clip →
          kept clip → captioned clip → training sample), so it reads as one pass
          over a clip, not three unrelated lists.
 
@@ -865,7 +867,7 @@
         <tr>
           <td class="algo-n">4</td>
           <td class="algo-op">drop static clips</td>
-          <td class="algo-out"><span class="algo-sigil">&minus;</span> sequences with negligible normalized displacement</td>
+          <td class="algo-out"><span class="algo-sigil">&minus;</span> sequences with negligible bone-length-normalized displacement</td>
         </tr>
         <tr>
           <td class="algo-n">5</td>
@@ -888,18 +890,23 @@
         </tr>
         <tr>
           <td class="algo-n">7</td>
-          <td class="algo-op">resample and render</td>
-          <td class="algo-out"><span class="algo-sigil">&rarr;</span> 30 FPS, four synchronized views</td>
+          <td class="algo-op">select the lateral joint pair</td>
+          <td class="algo-out"><span class="algo-sigil">+</span> a symmetric pair for facing (thighs, front shoulders), by an LLM</td>
         </tr>
         <tr>
           <td class="algo-n">8</td>
-          <td class="algo-op">caption with multimodal LLMs</td>
-          <td class="algo-out"><span class="algo-sigil">+</span> one text prompt per clip</td>
+          <td class="algo-op">resample and render</td>
+          <td class="algo-out"><span class="algo-sigil">&rarr;</span> 30 FPS, four synchronized views, the rest pose rendered alongside</td>
         </tr>
         <tr>
           <td class="algo-n">9</td>
+          <td class="algo-op">caption with a multimodal LLM</td>
+          <td class="algo-out"><span class="algo-sigil">+</span> one text prompt per clip; &ldquo;in place&rdquo; marks a stationary root</td>
+        </tr>
+        <tr>
+          <td class="algo-n">10</td>
           <td class="algo-op">review every pair by hand</td>
-          <td class="algo-out"><span class="algo-sigil">&minus;</span> captions that misidentify the dominant action</td>
+          <td class="algo-out"><span class="algo-sigil">&minus;</span> captions that misidentify the dominant action or the moving part</td>
         </tr>
       </tbody>
       <tbody>
@@ -911,37 +918,51 @@
           </th>
         </tr>
         <tr>
-          <td class="algo-n">10</td>
+          <td class="algo-n">11</td>
           <td class="algo-op">serialize the tree breadth-first</td>
           <td class="algo-out"><span class="algo-sigil">&rarr;</span> one joint ordering per skeleton</td>
         </tr>
         <tr>
-          <td class="algo-n">11</td>
+          <td class="algo-n">12</td>
           <td class="algo-op">scale by topology diameter</td>
           <td class="algo-out"><span class="algo-sigil">&rarr;</span> comparable extent across rigs</td>
         </tr>
         <tr>
-          <td class="algo-n">12</td>
-          <td class="algo-op">place in a canonical frame</td>
-          <td class="algo-out"><span class="algo-sigil">&rarr;</span> <em>y</em>-axis up, root at the origin</td>
-        </tr>
-        <tr>
           <td class="algo-n">13</td>
-          <td class="algo-op">align the initial facing direction</td>
-          <td class="algo-out"><span class="algo-sigil">&rarr;</span> +<em>z</em>, from the symmetric hip pair</td>
+          <td class="algo-op">place in a canonical frame</td>
+          <td class="algo-out"><span class="algo-sigil">&rarr;</span> <em>y</em>-axis up, the initial root at the origin</td>
         </tr>
         <tr>
           <td class="algo-n">14</td>
+          <td class="algo-op">align the initial facing direction</td>
+          <td class="algo-out"><span class="algo-sigil">&rarr;</span> +<em>z</em>, from the left-to-right axis of that symmetric pair</td>
+        </tr>
+        <tr>
+          <td class="algo-n">15</td>
           <td class="algo-op">express rotations against the rest pose</td>
           <td class="algo-out"><span class="algo-sigil">&rarr;</span> one kinematic basis across topologies</td>
         </tr>
         <tr>
-          <td class="algo-n">15</td>
+          <td class="algo-n">16</td>
           <td class="algo-op">normalize by feature statistics</td>
           <td class="algo-out"><span class="algo-sigil">&rarr;</span> global on the root, local on the rest</td>
         </tr>
       </tbody>
     </table>
+
+    <!-- Where to get it. The two links close the section the way the paper's
+         data statement does: the corpus, then the code that made it. Each
+         carries its host's official mark (assets/logos/), the one place on the
+         page a borrowed logo appears in colour: here the mark names the
+         destination, where in the quick links it would have been the row's
+         only silhouette (style.css §4). -->
+    <div class="section">
+      UniML3D is released on
+      <a href="https://huggingface.co/collections/Linzhan/unimate" target="_blank" rel="noopener"><img class="inline-mark" src="assets/logos/huggingface.svg" alt="" width="95" height="88" />Hugging Face</a>,
+      with the
+      <a href="https://github.com/Friedrich-M/UniMate/tree/main/data_process" target="_blank" rel="noopener"><img class="inline-mark" src="assets/logos/github.svg" alt="" width="98" height="96" />data-processing code</a>
+      that runs these three passes.
+    </div>
 
     <!-- The one-sheet of everything above, placed after it: a visitor who has
          read the page recognizes every panel; one who has not gets the whole
@@ -994,13 +1015,13 @@
     }
   </script>
 
-  <script type="module" src="js/index-viewer.js?v=73"></script>
+  <script type="module" src="js/index-viewer.js?v=98"></script>
 
   <!-- Galleries: scroll buttons + play-only-what-is-visible. -->
-  <script src="js/gallery.js?v=7"></script>
+  <script src="js/gallery.js?v=8"></script>
 
   <!-- TOC rail: scroll-spy + the gutter-collision watcher. -->
-  <script src="js/toc.js?v=2"></script>
+  <script src="js/toc.js?v=5"></script>
 
   <!-- Abstract fold: the phone-width "Read full abstract" toggle. -->
   <script src="js/abstract.js?v=1"></script>

@@ -16,17 +16,17 @@
   <meta property="og:title" content="UniMate Motion Lab" />
   <meta property="og:description" content="Explore UniMate's generated 3D character animations in an interactive motion lab." />
   <meta property="og:url" content="https://linzhanmou.com/unimate/interactive" />
-  <meta property="og:image" content="https://linzhanmou.com/unimate/assets/images/motionlab.png" />
+  <meta property="og:image" content="https://linzhanmou.com/unimate/assets/images/og-motion-lab.png" />
   <meta property="og:image:width" content="3800" />
   <meta property="og:image:height" content="1592" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="https://linzhanmou.com/unimate/assets/images/motionlab.png" />
+  <meta name="twitter:image" content="https://linzhanmou.com/unimate/assets/images/og-motion-lab.png" />
 
   <script>document.documentElement.dataset.theme = 'dark';</script>
 
   <link rel="icon" type="image/png" href="assets/images/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/images/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/interactive.css?v=19" />
+  <link rel="stylesheet" href="css/interactive.css?v=21" />
 </head>
 <body class="interactive-viewer-page">
   <main class="lab-shell">
@@ -65,6 +65,11 @@
               <button class="status-control is-active" type="button" data-setting="show model" aria-pressed="true"><span>Mesh</span><span class="control-switch" aria-hidden="true"><i></i></span></button>
               <button class="status-control is-active" type="button" data-setting="show skeleton" aria-pressed="true"><span>Skeleton</span><span class="control-switch" aria-hidden="true"><i></i></span></button>
               <button class="status-control" type="button" data-setting="wireframe" aria-pressed="false"><span>Wireframe</span><span class="control-switch" aria-hidden="true"><i></i></span></button>
+              <!-- Pins every rig's prompt over it; on from arrival. Off, the lab
+                   shows one prompt at a time under the pointer. The is-active
+                   here is a first paint only: viewer.js sets the real state from
+                   its config (interactive.js pinPrompts). -->
+              <button class="status-control is-active" type="button" data-setting="pin prompts" aria-pressed="true"><span>Text Prompts</span><span class="control-switch" aria-hidden="true"><i></i></span></button>
             </div>
           </div>
           <div class="control-dock" aria-label="Playback and camera controls">
@@ -88,7 +93,7 @@
       }
     }
   </script>
-  <script type="module" src="js/interactive.js?v=123"></script>
+  <script type="module" src="js/interactive.js?v=148"></script>
 
   <script type="text/javascript">
     var sc_project = 12925377;

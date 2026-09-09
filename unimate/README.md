@@ -15,10 +15,13 @@ Both entries configure the shared `js/viewer.js` engine before importing it.
 
 ```text
 assets/                 Media, split by type — the same convention the root
-  videos/               and dimo/ trees use
+  videos/               and dimo/ trees use. Clips are named after the section
+                        id they play in, then the subject: diverse-skeletons-N,
+                        one-prompt-*, diverse-prompts-*, diverse-motions-*,
+                        motion-editing / -inbetweening / -expansion, and teaser
   posters/              One poster frame per clip, same basename
   logos/                Affiliation marks
-  images/               Favicon, link-preview card, dataset figure
+  images/               Favicon, the two link-preview cards (og-*), dataset figure
 css/
   style.css             Project-page styles (10 numbered sections)
   schematics.css        Applications figure system (layout · rig · motion)
@@ -121,13 +124,13 @@ Normalized across the set on 2026-08-06; a new rig has to match before it lands.
   the bone's own. Both traps produced wrong answers before they were handled.
   Three known exceptions remain, all decorative bones that stretch by design:
   `bird-flap` (tail and side plumes, up to 15% of rig scale) and
-  `wall_e-greet` / `-greet_open` (`Head_02`, WALL-E's telescoping neck, 3.9% and
+  `wall_e-greet` / `-spread_wave` (`Head_02`, WALL-E's telescoping neck, 3.9% and
   2.0%). Freezing them would edit the motion, not the format. A fourth kind of
   exception is `panda-place`: its two finger bones translate 28 mm against the
   hand because a Franka gripper is a prismatic joint — that slide *is* the
   grasp, and no bone changes length.
 - **Filename `<category>-<action>.glb`**, one hyphen, `_` for every other gap:
-  `wall_e-greet_open`, `go2-rear_up`, `quadruped_spot_arm-step_reach`.
+  `wall_e-spread_wave`, `go2-rear_up`, `quadruped_spot_arm-step_reach`.
   Lowercase, digits and underscore only.
 
 Two points above depart from the generator on purpose. It names the action
@@ -231,19 +234,19 @@ backgrounded tab doesn't resume by teleporting a rig through its clip, and below
 
 ## Experiments §1 sheets
 
-`assets/videos/diverse-N.mp4` are the sheets in Experiments §1, one per view at
+`assets/videos/diverse-skeletons-N.mp4` are the sheets in Experiments §1, one per view at
 the full column. They are served exactly as exported — 4320×1848 H.264, about
 2 s, 12–16 MB each — with no re-encode; only the poster is derived from them:
 
 ```sh
-ffmpeg -i assets/videos/diverse-N.mp4 -frames:v 1 -vf "scale=1920:-2:flags=lanczos" -q:v 3 assets/posters/diverse-N.jpg
+ffmpeg -i assets/videos/diverse-skeletons-N.mp4 -frames:v 1 -vf "scale=1920:-2:flags=lanczos" -q:v 3 assets/posters/diverse-skeletons-N.jpg
 ```
 
 Check a new export's edges before trusting them — an earlier batch arrived
 letterboxed and had to be cropped:
 
 ```sh
-ffmpeg -i assets/videos/diverse-N.mp4 -vf "cropdetect=limit=24:round=2:reset=0" -f null - 2>&1 | grep -o 'crop=[0-9:]*' | sort | uniq -c
+ffmpeg -i assets/videos/diverse-skeletons-N.mp4 -vf "cropdetect=limit=24:round=2:reset=0" -f null - 2>&1 | grep -o 'crop=[0-9:]*' | sort | uniq -c
 ```
 
 A line equal to the full frame means no bars. Add the new `<video>` to the

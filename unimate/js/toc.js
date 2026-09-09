@@ -3,7 +3,8 @@
 // Neither is needed to navigate: the links are plain anchors, and the rail is
 // hidden below 1400px.
 //
-//   1. scrollSpy()        — light up the link beside the section being read
+//   1. scrollSpy()        — light up the link of the section being read and
+//                           unfold that section's numbered parts (.is-open)
 //   2. collisionWatcher() — fade the rail out while a gallery clip reaches into
 //                           the gutter underneath it
 // ─────────────────────────────────────────────────────────────────────────────
@@ -23,9 +24,22 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     if (!sections.size) return;
 
+    // Each section's parts, so the rail can unfold the ones being read: a
+    // top-level item followed by its .toc-subsection siblings.
+    const partsOf = new Map();          // any <li> in a group -> that group's part <li>s
+    let group = [];
+    for (const li of toc.querySelectorAll('li')) {
+      if (!li.classList.contains('toc-subsection')) group = [];
+      else group.push(li);
+      partsOf.set(li, group);
+    }
+
     const visible = new Set();
     const setActive = (a) => {
-      if (a) links.forEach((l) => l.classList.toggle('active', l === a));
+      if (!a) return;
+      links.forEach((l) => l.classList.toggle('active', l === a));
+      const open = partsOf.get(a.closest('li')) || [];
+      toc.querySelectorAll('.toc-subsection').forEach((li) => li.classList.toggle('is-open', open.includes(li)));
     };
 
     const observer = new IntersectionObserver((entries) => {

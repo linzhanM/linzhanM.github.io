@@ -1,38 +1,40 @@
 {
   "_comment": "The text prompt each rig's motion was generated from, keyed by its file in resources/glbs/. Read by js/viewer.js and drawn as a chip pinned above the model in the interactive viewer; a stage in js/examples.js can override one with a per-file `prompt`. House style is the paper's own captioning format (Appendix A.5): 'An [object type] [action].' — one sentence, under 12 words, ONE dominant action, a direction only where it is clearly observed, no adverbs, and no appearance or scene words. Name the object concretely, as the demo videos do ('A robot', 'An eagle', 'A jellyfish'), not as 'An object'.",
 
-  "_sources": "Two channels. (1) The lines listed in _from_caption are the ORIGINAL prompts, read off the captions burned into assets/: diverse-1..3.mp4 and prompt-eagle/-shark/-bighero.mp4 caption the same rigs this viewer loads. (2) Every other line was written from the motion itself — each glb was imported into Blender headless, sampled for travel / rise / yaw / per-limb activity, and rendered as a 6-frame filmstrip to look at, since every clip's animation carries the same name ('UniMate-Action', normalized across the set) and so says nothing about itself. Those describe what the rig actually does, but they are not the prompt the model was given; swap in the real ones where you have them.",
+  "_sources": "Two channels. (1) The lines listed in _from_caption are the ORIGINAL prompts, read off the captions burned into assets/: the Experiments §1 sheets diverse-skeletons-1..2.mp4 (2026-09-08; sixteen rigs) and diverse-prompts-eagle/-shark/-baymax.mp4 caption the same rigs this viewer loads. Where a current sheet reworded an older one (Garfield, the jellyfish, the bird, the satellite, the Gundam punch), the sheet on the page wins — a chip and the sheet beside it must not disagree — and those were re-read on 2026-09-09. Two lines the sheets name as plain robots keep the author's fuller wording on purpose and stay out of _from_caption: quadruped_spot_arm-step_reach ('A quadruped robot steps forward and extends its arm.') and go2-rear_up ('A quadruped robot rears up to greet.'). (2) Every other line was written from the motion itself — each glb was imported into Blender headless, sampled for travel / rise / yaw / per-limb activity, and rendered as a 6-frame filmstrip to look at, since every clip's animation carries the same name ('UniMate-Action', normalized across the set) and so says nothing about itself. Those describe what the rig actually does, but they are not the prompt the model was given; swap in the real ones where you have them.",
 
   "_departs_from_caption": "robot_arm-push.glb was captioned 'A putter pushes forward.' — the burned-in original — but the asset is plainly a robotic arm: its nodes are RoboticArm, Arm1, Arm2 and PushingBlock. The line now reads 'A robot arm pushes forward.', keeping the caption's verb and dropping its noun, and the file is no longer listed in _from_caption because that list means 'this IS the original'. One other asset disagrees with its caption and was left alone: dragon-flap.glb is a Stellaris voidspawn leviathan (mesh leviathan_01_voidspawn, PDXmat materials, root bone ship_main_03), not a dragon.",
 
   "_from_author": "chicken-attack.glb, stego-attack.glb ('attacks forward') and monster-walk.glb ('walks in place') were corrected by the author. They are the warning against trusting a render: the peck-like head dip and the stego's rear-up both LOOK like precise verbs, but this dataset reuses a small vocabulary — 'attacks forward' is also the caption on the piranha plant. Match an existing caption before inventing a verb.",
 
   "_from_caption": [
-    "radar-extend.glb", "lamp-bend.glb", "flower-close.glb", "piranha_plant-bite.glb",
+    "radar-extend.glb", "lamp-bend.glb", "lamp-hop.glb", "flower-close.glb", "piranha_plant-bite.glb",
+    "microduck-nod_head.glb", "panda-place.glb",
     "garfield-dance.glb", "jellyfish-wriggle.glb", "bird-flap.glb", "dragon-flap.glb", "gundam-punch.glb",
-    "armor-walk.glb", "quadruped_spot-walk.glb", "quadruped_green-run.glb", "baymax-walk.glb",
+    "armor-walk.glb", "quadruped_spot-walk.glb", "quadruped_green-run.glb",
+    "g1-wave.glb", "wall_e-spin.glb", "baymax-walk.glb",
     "baymax-dance.glb", "baymax-punch.glb", "eagle-take_off.glb",
-    "eagle-strike.glb", "eagle-landing.glb", "jaws-swim_right.glb",
-    "jaws-bite.glb", "jaws-swim_180.glb", "mixamo-spin_kick.glb"
+    "eagle-strike.glb", "eagle-land.glb", "jaws-swim_right.glb",
+    "jaws-bite.glb", "jaws-swim_turn.glb", "mixamo-spin_kick.glb"
   ],
 
-  "radar-extend.glb": "A radar extends its bases.",
+  "radar-extend.glb": "A satellite extends its bases.",
   "robot_arm-push.glb": "A robot arm pushes forward.",
   "lamp-bend.glb": "A lamp bends backward.",
 
-  "microduck-nod_head.glb": "A robot nods its head.",
+  "microduck-nod_head.glb": "A robot duck nods its head.",
   "panda-place.glb": "A robot arm places an object.",
   "lamp-hop.glb": "A lamp hops forward.",
 
   "flower-close.glb": "A flower closes its petals.",
   "piranha_plant-bite.glb": "A piranha plant bites forward.",
 
-  "garfield-dance.glb": "A garfield dances in rhythm.",
+  "garfield-dance.glb": "Garfield dances to a rhythm.",
   "gyarados-sway.glb": "A serpent sways its tail.",
-  "jellyfish-wriggle.glb": "A jellyfish wriggles tentacles.",
+  "jellyfish-wriggle.glb": "A jellyfish wriggles its tentacles.",
   "monster-walk.glb": "A monster walks in place.",
   "stego-attack.glb": "A dinosaur attacks forward.",
-  "bird-flap.glb": "A bird flaps its wings.",
+  "bird-flap.glb": "A bird flaps its wings and hovers.",
   "dragon_fire-hover.glb": "A dragon hovers and sweeps its tail.",
   "dragon-flap.glb": "A dragon flaps its wings.",
   "whale-sweep.glb": "A whale sweeps its tail.",
@@ -42,11 +44,11 @@
   "gundam-kick.glb": "A robot kicks with one leg.",
   "gundam-jump.glb": "A robot jumps and swings its arms.",
   "gundam-dance.glb": "A robot dances in place.",
-  "gundam-punch.glb": "A robot punches forward.",
+  "gundam-punch.glb": "A robot throws a punch forward.",
 
   "armor-walk.glb": "A robot walks forward.",
   "armor-jump.glb": "A robot jumps upward.",
-  "armor-rotate.glb": "A robot turns in place.",
+  "armor-turn.glb": "A robot turns in place.",
   "armor-kick.glb": "A robot kicks forward.",
   "quadruped_spot-walk.glb": "A quadruped robot walks in place.",
   "quadruped_green-run.glb": "A quadruped robot runs in place.",
@@ -60,13 +62,13 @@
   "go2-walk.glb": "A quadruped robot walks forward.",
   "go2-rear_up.glb": "A quadruped robot rears up to greet.",
 
-  "eve-greet_wave.glb": "A robot spreads both arms and waves.",
-  "eve-scan.glb": "A robot looks around.",
-  "eve-curious.glb": "A robot raises one arm.",
-  "eve-alert.glb": "A robot bends backward and shakes.",
+  "eve-spread_wave.glb": "A robot spreads both arms and waves.",
+  "eve-look_around.glb": "A robot looks around.",
+  "eve-raise_arm.glb": "A robot raises one arm.",
+  "eve-bend_shake.glb": "A robot bends backward and shakes.",
 
-  "wall_e-greet_open.glb": "A robot spreads both arms and waves.",
-  "wall_e-spin.glb": "A robot spins around.",
+  "wall_e-spread_wave.glb": "A robot spreads both arms and waves.",
+  "wall_e-spin.glb": "A robot spins around in place.",
   "wall_e-greet.glb": "A robot greets with a friendly gesture.",
   "wall_e-turn.glb": "A robot turns left in place.",
 
@@ -78,13 +80,13 @@
 
   "eagle-take_off.glb": "An eagle takes off and soars up.",
   "eagle-strike.glb": "An eagle strikes forward.",
-  "eagle-landing.glb": "An eagle descends and lands.",
+  "eagle-land.glb": "An eagle descends and lands.",
 
   "jaws-swim_right.glb": "A shark swims to right.",
   "jaws-bite.glb": "A shark swims and bites forward.",
-  "jaws-swim_180.glb": "A shark swims and turns around.",
+  "jaws-swim_turn.glb": "A shark swims and turns around.",
 
-  "mixamo-flip.glb": "A human performs a backflip.",
+  "mixamo-backflip.glb": "A human performs a backflip.",
   "mixamo-spin_kick.glb": "A human performs a spin kick.",
   "mixamo-high_kick.glb": "A human performs a high kick.",
   "mixamo-break_dance.glb": "A human performs a breakdance spin."

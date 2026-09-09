@@ -20,7 +20,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // the rows holding more clips than fit. Experiments §2 has exactly two, so a
   // cycle would have nothing to reveal (advance() bails on that too).
   // Experiments §1 fits one column-wide sheet per view, so perView() is 1 there
-  // and a step is a whole sheet.
+  // and a step is a whole sheet — except on a phone, where the sheet is wider
+  // than the view (responsive.css) and stops() gives it one stop per view, so
+  // a step is one column of the sheet.
   const galleries = [
     {
       sectionId: 'demoGallerySection',
@@ -78,13 +80,31 @@ document.addEventListener('DOMContentLoaded', function () {
       - container.getBoundingClientRect().left
       + container.scrollLeft;
 
-    // The clip currently leading the view — the one whose left edge the strip
-    // is parked on.
-    const leadItemIndex = () => {
+    // Every place the strip may come to rest, left to right: each clip's left
+    // edge, and — when a clip is wider than the view, as the Experiments §1
+    // sheets are on a phone (responsive.css) — one more stop per view-width
+    // across it, so a page turn walks the sheet a column at a time instead of
+    // leaping to the next sheet and leaving its far columns to the swipe. On
+    // every other strip a clip fits the view and has exactly one stop, so this
+    // is the list of clip edges it always was. Live, never cached: video sizes
+    // and the view width both change under the page.
+    const stops = () => {
+      const view = container.clientWidth;
+      const out = [];
+      for (const item of items) {
+        const left = itemLeft(item);
+        const width = item.getBoundingClientRect().width;
+        for (let x = left; x === left || x < left + width - 1; x += view) out.push(x);
+      }
+      return out;
+    };
+
+    // The stop currently leading the view — the one the strip is parked on.
+    const leadStopIndex = () => {
       let lead = 0;
       let leadDistance = Infinity;
-      items.forEach((item, index) => {
-        const distance = Math.abs(itemLeft(item) - container.scrollLeft);
+      stops().forEach((x, index) => {
+        const distance = Math.abs(x - container.scrollLeft);
         if (distance < leadDistance) {
           lead = index;
           leadDistance = distance;
@@ -93,45 +113,48 @@ document.addEventListener('DOMContentLoaded', function () {
       return lead;
     };
 
-    // Where the track sits for `index` to lead the view, clamped to the ends.
-    // Left-aligned, not centred: Experiments §2–4 fit exactly two clips (the
-    // two-up rule, style.css §7), and centring the middle of three would halve
-    // both neighbours — a comparison strip has to rest on whole clips.
+    // Where the track sits for stop `index` to lead the view, clamped to the
+    // ends. Left-aligned, not centred: Experiments §2–4 fit exactly two clips
+    // (the two-up rule, style.css §7), and centring the middle of three would
+    // halve both neighbours — a comparison strip has to rest on whole clips.
     const scrollTargetFor = (index) => {
-      const item = items[Math.max(0, Math.min(items.length - 1, index))];
+      const all = stops();
+      const x = all[Math.max(0, Math.min(all.length - 1, index))];
       const maxScroll = container.scrollWidth - container.clientWidth;
-      return Math.max(0, Math.min(maxScroll, itemLeft(item)));
+      return Math.max(0, Math.min(maxScroll, x));
     };
 
-    // How many items fit one view, from the live pitch between the first two
-    // (item plus gap). A click turns a whole page rather than nudging one item,
-    // so the row comes to rest on items the visitor has not seen: 2 on the
-    // two-up strips, 1 on a phone and on the Experiments §1 sheets. Measured on
-    // every step — the page may have been resized since the last one.
+    // How many stops fit one view, from the live pitch between the first two.
+    // A click turns a whole page rather than nudging one clip, so the row comes
+    // to rest on clips the visitor has not seen: 2 on the two-up strips, 1 on a
+    // phone and on the Experiments §1 sheets. Measured on every step — the page
+    // may have been resized since the last one.
     const perView = () => {
-      if (items.length < 2) return 1;
-      const pitch = itemLeft(items[1]) - itemLeft(items[0]);
+      const all = stops();
+      if (all.length < 2) return 1;
+      const pitch = all[1] - all[0];
       return pitch > 0 ? Math.max(1, Math.floor((container.clientWidth + 1) / pitch)) : 1;
     };
 
-    // The next index a page away in `dir` that actually moves the strip. At the
-    // end of a row the last clips share one clamped position (a two-up strip of
+    // The next stop a page away in `dir` that actually moves the strip. At the
+    // end of a row the last stops share one clamped position (a two-up strip of
     // three rests on clips 2 and 3 for index 1 and index 2 alike), and stepping
     // onto one would spend a click, or an auto-cycle beat, going nowhere — so
     // the walk continues until something moves.
     const stepIndex = (from, dir) => {
+      const count = stops().length;
       const here = scrollTargetFor(from);
       const page = perView();
-      for (let i = from + dir * page; i >= 0 && i < items.length; i += dir) {
+      for (let i = from + dir * page; i >= 0 && i < count; i += dir) {
         if (Math.abs(scrollTargetFor(i) - here) >= 1) return i;
       }
       // A partial last page in `dir`: land on the row's end rather than nowhere.
-      const last = dir > 0 ? items.length - 1 : 0;
+      const last = dir > 0 ? count - 1 : 0;
       return Math.abs(scrollTargetFor(last) - here) >= 1 ? last : from;
     };
 
     const showItem = (index) => {
-      targetIndex = Math.max(0, Math.min(items.length - 1, index));
+      targetIndex = Math.max(0, Math.min(stops().length - 1, index));
       programmaticScroll = true;
       container.scrollTo({
         left: scrollTargetFor(targetIndex),
@@ -185,10 +208,10 @@ document.addEventListener('DOMContentLoaded', function () {
       showItem(next);
     }
 
-    // Read the initial item after layout, then keep an explicit target so rapid
-    // clicks during a smooth scroll advance rather than reselecting the item
+    // Read the initial stop after layout, then keep an explicit target so rapid
+    // clicks during a smooth scroll advance rather than reselecting the stop
     // still leading the view.
-    requestAnimationFrame(() => { targetIndex = leadItemIndex(); });
+    requestAnimationFrame(() => { targetIndex = leadStopIndex(); });
     leftBtn.addEventListener('click', () => { yieldToUser(); showItem(stepIndex(targetIndex, -1)); });
     rightBtn.addEventListener('click', () => { yieldToUser(); showItem(stepIndex(targetIndex, 1)); });
     // The container's own scroll is the one signal that the visitor took the
@@ -199,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
     container.addEventListener('scroll', () => {
       if (programmaticScroll) return;
       if (performance.now() > autoQuietUntil) yieldToUser();
-      targetIndex = leadItemIndex();
+      targetIndex = leadStopIndex();
     }, { passive: true });
 
     if (autoCycles) {
