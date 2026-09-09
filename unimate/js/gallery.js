@@ -20,9 +20,9 @@ document.addEventListener('DOMContentLoaded', function () {
   // the rows holding more clips than fit. Experiments §2 has exactly two, so a
   // cycle would have nothing to reveal (advance() bails on that too).
   // Experiments §1 fits one column-wide sheet per view, so perView() is 1 there
-  // and a step is a whole sheet — except on a phone, where the sheet is wider
-  // than the view (responsive.css) and stops() gives it one stop per view, so
-  // a step is one column of the sheet.
+  // and a step is a whole sheet. Below 720px every strip is a column
+  // (responsive.css): nothing overflows, advance() bails, and the buttons are
+  // hidden there — but they stay in the DOM, because this script requires them.
   const galleries = [
     {
       sectionId: 'demoGallerySection',

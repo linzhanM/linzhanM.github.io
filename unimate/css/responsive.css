@@ -243,12 +243,22 @@
      padding, leader) with the canvas width and feeds that size to its solver,
      so long prompts stay one line rather than becoming two-line cards. */
 
-  /* One clip per screen: two-up (style.css §7) on a 350px column is two
-     thumbnails. The rows are already definite there, so the percentage is
-     exact. Spelled out per section id, not as a bare .gallery-video: a media
-     query adds no specificity, so one class would lose to the
+  /* One clip per row, the rows stacked: two-up (style.css §7) on a 350px
+     column is two thumbnails, and a strip that steps sideways is a second
+     scroll axis on a device that already has one under the thumb — so on a
+     phone the Experiments §2–4 strips are a column, read top to bottom like
+     the rest of the page, and the arrows go (below). gallery.js needs no
+     change: a column never overflows its track, so advance() has nothing to
+     reveal and bails. The rows are already definite there, so the percentage
+     is exact. Spelled out per section id, not as a bare .gallery-video: a
+     media query adds no specificity, so one class would lose to the
      #xGallerySection rules in style.css. Add a gallery here when you add one
      there. */
+  #transferGallerySection .video-gallery,
+  #promptGallerySection .video-gallery,
+  #motionGallerySection .video-gallery {
+    flex-direction: column;
+  }
   #transferGallerySection .gallery-video,
   #promptGallerySection .gallery-video,
   #motionGallerySection .gallery-video,
@@ -259,26 +269,22 @@
     height: auto;
   }
 
-  /* Experiments §1 goes the other way: WIDER than the column. Each sheet is
-     four columns of prompt + result, and the prompts are baked in — at the
-     column's width they are unreadable below ~700px. So the sheet is set to
-     two columns per view here (and one per view at 600px, below), overflowing
-     its row into the scroller; gallery.js gives an oversized clip one stop per
-     view, so the arrows and the auto-cycle walk it column by column and the
-     snap (mandatory, style.css §7) still rests inside it — a snap area larger
-     than the snapport may rest anywhere it covers it. The percentage is of the
-     row, which is definite here (width: 100%). */
-  #demoGallerySection .gallery-video { width: 200%; }
+  /* No arrows on a phone: every strip is a column now (Experiments §1 joins
+     below) and has nowhere to step. Hidden, not removed: gallery.js binds
+     both buttons and bails without them. The caption then stands alone in its
+     row and fills it (flex-grow), so the stacking rules the buttons needed
+     are gone with them. */
+  .gallery-nav-controls { display: none; }
 
-  /* Controls and caption stack rather than share a line. */
-  .gallery-caption-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .gallery-nav-controls {
-    margin-right: 0;
-    margin-bottom: 12px;
-  }
+  /* Experiments §1 stacks the same way: one whole sheet per row, at the
+     column's width, its frame exactly the sheet (width 100%, height auto,
+     and poster and clip share the 2.34:1 aspect), nothing cropped. The
+     baked-in prompts are small here — a sheet is four columns of prompt +
+     result — and that is the trade taken on 2026-09-09: an oversized sheet
+     panned column by column (200% here, 400% at 600px) was tried and read as
+     a cropped video, not a sheet. The snap on the container (style.css §7) is
+     inert with nothing to scroll and is left for the desktop. */
+  #demoGallerySection .video-gallery { flex-direction: column; }
 
   /* The full abstract stays in the document; js/abstract.js only folds it.
      The fade signals continuation without cutting a line at a hard edge. */
@@ -329,14 +335,29 @@
   .affiliations img { height: 60px; }
   .affiliations img.logo-lg { height: 80px; }
 
-  /* Five links at 19px run to three lines on a 375 phone's 335px column, and
-     in a wrapping flex row the dots are items of their own, so a line could
-     end on one — "Poster ·" — with nothing after it. The dots go; the 14px
-     gap keeps the labels apart. (An earlier three-link row measured 277 and
-     held one line; the count grew and the note did not.) */
-  .quick-links { gap: 8px 14px; margin: 22px 0 28px; }
-  .quick-link { font-size: 19px; }
+  /* Five links, two lines. The tight fit is the second line, "Interactive
+     demo · Code · Dataset": at 19px with 14px gaps it measured 333 on a 375
+     phone's 335px column and spilled Dataset onto a third line on any 360
+     phone (320px column). At 18px, with the mark 8px from its label and the
+     links 12px apart, the same line is 312 — two lines from 360 up, with
+     ~8px to spare on whichever line is the full one (the split flips from
+     2+3 to 3+2 at 375, both two lines). Below 360 it is three lines, which
+     is accepted. In a wrapping flex row the dots are items of their own, so
+     a line could end on one — "Poster ·" — with nothing after it; the dots
+     go, and the gap keeps the labels apart. Re-measure if a label changes:
+     an earlier three-link row measured 277 and held one line, the count grew
+     and the note did not. */
+  .quick-links { gap: 8px 12px; margin: 22px 0 28px; }
+  .quick-link { font-size: 18px; gap: 8px; }
   .quick-link-sep { display: none; }
+
+  /* The host marks in the Dataset release line (style.css §6, .inline-mark)
+     are cap height on the desktop, and on the desktop that is right: a 19px
+     mark in a 20px line is one glyph among many. At a phone's 18px measure
+     the line holds a third of the words and each mark is three times the
+     share of it, so two coloured logos read as the line's subject. Shorter
+     than the caps, so they sit in the line rather than on it. */
+  .inline-mark { height: 0.78em; vertical-align: -0.08em; }
 
   /* Headings. At 24/20px the plates wrapped into full-width slabs (334x65 for
      a rank-2 heading), heavier than the videos they introduce. Smaller type
@@ -363,31 +384,6 @@
   /* The 20px inset holds a caption inside a wider figure; here the figure IS
      the column, so it only misaligned the caption with the video. */
   .figure-caption { padding: 0; }
-
-  /* Same stack as the 720px block. stretch, not flex-start: in a column the
-     cross axis is horizontal, and flex-start would size a short caption to its
-     own text under a full-width video. */
-  .gallery-caption-container {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .gallery-nav-controls {
-    margin-right: 0;
-    margin-bottom: 12px;
-  }
-  /* 35px is under the 44px minimum touch target. */
-  .gallery-nav {
-    width: 44px;
-    height: 44px;
-    margin: 0 10px 0 0;
-  }
-
-  /* Experiments §1 at one sheet column per view: a prompt chip over its render,
-     twice, at the full width of the phone — the sheet's own panel is the phone
-     layout. Tall (the sheet is 2.34:1, so four views of it stand ~600px on a
-     375px phone), and accepted: the alternative was a legible sheet on no
-     phone at all. See the 720px block for the mechanism. */
-  #demoGallerySection .gallery-video { width: 400%; }
 
   /* Applications: the clip takes the full measure; caption and schematic share
      a second row, prose left, drawing right. */
@@ -442,25 +438,15 @@
     line-height: 1.5;
   }
 
-  /* The dataset strip is 4.9:1; fit to a 335px column it stands 68px tall and
-     its captions are dust. So on a phone it keeps a legible height and scrolls
-     sideways in its own track instead — the one horizontal scroller on the
-     page that is not a gallery, and the same gesture as the galleries. The
-     scrollbar is hidden as theirs is. */
-  .dataset-scroll {
-    margin-top: 18px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .dataset-scroll::-webkit-scrollbar { display: none; }
-  .dataset-scroll .dataset-figure {
-    width: auto;
-    max-width: none;
-    height: 220px;
-    border-radius: 10px;
-    box-shadow: none;
-  }
+  /* The dataset strip is 4.9:1, so fit to a 335px column it stands 68px tall
+     and its captions are dust — but it is whole, and on a phone nothing on
+     this page is cropped or scrolled sideways (2026-09-09; the galleries
+     stack for the same reason). A 220px-tall strip scrolling in its own track
+     was the earlier answer, and it read as a cropped image. The wrapper is a
+     plain block here, its style.css width the only thing about it. Radius and
+     shadow step down with the poster's, below. */
+  .dataset-scroll { margin-top: 18px; }
+  .dataset-figure,
   .poster-figure {
     border-radius: 10px;
     box-shadow: none;

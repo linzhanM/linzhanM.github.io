@@ -42,7 +42,7 @@
        sheet. Loaded after it so it can read the tokens. -->
   <link rel="stylesheet" href="css/schematics.css?v=1" />
   <!-- Breakpoint overrides load last. -->
-  <link rel="stylesheet" href="css/responsive.css?v=17" />
+  <link rel="stylesheet" href="css/responsive.css?v=18" />
 </head>
 
 <body>
@@ -819,6 +819,22 @@
       text prompts paired with motion sequences.
     </p>
 
+    <!-- Where to get it, between the figure and the table: the figure shows
+         what the corpus holds, this line says where it is, and the table then
+         says how it was made — so "the three passes below" points at what
+         follows. One line at the desktop measure (960px at 20px); a second
+         line reads as a paragraph, and this is a pointer, not one. Each link carries its host's official mark (assets/logos/),
+         the one place on the page a borrowed logo appears in colour: here the
+         mark names the destination, where in the quick links it would have
+         been the row's only silhouette (style.css §4). -->
+    <div class="section">
+      <strong>UniML3D</strong> is released on
+      <a href="https://huggingface.co/collections/Linzhan/unimate" target="_blank" rel="noopener"><img class="inline-mark" src="assets/logos/huggingface.svg" alt="" width="95" height="88" />Hugging Face</a>,
+      with the
+      <a href="https://github.com/Friedrich-M/UniMate/tree/main/data_process" target="_blank" rel="noopener"><img class="inline-mark" src="assets/logos/github.svg" alt="" width="98" height="96" />data-processing code</a>
+      for the three passes below.
+    </div>
+
     <!-- One table, three passes — filter, annotate, canonicalize — following the
          paper's own split: Sec. 4 "Skeleton-Based Filtering" (five numbered
          stages) and "Motion Canonicalization" (four); annotation is Appendix
@@ -949,20 +965,6 @@
         </tr>
       </tbody>
     </table>
-
-    <!-- Where to get it. The two links close the section the way the paper's
-         data statement does: the corpus, then the code that made it. Each
-         carries its host's official mark (assets/logos/), the one place on the
-         page a borrowed logo appears in colour: here the mark names the
-         destination, where in the quick links it would have been the row's
-         only silhouette (style.css §4). -->
-    <div class="section">
-      UniML3D is released on
-      <a href="https://huggingface.co/collections/Linzhan/unimate" target="_blank" rel="noopener"><img class="inline-mark" src="assets/logos/huggingface.svg" alt="" width="95" height="88" />Hugging Face</a>,
-      with the
-      <a href="https://github.com/Friedrich-M/UniMate/tree/main/data_process" target="_blank" rel="noopener"><img class="inline-mark" src="assets/logos/github.svg" alt="" width="98" height="96" />data-processing code</a>
-      that runs these three passes.
-    </div>
 
     <!-- The one-sheet of everything above, placed after it: a visitor who has
          read the page recognizes every panel; one who has not gets the whole
