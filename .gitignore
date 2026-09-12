@@ -72,3 +72,8 @@ resources/resume/*.toc
 # the repo back under 1 GB, so the local folder is now the ONLY copy. Back it up
 # off this machine before deleting anything in it.
 unimate/resources/glbs-raw/
+
+# Uncompressed DIMO rig sources, as unimate/resources/glbs-raw/. They stay in the
+# project tree; the homepage thumbnail's lab (resources/overview/dimo/) ships the
+# compressed builds (see its README.md).
+dimo/resources/glbs-raw/

@@ -536,6 +536,54 @@ hr {
   }
 }
 
+/* The UniMate and DIMO thumbnails are their motion labs themselves
+   (resources/overview/<project>/interactive.html?embed: no chrome, the light palette
+   on this page's --ivory-medium), so each is an <iframe> in the same frame as
+   the videos, inside a <figure>. An iframe has no intrinsic size, so it takes
+   the teaser's 16:9. */
+.pub-live {
+  position: relative; /* the phone link's hit area, below */
+  margin: 0;
+}
+
+.pub-live-frame {
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+
+/* No lift: the plate is something you drag, and a surface that jumps 3px as
+   the pointer arrives moves out from under the drag it invites. */
+.pub-live-frame:hover {
+  transform: none;
+  box-shadow: var(--shadow-plate);
+}
+
+/* The way into the lab on a phone. Desktop gets none: the frame takes the
+   click there, and a link hidden under it would be a tab stop with nothing to
+   see. */
+.pub-live-cover {
+  display: none;
+}
+
+/* Below md the columns stack and the frame would be a full-width band a thumb
+   can't scroll past (OrbitControls takes the touch), so it is inert and the
+   cover link takes the tap. */
+@media (max-width: 767.98px) {
+  .pub-live-frame {
+    pointer-events: none;
+  }
+
+  .pub-live-cover {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: var(--radius-md);
+  }
+}
+
 /* Palatino, deliberately a third voice beside Fraunces and Source Serif. It is
    never downloaded: Palatino on macOS, Palatino Linotype on Windows, Georgia
    (~15% wider) elsewhere, and the rules below must sit correctly under all

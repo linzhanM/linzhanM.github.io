@@ -1,0 +1,1054 @@
+/* Full-screen motion lab interface. */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
+
+:root {
+  --paper: #131413;
+  --paper-light: #f2eee8;
+  /* The sky behind every rig, tuned by eye: #191c1b read as washed, #111312 as
+     a void. viewer.js's VIEWER_THEMES.dark (background + metaColor) and the
+     theme-color meta in interactive.html carry the SAME value — move all three
+     together. */
+  --stage: #151817;
+  --ink: #f2eee8;
+  --muted: #9b9993;
+  --line: rgba(242, 238, 232, 0.16);
+  --signal: #e9873f;
+  --signal-soft: #3b281c;
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans: 'Instrument Sans', 'Helvetica Neue', sans-serif;
+  --chrome: rgba(10, 11, 11, 0.96);
+  --chrome-raised: rgba(28, 29, 27, 0.97);
+  --chrome-muted: rgba(211, 207, 199, 0.68);
+  --control-accent: #e9873f;
+  --control-accent-soft: rgba(233, 135, 63, 0.18);
+  --chrome-border: rgba(242, 238, 232, 0.13);
+  --chrome-divider: rgba(242, 238, 232, 0.12);
+  --chrome-heading: rgba(211, 207, 199, 0.52);
+  --chrome-hover: rgba(242, 238, 232, 0.06);
+  --chrome-active: rgba(17, 19, 18, 0.96);
+  --chrome-active-text: #f2a06f;
+  --chrome-shadow: 0 20px 48px rgba(0, 0, 0, 0.42), 0 2px 6px rgba(0, 0, 0, 0.24);
+  --prompt-bg: rgba(10, 11, 11, 0.94);
+  --prompt-text: #f2eee8;
+  --prompt-shadow: 0 8px 24px rgba(0, 0, 0, 0.38);
+}
+
+html[data-theme='light'] {
+  --paper: #e8e9e3;
+  --paper-light: #f3f4ef;
+  --stage: #f0eee6;
+  --ink: #171916;
+  --muted: #686c64;
+  --line: rgba(23, 25, 22, 0.18);
+  --signal: #ee5b38;
+  --signal-soft: #f9d8cd;
+  --chrome: rgba(225, 223, 214, 0.96);
+  --chrome-raised: rgba(249, 247, 241, 0.94);
+  --chrome-muted: rgba(76, 72, 65, 0.76);
+  --control-accent: #ee5b38;
+  --control-accent-soft: rgba(238, 91, 56, 0.14);
+  --chrome-border: rgba(23, 25, 22, 0.16);
+  --chrome-divider: rgba(23, 25, 22, 0.12);
+  --chrome-heading: rgba(76, 72, 65, 0.58);
+  --chrome-hover: rgba(23, 25, 22, 0.06);
+  --chrome-active: rgba(238, 91, 56, 0.12);
+  --chrome-active-text: #b93d22;
+  --chrome-shadow: 0 20px 48px rgba(76, 61, 47, 0.16), 0 2px 6px rgba(72, 62, 52, 0.09);
+  --prompt-bg: rgba(249, 247, 241, 0.94);
+  --prompt-text: #171916;
+  --prompt-shadow: 0 8px 24px rgba(76, 61, 47, 0.18);
+}
+
+* { box-sizing: border-box; }
+
+html {
+  min-width: 320px;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  color: var(--ink);
+  background:
+    linear-gradient(rgba(242, 238, 232, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242, 238, 232, 0.025) 1px, transparent 1px),
+    var(--paper);
+  background-size: 32px 32px;
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+button, a { font: inherit; }
+a { color: inherit; }
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+}
+
+::selection { background: var(--signal-soft); }
+
+.lab-shell {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.viewer-panel {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  background: var(--paper-light);
+  box-shadow: none;
+}
+
+.viewer-layout {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+.category-panel {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  z-index: 5;
+  width: 188px;
+  /* The rail is centred, so this bound sets its distance from the bottom edge:
+     45px, the clearance .asset-notice needs below it. Only short viewports feel
+     it, as the rail's scroll starting sooner. */
+  max-height: calc(100% - 90px);
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  background: linear-gradient(145deg, var(--chrome-raised), var(--chrome));
+  border: 1px solid var(--chrome-border);
+  border-radius: 10px;
+  box-shadow: var(--chrome-shadow);
+  backdrop-filter: blur(18px) saturate(0.82);
+  transform: translateY(-50%);
+  transition: transform 260ms ease, opacity 200ms ease;
+}
+
+/* Collapse: the panel slides off the left edge and the handle stays behind to
+   bring it back. Only chrome moves — the canvas never resizes, so camera and
+   layout are untouched. .is-instant suppresses the slide on the
+   restored-from-sessionStorage first paint, so a returning visitor's hidden
+   panel is simply hidden rather than seen leaving. */
+.category-panel.is-collapsed {
+  transform: translate(-240px, -50%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.category-panel.is-instant,
+.panel-toggle.is-instant {
+  transition: none;
+}
+
+.panel-toggle {
+  position: absolute;
+  left: 214px;
+  top: 50%;
+  z-index: 5;
+  width: 20px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--chrome-border);
+  border-radius: 10px;
+  color: var(--chrome-muted);
+  background: linear-gradient(145deg, var(--chrome-raised), var(--chrome));
+  box-shadow: var(--chrome-shadow);
+  backdrop-filter: blur(18px) saturate(0.82);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: left 260ms ease, color 150ms ease;
+}
+
+.panel-toggle:hover { color: var(--ink); }
+
+.panel-toggle svg {
+  width: 8px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 260ms ease;
+}
+
+.panel-toggle.is-collapsed { left: 10px; }
+.panel-toggle.is-collapsed svg { transform: rotate(180deg); }
+
+.category-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 7px 10px;
+  border-bottom: 1px solid var(--chrome-divider);
+  color: var(--chrome-heading);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.category-heading strong {
+  color: var(--control-accent);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.category-theme {
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 9px 5px;
+  border: 0;
+  border-top: 1px solid var(--chrome-divider);
+  border-radius: 0;
+  color: var(--chrome-heading);
+  background: transparent;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.015em;
+  text-align: left;
+  cursor: pointer;
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.category-theme:hover { color: var(--ink); background: var(--chrome-hover); }
+
+.category-theme .theme-value {
+  gap: 7px;
+  padding: 3px 4px 3px 8px;
+  border: 1px solid var(--control-accent);
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--control-accent-soft);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.category-theme .theme-swatch {
+  width: 20px;
+  height: 20px;
+  border-color: var(--control-accent);
+}
+
+.example-sidebar {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 7px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+}
+
+.example-sidebar::-webkit-scrollbar { display: none; }
+
+.example-item {
+  position: relative;
+  flex: 0 0 auto;
+  width: 100%;
+  min-height: 34px;
+  max-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--chrome-muted);
+  cursor: pointer;
+  text-align: left;
+  transition: color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.example-item:hover { color: var(--ink); background: var(--chrome-hover); }
+.example-item:focus-visible,
+.status-control:focus-visible,
+.dock-control:focus-visible { outline-color: var(--control-accent); }
+.example-item.active {
+  color: var(--chrome-active-text);
+  background: var(--chrome-active);
+  border-color: var(--control-accent);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18), inset 0 0 0 1px rgba(242, 160, 111, 0.1);
+}
+.example-name { font-size: 13px; font-weight: 500; letter-spacing: -0.005em; }
+.example-count {
+  display: none;
+}
+
+.viewer-wrapper {
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--stage);
+}
+
+.viewer-wrapper canvas { display: block; }
+
+.control-bar,
+.control-dock {
+  position: absolute;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 9px;
+  color: var(--chrome-muted);
+  background: linear-gradient(145deg, var(--chrome-raised), var(--chrome));
+  border: 1px solid rgba(242, 238, 232, 0.13);
+  border-radius: 15px;
+  box-shadow: var(--chrome-shadow);
+  backdrop-filter: blur(18px) saturate(0.84);
+}
+
+.control-bar {
+  top: 12px;
+  right: 12px;
+  /* Wide enough that the catalog's longest label ("Unitree G1 Robot", 13px
+     sans, after the mono "Category" and 16px gap) fits without the ellipsis.
+     The ellipsis is insurance for drop-in FILE names only (viewer.js puts the
+     full name in a title); at 194px it was also eating catalog names. */
+  width: 216px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 11px 12px;
+  border-radius: 10px;
+}
+
+.control-status {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 5px 16px;
+  padding: 0 2px 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.control-status > span { color: rgba(211, 207, 199, 0.48); letter-spacing: 0.015em; }
+.control-status > strong {
+  overflow: hidden;
+  color: var(--paper-light);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.theme-control .theme-value {
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(226, 221, 213, 0.7);
+  font-size: 10px;
+  transition: color 150ms ease;
+}
+
+.theme-swatch {
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(242, 238, 232, 0.28);
+  border-radius: 50%;
+  background: #151817;
+  box-shadow: inset 0 0 0 3px rgba(242, 238, 232, 0.08);
+  transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.theme-control:hover .theme-value { color: var(--paper-light); }
+.theme-control:focus-visible { outline-color: var(--control-accent); }
+html[data-theme='light'] .theme-swatch {
+  border-color: rgba(23, 25, 22, 0.24);
+  background: #f0eee6;
+  box-shadow: inset 0 0 0 3px rgba(23, 25, 22, 0.06);
+}
+
+.control-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+.status-control {
+  width: 100%;
+  min-height: 28px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 2px;
+  border: 0;
+  border-radius: 4px;
+  color: rgba(211, 207, 199, 0.48);
+  background: transparent;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.015em;
+  text-align: left;
+  cursor: pointer;
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.status-control:hover {
+  color: rgba(226, 221, 213, 0.74);
+  background: rgba(242, 238, 232, 0.055);
+}
+
+.status-control:focus-visible { outline-offset: 1px; }
+
+.control-switch {
+  position: relative;
+  justify-self: end;
+  width: 34px;
+  height: 19px;
+  border: 1px solid rgba(211, 207, 199, 0.24);
+  border-radius: 999px;
+  background: rgba(211, 207, 199, 0.1);
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.control-switch i {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: rgba(211, 207, 199, 0.54);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.36);
+  transition: transform 160ms ease, background 160ms ease;
+}
+
+.status-control.is-active .control-switch {
+  border-color: rgba(233, 135, 63, 0.8);
+  background: rgba(233, 135, 63, 0.3);
+}
+
+.status-control.is-active .control-switch i {
+  background: var(--control-accent);
+  transform: translateX(15px);
+}
+
+.control-dock {
+  left: 50%;
+  top: 12px;
+  bottom: auto;
+  max-width: calc(100% - 380px);
+  gap: 2px;
+  padding: 5px 7px;
+  border-radius: 12px;
+  transform: translateX(-50%);
+}
+
+.dock-control {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 7px 2px 3px;
+  border: 0;
+  border-radius: 8px;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 150ms ease, background 150ms ease;
+}
+
+.dock-control:hover { color: var(--paper-light); background: rgba(242, 238, 232, 0.07); }
+.dock-control.is-active { color: var(--paper-light); }
+
+.dock-control kbd {
+  min-width: 23px;
+  height: 23px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0 5px;
+  border: 1px solid rgba(211, 207, 199, 0.26);
+  border-bottom-color: rgba(211, 207, 199, 0.4);
+  border-radius: 6px;
+  color: rgba(226, 221, 213, 0.72);
+  background: rgba(211, 207, 199, 0.1);
+  box-shadow: inset 0 -1px 0 rgba(242, 238, 232, 0.08);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.dock-control.is-active kbd {
+  color: var(--paper-light);
+  border-color: rgba(233, 135, 63, 0.7);
+  background: var(--control-accent-soft);
+}
+
+.dock-control span,
+.dock-hint {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.dock-project {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  margin-left: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--chrome-border);
+  border-radius: 8px;
+  color: var(--ink);
+  background: var(--chrome-hover);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
+}
+
+.dock-project:hover { border-color: var(--control-accent); background: var(--control-accent-soft); }
+.dock-project:focus-visible { outline-color: var(--control-accent); }
+
+.dock-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 4px;
+  white-space: nowrap;
+}
+
+.orbit-icon,
+.zoom-icon {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  border: 1px solid rgba(211, 207, 199, 0.38);
+  border-radius: 50%;
+}
+
+.orbit-icon::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: 1px;
+  width: 5px;
+  height: 5px;
+  border-top: 1px solid var(--paper-light);
+  border-right: 1px solid var(--paper-light);
+  transform: rotate(18deg);
+}
+
+.zoom-icon { border-radius: 7px; }
+.zoom-icon::before { content: ''; position: absolute; left: 7px; top: 2px; width: 1px; height: 4px; background: rgba(211, 207, 199, 0.62); }
+
+html[data-theme='light'] body {
+  background:
+    linear-gradient(rgba(23, 25, 22, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 25, 22, 0.035) 1px, transparent 1px),
+    var(--paper);
+  background-size: 32px 32px;
+}
+
+html[data-theme='light'] .example-item:hover,
+html[data-theme='light'] .dock-control:hover {
+  color: var(--ink);
+  background: var(--chrome-hover);
+}
+
+html[data-theme='light'] .example-item { color: var(--muted); }
+
+html[data-theme='light'] .control-status > span,
+html[data-theme='light'] .status-control { color: var(--ink); }
+html[data-theme='light'] .control-status > strong,
+html[data-theme='light'] .dock-control.is-active { color: var(--ink); }
+html[data-theme='light'] .status-control:hover { color: var(--ink); background: rgba(112, 101, 88, 0.08); }
+html[data-theme='light'] .theme-control .theme-value { color: var(--muted); }
+html[data-theme='light'] .theme-control:hover .theme-value { color: var(--ink); }
+html[data-theme='light'] .category-theme .theme-value { color: var(--ink); }
+
+html[data-theme='light'] .control-switch {
+  border-color: rgba(72, 66, 58, 0.27);
+  background: rgba(93, 84, 74, 0.1);
+}
+html[data-theme='light'] .control-switch i { background: rgba(72, 66, 58, 0.46); }
+
+html[data-theme='light'] .dock-control kbd {
+  color: rgba(66, 62, 55, 0.72);
+  border-color: rgba(72, 66, 58, 0.25);
+  border-bottom-color: rgba(72, 66, 58, 0.4);
+  background: rgba(93, 84, 74, 0.08);
+  box-shadow: inset 0 -1px 0 rgba(72, 66, 58, 0.08);
+}
+html[data-theme='light'] .dock-control.is-active kbd {
+  color: var(--ink);
+  border-color: rgba(238, 91, 56, 0.66);
+}
+html[data-theme='light'] .orbit-icon,
+html[data-theme='light'] .zoom-icon { border-color: rgba(23, 25, 22, 0.36); }
+html[data-theme='light'] .orbit-icon::after { border-color: var(--ink); }
+html[data-theme='light'] .zoom-icon::before { background: rgba(23, 25, 22, 0.58); }
+
+html[data-theme='light'] .viewer-label {
+  border-color: rgba(23, 25, 22, 0.15);
+  background: rgba(243, 244, 239, 0.76);
+}
+html[data-theme='light'] .viewer-label::after { background: linear-gradient(to bottom, transparent, rgba(23, 25, 22, 0.38)); }
+html[data-theme='light'] .viewer-pin { box-shadow: 0 0 0 2px rgba(243, 244, 239, 0.68); }
+html[data-theme='light'] #loading-overlay { color: var(--ink); background: rgba(240, 238, 230, 0.88); }
+html[data-theme='light'] #drop-hint { color: var(--signal); background: rgba(249, 216, 205, 0.88); }
+html[data-theme='light'] .drop-note { color: rgba(23, 25, 22, 0.54); }
+html[data-theme='light'] .asset-notice { color: rgba(23, 25, 22, 0.44); }
+/* More alpha than a solid ring would take: a 1px dash is half gap, and needs
+   the extra to carry the weight of the text beside it. */
+html[data-theme='light'] .drop-note span { border-color: rgba(23, 25, 22, 0.34); }
+
+#viewer-labels { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+
+.viewer-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* No max-width: the pinned chip is one nowrap line, and a cap let a long
+     prompt run out past its own border. The box is as wide as its sentence. */
+  padding: 5px 9px;
+  border: 1px solid rgba(242, 238, 232, 0.15);
+  border-radius: 3px;
+  color: var(--ink);
+  background: rgba(18, 19, 18, 0.88);
+  backdrop-filter: blur(4px);
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.4;
+  text-align: center;
+  white-space: nowrap;
+  will-change: transform;
+  animation: label-in 180ms ease-out both;
+}
+
+.viewer-label::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: var(--leader-x, 0px);
+  margin-top: var(--leader-y, 0px);
+  width: 1px;
+  height: var(--leader, 0px);
+  background: linear-gradient(to bottom, transparent, rgba(242, 238, 232, 0.38));
+  transform-origin: top center;
+  transform: rotate(var(--leader-angle, 0rad));
+}
+
+.viewer-pin {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 0 2px rgba(18, 19, 18, 0.72);
+  will-change: transform;
+  animation: label-in 180ms ease-out both;
+}
+
+/* Text Prompts off: one prompt at a time beside the cursor (hoverPrompts). The
+   rig under the pointer is the target, so leader and pin are dropped and the
+   chip is a card. Text Prompts on (the lab's opening state): viewer.js sets
+   .is-pinned-prompts on the wrapper and the rules above take over — every
+   rig's chip standing over its root joint, leader and pin included. */
+.interactive-viewer-page .viewer-wrapper:not(.is-pinned-prompts) .viewer-label::after,
+.interactive-viewer-page .viewer-wrapper:not(.is-pinned-prompts) .viewer-pin {
+  display: none !important;
+}
+
+.interactive-viewer-page .viewer-wrapper:not(.is-pinned-prompts) .viewer-label {
+  max-width: 280px;
+  padding: 9px 12px 10px;
+  border: 0;
+  border-left: 3px solid var(--signal);
+  border-radius: 4px;
+  color: var(--prompt-text);
+  background: var(--prompt-bg);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--prompt-shadow);
+  font-size: 12px;
+  line-height: 1.45;
+  text-align: left;
+  white-space: normal;
+}
+
+@keyframes label-in { from { opacity: 0; } }
+
+#loading-overlay,
+#drop-hint {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  color: var(--paper-light);
+  background: rgba(17, 19, 19, 0.94);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.spinner { width: 18px; height: 18px; border: 2px solid var(--line); border-top-color: var(--signal); border-radius: 50%; animation: spin 700ms linear infinite; }
+@keyframes spin { to { transform: rotate(1turn); } }
+
+#drop-hint { display: none; margin: 14px; border: 1px dashed var(--signal); color: var(--paper-light); background: rgba(59, 40, 28, 0.94); }
+
+/* The two bottom corners are the stage's fine print, the only text on the page
+   not carried on a plate. They share a 14px line box and 16px bottom inset so
+   they sit on ONE baseline — at unequal box heights the band wobbles. They do
+   not share a voice: the right corner is something you can do, so it takes the
+   label register (mono, caps, tracked, like the rail's CATEGORIES heading); the
+   left is a sentence, so it takes the sans — in mono that 50-character line set
+   as a bar of even texture, 20% wider and less legible. Keep the split. */
+.drop-note {
+  position: absolute;
+  bottom: 16px;
+  right: 18px;
+  z-index: 3;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: rgba(211, 207, 199, 0.55);
+  font-family: var(--mono);
+  font-size: 9px;
+  line-height: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* The mark is #drop-hint in miniature — same 1px dash, hard corners and
+   landscape frame — so it predicts the interaction: start dragging and this box
+   becomes the stage. (A "+" in a circle read as a button on something that
+   can't be clicked.) Restyle #drop-hint's border and restyle this with it, or
+   the promise breaks. Below ~18px wide the dashes land mostly on the corners
+   and it reads as brackets, so this size is a floor. */
+.drop-note span {
+  width: 21px;
+  height: 13px;
+  border: 1px dashed rgba(211, 207, 199, 0.36);
+}
+
+/* Asset attribution, on the rail's 18px edge as the foot of that column. It
+   must stay ONE line — the clearance below the rail is a single line's worth
+   (.category-panel's max-height) — so the max-width stops clear of the drop
+   note. Dimmer than the note: the note is the one worth reading first. */
+.asset-notice {
+  position: absolute;
+  bottom: 16px;
+  left: 18px;
+  z-index: 3;
+  margin: 0;
+  max-width: calc(100% - 260px);
+  pointer-events: none;
+  color: rgba(211, 207, 199, 0.4);
+  font-family: var(--sans);
+  font-size: 10px;
+  line-height: 14px;
+  letter-spacing: 0.004em;
+}
+
+/* The sans word-space is too narrow at 10px to seat a middot ("owners·research"
+   closed up). Padding rather than space entities: 0.42em is a width no entity
+   gives, and with no literal whitespace the separator offers no line break —
+   one fewer way for the notice to go two lines. Accepted cost: copying the line
+   yields it closed up. */
+.asset-notice i {
+  padding: 0 0.42em;
+  font-style: normal;
+}
+
+/* --- Embedded (interactive.html?embed) --- */
+/* The root homepage frames this page as its UniMate thumbnail: one stage,
+   ~255px wide, so every piece of chrome goes — the rail, its
+   handle, the bar, the dock, the drop notes and the asset line. The prompt
+   chips too: at that width they scale to a third and pile up (pinned mode
+   never resolves collisions). Chips are hidden, not removed, so the engine's
+   cached box measurements stay real. The class is set in the head script. */
+html.is-embed .category-panel,
+html.is-embed .panel-toggle,
+html.is-embed .control-bar,
+html.is-embed .control-dock,
+html.is-embed .drop-note,
+html.is-embed .asset-notice,
+html.is-embed #drop-hint {
+  display: none;
+}
+
+html.is-embed #viewer-labels {
+  visibility: hidden;
+}
+
+/* The lab's phone floor (html min-width above) is wider than the thumbnail
+   slot; framed, the page is exactly as wide as its frame. */
+html.is-embed {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .viewer-layout { aspect-ratio: auto; }
+  /* The panel is the bottom strip here — primary navigation, never hidden —
+     so a collapsed state carried over from a desktop-width session is undone. */
+  .panel-toggle { display: none; }
+  .category-panel.is-collapsed {
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .category-panel {
+    left: max(10px, env(safe-area-inset-left));
+    right: max(10px, env(safe-area-inset-right));
+    top: auto;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    width: auto;
+    max-height: none;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    padding: 5px;
+    transform: none;
+  }
+  .category-heading { display: none; }
+  .example-sidebar { flex: 1 1 auto; width: auto; flex-direction: row; padding-top: 0; overflow-x: auto; overflow-y: hidden; }
+  /* Every slot in the strip goes to a category; the theme toggle is desktop
+     chrome. */
+  .category-theme { display: none; }
+  .drop-note { display: none; }
+  /* No free bottom-left: the strip is the whole bottom edge, and floating the
+     line above it would be a second offset tied to the strip's height. */
+  .asset-notice { display: none; }
+  /* The dock parks top-LEFT as a pill, mirroring the bar top-right. Never give
+     it back a fixed vertical offset: a full-width band 163px down was tuned for
+     one portrait height — on a tablet it floated mid-sky, in landscape it landed
+     on the category strip. Corners exist at every aspect ratio. max-width keeps
+     it clear of the 216px bar even at 561px wide. */
+  .control-dock {
+    left: max(8px, env(safe-area-inset-left));
+    right: auto;
+    top: max(8px, env(safe-area-inset-top));
+    bottom: auto;
+    max-width: calc(100% - 262px);
+    overflow-x: auto;
+    scrollbar-width: none;
+    transform: none;
+  }
+  .control-bar {
+    top: max(8px, env(safe-area-inset-top));
+    right: max(8px, env(safe-area-inset-right));
+    width: min(216px, calc(100% - 16px));
+  }
+  .control-dock::-webkit-scrollbar { display: none; }
+  .dock-hint { display: none; }
+  /* Touch screens: a Space / O / R chip is a promise the hardware can't keep. */
+  .dock-control kbd { display: none; }
+  .dock-control { padding: 2px 9px; }
+  .example-item { width: auto; min-width: max-content; min-height: 38px; max-height: 38px; padding: 0 11px; }
+  .example-item.active { padding-left: 11px; }
+  .example-name { overflow: hidden; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+  .viewer-wrapper { height: 100vh; height: 100dvh; min-height: 0; }
+}
+
+@media (max-width: 560px) {
+  .viewer-wrapper { height: 100vh; height: 100dvh; min-height: 0; }
+  .category-panel {
+    left: max(6px, env(safe-area-inset-left));
+    right: max(6px, env(safe-area-inset-right));
+    bottom: max(6px, env(safe-area-inset-bottom));
+    width: auto;
+    padding: 4px;
+    border-radius: 12px;
+  }
+  .example-sidebar {
+    min-width: 0;
+    width: auto;
+    scroll-snap-type: x proximity;
+    touch-action: pan-x;
+    -webkit-overflow-scrolling: touch;
+  }
+  .example-item {
+    min-height: 44px;
+    max-height: 44px;
+    padding: 0 11px;
+    scroll-snap-align: start;
+  }
+  .example-item.active { padding-left: 11px; }
+  .example-name { font-size: 11px; }
+  .viewer-label { font-size: 9px; padding: 4px 7px; }
+  /* THE CONSOLE. On a phone the bar and the dock fuse into one plate of three
+     ruled registers — readout, display switches, transport — hairlines and mono
+     type, no chips. As two stacked chip plates the cluster read as one
+     instrument sawn in half and spent ~175px of a 667px screen on it.
+
+     THE TWO ELEMENTS MEET BY ARITHMETIC: the bar is border 1 + readout 34 +
+     rule 1 + two switch rows 88 = 124px tall, and the dock hangs at +123 — one
+     px UNDER the bar, so a rounding error shows as nothing instead of a lit
+     seam. Both are flat --chrome (the gradient would restart at the joint and
+     stripe it). Change any row height and move the dock's offset with it.
+
+     The four switches run two by two: four across, "Wireframe" and "Skeleton"
+     beside a 34px track do not fit a quarter of a 375px phone even at 9px. */
+  .control-bar {
+    left: max(8px, env(safe-area-inset-left));
+    right: max(8px, env(safe-area-inset-right));
+    width: auto;
+    padding: 0;
+    border-bottom: 0;
+    border-radius: 12px 12px 0 0;
+    background: var(--chrome);
+  }
+  .control-status {
+    box-sizing: border-box;
+    height: 34px;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    padding: 0 12px;
+  }
+  .control-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    border-top: 1px solid var(--chrome-divider);
+  }
+  /* A register line, not a chip: the whole half is the tap target, and the
+     rules draw only where one control ends and the next begins — a column rule
+     down the centre, a row rule under the first pair. The row rule sits inside
+     the second row's 44px (border-box), so it adds nothing to the arithmetic. */
+  .status-control {
+    box-sizing: border-box;
+    height: 44px;
+    min-height: 0;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 4px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    font-size: 10px;
+  }
+  .status-control:nth-child(even) { border-left: 1px solid var(--chrome-divider); }
+  .status-control:nth-child(n + 3) { border-top: 1px solid var(--chrome-divider); }
+  .status-control > span:first-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .control-switch { flex: none; }
+  .control-dock {
+    left: max(8px, env(safe-area-inset-left));
+    right: max(8px, env(safe-area-inset-right));
+    top: calc(max(8px, env(safe-area-inset-top)) + 123px);
+    max-width: none;
+    overflow: visible;
+    display: grid;
+    /* The link is the longest label, and 3fr exactly (3 of 6 = 1 of 2) lands
+       the divider before it on the switch grid's centre rule — one column line
+       through both registers instead of two a few px apart. */
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 3fr);
+    gap: 0;
+    padding: 0;
+    border-top: 1px solid var(--chrome-divider);
+    border-radius: 0 0 12px 12px;
+    background: var(--chrome);
+  }
+  .dock-control {
+    box-sizing: border-box;
+    height: 44px;
+    min-height: 0;
+    justify-content: center;
+    padding: 0 4px;
+    border: 0;
+    border-radius: 0;
+  }
+  /* Mono, like every other label on the plate: the transport row is a register
+     here, not the desktop's pill. */
+  .dock-control span,
+  .dock-project {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.015em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dock-control + .dock-control,
+  .dock-project { border-left: 1px solid var(--chrome-divider); }
+  /* State is fill and ink — a border would break the ruling. The end cells
+     round to the plate's corners (12 outer − 1 border) so an active fill never
+     squares them off; overflow:hidden would do it too, and clip the focus ring. */
+  .dock-control.is-active {
+    color: var(--chrome-active-text);
+    background: var(--control-accent-soft);
+  }
+  .control-dock > :first-child { border-bottom-left-radius: 11px; }
+  .control-dock > :last-child { border-bottom-right-radius: 11px; }
+  .dock-project {
+    box-sizing: border-box;
+    height: 44px;
+    min-height: 0;
+    margin: 0;
+    justify-content: center;
+    padding: 0 4px;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+}
+
+@media (max-height: 520px) and (max-width: 900px) {
+  .example-sidebar { max-height: none; }
+  .example-item { min-height: 30px; max-height: 30px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

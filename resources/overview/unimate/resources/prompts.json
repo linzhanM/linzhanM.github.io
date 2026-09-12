@@ -1,0 +1,16 @@
+{
+  "_comment": "The text prompt each rig's motion was generated from, keyed by its file in resources/glbs/ (the paper teaser's own assets, uncompressed): the Teaser Scene's seven rigs, copied from unimate/resources/prompts.json, which records where every line came from (_sources) and the house style. Read by js/viewer.js; the homepage thumbnail hides the chips.",
+
+  "_from_caption": [
+    "radar-extend.glb", "flower-close.glb", "baymax-punch.glb"
+  ],
+
+  "radar-extend.glb": "A satellite extends its bases.",
+  "quadruped_spot_arm-step_reach.glb": "A quadruped robot steps forward and extends its arm.",
+  "flower-close.glb": "A flower closes its petals.",
+
+  "baymax-punch.glb": "A robot punches forward.",
+  "go2-rear_up.glb": "A quadruped robot rears up to greet.",
+  "g1-pick_up.glb": "A humanoid robot picks up an object.",
+  "mixamo-high_kick.glb": "A human performs a high kick."
+}

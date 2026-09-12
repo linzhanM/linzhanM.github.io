@@ -1,0 +1,674 @@
+/* ============================================================
+   DIMO Motion Lab — interactive.html. Its own sheet: the lab
+   shares the project page's palette and faces but none of its
+   layout. Two palettes, read off html[data-theme]: dark is the
+   project page's hero (the latent space), light its paper body.
+   The row of bodies on the stage is the one loud thing; every
+   piece of chrome around it is set quiet and small.
+   ============================================================ */
+
+:root {
+  --bg: #0B0E14;
+  --bg-2: #10141C;
+  --ink: #F4F6FA;
+  --ink-2: #9AA3B2;
+  --line: rgba(244, 246, 250, 0.12);
+  --line-soft: rgba(244, 246, 250, 0.07);
+  --chrome: rgba(16, 20, 28, 0.82);
+  --raise: rgba(244, 246, 250, 0.05);
+  --raise-2: rgba(244, 246, 250, 0.09);
+  --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  --blue: #3B82F6;
+  --violet: #8B5CF6;
+  --pink: #FF5C8A;
+  --spectrum: linear-gradient(90deg, var(--blue), var(--violet), var(--pink));
+  --display: "Space Grotesk", system-ui, sans-serif;
+  --body: "Inter", system-ui, sans-serif;
+  --panel: 340px;
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  --bg: #EEF0F4;
+  --bg-2: #FFFFFF;
+  --ink: #0E1320;
+  --ink-2: #5C6472;
+  --line: rgba(14, 19, 32, 0.12);
+  --line-soft: rgba(14, 19, 32, 0.07);
+  --chrome: rgba(255, 255, 255, 0.82);
+  --raise: rgba(14, 19, 32, 0.05);
+  --raise-2: rgba(14, 19, 32, 0.09);
+  --shadow: 0 18px 40px rgba(14, 19, 32, 0.12);
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+button, select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 2px;
+}
+
+/* The one gradient device, as on the project page: a hairline at the top. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--spectrum);
+  z-index: 20;
+}
+
+/* ---------- Shell ---------- */
+.lab-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--panel);
+  height: 100%;
+  height: 100dvh;
+}
+
+.stage { position: relative; min-width: 0; }
+
+.viewer-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.viewer-wrapper canvas { display: block; }
+
+/* While the models load: the stage is covered (the camera is not fitted yet,
+   so the floor would show at the wrong scale) under the same words, type and
+   spinner as UniMate's (resources/overview/unimate/css/interactive.css), in
+   this lab's palette. The chrome stays above it. The homepage thumbnail takes
+   UniMate's light values outright, below, so the two load identically. It
+   replaced a spectrum hairline pulsing along the stage top. */
+#loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  color: var(--ink);
+  background: var(--bg);
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.viewer-wrapper.is-loading #loading-overlay { display: flex; }
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--line);
+  border-top-color: var(--violet);
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(1turn); } }
+
+/* ---------- Stage head: wordmark + object switch ---------- */
+.stage-head {
+  position: absolute;
+  top: 20px;
+  left: 22px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.wordmark {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.wordmark span {
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+.wordmark:hover span { color: var(--ink); }
+
+.object-rail {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--chrome);
+  backdrop-filter: blur(14px);
+}
+
+.object-rail button {
+  padding: 6px 13px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.object-rail button:hover { color: var(--ink); }
+
+.object-rail button.is-active {
+  color: var(--ink);
+  background: var(--raise-2);
+}
+
+/* ---------- Stage side: theme + facts (top-right) ---------- */
+.stage-side {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  max-width: 260px;
+  text-align: right;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--chrome);
+  color: var(--ink-2);
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 12px;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+}
+
+.theme-toggle:hover { color: var(--ink); }
+
+.theme-toggle i {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: linear-gradient(135deg, #0B0E14 50%, #EEF0F4 50%);
+}
+
+.stage-facts {
+  margin: 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+/* ---------- Body tags on the stage ---------- */
+.stage-tags {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.tag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--chrome);
+  color: var(--ink-2);
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  will-change: transform;
+}
+
+.tag::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c, var(--violet));
+  box-shadow: 0 0 8px var(--c, var(--violet));
+}
+
+.tag:hover { color: var(--ink); }
+
+.tag.is-selected {
+  color: var(--ink);
+  border-color: var(--c, var(--violet));
+}
+
+.tag[hidden] { display: none; }
+
+/* ---------- Dock (bottom of the stage) ---------- */
+.dock {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  z-index: 5;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  max-width: calc(100% - 44px);
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--chrome);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.dock-group {
+  display: flex;
+  gap: 2px;
+  padding: 0 3px;
+}
+
+.dock-group + .dock-group { border-left: 1px solid var(--line-soft); }
+
+.dock button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 12.5px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.dock button:hover { color: var(--ink); background: var(--raise); }
+
+.dock button.is-active {
+  color: var(--ink);
+  background: var(--raise-2);
+}
+
+kbd {
+  font-family: var(--body);
+  font-size: 10px;
+  line-height: 1;
+  padding: 2px 5px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--ink-2);
+}
+
+/* The decoder's time condition: one period, drawn under the dock as a fill. */
+.phase-bar {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: var(--line-soft);
+}
+
+.phase-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  transform: scaleX(var(--u, 0));
+  background: var(--spectrum);
+}
+
+/* ---------- Latent panel ---------- */
+.latent-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px 20px 20px;
+  border-left: 1px solid var(--line);
+  background: var(--bg-2);
+  overflow-y: auto;
+}
+
+.panel-head h1 {
+  margin: 0 0 6px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 21px;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.panel-head p,
+.panel-hint {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 34em;
+}
+
+#latent-canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3.2;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  cursor: crosshair;
+  touch-action: none;
+}
+
+/* Which body the sheet edits, and where its code is. */
+.selection {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: -8px 0 0;
+  font-size: 12px;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.selection-body {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--display);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.selection-body::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--c, var(--violet));
+  box-shadow: 0 0 8px var(--c, var(--violet));
+}
+
+.latent-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--raise);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.action:hover { background: var(--raise-2); }
+.action:disabled { opacity: 0.45; cursor: default; }
+
+.action.is-active {
+  border-color: rgba(139, 92, 246, 0.7);
+  background: rgba(139, 92, 246, 0.16);
+}
+
+.action.is-flash { transform: scale(0.97); }
+
+/* Interpolation: A and B, the row does the rest. */
+.interp {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 10px;
+  padding: 12px;
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  background: var(--raise);
+}
+
+.interp[hidden] { display: none; }
+
+.interp p {
+  grid-column: 1 / -1;
+  margin: 0 0 2px;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.interp label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.interp select {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.panel-section h2 {
+  margin: 0 0 4px;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+.panel-section .panel-hint { margin-bottom: 10px; }
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--raise);
+  color: var(--ink-2);
+  font-size: 12px;
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+}
+
+.chip:hover { color: var(--ink); background: var(--raise-2); }
+
+.chip.is-active {
+  color: var(--ink);
+  border-color: var(--c, var(--violet));
+}
+
+/* Decoder weights: name · bar · value, one row per basis motion, in the
+   selected body's colour. */
+.weights {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.weights li {
+  display: grid;
+  grid-template-columns: 84px 1fr 34px;
+  align-items: center;
+  gap: 10px;
+}
+
+.weights li.is-lead .w-name,
+.weights li.is-lead .w-value { color: var(--ink); }
+
+.w-bar {
+  position: relative;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line-soft);
+  overflow: hidden;
+}
+
+.w-bar i {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  transform: scaleX(var(--w, 0));
+  background: var(--c, var(--violet));
+  transition: transform 0.12s ease;
+}
+
+.w-value { text-align: right; }
+
+.panel-foot {
+  margin: auto 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-soft);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.panel-foot a { color: var(--ink); }
+.panel-foot strong { color: var(--ink); font-weight: 600; }
+
+/* ---------- Embedded (interactive.html?embed) ---------- */
+/* The root homepage frames the lab as DIMO's thumbnail, ~255px wide: the
+   stage alone. Every piece of chrome goes — the head, the facts, the body
+   tags, the dock, the latent panel, both spectrum hairlines — and the shell
+   drops to one cell. The class is set in the page's head script. */
+html.is-embed .stage-head,
+html.is-embed .stage-side,
+html.is-embed .stage-tags,
+html.is-embed .dock,
+html.is-embed .latent-panel,
+html.is-embed body::before {
+  display: none;
+}
+
+/* UniMate's embed values (its light palette: --ink, --line, --signal, over
+   --stage), so the homepage's two thumbnails load identically. */
+html.is-embed #loading-overlay {
+  color: #171916;
+  background: #F0EEE6;
+}
+
+html.is-embed .spinner {
+  border-color: rgba(23, 25, 22, 0.18);
+  border-top-color: #ee5b38;
+}
+
+html.is-embed .lab-shell {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+/* The stage's own ivory (viewer.js THEMES.light.background), not the light
+   palette's cool --bg: it is what shows before the scene paints and while the
+   canvas fades between the thumbnail's objects, and it has to match. */
+html.is-embed {
+  --bg: #F0EEE6;
+}
+
+/* The fade between objects (viewer.js advanceCycle, FADE_SECONDS). */
+html.is-embed .viewer-wrapper canvas {
+  transition: opacity 180ms ease;
+}
+
+html.is-embed .viewer-wrapper.is-switching canvas {
+  opacity: 0;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+  :root { --panel: 300px; }
+  .stage-facts { display: none; }
+}
+
+@media (max-width: 720px) {
+  .lab-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .latent-panel {
+    max-height: 46dvh;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding: 16px 16px 18px;
+    gap: 14px;
+  }
+
+  #latent-canvas { aspect-ratio: 16 / 9; }
+
+  .stage-head { top: 14px; left: 14px; gap: 10px; }
+  .wordmark span { display: none; }
+  .stage-side { top: 14px; right: 14px; }
+  .dock { bottom: 12px; max-width: calc(100% - 24px); overflow-x: auto; }
+  kbd { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action, .w-bar i { transition: none; }
+  html.is-embed .viewer-wrapper canvas { transition: none; }
+}

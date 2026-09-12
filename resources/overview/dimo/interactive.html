@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Explore DIMO's motion latent space: several bodies of one object play the motions decoded from their own latent codes. Move a code, resample the set, interpolate between two motions, and watch neural key points drive Gaussians on a UR5e arm and D-NeRF's bouncing balls." />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="theme-color" content="#0B0E14" />
+  <title>DIMO Motion Lab</title>
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="DIMO Motion Lab" />
+  <meta property="og:description" content="Several bodies of one object play the motions decoded from their own latent codes. Move a code, resample, interpolate, and watch neural key points drive Gaussians." />
+  <meta property="og:url" content="https://linzhanmou.com/resources/overview/dimo/interactive" />
+
+  <!-- Decided here so the first paint is already right. ?embed is the root
+       homepage's DIMO thumbnail (index.html frames this page): the ducks and
+       the UR5e in turn, no chrome, the light palette on the page's ivory; interactive.css hides
+       the chrome off html.is-embed. Otherwise the visitor's own choice: dark
+       (the project page's hero) unless they switched to light. -->
+  <script>
+    var embed = new URLSearchParams(location.search).has('embed');
+    if (embed) document.documentElement.classList.add('is-embed');
+    try { document.documentElement.dataset.theme = embed || localStorage.getItem('dimo-lab-theme') === 'light' ? 'light' : 'dark'; }
+    catch (e) { document.documentElement.dataset.theme = embed ? 'light' : 'dark'; }
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/interactive.css?v=1" />
+</head>
+<body>
+  <main class="lab-shell">
+    <section class="stage" aria-label="Stage">
+      <div class="viewer-wrapper is-loading" id="viewer-wrapper">
+        <!-- UniMate's lab markup and words, so the homepage's two thumbnails
+             load alike. Shown while the wrapper is .is-loading (set here, so
+             it covers the first paint); viewer.js clears it. -->
+        <div id="loading-overlay"><span class="spinner"></span><span>Building scene</span></div>
+        <header class="stage-head">
+          <a class="wordmark" href="../../../dimo/" aria-label="DIMO project page">DIMO <span>Motion Lab</span></a>
+          <!-- Object buttons are written from the catalog (examples.js). -->
+          <div class="object-rail" id="object-rail" role="group" aria-label="Object"></div>
+        </header>
+
+        <div class="stage-side">
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch palette"><i aria-hidden="true"></i><span>Dark</span></button>
+          <p class="stage-facts">512 key points and 6,000 Gaussians per body, each Gaussian skinned from its 6 nearest key points.</p>
+        </div>
+
+        <!-- One tag per body, placed by the engine. -->
+        <div class="stage-tags" id="stage-tags" aria-label="Bodies on stage"></div>
+
+        <div class="dock" aria-label="Display controls">
+          <div class="dock-group" role="group" aria-label="Surface">
+            <button type="button" data-surface="mesh" aria-pressed="true"><span>Mesh</span></button>
+            <button type="button" data-surface="gaussians" aria-pressed="false"><span>Gaussians</span><kbd>G</kbd></button>
+          </div>
+          <div class="dock-group" role="group" aria-label="Overlays">
+            <button type="button" data-overlay="keypoints" aria-pressed="false"><span>Key points</span><kbd>K</kbd></button>
+            <button type="button" data-overlay="trajectories" aria-pressed="true"><span>Trajectories</span><kbd>T</kbd></button>
+          </div>
+          <div class="dock-group" role="group" aria-label="Playback and camera">
+            <button type="button" data-toggle="paused" aria-pressed="false"><span>Pause</span><kbd>Space</kbd></button>
+            <button type="button" data-toggle="orbit" aria-pressed="true"><span>Orbit</span><kbd>O</kbd></button>
+            <button type="button" data-action="reset"><span>Reset view</span><kbd>R</kbd></button>
+          </div>
+          <div class="phase-bar" id="phase-bar" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="latent-panel" aria-label="Motion latent space">
+      <header class="panel-head">
+        <h1>Motion latent space</h1>
+        <p>Each body on the stage plays the motion at one point of this sheet. Pick a body, drag its point, or resample the set.</p>
+      </header>
+
+      <canvas id="latent-canvas" aria-label="Latent sheet. Press a body's dot to select it, drag to move its code."></canvas>
+
+      <p class="selection"><span class="selection-body" id="selected-name">Body 1</span><span id="z-readout">z = (0.00, 0.00)</span></p>
+
+      <div class="latent-actions">
+        <button type="button" class="action" id="resample">Resample <kbd>S</kbd></button>
+        <button type="button" class="action" id="interp-toggle" aria-pressed="false">Interpolate <kbd>I</kbd></button>
+      </div>
+
+      <div class="interp" id="interp-panel" hidden>
+        <p>The row steps from motion A to motion B.</p>
+        <label>A <select id="interp-a"></select></label>
+        <label>B <select id="interp-b"></select></label>
+      </div>
+
+      <section class="panel-section">
+        <h2>Prompts</h2>
+        <p class="panel-hint">Sets the selected body to the motion a caption maps to.</p>
+        <div class="chips" id="prompt-chips"></div>
+      </section>
+
+      <section class="panel-section">
+        <h2>Decoder weights</h2>
+        <ul class="weights" id="decoder-weights"></ul>
+      </section>
+
+      <!-- The first sentence must stay: this is a hand-built illustration of
+           the paper's mechanism, not the trained model (examples.js header). -->
+      <p class="panel-foot"><strong>Illustrative simulation.</strong> A basis of motions blended by RBF weights over a 2-D sheet stands in for DIMO's 32-D latent and 8-layer decoder; key points ride their link and Gaussians are skinned from their six nearest key points with the paper's RBF weights. The mechanism is described in the <a href="../../../dimo/#method">method section</a>. The UR5e plays the project's nine motion clips. UR5e meshes &copy; Universal Robots.</p>
+    </aside>
+  </main>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="js/interactive.js?v=5"></script>
+
+  <script type="text/javascript">
+    var sc_project = 12925377;
+    var sc_invisible = 1;
+    var sc_security = "43deea45";
+  </script>
+  <!-- Top-level visits only: framed on the homepage this page would otherwise
+       log a lab visit for every homepage load. -->
+  <script type="text/javascript">
+    if (window.self === window.top) {
+      var sc = document.createElement('script');
+      sc.src = 'https://www.statcounter.com/counter/counter.js';
+      sc.async = true;
+      document.body.appendChild(sc);
+    }
+  </script>
+  <noscript>
+    <div class="statcounter"><a title="Web Analytics Made Easy - Statcounter" href="https://statcounter.com/"
+        target="_blank"><img class="statcounter"
+          src="https://c.statcounter.com/12925377/0/43deea45/1/"
+          alt="Web Analytics Made Easy - Statcounter" referrerPolicy="no-referrer-when-downgrade"></a>
+    </div>
+  </noscript>
+</body>
+</html>

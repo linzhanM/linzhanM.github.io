@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Explore UniMate's generated 3D character animations in an interactive motion lab." />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="theme-color" content="#151817" />
+  <title>UniMate Motion Lab</title>
+
+  <!-- ?embed is the homepage's UniMate thumbnail (root index.html frames this
+       page): one stage, light palette so its stage matches the page's media
+       plate, and interactive.css hides every piece of chrome off
+       the html class. Decided here in the head so the first paint is already
+       light — the module that configures the viewer arrives too late for that. -->
+  <script>
+    var embed = new URLSearchParams(location.search).has('embed');
+    document.documentElement.dataset.theme = embed ? 'light' : 'dark';
+    if (embed) document.documentElement.classList.add('is-embed');
+  </script>
+
+  <link rel="stylesheet" href="css/interactive.css?v=23" />
+</head>
+<body class="interactive-viewer-page">
+  <main class="lab-shell">
+    <section class="viewer-panel" aria-label="Interactive animation viewer">
+      <div class="viewer-layout">
+        <div class="viewer-wrapper" id="viewer-wrapper">
+          <aside class="category-panel" id="category-panel" aria-label="Motion categories">
+            <!-- The count is a first paint only: viewer.js rewrites it from the
+                 filtered catalog, so don't maintain it by hand. -->
+            <div class="category-heading"><span>Categories</span><strong>1</strong></div>
+            <div class="example-sidebar" id="example-sidebar" role="group" aria-label="Example stages"></div>
+            <button class="theme-control category-theme" type="button" data-theme-toggle aria-pressed="false" aria-label="Switch to light palette"><span>Theme</span><span class="theme-value"><span class="theme-name">Dark</span><i class="theme-swatch" aria-hidden="true"></i></span></button>
+          </aside>
+          <!-- Collapse handle for the category panel: rides its right edge, and
+               stays at the screen edge while the panel is hidden. Desktop only —
+               on phones the panel is the bottom strip and always shows. -->
+          <button class="panel-toggle" type="button" aria-controls="category-panel" aria-expanded="true" aria-label="Hide categories">
+            <svg viewBox="0 0 8 12" aria-hidden="true" focusable="false"><path d="M6.5 1 2 6l4.5 5" /></svg>
+          </button>
+          <div id="viewer-labels"></div>
+          <div id="loading-overlay"><span class="spinner"></span><span>Building scene</span></div>
+          <div id="drop-hint">Release to inspect your model</div>
+          <div class="drop-note"><span aria-hidden="true"></span> Drop GLB or GLTF to inspect</div>
+          <!-- The rigs are third-party art shown as motion targets. The academic
+               convention is two clauses and no more: whose they are, and that
+               the use is research. Do NOT add licence language ("under fair
+               use", "with permission") we were never granted. -->
+          <p class="asset-notice">Models &copy; their respective owners<i>&middot;</i>research use only</p>
+          <div class="control-bar" aria-label="Display controls">
+            <div class="control-status" aria-live="polite">
+              <span>Category</span><strong id="stage-name">Teaser Scene</strong>
+            </div>
+            <div class="control-actions">
+              <button class="status-control is-active" type="button" data-setting="show model" aria-pressed="true"><span>Mesh</span><span class="control-switch" aria-hidden="true"><i></i></span></button>
+              <button class="status-control is-active" type="button" data-setting="show skeleton" aria-pressed="true"><span>Skeleton</span><span class="control-switch" aria-hidden="true"><i></i></span></button>
+              <button class="status-control" type="button" data-setting="wireframe" aria-pressed="false"><span>Wireframe</span><span class="control-switch" aria-hidden="true"><i></i></span></button>
+              <!-- Pins every rig's prompt over it; on from arrival. Off, the lab
+                   shows one prompt at a time under the pointer. The is-active
+                   here is a first paint only: viewer.js sets the real state from
+                   its config (interactive.js pinPrompts). -->
+              <button class="status-control is-active" type="button" data-setting="pin prompts" aria-pressed="true"><span>Text Prompts</span><span class="control-switch" aria-hidden="true"><i></i></span></button>
+            </div>
+          </div>
+          <div class="control-dock" aria-label="Playback and camera controls">
+            <button class="dock-control" type="button" data-setting="paused" aria-pressed="false"><kbd>Space</kbd><span>Pause</span></button>
+            <button class="dock-control is-active" type="button" data-setting="auto orbit" aria-pressed="true"><kbd>O</kbd><span>Orbit</span></button>
+            <button class="dock-control" type="button" data-action="reset"><kbd>R</kbd><span>Reset</span></button>
+            <span class="dock-hint"><i class="orbit-icon" aria-hidden="true"></i>Drag to orbit</span>
+            <span class="dock-hint"><i class="zoom-icon" aria-hidden="true"></i>Scroll to zoom</span>
+            <a class="dock-project" href="../../../unimate/" aria-label="Return to the UniMate project page">&#8592; Project Page</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="js/interactive.js?v=214"></script>
+
+  <script type="text/javascript">
+    var sc_project = 12925377;
+    var sc_invisible = 1;
+    var sc_security = "43deea45";
+  </script>
+  <!-- Top-level visits only: framed on the homepage this page would otherwise
+       log a lab visit for every homepage load. -->
+  <script type="text/javascript">
+    if (window.self === window.top) {
+      var sc = document.createElement('script');
+      sc.src = 'https://www.statcounter.com/counter/counter.js';
+      sc.async = true;
+      document.body.appendChild(sc);
+    }
+  </script>
+  <noscript>
+    <div class="statcounter"><a title="Web Analytics Made Easy - Statcounter" href="https://statcounter.com/"
+        target="_blank"><img class="statcounter"
+          src="https://c.statcounter.com/12925377/0/43deea45/1/"
+          alt="Web Analytics Made Easy - Statcounter" referrerPolicy="no-referrer-when-downgrade"></a>
+    </div>
+  </noscript>
+</body>
+</html>
