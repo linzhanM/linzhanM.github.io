@@ -17,7 +17,11 @@
 //              Files it omits follow the ones it names, in catalog order.
 //   scale      multiplies every model's normalized size in this stage.
 //   pad        camera zoom-out margin (>1 pulls the camera back). Default 1.0.
-//   lighting   light-intensity multiplier (1 = default look).
+//   lighting   light-intensity multiplier (1 = the look as written).
+//   look       'default' (this lab's own) or 'dimo': the DIMO Motion Lab's
+//              studio — its environment, tone mapping, lights and clearcoat /
+//              anodised finishes (viewer.js LOOKS). Tabletop's, since its
+//              duck, arm and lamp are that lab's kind of object.
 //   evenGaps   true = constant gap between model EDGES, so a wide model doesn't
 //              crowd a narrow one; false = uniform centre spacing.
 //   sizeBy     'height' (default), or 'maxdim' to normalize to the largest bbox
@@ -188,7 +192,7 @@ export const EXAMPLES = [
       { url: 'resources/glbs/panda-place.glb', groundToMesh: true },
       { url: 'resources/glbs/lamp-hop.glb', groundToMesh: true, rotate: [0, 30, 0] },
     ],
-    spacing: 1.15, pad: 1.1, evenGaps: true,
+    spacing: 1.15, pad: 1.1, evenGaps: true, look: 'dimo',
   },
   {
     label: 'Bipedal',

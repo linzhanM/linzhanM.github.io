@@ -101,7 +101,8 @@ function farthestPoints(candidates, count) {
 // its colour is: light shells are painted plastic with a clearcoat, dark parts
 // are anodised metal, and `gloss` is the glassy plastic of the bouncing balls.
 // A model's own materials are re-cast into these by colour, so every object
-// in the lab is lit the same way.
+// in the lab is lit the same way. envMapIntensity 0.6 (was 0.75) since
+// 2026-09-12, with viewer.js's exposure and key light: too bright before.
 const materialCache = new Map();
 function materialFor(color, finish) {
   if (!finish) finish = new THREE.Color(color).getHSL({}).l < 0.4 ? 'metal' : 'shell';
@@ -113,7 +114,7 @@ function materialFor(color, finish) {
       gloss: { roughness: 0.16, metalness: 0.02, clearcoat: 1, clearcoatRoughness: 0.08 },
       matte: { roughness: 0.85, metalness: 0 },
     };
-    materialCache.set(key, new THREE.MeshPhysicalMaterial({ color, envMapIntensity: 0.75, ...presets[finish] }));
+    materialCache.set(key, new THREE.MeshPhysicalMaterial({ color, envMapIntensity: 0.6, ...presets[finish] }));
   }
   return materialCache.get(key);
 }

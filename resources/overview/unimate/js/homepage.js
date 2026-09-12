@@ -16,31 +16,30 @@
 // engine normalizes.
 //
 // The rigs in resources/glbs/ are the paper teaser's own assets
-// (Paper/SIGA-2026/teaser_assets), copied uncompressed at the owner's request
-// (2026-09-12): ~107 MB, ~46 MB gzipped, where compressed builds were ~10 MB
-// and ~7 MB.
+// (Paper/SIGA-2026/teaser_assets) put through unimate/README.md's compression
+// (meshopt + 512px WebP; ~10 MB, from ~107 MB uncompressed). They shipped
+// uncompressed for part of 2026-09-12 and were the heaviest load on the
+// homepage; the sources stay in the gitignored resources/glbs-raw/.
 export const TEASER_SCENE_EXAMPLE = {
   label: 'Teaser Scene',
   files: [
     // groundFrame as the Articulated stage sets the satellite: its legs extend
-    // over the clip, so it grounds on the last frame. Its material is a half
-    // metal: this engine has had a studio environment to reflect since
-    // 2026-09-12 (viewer.js buildEnvironment), so the dish reads as brushed
-    // metal, where the matte 0.55 / 0.15 it wore before was flat. That stage's
-    // 0.3 / 0.7 went darker than the thumbnail wants.
+    // over the clip, so it grounds on the last frame. Its material is not that
+    // stage's 0.3 / 0.7: a metal reflects only an environment, and with none
+    // (viewer.js) the dish went dark from this high camera, at the owner's
+    // request 2026-09-12 — and a painted 0.55 / 0.15 blew out white. 0.5 /
+    // 0.45 is the middle that read right: a light grey dish with shading.
     // The satellite a little back and the flower a little forward (offset z), so
     // both line up in depth with Spot's middle, the satellite a touch left, and
     // the whole row 1.15× its teaser ratios, at the owner's request.
-    { url: 'resources/glbs/radar-extend.glb', material: { roughness: 0.4, metalness: 0.5 }, rotate: [0, 70, 0], groundFrame: 1, groundToMesh: true, scale: 1.15, offset: [-0.2, 0, -0.2] },
-    { url: 'resources/glbs/quadruped_spot_arm-step_reach.glb', groundToMesh: true, rotate: [0, -60, 0], scale: 1.15, offset: [0.05, 0, 0.] },
-    { url: 'resources/glbs/flower-close.glb', groundToMesh: true, rotate: [0, 25, 0], scale: 0.95, offset: [0.1, 0, 0.2] },
+    { url: 'resources/glbs/radar-extend.glb', material: { roughness: 0.5, metalness: 0.45 }, rotate: [0, 70, 0], groundFrame: 1, groundToMesh: true, scale: 1.15, offset: [-0.2, 0, -0.2] },
+    { url: 'resources/glbs/quadruped_spot_arm-step_reach.glb', groundToMesh: true, rotate: [0, -60, 0], scale: 1.2, offset: [0.05, 0, 0.] },
+    { url: 'resources/glbs/flower-close.glb', groundToMesh: true, rotate: [0, 25, 0], scale: 1.0, offset: [0.1, 0, 0.2] },
     // Row 1: the teaser's second row at about 1.4× its teaser height ratios: at
     // the teaser's own ratios this camera, lower than the teaser's, left the back
     // row small behind the front, and 1.9 back it needs the size to hold its own.
-    // The mixamo rig takes the catalog's mixamo material, which renders dark and
-    // matte without it, at half the catalog's emissive lift (0.25, not 0.5): with
-    // the environment the rig has reflections to brighten it, and the full lift
-    // washed its yellows toward white.
+    // The mixamo rig takes the catalog's mixamo material (unimate/js/examples.js
+    // MIXAMO), which renders dark and matte without it.
     // Baymax a size up on the rest of its row and a little left, at the owner's
     // request (offset −0.15: at −0.3 its punch reached the frame's left edge).
     // The Go2, the G1 and the mixamo rig shifted right (offset x 0.1, 0.25 and
@@ -50,7 +49,7 @@ export const TEASER_SCENE_EXAMPLE = {
     { url: 'resources/glbs/baymax-punch.glb', row: 1, rotate: [0, 90, 0], scale: 1.4, offset: [-0.15, 0, 0] },
     { url: 'resources/glbs/go2-rear_up.glb', row: 1, groundToMesh: true, rotate: [0, -65, 0], scale: 1.65, offset: [0.1, 0, 0] },
     { url: 'resources/glbs/g1-pick_up.glb', row: 1, groundToMesh: true, rotate: [0, 35, 0], scale: 1.95, offset: [0.25, 0, 0] },
-    { url: 'resources/glbs/mixamo-high_kick.glb', row: 1, material: { roughness: 0.8, emissiveIntensity: 0.25 }, rotate: [0, -20, 0], scale: 1.6, offset: [0.6, 0, 0.1] },
+    { url: 'resources/glbs/mixamo-high_kick.glb', row: 1, material: { roughness: 0.8, emissiveIntensity: 0.5 }, rotate: [0, -20, 0], scale: 1.6, offset: [0.6, 0, 0.1] },
   ],
   // frameEnvelope: Spot walks and reaches down past its opening pose late in
   // the clip, which a camera fitted at t = 0 cropped. The rigs fill most of the

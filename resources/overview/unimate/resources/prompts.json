@@ -1,5 +1,5 @@
 {
-  "_comment": "The text prompt each rig's motion was generated from, keyed by its file in resources/glbs/ (the paper teaser's own assets, uncompressed): the Teaser Scene's seven rigs, copied from unimate/resources/prompts.json, which records where every line came from (_sources) and the house style. Read by js/viewer.js; the homepage thumbnail hides the chips.",
+  "_comment": "The text prompt each rig's motion was generated from, keyed by its file in resources/glbs/ (the paper teaser's own assets, compressed as unimate/'s): the Teaser Scene's seven rigs, copied from unimate/resources/prompts.json, which records where every line came from (_sources) and the house style. Read by js/viewer.js; the homepage thumbnail hides the chips.",
 
   "_from_caption": [
     "radar-extend.glb", "flower-close.glb", "baymax-punch.glb"

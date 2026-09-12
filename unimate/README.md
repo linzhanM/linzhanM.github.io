@@ -159,6 +159,46 @@ Output lands in `~/Downloads/lab_renders/<slug>.mp4` — outside the repo on
 purpose, since every file under `assets/**` is referenced by a page. Needs
 Chrome and ffmpeg; no npm packages. `--help` lists every option.
 
+**The homepage's two thumbnails render through the same tool** (`--lab
+homepage-unimate` / `homepage-dimo`: the labs under `resources/overview/`,
+opened `?embed` as the root `index.html` frames them). `lib/labs.mjs` is the
+adapter — where each page's stage list, load state and stage switch live — and
+the default `--lab unimate` is the same adapter for this lab. The DIMO
+recording the homepage serves to phones (`assets/videos/dimo-lab.mp4`) was made
+so on 2026-09-12; the UniMate one (`unimate-lab.mp4`) comes from Blender since
+that day (`resources/overview/render/`, the paper teaser's renderer animated —
+CLAUDE.md has the section), and the `homepage-unimate` line below renders the
+web lab instead, for a comparison:
+
+```bash
+# 3840x2160 laid out at 1280x720: those two labs take --scale as their pixel
+# ratio (maxPixelRatio; the labs cap their own at 2), so skeleton hairlines and
+# DIMO's pixel-sized trails keep a phone's weight in a 4K frame. UniMate's
+# stage frames on fractions, so it frames as the thumbnail does at any size;
+# DIMO's pixel insets are scaled by the adapter.
+node unimate/tools/render-category.mjs --lab homepage-unimate -c teaser-scene \
+  --loops 2 --fps 30 --width 1280 --height 720 --scale 3 --no-downsample --jpeg --crf 20 \
+  -o unimate-lab.mp4
+# DIMO plays its cycle (ducks, then arms, two periods each — one --loops is the
+# whole 12 s). Laid out at 640x360 with a 6x ratio, half UniMate's, so its
+# key-point trails (a few px wide) hold up in the 4K frame — at 3x they were
+# faint (owner, 2026-09-12). Its 180 ms fade at the cut is a CSS transition on
+# the REAL clock, which the virtual clock would leave as a run of blank frames,
+# so the adapter emulates reduced motion (a hard cut) and the fade goes on in
+# post, in the stage's own ivory — hence a ProRes intermediate. Only the cut in
+# the middle is faded: the ends are not (owner, 2026-09-12), so the loop is a
+# plain cut like the live thumbnail's own.
+node unimate/tools/render-category.mjs --lab homepage-dimo -c microduck \
+  --loops 1 --fps 30 --width 640 --height 360 --scale 6 --no-downsample --jpeg \
+  -o dimo-lab.mov
+# Each fade is windowed with `enable`: on its own, fade holds its colour outside
+# the fade too (a fade-in before its start, a fade-out after its end).
+ffmpeg -i dimo-lab.mov -vf "fade=t=out:st=5.82:d=0.18:color=0xF0EEE6:enable='between(t,5.82,6)',\
+fade=t=in:st=6:d=0.18:color=0xF0EEE6:enable='between(t,6,6.18)'" \
+  -c:v libx264 -preset slow -crf 20 -pix_fmt yuv420p -colorspace bt709 \
+  -color_primaries bt709 -color_trc bt709 -color_range tv -movflags +faststart dimo-lab.mp4
+```
+
 `render-category.mjs` is the sequence and nothing else; each step is a module in
 `tools/lib/`:
 
@@ -169,11 +209,12 @@ Chrome and ffmpeg; no npm packages. `--help` lists every option.
 | `chrome.mjs` | finding and launching the browser |
 | `cdp.mjs` | the DevTools socket, and one attached page |
 | `bootstrap.mjs` | everything injected into the page, virtual clock included |
-| `stage.mjs` | opening the lab and getting a category on screen |
+| `labs.mjs` | the pages it can render (`--lab`), each as the expressions that drive it |
+| `stage.mjs` | opening the lab and getting a category on screen, through the adapter |
 | `clip.mjs` | how long the video runs, read out of the `.glb` rigs |
 | `output.mjs` | frame geometry, the ffmpeg command, the frame sink |
 | `capture.mjs` | the step-screenshot-write loop |
-| `paths.mjs`, `util.mjs` | repo root and lab URL; `fail` / `slugify` / `waitUntil` |
+| `paths.mjs`, `util.mjs` | repo root and the default lab URL; `fail` / `slugify` / `waitUntil` |
 
 Two seams are worth knowing before editing any of them. `bootstrap.mjs` is the
 *only* channel into the page — it is stringified into

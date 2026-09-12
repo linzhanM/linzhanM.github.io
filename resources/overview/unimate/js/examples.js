@@ -83,6 +83,6 @@
 //                  (flyers). Chains resolve in dependency order. Off the row.
 // ─────────────────────────────────────────────────────────────────────────────
 
-import { TEASER_SCENE_EXAMPLE } from './homepage.js?v=59';
+import { TEASER_SCENE_EXAMPLE } from './homepage.js?v=60';
 
 export const EXAMPLES = [TEASER_SCENE_EXAMPLE];

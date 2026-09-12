@@ -26,7 +26,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { OBJECTS, CYCLE_SECONDS, LATENT_SIGMA, KEYPOINTS, GAUSSIANS } from './examples.js?v=3';
-import { buildRig, cloneRig } from './rigs.js?v=1';
+import { buildRig, cloneRig } from './rigs.js?v=3';
 import { controlNames, weightsAt, decodePose, bindGaussians, skinGaussians, transformKeypoints } from './decoder.js?v=1';
 
 const config = window.DIMO_LAB_CONFIG || {};
@@ -79,7 +79,11 @@ const THEMES = {
   light: {
     // UniMate's light stage (--ivory-medium): the two homepage thumbnails sit
     // side by side, so the paper and its lines take that stage's beiges.
-    background: '#F0EEE6', grid: { cell: '#EAE6DB', line: '#D3CCB9' },
+    // The cell IS the background, as the UniMate thumbnail's paper is (its
+    // viewer.js paper.cell): a darker cell (#EAE6DB, until 2026-09-12) made
+    // this frame read greyer than its neighbour edge to edge, and the fog,
+    // which fades to the background, never seemed to arrive.
+    background: '#F0EEE6', grid: { cell: '#F0EEE6', line: '#D3CCB9' },
     hemi: ['#ffffff', '#a9aebb'], shadow: 0.24, keypointCore: '#1a1033',
   },
 };
@@ -101,12 +105,22 @@ scene.fog = new THREE.Fog(0x000000, 7, 16);   // range refitted per object (fram
 const DEFAULT_FOV = 32;   // vertical degrees; an object's camera.fov overrides it
 const camera = new THREE.PerspectiveCamera(DEFAULT_FOV, 1, 0.05, 60);
 const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+// Capped at 2; `maxPixelRatio` lifts the cap for unimate/tools/
+// render-category.mjs (--lab homepage-dimo), which lays this page out at a
+// fraction of its output size so the pixel-sized trails and key points keep
+// a phone's weight in a 4K frame. The latent sheet keeps its own 2 below.
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, config.maxPixelRatio || 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+// Down from 1.05 on 2026-09-12 at the owner's request: beside the UniMate
+// thumbnail's direct-lit stage the shells read too bright; 0.8 then read a
+// little dark, 0.88 a touch dull, so it sits just under where it began. ACES
+// absorbs small steps (0.9 alone moved the shells by nothing measurable), so
+// the hemisphere, the key and the environment moved with it (below, and
+// rigs.js envMapIntensity).
+renderer.toneMappingExposure = 0.95;
 dom.wrapper.prepend(renderer.domElement);
 
 // Image-based light for the clearcoats and metals; the directional lights
@@ -117,7 +131,7 @@ dom.wrapper.prepend(renderer.domElement);
   pmrem.dispose();
 }
 const hemi = new THREE.HemisphereLight(0xffffff, 0x000000, 0.5);
-const key = new THREE.DirectionalLight('#ffffff', 1.9);
+const key = new THREE.DirectionalLight('#ffffff', 1.7);
 key.position.set(2.4, 4.6, 2.8);
 key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048);
@@ -276,6 +290,9 @@ const keypointMaterial = new THREE.ShaderMaterial({
 });
 
 const TRAIL_OPACITY = 0.9;
+// Plain GL lines, one device pixel wide: three's fat segments (LineSegments2
+// at 1.25 CSS px) were tried on 2026-09-12 and taken out the same day at the
+// owner's request.
 // What trails fade into: the stage's own colour, in the renderer's linear space.
 const trailFade = new THREE.Color();
 

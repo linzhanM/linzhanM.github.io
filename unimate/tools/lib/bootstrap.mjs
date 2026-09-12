@@ -4,18 +4,21 @@
 // needs may leak into the shipped viewer. It is the tool's only channel into
 // the page; the viewer itself never grows a capture-only branch.
 
-// Config overrides the lab does not offer as UI.
-export function viewerConfigFor(opts) {
+// Config overrides the lab does not offer as UI: the page's own (labs.mjs),
+// then the flags.
+export function viewerConfigFor(opts, lab) {
   return {
+    ...lab.config(opts),
     ...(opts.labels ? { pinPrompts: true } : {}),
     ...(opts.orbit ? {} : { autoOrbitControls: false, initialOrbitAngle: 0 }),
   };
 }
 
-export function bootstrapSource(config, zoom) {
+export function bootstrapSource(config, zoom, configGlobal) {
   return `(() => {
   const CONFIG = ${JSON.stringify(config)};
   const ZOOM = ${zoom};
+  const CONFIG_GLOBAL = ${JSON.stringify(configGlobal)};
 
   // Keep the WebGL back buffer readable after the compositor paints, or a
   // screenshot taken between render ticks returns a black canvas.
@@ -27,10 +30,11 @@ export function bootstrapSource(config, zoom) {
     return getContext.call(this, type, attrs);
   };
 
-  // interactive.js assigns the whole config object, so the overrides are
-  // folded in as it lands rather than written before or after it.
+  // interactive.js assigns the whole config object (UNIMATE_VIEWER_CONFIG, or
+  // DIMO_LAB_CONFIG — the adapter's), so the overrides are folded in as it
+  // lands rather than written before or after it.
   let cfg;
-  Object.defineProperty(window, 'UNIMATE_VIEWER_CONFIG', {
+  Object.defineProperty(window, CONFIG_GLOBAL, {
     configurable: true,
     get: () => cfg,
     set: (value) => {

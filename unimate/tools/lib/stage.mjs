@@ -1,43 +1,45 @@
 // Driving the lab: open it, pick a category, and get the page into the state
 // the capture expects. Where a real control exists (theme, stage) the tool
-// clicks it rather than reaching into the viewer.
+// clicks it rather than reaching into the viewer. Which page, and where its
+// controls are, is the `lab` adapter (labs.mjs).
 
-import { LAB_PATH, REPO_ROOT } from './paths.mjs';
+import { REPO_ROOT } from './paths.mjs';
 import { fail, slugify } from './util.mjs';
 
-// Returns the category labels the lab currently shows — also what --list prints.
-export async function openLab(page, origin, slug) {
-  const url = `${origin}${LAB_PATH}${slug ? '#' + slug : ''}`;
+// A stage's slug: the page's own where it has one (DIMO's catalog), else the
+// label slugified as the UniMate lab's hash is.
+export const stageSlug = (stage) => stage.slug || slugify(stage.label);
+
+// Returns the stages the page currently shows, {label, slug?, index} — also
+// what --list prints.
+export async function openLab(page, origin, slug, lab) {
+  const url = `${origin}${lab.path}${slug ? '#' + slug : ''}`;
   process.stderr.write(`serving ${REPO_ROOT}\nopening ${url}\n`);
   await page.send('Page.navigate', { url });
   await page.waitFor('document.readyState === "complete"', 60_000, 'the page to load');
-  await page.waitFor('document.querySelectorAll("#example-sidebar button").length > 0', 60_000, 'the category list');
-  return page.eval('[...document.querySelectorAll("#example-sidebar .example-name")].map((el) => el.textContent)');
+  await page.waitFor(lab.ready, 180_000, 'the stage list');
+  return page.eval(lab.stages);
 }
 
 // The lab resolves an unknown hash to the first stage without a word, which
 // would render the wrong category silently.
 export function resolveStage(stages, opts, slug) {
-  const match = stages.find((label) => slugify(label) === slug);
+  const match = stages.find((stage) => stageSlug(stage) === slug);
   if (!match) {
-    fail(`no category "${opts.category}". The lab currently shows:\n${stages.map((l) => `  ${l} (${slugify(l)})`).join('\n')}`);
+    fail(`no category "${opts.category}". The lab currently shows:\n${stages.map((s) => `  ${s.label} (${stageSlug(s)})`).join('\n')}`);
   }
   return match;
 }
 
-export function useLightTheme(page) {
+export function useLightTheme(page, lab) {
   return page.eval(`(() => {
-    const t = document.querySelector('[data-theme-toggle]');
+    const t = document.querySelector(${JSON.stringify(lab.themeToggle)});
     if (t && document.documentElement.dataset.theme !== 'light') t.click();
   })()`);
 }
 
-export function waitForStageLoaded(page) {
-  return page.waitFor(`(() => {
-    const overlay = document.getElementById('loading-overlay');
-    const canvas = document.querySelector('#viewer-wrapper canvas');
-    return !!canvas && !!overlay && getComputedStyle(overlay).display === 'none';
-  })()`, 180_000, 'the stage to finish loading');
+export function waitForStageLoaded(page, lab) {
+  return page.waitFor(lab.loaded, 180_000, 'the stage to finish loading');
 }
 
 // Repaints only what is BEHIND the stage; floor, lights and skeleton stay on
@@ -72,10 +74,11 @@ export function clearDefaultBackground(page) {
 }
 
 // Call AFTER waitForStageLoaded, which reads the loading overlay this hides.
-export function hideChrome(page) {
+export function hideChrome(page, lab) {
+  if (!lab.chrome) return;
   return page.eval(`(() => {
     const style = document.createElement('style');
-    style.textContent = '.category-panel,.panel-toggle,.control-bar,.control-dock,.drop-note,#drop-hint,#loading-overlay{display:none !important}';
+    style.textContent = ${JSON.stringify(lab.chrome)} + '{display:none !important}';
     document.head.appendChild(style);
   })()`);
 }
@@ -92,11 +95,7 @@ export async function beginVirtualClock(page) {
 // again now that the clock is virtual. Loading runs on fetch and promises, not
 // frames, so it completes while time is frozen — no mixer advances and the
 // camera does not orbit between the fit and the first captured frame.
-export async function reloadStageOnVirtualClock(page, stageIndex) {
-  await page.eval(`document.querySelectorAll('#example-sidebar button')[${stageIndex}].click()`);
-  // The INLINE style, not the computed one: hideChrome put `display: none
-  // !important` on the overlay, so computed reads "hidden" from the first
-  // poll. loadStage writes 'flex' then 'none' on the element itself.
-  await page.waitFor(`document.getElementById('loading-overlay').style.display === 'none'`,
-    180_000, 'the stage to reload on the virtual clock');
+export async function reloadStageOnVirtualClock(page, stage, lab) {
+  await page.eval(lab.reopen(stage.index));
+  await page.waitFor(lab.reopened, 180_000, 'the stage to reload on the virtual clock');
 }

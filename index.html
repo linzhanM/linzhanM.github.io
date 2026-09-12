@@ -29,7 +29,7 @@
 	<!-- ?v= busts the Pages cache. These two files are shared by all three root
 	     pages — bump the number in all three and keep them equal. -->
 	<link rel="stylesheet" href="css/custom-navbar.css?v=40">
-	<link rel="stylesheet" href="css/styles.css?v=52">
+	<link rel="stylesheet" href="css/styles.css?v=53">
 
 	<script type="text/javascript">
 		// The [abs] toggles. `control` is the link itself (passed as `this`), so
@@ -128,11 +128,19 @@
 				     teaser's bottom row (js/homepage.js there). Drag orbits it; the
 				     wheel scrolls this page.
 				     No caption: [demo] below is the way into the lab on desktop. Below
-				     md the frame is inert and the cover link takes the tap; it exists
-				     only there, so desktop has no invisible tab stop. -->
+				     md the frame gives way to its recording (the <video>, rendered
+				     from this same page by unimate/tools/render-category.mjs --lab
+				     homepage-unimate; a phone's thumb can't scroll past the canvas,
+				     and a lab is megabytes it would only watch) and the cover link
+				     takes the tap; styles.css shows one or the other, and the script
+				     at the foot removes the other so neither is fetched in vain. The
+				     cover exists only there, so desktop has no invisible tab stop. -->
 				<figure class="pub-live">
 					<iframe class="pub-thumbnail img-thumbnail pub-live-frame" src="resources/overview/unimate/interactive.html?embed#teaser-scene"
 						title="UniMate motion lab: a satellite, a quadruped robot with an arm and a flower, with Baymax, a Go2, a G1 humanoid and a kicking human behind them" loading="lazy" tabindex="-1"></iframe>
+					<video class="pub-thumbnail img-thumbnail lazy-video pub-live-video" aria-label="UniMate motion lab, recorded" tabindex="-1"
+						preload="none" loop="" muted="muted" playsinline="playsinline"
+						src="assets/videos/unimate-lab.mp4"></video>
 					<a class="pub-live-cover" href="https://linzhanmou.com/unimate/interactive" aria-label="Open the UniMate motion lab"></a>
 				</figure>
 			</div>
@@ -164,10 +172,14 @@
 				     the project page); ?embed hides its chrome (see that page's head and
 				     interactive.css) and plays the robot ducks and the UR5e arms in turn
 				     (embedCycle in its js/interactive.js). Drag orbits it; the wheel
-				     scrolls this page. The cover link works as UniMate's above. -->
+				     scrolls this page. The recording and the cover link work as
+				     UniMate's above (--lab homepage-dimo renders it). -->
 				<figure class="pub-live">
 					<iframe class="pub-thumbnail img-thumbnail pub-live-frame" src="resources/overview/dimo/interactive.html?embed#microduck"
 						title="DIMO motion lab: robot ducks, then UR5e arms" loading="lazy" tabindex="-1"></iframe>
+					<video class="pub-thumbnail img-thumbnail lazy-video pub-live-video" aria-label="DIMO motion lab, recorded: robot ducks, then UR5e arms" tabindex="-1"
+						preload="none" loop="" muted="muted" playsinline="playsinline"
+						src="assets/videos/dimo-lab.mp4"></video>
 					<a class="pub-live-cover" href="https://linzhanmou.com/resources/overview/dimo/interactive" aria-label="Open the DIMO motion lab"></a>
 				</figure>
 			</div>
@@ -364,10 +376,23 @@
 	<script>document.getElementById("copyright-year").textContent = new Date().getFullYear();</script>
 
 	<script>
-		// Play each clip while on screen, pause otherwise. The Robotics clips
-		// carry `preload="none"`, so nothing is fetched until this observer
-		// reaches them. Both Vision slots are the projects' own labs in iframes
-		// (UniMate's and DIMO's), which gate their rendering the same way.
+		// Below md each Vision slot is its lab's recording, above it the lab
+		// itself (both are in the markup; styles.css shows one). This drops the
+		// other, so a phone never fetches a lab's models and a desktop never
+		// fetches a clip — and it runs before the frames' lazy load and the
+		// observer below reach them.
+		(function () {
+			var phone = window.matchMedia('(max-width: 767.98px)').matches;
+			document.querySelectorAll('.pub-live').forEach(function (figure) {
+				var other = figure.querySelector(phone ? '.pub-live-frame' : '.pub-live-video');
+				if (other) other.remove();
+			});
+		})();
+
+		// Play each clip while on screen, pause otherwise. Every clip carries
+		// `preload="none"`, so nothing is fetched until this observer reaches
+		// it. On desktop both Vision slots are the projects' own labs in
+		// iframes (UniMate's and DIMO's), which gate their rendering the same way.
 		(function () {
 			var vids = document.querySelectorAll('video.lazy-video');
 			if (!('IntersectionObserver' in window)) {

@@ -26,7 +26,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=156';
+import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=157';
 
 const wrapper = document.getElementById('viewer-wrapper');
 const overlay = document.getElementById('loading-overlay');
@@ -51,9 +51,6 @@ const VIEWER_THEMES = {
     background: 0x151817,
     hemisphereGround: 0x4a4038,
     paper: { cell: '#151817', line: '#2e302c' },
-    // The studio the rigs reflect (buildEnvironment): a sky over the horizon
-    // over a floor, in the theme's tones so a reflection reads as this room.
-    environment: { sky: '#8c8b86', horizon: '#2a2c2b', ground: '#0e100f' },
     shadowOpacity: 0.46,
     metaColor: '#151817',
   },
@@ -62,7 +59,6 @@ const VIEWER_THEMES = {
     hemisphereGround: 0x9a9a9a,
     // The DIMO thumbnail's paper beside it (dimo/js/viewer.js THEMES.light).
     paper: { cell: '#F0EEE6', line: '#D3CCB9' },
-    environment: { sky: '#ffffff', horizon: '#efece4', ground: '#9a948a' },
     shadowOpacity: 0.25,
     metaColor: '#e8e9e3',
   },
@@ -146,28 +142,30 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 1.4, 4);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+// Capped at 2 as unimate/'s lab is; `maxPixelRatio` lifts the cap for
+// unimate/tools/render-category.mjs, which lays this page out at a fraction of
+// its output size so the skeleton hairlines keep a phone's weight in a 4K
+// frame (its --lab homepage-unimate).
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, viewerConfig.maxPixelRatio || 2));
 renderer.setSize(wrapper.clientWidth, wrapper.clientHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-// No tone mapping, as in unimate/ and the DIMO thumbnail beside this one: ACES
-// was tried with the environment below (2026-09-12) and paled Spot's yellow and
-// Baymax's red, the colours the rigs are known by. Exposure is held under
-// clipping by the light balance instead — a key at 2.0 already washed the
-// sunlit side of the yellows toward white.
+// No tone mapping, as in unimate/: ACES was tried (2026-09-12) and paled
+// Spot's yellow and Baymax's red, the colours the rigs are known by.
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 wrapper.appendChild(renderer.domElement);
 
 // Lights. Each remembers its base intensity so a per-example multiplier can
 // brighten/dim just one window (see applyLighting / EXAMPLES `lighting`).
-// Dimmer than unimate/ throughout (hemisphere 0.65 to its 2.2, key 1.4 to
-// 2.0, fill 0.6 to 0.8): the environment below carries part of the ambient,
-// and the balance that matched the direct-lit lab's exposure (0.9 / 2.0 / 0.8)
-// read as too strong a light at the owner's request, 2026-09-12 — Spot's
-// yellow and the G1's shell ran toward white.
-const hemiLight = new THREE.HemisphereLight(0xffffff, VIEWER_THEMES[viewerTheme].hemisphereGround, 0.65);
+// unimate/'s own three, at its values — direct light only. A studio
+// environment (a painted equirect through PMREMGenerator, envMapIntensity
+// 0.45 under a hemisphere at 0.65) with a clearcoat polish on every material
+// was built for the glossy shells on 2026-09-12 and taken out the same day at
+// the owner's request: the reflections read as too bright a stage beside
+// unimate/'s matte one. Match that lab, not the teaser render.
+const hemiLight = new THREE.HemisphereLight(0xffffff, VIEWER_THEMES[viewerTheme].hemisphereGround, 2.2);
 scene.add(hemiLight);
-const keyLight = new THREE.DirectionalLight(0xffffff, 1.4);
+const keyLight = new THREE.DirectionalLight(0xffffff, 2.0);
 keyLight.position.set(4, 8, 6);
 scene.add(keyLight);
 // The key light casts the ground shadows. Its ortho shadow frustum is fitted to
@@ -177,74 +175,12 @@ keyLight.shadow.mapSize.set(2048, 2048);
 keyLight.shadow.bias = -0.0004;
 keyLight.shadow.normalBias = 0.02;
 scene.add(keyLight.target);
-const fillLight = new THREE.DirectionalLight(0xffffff, 0.6);
+const fillLight = new THREE.DirectionalLight(0xffffff, 0.8);
 fillLight.position.set(-5, 3, -4);
 scene.add(fillLight);
 
 const LIGHTS = [hemiLight, keyLight, fillLight];
 LIGHTS.forEach((l) => { l.userData.baseIntensity = l.intensity; });
-
-// Environment. The rigs ship real PBR values — Spot's and the G1's shells are
-// glossy, the Go2's visor is near a mirror — which direct lights alone cannot
-// show: a specular needs something to reflect, and without it every surface
-// read as one matte fill. Nothing is fetched for it. A small equirectangular
-// canvas paints a studio in the theme's own tones (bright sky, the background
-// at the horizon, a darker floor) with a soft box where the key light stands
-// and a dimmer one at the fill, and PMREMGenerator turns it into the
-// prefiltered map every lit material samples. It is what the paper teaser's
-// render gives its glossy rays (render_teaser_unimate.py: a vertical gradient
-// world). Materials take it through envMapIntensity (fixMaterials): 0.45 with
-// the hemisphere at 0.65; 0.8 with 1.2 lit the rigs flat from every side.
-const ENV_INTENSITY = 0.45;
-const envCanvas = document.createElement('canvas');
-envCanvas.width = 128;
-envCanvas.height = 64;
-const pmrem = new THREE.PMREMGenerator(renderer);
-
-// A soft box centred on a world direction, in three's own equirect
-// coordinates (equirectUv: u from the azimuth, v from the elevation). rx/ry
-// are its radii as shares of the canvas; it is drawn again a full turn over so
-// a box near the seam wraps instead of being cut.
-function paintSoftbox(ctx, dir, rx, ry, alpha) {
-  const d = dir.clone().normalize();
-  const w = ctx.canvas.width, h = ctx.canvas.height;
-  const u = Math.atan2(d.z, d.x) / (2 * Math.PI) + 0.5;
-  const v = Math.asin(d.y) / Math.PI + 0.5;
-  for (const du of [-1, 0, 1]) {
-    ctx.save();
-    ctx.translate((u + du) * w, (1 - v) * h);
-    ctx.scale(rx * w, ry * h);
-    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
-    g.addColorStop(0, `rgba(255,255,255,${alpha})`);
-    g.addColorStop(0.55, `rgba(255,255,255,${alpha * 0.7})`);
-    g.addColorStop(1, 'rgba(255,255,255,0)');
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(0, 0, 1, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-  }
-}
-
-function buildEnvironment(theme) {
-  const { sky, horizon, ground } = VIEWER_THEMES[theme].environment;
-  const ctx = envCanvas.getContext('2d'), w = envCanvas.width, h = envCanvas.height;
-  const g = ctx.createLinearGradient(0, 0, 0, h);
-  g.addColorStop(0, sky);
-  g.addColorStop(0.5, horizon);
-  g.addColorStop(1, ground);
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, w, h);
-  paintSoftbox(ctx, keyLight.position, 0.16, 0.12, 1);
-  paintSoftbox(ctx, fillLight.position, 0.11, 0.08, 0.45);
-  const tex = new THREE.CanvasTexture(envCanvas);
-  tex.mapping = THREE.EquirectangularReflectionMapping;
-  tex.colorSpace = THREE.SRGBColorSpace;
-  const env = pmrem.fromEquirectangular(tex).texture;
-  tex.dispose();
-  if (scene.environment) scene.environment.dispose();
-  scene.environment = env;
-}
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -262,10 +198,9 @@ if (viewerConfig.autoOrbitControls) {
   controls.autoRotateSpeed = settings['orbit speed'];
 }
 
-// This lab's rigs in resources/glbs/ are the paper teaser's own files,
-// uncompressed. unimate/'s rigs are meshopt-compressed (pipeline in
-// unimate/README.md), and meshopt geometry needs this decoder registered or the
-// .glb fails to parse, so it stays for any compressed rig.
+// This lab's rigs in resources/glbs/ are meshopt-compressed like unimate/'s
+// (pipeline in unimate/README.md; since 2026-09-12, uncompressed before), and
+// meshopt geometry needs this decoder registered or the .glb fails to parse.
 const gltfLoader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 const clock = new THREE.Clock();
 
@@ -290,36 +225,7 @@ function loadModel(url) {
   });
 }
 
-// Polish, as the paper teaser's render polishes every rig before it renders
-// (render_teaser_unimate.py polish_materials): authored colours and maps are
-// kept, and only values the file left as plain numbers are nudged into a band.
-// Roughness lands in [ROUGH_LO, ROUGH_HI] after ROUGH_MULT — so a mirror-flat
-// visor picks up a real highlight instead of a white blowout, and a dead-matte
-// surface stops reading as paper — and a thin clearcoat gives every surface the
-// crisp secondary highlight that reads as a finished material, kept light so
-// painted and organic surfaces don't turn to plastic. A MeshStandardMaterial
-// has no clearcoat, so it is rebuilt as a MeshPhysicalMaterial over the same
-// maps: the standard copy only, since MeshPhysicalMaterial.copy reads physical
-// fields the source doesn't have, and the physical defines put back, which
-// that copy overwrites.
-const ROUGH_LO = 0.17, ROUGH_HI = 0.8, ROUGH_MULT = 0.94;
-const COAT = 0.05, COAT_ROUGH = 0.25;
-function polishMaterial(m) {
-  if (!m.isMeshStandardMaterial) return m;
-  let p = m;
-  if (!m.isMeshPhysicalMaterial) {
-    p = new THREE.MeshPhysicalMaterial();
-    THREE.MeshStandardMaterial.prototype.copy.call(p, m);
-    p.defines = { STANDARD: '', PHYSICAL: '' };
-    m.dispose();
-  }
-  if (!p.roughnessMap) p.roughness = THREE.MathUtils.clamp(p.roughness * ROUGH_MULT, ROUGH_LO, ROUGH_HI);
-  if (p.clearcoat < COAT) { p.clearcoat = COAT; p.clearcoatRoughness = COAT_ROUGH; }
-  p.envMapIntensity = ENV_INTENSITY;
-  return p;
-}
-
-// Shadows on, culling off, every map tagged sRGB, and every lit material polished.
+// Shadows on, culling off, every map tagged sRGB (as unimate/ does it).
 function fixMaterials(model) {
   model.traverse((o) => {
     if (!o.isMesh) return;
@@ -329,14 +235,12 @@ function fixMaterials(model) {
     o.frustumCulled = false;
     o.castShadow = true;
     o.receiveShadow = true;   // onto the ground catcher, and onto each other
-    const polish = (m) => {
-      if (!m) return m;
+    const mats = Array.isArray(o.material) ? o.material : [o.material];
+    for (const m of mats) {
+      if (!m) continue;
       if (m.map) m.map.colorSpace = THREE.SRGBColorSpace;
-      const p = polishMaterial(m);
-      p.needsUpdate = true;
-      return p;
-    };
-    o.material = Array.isArray(o.material) ? o.material.map(polish) : polish(o.material);
+      m.needsUpdate = true;
+    }
   });
 }
 
@@ -727,7 +631,6 @@ function applyViewerTheme(theme) {
   if (isFullscreenLab) document.documentElement.dataset.theme = viewerTheme;
   scene.background.setHex(palette.background);
   hemiLight.groundColor.setHex(palette.hemisphereGround);
-  buildEnvironment(viewerTheme);
   paintPaper(viewerTheme);
   if (shadowPlane) shadowPlane.material.opacity = palette.shadowOpacity;
 

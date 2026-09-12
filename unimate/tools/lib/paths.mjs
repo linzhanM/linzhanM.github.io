@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const TOOLS_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const REPO_ROOT = resolve(TOOLS_DIR, '..', '..');
-export const LAB_PATH = '/unimate/interactive.html';
+export const LAB_PATH = '/unimate/interactive.html';   // the default --lab; the others are in labs.mjs
 
 // Outside the repo on purpose: every file under assets/** is referenced by a
 // page, so a stray clip in there reads as a mistake.

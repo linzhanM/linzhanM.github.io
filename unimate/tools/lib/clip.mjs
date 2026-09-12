@@ -39,8 +39,17 @@ export async function glbClipSeconds(file) {
 // Each rig loops on its own clip, so the video runs the LONGEST one times
 // --loops: that rig gets exactly that many passes, shorter ones more, and none
 // is cut mid-motion.
-export async function stageSeconds(page, origin, opts) {
+export async function stageSeconds(page, origin, opts, lab) {
   if (opts.seconds != null) return opts.seconds;
+
+  // A page that plays a cycle of its own (the DIMO thumbnail) says how long
+  // one pass is; --loops counts passes.
+  if (lab.seconds) {
+    const pass = await page.eval(lab.seconds);
+    const seconds = pass * opts.loops;
+    process.stderr.write(`one pass ${pass.toFixed(2)}s x ${opts.loops} loops = ${seconds.toFixed(2)}s\n`);
+    return seconds;
+  }
 
   const assets = await page.eval('window.__labCapture.assets()');
   const clips = [];

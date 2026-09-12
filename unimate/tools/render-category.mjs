@@ -1,8 +1,10 @@
 #!/usr/bin/env node
-// Render one category of interactive.html's motion lab to a video file.
+// Render one category of interactive.html's motion lab to a video file — or
+// one of the homepage's two thumbnails (--lab, see lib/labs.mjs).
 //
 //   node unimate/tools/render-category.mjs --category "Unitree G1 Robot"
 //   node unimate/tools/render-category.mjs --list
+//   node unimate/tools/render-category.mjs --lab homepage-dimo -c microduck --loops 1
 //
 // The lab is the renderer. This script serves the repo, drives a headless
 // Chrome over CDP, and pipes what the page paints into ffmpeg. Nothing about
@@ -27,18 +29,20 @@ import { captureFrames } from './lib/capture.mjs';
 import { CDP, openPage } from './lib/cdp.mjs';
 import { launchChrome } from './lib/chrome.mjs';
 import { stageSeconds } from './lib/clip.mjs';
+import { LABS } from './lib/labs.mjs';
 import { parseArgs, wantsAlpha } from './lib/options.mjs';
 import { frameFormat, frameGeometry, openSink } from './lib/output.mjs';
 import { serveRepo } from './lib/server.mjs';
 import {
   backgroundPainter, beginVirtualClock, clearDefaultBackground, hideChrome,
-  openLab, reloadStageOnVirtualClock, resolveStage, useLightTheme, waitForStageLoaded,
+  openLab, reloadStageOnVirtualClock, resolveStage, stageSlug, useLightTheme, waitForStageLoaded,
 } from './lib/stage.mjs';
 import { sleep, slugify } from './lib/util.mjs';
 
 async function main() {
   const opts = parseArgs(process.argv.slice(2));
   const alpha = wantsAlpha(opts);
+  const lab = LABS[opts.lab];
 
   const { server, origin } = await serveRepo();
   const chrome = await launchChrome(opts);
@@ -55,32 +59,37 @@ async function main() {
   try {
     const page = await openPage(cdp, opts);
     await page.send('Page.addScriptToEvaluateOnNewDocument', {
-      source: bootstrapSource(viewerConfigFor(opts), opts.zoom),
+      source: bootstrapSource(viewerConfigFor(opts, lab), opts.zoom, lab.configGlobal),
     });
+    // CSS transitions run on the real clock, not the virtual one; a page whose
+    // cuts are transitions asks for them to be cuts (labs.mjs).
+    if (lab.reducedMotion) {
+      await page.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+    }
 
     // ── Load the lab ─────────────────────────────────────────────────────────
     const slug = opts.category ? slugify(opts.category) : '';
-    const stages = await openLab(page, origin, slug);
+    const stages = await openLab(page, origin, slug, lab);
 
     if (opts.list) {
-      console.log(stages.map((label) => `  ${label.padEnd(20)} ${slugify(label)}`).join('\n'));
+      console.log(stages.map((s) => `  ${s.label.padEnd(20)} ${stageSlug(s)}`).join('\n'));
       return;
     }
 
     const match = resolveStage(stages, opts, slug);
-    if (opts.theme === 'light') await useLightTheme(page);
+    if (opts.theme === 'light') await useLightTheme(page, lab);
 
-    process.stderr.write(`loading "${match}" — rigs, textures, camera fit\n`);
-    await waitForStageLoaded(page);
+    process.stderr.write(`loading "${match.label}" — rigs, textures, camera fit\n`);
+    await waitForStageLoaded(page, lab);
 
     // ── Backdrop ─────────────────────────────────────────────────────────────
     const applyBackground = backgroundPainter(page, opts, alpha);
     await applyBackground();
     if (alpha) await clearDefaultBackground(page);
-    if (!opts.chromeUi) await hideChrome(page);
+    if (!opts.chromeUi) await hideChrome(page, lab);
 
     // ── How long the video runs ──────────────────────────────────────────────
-    const seconds = await stageSeconds(page, origin, opts);
+    const seconds = await stageSeconds(page, origin, opts, lab);
 
     // Real time: first-frame shader compiles and the camera's damped fit must
     // be spent before the clock freezes.
@@ -97,12 +106,12 @@ async function main() {
       + `(${captured.width}x${captured.height}${resampled})\n`);
 
     await beginVirtualClock(page);
-    await reloadStageOnVirtualClock(page, stages.indexOf(match));
+    await reloadStageOnVirtualClock(page, match, lab);
     await applyBackground();   // the reload may have repainted it
 
     await captureFrames(page, sink, { total, fps: opts.fps, format, jpeg: opts.jpeg });
     await sink.finish();
-    process.stderr.write(`wrote ${sink.path} — ${(total / opts.fps).toFixed(1)}s of "${match}"\n`);
+    process.stderr.write(`wrote ${sink.path} — ${(total / opts.fps).toFixed(1)}s of "${match.label}"\n`);
   } finally {
     await cleanup();
   }

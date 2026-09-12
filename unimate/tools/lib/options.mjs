@@ -1,5 +1,6 @@
 // The command line: usage text and parser together, so a new flag is one edit.
 
+import { LAB_NAMES } from './labs.mjs';
 import { fail } from './util.mjs';
 
 export const USAGE = `
@@ -10,6 +11,15 @@ Render one motion-lab category to a video.
   --category, -c <name>  Category label ("Unitree G1 Robot") or its slug
                          ("unitree-g1-robot"). Required unless --list.
   --list                 Print every category the lab currently shows, and exit.
+  --lab <name>           Which page: unimate (the lab, default), or one of the
+                         homepage thumbnails, homepage-unimate / homepage-dimo
+                         (resources/overview/*/interactive.html?embed — framed
+                         as index.html frames them, chrome already hidden).
+                         Those two take --scale as their pixel ratio (the labs
+                         cap their own at 2), so render them at the size the
+                         page should be laid out at and raise --scale for the
+                         pixels: --width 1280 --height 720 --scale 3
+                         --no-downsample is 4K with hairlines a phone's weight.
   --out, -o <file>       Output path. Extension picks the codec: .mp4 (h264),
                          .webm (vp9), .gif, or .png for a numbered sequence in a
                          directory. Default ~/Downloads/lab_renders/<slug>.mp4
@@ -64,7 +74,7 @@ Render one motion-lab category to a video.
 
 export function parseArgs(argv) {
   const o = {
-    category: null, list: false, out: null, seconds: null, loops: 3, fps: 60,
+    category: null, list: false, lab: 'unimate', out: null, seconds: null, loops: 3, fps: 60,
     width: 2560, height: 1440, scale: 1.5, downsample: true, zoom: 1, theme: 'dark',
     background: null, chromeUi: false,
     labels: false, orbit: true, jpeg: false, crf: 18, warmup: 1500,
@@ -84,6 +94,7 @@ export function parseArgs(argv) {
     switch (a) {
       case '--category': case '-c': o.category = next(); break;
       case '--list': o.list = true; break;
+      case '--lab': o.lab = next(); break;
       case '--out': case '-o': o.out = next(); break;
       case '--seconds': case '-s': o.seconds = num(next(), 'seconds'); break;
       case '--loops': o.loops = num(next(), 'loops'); break;
@@ -112,6 +123,7 @@ export function parseArgs(argv) {
   }
   if (!o.list && !o.category) fail(`nothing to render — pass --category or --list\n\n${USAGE}`);
   if (o.theme !== 'dark' && o.theme !== 'light') fail('--theme must be dark or light');
+  if (!LAB_NAMES.includes(o.lab)) fail(`--lab must be one of ${LAB_NAMES.join(', ')}, got "${o.lab}"`);
   return o;
 }
 
