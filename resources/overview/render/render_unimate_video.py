@@ -59,27 +59,36 @@ CONFIG = [
     dict(name="g1", glb="g1-pick_up.glb", rot_z=35, height=2.55, row=1),
     dict(name="mixamo", glb="mixamo-high_kick.glb", rot_z=0, height=2.15, row=1),
 ]
-ROW_Y = [0.0, float(os.environ.get("ROW_DEPTH", 2.9))]   # the teaser's two ground rows, 2.9 apart
+ROW_Y = [0.0, float(os.environ.get("ROW_DEPTH", 3.3))]   # the teaser's two ground rows, 2.9 apart there; deeper here (below)
+# The back row a size up on the teaser's heights: from a lower camera the
+# rows overlap more, and the far row shrinks in perspective (owner's request,
+# 2026-09-12).
+BACK_SCALE = float(os.environ.get("BACK_SCALE", 1.18))
+for _c in CONFIG:
+    if _c["row"] == 1:
+        _c["height"] *= BACK_SCALE
 CLIP_FRAMES = 60            # every rig: 60 keys at 30 fps (unimate/README.md)
 
 # Framing, settled on four frames of the loop (0, 20, 40, 59) tiled side by
 # side on 2026-09-12. The teaser fits a still it crops afterwards, so its
 # values (elevation 0.7265, fill 0.9, aim at z 1.62, gap 0.45) left this
-# 16:9 frame half empty. A steeper camera (0.9; 1.3 and 1.6 foreshortened
-# the rigs) and, as the live thumbnail's pad 0.765 does, a fit that lets the
-# loop's envelope overflow the frame — 1.3 of the width, 1.12 of the height:
-# the extremes never coincide, and at 1.25 the front row's feet left the
-# bottom edge. Aimed lower (z 1.05) so that row rises off it.
+# 16:9 frame half empty. As the live thumbnail's pad 0.765 does, the fit lets
+# the loop's envelope overflow the frame — 1.28 of the width, 1.05 of the
+# height: the extremes never coincide, and at 1.25 high the front row's feet
+# left the bottom edge. The camera sits at 0.7 (0.9 was tried; the owner asked
+# for a lower angle), the back row a size up (1.18) and further back (3.3)
+# so it holds its own from there, and the aim at z 1.15 keeps the G1's head,
+# the top of the envelope at the end of its clip, off the top edge.
 RES_X = int(os.environ.get("RES_X", 3840))
 RES_Y = int(os.environ.get("RES_Y", 2160))
-OUT_DIR = os.environ.get("OUT_DIR", os.path.expanduser("~/Downloads/lab_renders/unimate-blender"))
+OUT_DIR = os.environ.get("OUT_DIR", os.path.expanduser("~/Downloads/renders/unimate-blender"))
 SAMPLES = int(os.environ.get("SAMPLES", 64))
 CAM_AZIM = float(os.environ.get("CAM_AZIM", 0))
-CAM_ELEV_RATIO = float(os.environ.get("CAM_ELEV_RATIO", 0.9))
-FILL_H = float(os.environ.get("FILL_H", 1.3))
-FILL_V = float(os.environ.get("FILL_V", 1.12))
-CAM_TARGET_Z = float(os.environ.get("CAM_TARGET_Z", 1.05))
-GAP = float(os.environ.get("GAP", 0.3))
+CAM_ELEV_RATIO = float(os.environ.get("CAM_ELEV_RATIO", 0.7))
+FILL_H = float(os.environ.get("FILL_H", 1.28))
+FILL_V = float(os.environ.get("FILL_V", 1.05))
+CAM_TARGET_Z = float(os.environ.get("CAM_TARGET_Z", 1.15))
+GAP = float(os.environ.get("GAP", 0.35))
 GRID_CELL = float(os.environ.get("GRID_CELL", 0.75))
 BONE_T, JOINT_T = 0.008, 0.017
 SKEL_REF_H = float(os.environ.get("SKEL_REF_H", 1.25))

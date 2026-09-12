@@ -11,6 +11,8 @@
 # encodes LOOPS passes of the 2 s clip as h264, Rec.709 tagged. The clip
 # cuts back to its first frame as the lab's own loop does.
 #
+# Frames go to ~/Downloads/renders/ by default (the owner's render folder,
+# outside the repo: every file under assets/** is referenced by a page).
 # Env: BLENDER (binary), OUT (mp4 path), OUT_DIR (frames), LOOPS (2), CRF (20),
 # BG (#F0EEE6), and anything render_unimate_video.py reads (RES_X/RES_Y,
 # SAMPLES, FRAMES, CAM_ELEV_RATIO, FILL_H, GAP, GRID_CELL, ...).
@@ -20,7 +22,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(cd "$HERE/../../.." && pwd)"
 BLENDER="${BLENDER:-/Applications/Blender.app/Contents/MacOS/Blender}"
 OUT="${OUT:-$REPO/assets/videos/unimate-lab.mp4}"
-export OUT_DIR="${OUT_DIR:-$HOME/Downloads/lab_renders/unimate-blender}"
+export OUT_DIR="${OUT_DIR:-$HOME/Downloads/renders/unimate-blender}"
 export BG="${BG:-#F0EEE6}"
 LOOPS="${LOOPS:-2}"
 CRF="${CRF:-20}"

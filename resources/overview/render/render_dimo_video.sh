@@ -11,6 +11,8 @@
 # over 180 ms in that ivory (the live thumbnail's own fade; the ends are cuts,
 # like its loop), and encodes h264, Rec.709 tagged.
 #
+# Frames go to ~/Downloads/renders/ by default (the owner's render folder,
+# outside the repo: every file under assets/** is referenced by a page).
 # Env: BLENDER, OUT, OUT_DIR, LOOPS (2), CRF (20), BG (#F0EEE6), and whatever
 # render_dimo_video.py reads (RES_X/RES_Y, SAMPLES, FRAMES, ONLY, FILL, ...).
 set -euo pipefail
@@ -19,7 +21,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(cd "$HERE/../../.." && pwd)"
 BLENDER="${BLENDER:-/Applications/Blender.app/Contents/MacOS/Blender}"
 OUT="${OUT:-$REPO/assets/videos/dimo-lab.mp4}"
-export OUT_DIR="${OUT_DIR:-$HOME/Downloads/lab_renders/dimo-blender}"
+export OUT_DIR="${OUT_DIR:-$HOME/Downloads/renders/dimo-blender}"
 export BG="${BG:-#F0EEE6}"
 LOOPS="${LOOPS:-2}"
 CRF="${CRF:-20}"

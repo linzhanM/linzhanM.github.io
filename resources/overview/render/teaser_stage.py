@@ -145,8 +145,12 @@ def build_lights_and_world(center, span, accents=()):
     (name, hex colour, energy, (dx, dy, dz) from the centre as shares of
     `span`) — DIMO's pink rim and blue fill."""
     scene = bpy.context.scene
+    # LIGHT scales the whole rig off the teaser's values (sun 1.85, fill 130,
+    # rim 190). 0.7 was tried on 2026-09-12 when they read strong, and the
+    # owner then kept the recording at 1.0 — so 1.0 it is; the knob stays.
+    light = float(os.environ.get("LIGHT", 1.0))
     sd = bpy.data.lights.new("Key", type="SUN")
-    sd.energy = float(os.environ.get("KEY_ENERGY", 1.85))
+    sd.energy = float(os.environ.get("KEY_ENERGY", 1.85)) * light
     sd.angle = math.radians(4.5)
     sd.color = (1.0, 0.985, 0.96)
     sun = bpy.data.objects.new("Key", sd)
@@ -156,7 +160,7 @@ def build_lights_and_world(center, span, accents=()):
     # The teaser's energies are for its ~10 m stage; an area light's irradiance
     # falls with distance squared, so a stage a tenth the size (the ducks)
     # takes a hundredth of the watts or it blows out to white.
-    scale = (span / 9.7) ** 2
+    scale = (span / 9.7) ** 2 * light
 
     def area(name, color, energy, size, size_y, loc):
         d = bpy.data.lights.new(name, type="AREA")
