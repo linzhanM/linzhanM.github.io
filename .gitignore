@@ -82,3 +82,7 @@ dimo/resources/glbs-raw/
 # teaser's own assets); resources/overview/unimate/resources/glbs/ ships the
 # meshopt/WebP builds, recipe in unimate/README.md.
 resources/overview/unimate/resources/glbs-raw/
+
+# The server bundle's working source. Only the built resources/server.zip is
+# published: this folder holds secrets/secrets.enc, and the repo is public.
+resources/server/
