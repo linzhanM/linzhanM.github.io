@@ -9,17 +9,31 @@
   <title>UniMate Motion Lab</title>
 
   <!-- ?embed is the homepage's UniMate thumbnail (root index.html frames this
-       page): one stage, light palette so its stage matches the page's media
-       plate, and interactive.css hides every piece of chrome off
-       the html class. Decided here in the head so the first paint is already
-       light — the module that configures the viewer arrives too late for that. -->
+       page): one stage, the homepage's own palette (light on its ivory plate,
+       dark on its dark one; it stamps html[data-theme] from its navbar switch
+       or the system, and this page reads that, same-origin), and
+       interactive.css hides every piece of chrome off the html class. Decided
+       here in the head so the first paint is already right — the module that
+       configures the viewer arrives too late for that; viewer.js follows a
+       change. -->
   <script>
+    // The palette of the page framing this one (root index.html stamps
+    // html[data-theme] in its head), else the system's — for a frame on some
+    // other origin, or this page opened ?embed on its own.
+    function pageTheme() {
+      try {
+        var t = window.parent !== window && window.parent.document.documentElement.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+      } catch (e) { /* cross-origin frame */ }
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    window.pageTheme = pageTheme;
     var embed = new URLSearchParams(location.search).has('embed');
-    document.documentElement.dataset.theme = embed ? 'light' : 'dark';
+    document.documentElement.dataset.theme = embed ? pageTheme() : 'dark';
     if (embed) document.documentElement.classList.add('is-embed');
   </script>
 
-  <link rel="stylesheet" href="css/interactive.css?v=23" />
+  <link rel="stylesheet" href="css/interactive.css?v=24" />
 </head>
 <body class="interactive-viewer-page">
   <main class="lab-shell">
@@ -84,7 +98,7 @@
       }
     }
   </script>
-  <script type="module" src="js/interactive.js?v=217"></script>
+  <script type="module" src="js/interactive.js?v=218"></script>
 
   <script type="text/javascript">
     var sc_project = 12925377;

@@ -7,6 +7,9 @@
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- Safari's toolbar takes the page colour; nav.js rewrites it on a switch.
+	     Both values are styles.css's --ivory-light, light and dark. -->
+	<meta name="theme-color" content="#faf9f5">
 	<meta name="description" content="Resume of Linzhan Mou - CS Ph.D. student at Princeton University. Education, publications, research and industry experience.">
 	<!-- Out of search results, but crawling stays allowed in robots.txt: a
 	     crawler has to fetch the page to see this tag, and a Disallow would let
@@ -18,6 +21,22 @@
 
 	<!-- Section-reveal gate; must stay in the head. See index.html. -->
 	<script>document.documentElement.classList.add('js-anim');</script>
+	<!-- The appearance, also before any body markup: the choice made at the
+	     navbar switch (nav.js keeps it in localStorage), else the system's.
+	     styles.css keys its dark tokens on this attribute, so the first paint is
+	     already the right palette. Identical on all three root pages. -->
+	<script>
+		(function () {
+			var theme = null;
+			try { theme = localStorage.getItem('theme'); } catch (e) {}
+			if (theme !== 'light' && theme !== 'dark') {
+				theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			}
+			document.documentElement.dataset.theme = theme;
+			var tint = document.querySelector('meta[name="theme-color"]');
+			if (tint) tint.content = theme === 'dark' ? '#1e2120' : '#faf9f5';
+		})();
+	</script>
 
 	<!-- No Font Awesome / Academicons: every link on this page is a word, and the
 	     PDF mark below is inline SVG for that reason. -->
@@ -29,8 +48,8 @@
 	<!-- ?v= busts the Pages cache. The first two are shared with the other root
 	     pages — keep the numbers equal across all three. resume.css has its own
 	     counter. -->
-	<link rel="stylesheet" href="css/custom-navbar.css?v=40">
-	<link rel="stylesheet" href="css/styles.css?v=53">
+	<link rel="stylesheet" href="css/custom-navbar.css?v=41">
+	<link rel="stylesheet" href="css/styles.css?v=54">
 	<link rel="stylesheet" href="css/resume.css?v=14">
 </head>
 
@@ -45,13 +64,16 @@
 					<img src="assets/logos/princeton-logo.jpg" alt="" aria-hidden="true">
 					<strong>Linzhan Mou</strong>
 				</a>
+			</div>
+			<!-- Appearance switch: nav.js flips html[data-theme] and keeps the
+			     choice; the head script above reads it back on the next page. -->
+			<button class="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Dark appearance"><span class="theme-switch-knob"></span></button>
 				<button class="navbar-burger" type="button" aria-label="Menu" aria-expanded="false"
 					aria-controls="navbar-main">
 					<span></span>
 					<span></span>
 					<span></span>
 				</button>
-			</div>
 			<div class="navbar-menu" id="navbar-main">
 				<div class="navbar-sections">
 					<a class="nav-section" href="/#About">About</a>
@@ -325,7 +347,7 @@
 		<p>&copy; <span id="copyright-year"></span> Linzhan Mou</p>
 	</footer>
 
-	<script src="js/nav.js?v=43"></script>
+	<script src="js/nav.js?v=44"></script>
 	<script>document.getElementById("copyright-year").textContent = new Date().getFullYear();</script>
 </body>
 

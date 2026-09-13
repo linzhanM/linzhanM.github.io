@@ -22,7 +22,18 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://linzhanmou.com/unimate/assets/images/og-motion-lab.png" />
 
-  <script>document.documentElement.dataset.theme = 'dark';</script>
+  <!-- The lab opens in the appearance chosen at the root pages' navbar switch
+       (localStorage `theme`, the key root nav.js writes), and its own Theme
+       button writes the same key (viewer.js), so the site and the lab are one
+       setting. With no choice made it opens dark, its own default — not the
+       system's, which the root pages follow. -->
+  <script>
+    (function () {
+      var theme = null;
+      try { theme = localStorage.getItem('theme'); } catch (e) { /* private mode */ }
+      document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
+    })();
+  </script>
 
   <link rel="icon" type="image/png" href="assets/images/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/images/favicon-baymax.png" />
@@ -93,7 +104,7 @@
       }
     }
   </script>
-  <script type="module" src="js/interactive.js?v=149"></script>
+  <script type="module" src="js/interactive.js?v=150"></script>
 
   <script type="text/javascript">
     var sc_project = 12925377;

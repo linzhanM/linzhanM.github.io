@@ -1,5 +1,5 @@
-/* Shared by the three root pages: the mobile burger, the section reveal, and
-   the keypoint that marks the section you're reading. The keypoint is driven
+/* Shared by the three root pages: the appearance switch, the mobile burger,
+   the section reveal, and the keypoint that marks the section you're reading. The keypoint is driven
    by writing --kp-x (offset along the rail) and --kp-o (opacity) onto
    .navbar-sections, so all easing stays in CSS. Links are plain anchors —
    without JS the nav still navigates, it just doesn't track. */
@@ -80,6 +80,57 @@ function revealSections() {
 
 document.addEventListener('DOMContentLoaded', function () {
 	revealSections();
+
+	// --- Appearance switch ------------------------------------------------
+	// The palette is html[data-theme] (styles.css keys its dark tokens on it).
+	// An inline script in each page's <head> stamps it before first paint —
+	// the stored choice, else the system's — so nothing here decides the
+	// opening state; this only turns the switch and keeps the choice. A choice
+	// once made is kept over the system setting (localStorage, so it holds
+	// across visits and pages) and the system is followed only until then;
+	// there is no third "system" state to explain. The framed labs on the
+	// homepage watch the attribute themselves.
+	var THEME_KEY = 'theme';
+	var root = document.documentElement;
+	var themeSwitch = document.querySelector('.theme-switch');
+
+	function chosen() {
+		try {
+			var t = localStorage.getItem(THEME_KEY);
+			return t === 'light' || t === 'dark' ? t : null;
+		} catch (e) { return null; }
+	}
+
+	function reflectTheme() {
+		var dark = root.dataset.theme === 'dark';
+		if (themeSwitch) themeSwitch.setAttribute('aria-checked', String(dark));
+		// Safari's toolbar tint (the theme-color meta in each head): the page
+		// colour, styles.css --ivory-light in each mode.
+		var tint = document.querySelector('meta[name="theme-color"]');
+		if (tint) tint.content = dark ? '#1e2120' : '#faf9f5';
+	}
+
+	reflectTheme();
+
+	if (themeSwitch) {
+		themeSwitch.addEventListener('click', function () {
+			var next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+			root.dataset.theme = next;
+			try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+			reflectTheme();
+		});
+	}
+
+	if (window.matchMedia) {
+		var scheme = window.matchMedia('(prefers-color-scheme: dark)');
+		var follow = function (e) {
+			if (chosen()) return;
+			root.dataset.theme = e.matches ? 'dark' : 'light';
+			reflectTheme();
+		};
+		if (scheme.addEventListener) scheme.addEventListener('change', follow);
+		else if (scheme.addListener) scheme.addListener(follow);
+	}
 
 	var burger = document.querySelector('.navbar-burger');
 	var menu = document.querySelector('.navbar-menu');

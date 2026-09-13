@@ -618,6 +618,19 @@ html.is-embed .spinner {
   border-top-color: #ee5b38;
 }
 
+/* And, when the homepage is dark (the head reads it), UniMate's dark --ink,
+   --line and --signal over the homepage's dark plate (root styles.css
+   --ivory-medium in dark; viewer.js gives the stage the same value). */
+html.is-embed[data-theme="dark"] #loading-overlay {
+  color: #f2eee8;
+  background: #151817;
+}
+
+html.is-embed[data-theme="dark"] .spinner {
+  border-color: rgba(242, 238, 232, 0.16);
+  border-top-color: #e9873f;
+}
+
 html.is-embed .lab-shell {
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
@@ -628,6 +641,11 @@ html.is-embed .lab-shell {
    canvas fades between the thumbnail's objects, and it has to match. */
 html.is-embed {
   --bg: #F0EEE6;
+}
+
+/* Dark: the stage viewer.js gives the framed dark palette, the page's plate. */
+html.is-embed[data-theme="dark"] {
+  --bg: #151817;
 }
 
 /* The fade between objects (viewer.js advanceCycle, FADE_SECONDS). */

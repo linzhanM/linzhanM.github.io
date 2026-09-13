@@ -63,6 +63,19 @@ const VIEWER_THEMES = {
     metaColor: '#e8e9e3',
   },
 };
+// Framed by the homepage, dark is the lab's own dark as unimate/interactive
+// draws it (the owner's reference, 2026-09-12): its #151817 sky — which is
+// also the page's dark plate, root styles.css --ivory-medium — and its
+// CHECKER floor (unimate/js/viewer.js VIEWER_THEMES.dark.checker) in place
+// of the graph paper light keeps, one square per paper cell, at the lab's
+// opacity. The DIMO thumbnail beside it takes the same values.
+if (viewerConfig.embedded) {
+  Object.assign(VIEWER_THEMES.dark, {
+    background: 0x151817,
+    paper: { checker: ['#35312c', '#222321'], opacity: 0.88 },
+    metaColor: '#151817',
+  });
+}
 let viewerTheme = isFullscreenLab
   ? (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark')
   : 'light';
@@ -613,16 +626,36 @@ fadeCanvas.width = fadeCanvas.height = 256;
 }
 const fadeTex = new THREE.CanvasTexture(fadeCanvas);
 
+// A theme's `paper` is either graph paper ({ cell, line }: one cell per tile)
+// or a checker ({ checker: [base, alternate] }: a 2 × 2 tile, each square one
+// cell, as the lab's floor is drawn); `opacity` dims either over the sky.
+let floorSize = 0;   // the last floor's side, so a theme change can re-tile it
+function paperTiles(theme = viewerTheme) {
+  return VIEWER_THEMES[theme].paper.checker ? 2 : 1;   // cells per texture tile
+}
+function setPaperRepeat() {
+  if (floorSize) paperTex.repeat.setScalar(floorSize / (FLOOR_CELL * paperTiles()));
+}
 function paintPaper(theme) {
-  const { cell, line } = VIEWER_THEMES[theme].paper;
+  const paper = VIEWER_THEMES[theme].paper;
   const ctx = paperCanvas.getContext('2d'), n = paperCanvas.width;
-  const half = Math.max(1, Math.round((n * FLOOR_LINE) / 2));   // half a line on each edge meets its neighbour's
-  ctx.fillStyle = cell;
-  ctx.fillRect(0, 0, n, n);
-  ctx.fillStyle = line;
-  ctx.fillRect(0, 0, n, half); ctx.fillRect(0, n - half, n, half);
-  ctx.fillRect(0, 0, half, n); ctx.fillRect(n - half, 0, half, n);
+  if (paper.checker) {
+    const [base, alternate] = paper.checker, h = n / 2;
+    ctx.fillStyle = base;
+    ctx.fillRect(0, 0, n, n);
+    ctx.fillStyle = alternate;
+    ctx.fillRect(0, 0, h, h); ctx.fillRect(h, h, h, h);
+  } else {
+    const half = Math.max(1, Math.round((n * FLOOR_LINE) / 2));   // half a line on each edge meets its neighbour's
+    ctx.fillStyle = paper.cell;
+    ctx.fillRect(0, 0, n, n);
+    ctx.fillStyle = paper.line;
+    ctx.fillRect(0, 0, n, half); ctx.fillRect(0, n - half, n, half);
+    ctx.fillRect(0, 0, half, n); ctx.fillRect(n - half, 0, half, n);
+  }
   paperTex.needsUpdate = true;
+  setPaperRepeat();
+  if (grid) grid.material.opacity = paper.opacity ?? 1;
 }
 
 function applyViewerTheme(theme) {
@@ -648,6 +681,19 @@ function applyViewerTheme(theme) {
 }
 
 applyViewerTheme(viewerTheme);
+
+// Framed, the palette is the homepage's (interactive.html's head reads it
+// first, through window.pageTheme): its switch rewrites html[data-theme] on
+// the page framing this one, which is watched here, same-origin, so the stage
+// turns with the page. The system query is the fallback the head falls to,
+// followed the same way.
+if (viewerConfig.embedded) {
+  const follow = () => applyViewerTheme(window.pageTheme ? window.pageTheme() : 'light');
+  try {
+    new MutationObserver(follow).observe(window.parent.document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  } catch (e) { /* not framed by the homepage */ }
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', follow);
+}
 
 // Frame the whole stage: fit the camera to the union of all pivots, drop a paper
 // floor. pad > 1 zooms out without moving the models — for a tightly spaced row
@@ -720,7 +766,8 @@ function frameStage(pad = 1.0, orbitAngleDegrees = viewerConfig.initialOrbitAngl
   // −2.5) it inflates the floor until the walkers read lost on it.
   const shiftMag = Math.hypot(activeShift[0], activeShift[2]);
   const gridSize = (Math.max(size.x, size.z, MIN_FRAME_WIDTH, 1) + 2 * shiftMag) * 1.6 * activeFloor;
-  paperTex.repeat.setScalar(gridSize / FLOOR_CELL);   // cells keep their size as the floor grows
+  floorSize = gridSize;
+  setPaperRepeat();   // cells keep their size as the floor grows
   grid = new THREE.Mesh(
     new THREE.PlaneGeometry(gridSize, gridSize),
     // Unlit and untoned, so the paper matches the background exactly and ignores
@@ -729,6 +776,7 @@ function frameStage(pad = 1.0, orbitAngleDegrees = viewerConfig.initialOrbitAngl
       map: paperTex,
       alphaMap: fadeTex,
       transparent: true,
+      opacity: VIEWER_THEMES[viewerTheme].paper.opacity ?? 1,
       depthWrite: false,
       toneMapped: false,
       side: THREE.DoubleSide,

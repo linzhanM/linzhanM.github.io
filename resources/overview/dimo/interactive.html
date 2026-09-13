@@ -15,21 +15,39 @@
 
   <!-- Decided here so the first paint is already right. ?embed is the root
        homepage's DIMO thumbnail (index.html frames this page): the ducks and
-       the UR5e in turn, no chrome, the light palette on the page's ivory; interactive.css hides
-       the chrome off html.is-embed. Otherwise the visitor's own choice: dark
-       (the project page's hero) unless they switched to light. -->
+       the UR5e in turn, no chrome, and the homepage's own palette (it stamps
+       html[data-theme] from its navbar switch or the system, and this page
+       reads that, same-origin; light is its ivory plate, dark its dark one,
+       both UniMate's stage values); interactive.css hides the chrome off
+       html.is-embed, and viewer.js follows a change. Otherwise the appearance
+       chosen at the root pages' navbar switch (localStorage `theme`, which
+       this lab's own toggle writes too, so the site and the lab are one
+       setting), and with no choice made, dark (the project page's hero). -->
   <script>
+    // The palette of the page framing this one (root index.html stamps
+    // html[data-theme] in its head), else the system's — for a frame on some
+    // other origin, or this page opened ?embed on its own.
+    function pageTheme() {
+      try {
+        var t = window.parent !== window && window.parent.document.documentElement.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+      } catch (e) { /* cross-origin frame */ }
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    window.pageTheme = pageTheme;
     var embed = new URLSearchParams(location.search).has('embed');
     if (embed) document.documentElement.classList.add('is-embed');
-    try { document.documentElement.dataset.theme = embed || localStorage.getItem('dimo-lab-theme') === 'light' ? 'light' : 'dark'; }
-    catch (e) { document.documentElement.dataset.theme = embed ? 'light' : 'dark'; }
+    var theme = 'dark';
+    if (embed) theme = pageTheme();
+    else { try { if (localStorage.getItem('theme') === 'light') theme = 'light'; } catch (e) { /* private mode */ } }
+    document.documentElement.dataset.theme = theme;
   </script>
 
   <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/interactive.css?v=1" />
+  <link rel="stylesheet" href="css/interactive.css?v=2" />
 </head>
 <body>
   <main class="lab-shell">
@@ -118,7 +136,7 @@
       }
     }
   </script>
-  <script type="module" src="js/interactive.js?v=11"></script>
+  <script type="module" src="js/interactive.js?v=12"></script>
 
   <script type="text/javascript">
     var sc_project = 12925377;

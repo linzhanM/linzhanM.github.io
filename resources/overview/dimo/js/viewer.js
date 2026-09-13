@@ -87,6 +87,16 @@ const THEMES = {
     hemi: ['#ffffff', '#a9aebb'], shadow: 0.24, keypointCore: '#1a1033',
   },
 };
+// Framed, dark takes the UniMate lab's dark as unimate/interactive draws it
+// (the owner's reference, 2026-09-12; UniMate's thumbnail takes the same):
+// its #151817 sky, which is the page's dark plate (root styles.css
+// --ivory-medium), and its checker floor (unimate/js/viewer.js
+// VIEWER_THEMES.dark.checker) in place of the paper light keeps — so the two
+// thumbnails sit side by side in the page under either palette. No pool: the
+// thumbnail is the stage, not the project page's hero.
+if (config.embedded) {
+  Object.assign(THEMES.dark, { background: '#151817', grid: { checker: ['#35312c', '#222321'], opacity: 0.88 }, pool: null });
+}
 let themeName = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
 
 const settings = {
@@ -208,15 +218,27 @@ function paintFloor(theme) {
     ctx.fillRect(0, 0, size, size);
     poolTexture.needsUpdate = true;
   }
-  // One cell: paper, with half a line along each edge so lines meet across cells.
+  // One tile: paper (one cell, half a line along each edge so lines meet
+  // across cells) or, for a `checker` grid, a 2 × 2 tile with each square one
+  // cell, as the UniMate lab's floor is drawn; `opacity` dims it over the sky.
   const fctx = floorCanvas.getContext('2d'), n = floorCanvas.width;
-  const half = Math.max(1, Math.round((n * FLOOR_LINE) / 2));
-  fctx.fillStyle = theme.grid.cell;
-  fctx.fillRect(0, 0, n, n);
-  fctx.fillStyle = theme.grid.line;
-  fctx.fillRect(0, 0, n, half); fctx.fillRect(0, n - half, n, half);
-  fctx.fillRect(0, 0, half, n); fctx.fillRect(n - half, 0, half, n);
+  if (theme.grid.checker) {
+    const [base, alternate] = theme.grid.checker, h = n / 2;
+    fctx.fillStyle = base;
+    fctx.fillRect(0, 0, n, n);
+    fctx.fillStyle = alternate;
+    fctx.fillRect(0, 0, h, h); fctx.fillRect(h, h, h, h);
+  } else {
+    const half = Math.max(1, Math.round((n * FLOOR_LINE) / 2));
+    fctx.fillStyle = theme.grid.cell;
+    fctx.fillRect(0, 0, n, n);
+    fctx.fillStyle = theme.grid.line;
+    fctx.fillRect(0, 0, n, half); fctx.fillRect(0, n - half, n, half);
+    fctx.fillRect(0, 0, half, n); fctx.fillRect(n - half, 0, half, n);
+  }
+  floorTexture.repeat.setScalar(FLOOR_SIZE / FLOOR_CELL / (theme.grid.checker ? 2 : 1));
   floorTexture.needsUpdate = true;
+  floorMaterial.opacity = theme.grid.opacity ?? 1;
   catcher.material.opacity = theme.shadow;
 }
 
@@ -300,8 +322,10 @@ function applyTheme(name) {
   themeName = name === 'light' ? 'light' : 'dark';
   const theme = THEMES[themeName];
   document.documentElement.dataset.theme = themeName;
+  // The key the root pages' navbar switch uses (root nav.js): one setting for
+  // the site and the lab. Framed, the homepage owns it.
   if (!config.embedded) {
-    try { localStorage.setItem('dimo-lab-theme', themeName); } catch (e) { /* private mode */ }
+    try { localStorage.setItem('theme', themeName); } catch (e) { /* private mode */ }
   }
   scene.background.set(theme.background);
   scene.fog.color.set(theme.background);
@@ -1182,6 +1206,19 @@ const hashIndex = () => OBJECTS.findIndex((o) => o.slug === decodeURIComponent(l
 window.addEventListener('hashchange', () => { if (stage.ready && hashIndex() >= 0) showObject(hashIndex()); });
 
 applyTheme(themeName);
+
+// Framed, the palette is the homepage's (interactive.html's head reads it
+// first, through window.pageTheme): its switch rewrites html[data-theme] on
+// the page framing this one, which is watched here, same-origin, so the stage
+// turns with the page. The system query is the fallback the head falls to,
+// followed the same way.
+if (config.embedded) {
+  const follow = () => applyTheme(window.pageTheme ? window.pageTheme() : 'light');
+  try {
+    new MutationObserver(follow).observe(window.parent.document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  } catch (e) { /* not framed by the homepage */ }
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', follow);
+}
 resize();
 // A failed load keeps the stage covered and says so, in UniMate's words.
 buildStage(Math.max(0, hashIndex())).catch((err) => {

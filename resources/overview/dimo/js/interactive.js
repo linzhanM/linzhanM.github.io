@@ -4,8 +4,9 @@
 window.DIMO_LAB_CONFIG = {
   // interactive.html?embed — the root homepage frames the lab as DIMO's
   // thumbnail. The chrome is hidden by interactive.css; the engine drops zoom,
-  // keys and the selection ring, keeps its palette off localStorage, matches
-  // the page's ivory, and renders only while the frame is on screen.
+  // keys and the selection ring, keeps its palette off localStorage, takes the
+  // homepage's palette on its plate (light or dark), and renders only while
+  // the frame is on screen.
   embedded: document.documentElement.classList.contains('is-embed'),
   // Where the framed stage must stay clear, in CSS px (viewer.js frameCamera):
   // the lab's head and facts along the top and its dock along the bottom; in
@@ -37,4 +38,4 @@ window.DIMO_LAB_CONFIG = {
   trailFrames: 14,
 };
 
-await import('./viewer.js?v=9');
+await import('./viewer.js?v=10');

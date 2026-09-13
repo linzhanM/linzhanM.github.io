@@ -4,7 +4,7 @@
    ============================================================ */
 :root {
   /* Surfaces */
-  --ivory-light:   #faf9f5;  /* page background */
+  --ivory-light:   #faf9f5;  /* page background (also the theme-color meta, set in each head and nav.js) */
   --ivory-medium:  #f0eee6;  /* subtle hover backgrounds */
   --ivory-dark:    #e8e6dc;  /* borders / dividers */
   --accent-bg:     #fdf6ee;  /* tinted block (abstract) background */
@@ -59,11 +59,81 @@
   --weight-regular:  400;
   --weight-semibold: 600;
   --weight-bold:     700;
+
+  /* Scrollbars and form controls painted to match; the dark block below
+     flips it. */
+  color-scheme: light;
+}
+
+/* Dark appearance: the same roles, re-valued. Keyed on html[data-theme], which
+   an inline script in each page's <head> stamps before any body markup is
+   parsed — a choice made at the navbar switch (nav.js, kept in localStorage),
+   else the system appearance — so the first paint is already the right
+   palette. Not a prefers-color-scheme query: the switch has to win over the
+   system, and one attribute is what the framed labs read too. With JS off the
+   page is light, as it is without the reveal.
+
+   Nothing else in the sheet changes — every colour on the page is one of
+   these tokens, so a rule that hard-codes a colour is what breaks dark mode.
+   The surface names keep their light-mode words (--ivory-*) because they name
+   roles, not hues: page, plate, rule. `screen` on purpose — paper gets the
+   light page whatever the switch says.
+
+   The plate (--ivory-medium) is the UniMate lab's own dark stage (#151817,
+   unimate/js/viewer.js VIEWER_THEMES.dark) and the page is that family a
+   step lighter: the owner's reference for dark is that lab
+   (unimate/interactive, 2026-09-12), and both framed labs take the plate as
+   their sky and the lab's checker as their floor when the page is dark
+   (their embed palettes carry the values; change it here and there), so
+   the thumbnails sit in the page and match the lab the [demo] opens. A warm
+   ink dark (#1f1d1a / #171614) was tried between and replaced at the owner's
+   request. The page is one step lighter than the plate, so media reads as
+   set into the paper, the inverse of light mode's plate a step darker than
+   the page. Text tiers stay >= 4.5:1 on the page. The shadows go to plain
+   black at higher alpha: a warm-ink shadow at 9% is invisible on a dark
+   ground. */
+@media screen {
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --ivory-light:   #1e2120;  /* page background (also the theme-color meta's dark value) */
+    --ivory-medium:  #151817;  /* media plates, subtle hover backgrounds */
+    --ivory-dark:    #303432;  /* borders / dividers */
+    --accent-bg:     #2a2420;  /* tinted block (abstract) background */
+
+    --text-primary:   #f2eee8; /* 14.4:1 */
+    --text-secondary: #b4b1a9; /*  7.4:1 */
+    --text-tertiary:  #94928b; /*  5.0:1 */
+
+    --shadow-plate: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 14px rgba(0, 0, 0, 0.45);
+    --shadow-lift:  0 2px 4px rgba(0, 0, 0, 0.4), 0 14px 30px rgba(0, 0, 0, 0.55);
+  }
 }
 
 /* --- Base --- */
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
+
+  /* The appearance switch turns the page rather than snapping it: every
+     surface that carries a token colour crosses over on the switch knob's
+     own 200ms (custom-navbar.css). Nothing runs at load — html[data-theme]
+     is stamped before first paint, so there is no change to animate. The
+     framed labs repaint their stages at once; a fifth of a second apart, the
+     page and its plates still read as one turn. */
+  body,
+  .navbar,
+  .navbar-menu.is-active,
+  hr,
+  .site-footer,
+  .hero-photo,
+  .pub-thumbnail,
+  .pub-abstract,
+  .theme-switch,
+  .theme-switch-knob {
+    transition-property: background-color, border-color, color;
+    transition-duration: 200ms;
+    transition-timing-function: ease-out;
+  }
 }
 
 body {
@@ -517,7 +587,7 @@ hr {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-plate);
   overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 200ms ease-out, border-color 200ms ease-out;
 }
 
 .pub-thumbnail:hover {
@@ -528,7 +598,7 @@ hr {
 /* The lift is decoration; the shadow still marks the hover. */
 @media (prefers-reduced-motion: reduce) {
   .pub-thumbnail {
-    transition: box-shadow 0.25s ease;
+    transition: box-shadow 0.25s ease;   /* no colour crossfade either: the theme snaps */
   }
 
   .pub-thumbnail:hover {
@@ -537,9 +607,9 @@ hr {
 }
 
 /* The UniMate and DIMO thumbnails are their motion labs themselves
-   (resources/overview/<project>/interactive.html?embed: no chrome, the light palette
-   on this page's --ivory-medium), so each is an <iframe> in the same frame as
-   the videos, inside a <figure>. An iframe has no intrinsic size, so it takes
+   (resources/overview/<project>/interactive.html?embed: no chrome, this page's
+   palette — they read html[data-theme] here — its stage --ivory-medium in both),
+   so each is an <iframe> in the same frame as the videos, inside a <figure>. An iframe has no intrinsic size, so it takes
    the teaser's 16:9. */
 .pub-live {
   position: relative; /* the phone link's hit area, below */

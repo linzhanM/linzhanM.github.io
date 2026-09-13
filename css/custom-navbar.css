@@ -1,7 +1,11 @@
 /* Navbar — a section index, not a branding bar. All navbar chrome lives here;
    styles.css loads after this file and must carry none.
-   Structure: .navbar > .navbar-inner > (.navbar-brand > .brand-link + .navbar-burger)
+   Structure: .navbar > .navbar-inner > (.navbar-brand > .brand-link)
+                                      + .theme-switch + .navbar-burger
                                       + (.navbar-menu > .navbar-sections)
+   One row on a desktop; on a phone the menu wraps under the brand row, and
+   the switch and burger stay on it. The switch is one element in one place —
+   the row's order does the rest.
 
    Full-bleed: brand pinned left, section index right. The labels reuse the
    eyebrow treatment of .section-h3 so the nav reads as an index of the page's
@@ -16,7 +20,11 @@
   /* Bootstrap ships `.navbar { padding: 0.5rem 1rem }`; the gutter is
      .navbar-inner's job and this would double it. */
   padding: 0;
+  /* The page background at 86%, so the blur below shows through. Off the token
+     so it follows the dark palette; the rgba is the light value for a browser
+     without color-mix. */
   background-color: rgba(250, 249, 245, 0.86);
+  background-color: color-mix(in srgb, var(--ivory-light) 86%, transparent);
   border-bottom: 1px solid var(--ivory-dark);
 }
 
@@ -28,8 +36,13 @@
 }
 
 /* Bootstrap sets `.navbar { display: flex }`, so this is a flex item and would
-   shrink to its content without the explicit width. */
+   shrink to its content without the explicit width. A wrapping row: on a
+   phone the menu takes a whole row of its own below (order rules in the
+   mobile block). */
 .navbar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
   width: 100%;
   padding-left: 3rem;
   padding-right: 3rem;
@@ -40,6 +53,52 @@
   align-items: stretch;
   flex-shrink: 0;
   min-height: 4.25rem;
+}
+
+/* --- Appearance switch: darioamodei.com's pill (the owner's reference,
+   2026-09-12), scaled and toned to this rail. His is 40 × 20 with a 14px
+   knob beside a 20px name; here it stands beside 14px capitals, so it is
+   32 × 18 with a 12px knob that slides 14px (the track is border-box: 30
+   inside, 2 + 12 + 14 + 2). His pill inverts in dark — ivory fill, dark
+   knob — which on this bar read as the one bright block beside quiet labels;
+   here it is drawn the way the page's media plates are, in both modes: the
+   track is the plate tone (--ivory-medium, a step off the page), the ring is
+   the labels' resting grey and goes to full ink on hover as the labels do,
+   and the knob is ink. Page against ink, never the accent: the orange stays
+   the rail's. nav.js flips html[data-theme] and keeps the choice; the knob
+   reads the attribute, so it is right on the first paint with no script of
+   its own. --- */
+.theme-switch {
+  position: relative;
+  flex-shrink: 0;
+  align-self: center;
+  width: 32px;
+  height: 18px;
+  padding: 0;
+  border: 1px solid var(--text-secondary);
+  border-radius: 2rem;
+  background-color: var(--ivory-medium);
+  cursor: pointer;
+  transition: border-color 160ms ease-out, background-color 200ms ease-out;
+}
+
+.theme-switch:hover {
+  border-color: var(--text-primary);
+}
+
+.theme-switch-knob {
+  position: absolute;
+  left: 2px;
+  bottom: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+  transition: transform 200ms ease-out, background-color 200ms ease-out;
+}
+
+:root[data-theme="dark"] .theme-switch-knob {
+  transform: translateX(14px);
 }
 
 /* --- Brand: display face, matching the h1 below it. No left padding, so the
@@ -76,13 +135,13 @@
   background-color: transparent;
 }
 
-/* --- Burger (mobile only) --- */
+/* --- Burger (mobile only). Last on the brand row, so it sits at the edge
+   with the switch just inside it. --- */
 .navbar-burger {
   display: block;
   position: relative;
   height: 4.25rem;
   width: 3.25rem;
-  margin-left: auto;
   padding: 0;
   border: none;
   background: transparent;
@@ -170,8 +229,17 @@
 }
 
 /* --- Keyboard focus --- */
+/* Bootstrap's reboot rings every focused button (`button:focus { outline:
+   5px auto -webkit-focus-ring-color }`), mouse click included, so the switch
+   and the burger take the ring only for keyboard focus, below. */
+.navbar-burger:focus:not(:focus-visible),
+.theme-switch:focus:not(:focus-visible) {
+  outline: none;
+}
+
 .navbar a:focus-visible,
-.navbar-burger:focus-visible {
+.navbar-burger:focus-visible,
+.theme-switch:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
@@ -188,6 +256,16 @@
 
 /* --- Mobile (<=1023px): burger reveals a stacked menu --- */
 @media screen and (max-width: 1023px) {
+  /* The brand takes the slack, which puts the switch and the burger at the
+     row's right end; the menu wraps under them as a row of its own. */
+  .navbar-brand {
+    flex-grow: 1;
+  }
+
+  .navbar-menu {
+    flex-basis: 100%;
+  }
+
   .navbar-menu.is-active {
     display: block;
     padding: 0.25rem 0 0.75rem;
@@ -213,30 +291,32 @@
 
 /* --- Desktop (>=1024px) --- */
 @media screen and (min-width: 1024px) {
-  .navbar-inner,
   .navbar-menu {
     display: flex;
-    align-items: stretch;
+    align-items: center;
+    flex-grow: 1;
   }
 
   .navbar-burger {
     display: none;
   }
 
-  .navbar-menu {
-    flex-grow: 1;
-    align-items: center;
-  }
-
   .navbar-sections {
     margin-left: auto;
+  }
+
+  /* After the rail, at the rail's gap: the last stop on the section index. */
+  .theme-switch {
+    order: 1;
+    margin-left: 2.25rem;
   }
 }
 
 /* --- Reduced motion: the keypoint still marks position, it just doesn't travel. --- */
 @media (prefers-reduced-motion: reduce) {
   .nav-keypoint,
-  .navbar-burger span {
+  .navbar-burger span,
+  .theme-switch-knob {
     transition: none;
   }
 }

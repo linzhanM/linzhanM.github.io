@@ -28,6 +28,13 @@
   --spine: #cac3b2;   /* 1.67:1 on --ivory-light */
 }
 
+/* The same hairline weight on the dark page (styles.css's dark tokens). */
+@media screen {
+  :root[data-theme="dark"] {
+    --spine: #4a4e4b;   /* 1.7:1 on the dark page */
+  }
+}
+
 /* --- Masthead --- */
 /* The résumé masthead's two-sided row: what this page is on the left, the same
    record in its other database on the right. One baseline, so the 36px title
