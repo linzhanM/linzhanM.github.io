@@ -3,9 +3,8 @@
    Structure: .navbar > .navbar-inner > (.navbar-brand > .brand-link)
                                       + .theme-switch + .navbar-burger
                                       + (.navbar-menu > .navbar-sections)
-   One row on a desktop; on a phone the menu wraps under the brand row, and
-   the switch and burger stay on it. The switch is one element in one place —
-   the row's order does the rest.
+   One row on desktop; on a phone the menu wraps to a second row and the
+   switch and burger stay on the first (order rules in the mobile block).
 
    Full-bleed: brand pinned left, section index right. The labels reuse the
    eyebrow treatment of .section-h3 so the nav reads as an index of the page's
@@ -35,10 +34,8 @@
   }
 }
 
-/* Bootstrap sets `.navbar { display: flex }`, so this is a flex item and would
-   shrink to its content without the explicit width. A wrapping row: on a
-   phone the menu takes a whole row of its own below (order rules in the
-   mobile block). */
+/* Bootstrap's .navbar is flex, so this is a flex item and needs the explicit
+   width. A wrapping row: on a phone .navbar-menu takes a row of its own. */
 .navbar-inner {
   display: flex;
   flex-wrap: wrap;
@@ -55,19 +52,11 @@
   min-height: 4.25rem;
 }
 
-/* --- Appearance switch: darioamodei.com's pill (the owner's reference,
-   2026-09-12), scaled and toned to this rail. His is 40 × 20 with a 14px
-   knob beside a 20px name; here it stands beside 14px capitals, so it is
-   32 × 18 with a 12px knob that slides 14px (the track is border-box: 30
-   inside, 2 + 12 + 14 + 2). His pill inverts in dark — ivory fill, dark
-   knob — which on this bar read as the one bright block beside quiet labels;
-   here it is drawn the way the page's media plates are, in both modes: the
-   track is the plate tone (--ivory-medium, a step off the page), the ring is
-   the labels' resting grey and goes to full ink on hover as the labels do,
-   and the knob is ink. Page against ink, never the accent: the orange stays
-   the rail's. nav.js flips html[data-theme] and keeps the choice; the knob
-   reads the attribute, so it is right on the first paint with no script of
-   its own. --- */
+/* --- Appearance switch: darioamodei.com's pill, scaled to the rail — 32 × 18,
+   a 12px knob sliding 14px (border-box: 30 inside = 2 + 12 + 14 + 2). Track
+   in the plate tone, ring in the labels' grey (ink on hover, as the labels),
+   knob in ink; never the accent. The knob reads html[data-theme], so it is
+   right on the first paint without a script. --- */
 .theme-switch {
   position: relative;
   flex-shrink: 0;
@@ -229,9 +218,8 @@
 }
 
 /* --- Keyboard focus --- */
-/* Bootstrap's reboot rings every focused button (`button:focus { outline:
-   5px auto -webkit-focus-ring-color }`), mouse click included, so the switch
-   and the burger take the ring only for keyboard focus, below. */
+/* Bootstrap rings every focused button, mouse click included; the switch
+   and the burger ring only for keyboard focus (below). */
 .navbar-burger:focus:not(:focus-visible),
 .theme-switch:focus:not(:focus-visible) {
   outline: none;
@@ -256,8 +244,8 @@
 
 /* --- Mobile (<=1023px): burger reveals a stacked menu --- */
 @media screen and (max-width: 1023px) {
-  /* The brand takes the slack, which puts the switch and the burger at the
-     row's right end; the menu wraps under them as a row of its own. */
+  /* The brand takes the slack, so the switch and burger sit at the row's
+     right end; the menu wraps under them. */
   .navbar-brand {
     flex-grow: 1;
   }
@@ -305,7 +293,7 @@
     margin-left: auto;
   }
 
-  /* After the rail, at the rail's gap: the last stop on the section index. */
+  /* After the rail, at the rail's gap. */
   .theme-switch {
     order: 1;
     margin-left: 2.25rem;

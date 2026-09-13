@@ -8,18 +8,14 @@
   <meta name="theme-color" content="#151817" />
   <title>UniMate Motion Lab</title>
 
-  <!-- ?embed is the homepage's UniMate thumbnail (root index.html frames this
-       page): one stage, the homepage's own palette (light on its ivory plate,
-       dark on its dark one; it stamps html[data-theme] from its navbar switch
-       or the system, and this page reads that, same-origin), and
-       interactive.css hides every piece of chrome off the html class. Decided
-       here in the head so the first paint is already right — the module that
-       configures the viewer arrives too late for that; viewer.js follows a
-       change. -->
+  <!-- ?embed: the homepage's UniMate thumbnail (root index.html frames this
+       page) — one stage, no chrome (interactive.css, off the html class),
+       and the homepage's palette: it stamps html[data-theme], read here
+       same-origin. Decided in the head so the first paint is right;
+       viewer.js follows a change. -->
   <script>
-    // The palette of the page framing this one (root index.html stamps
-    // html[data-theme] in its head), else the system's — for a frame on some
-    // other origin, or this page opened ?embed on its own.
+    // The framing page's html[data-theme]; the system query when there is
+    // none (another origin, or ?embed opened on its own).
     function pageTheme() {
       try {
         var t = window.parent !== window && window.parent.document.documentElement.dataset.theme;

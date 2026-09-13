@@ -2159,11 +2159,8 @@ if (isFullscreenLab) {
   themeToggle?.addEventListener('click', () => {
     const next = viewerTheme === 'dark' ? 'light' : 'dark';
     applyViewerTheme(next);
-    // The visitor's choice, kept under the key the root pages' navbar switch
-    // uses (root nav.js), so the homepage opens in it too — one setting for
-    // the site and the lab. Only here, on a click: the theme applied at load
-    // is read from that key or is the lab's dark default, and neither is a
-    // choice.
+    // Store the click under the root pages' key, so the homepage follows;
+    // never on load — a default or a read-back is not a choice.
     if (isFullscreenLab) {
       try { localStorage.setItem('theme', next); } catch (e) { /* private mode */ }
     }

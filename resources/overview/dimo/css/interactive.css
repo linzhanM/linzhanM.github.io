@@ -606,8 +606,8 @@ html.is-embed body::before {
   display: none;
 }
 
-/* UniMate's embed values (its light palette: --ink, --line, --signal, over
-   --stage), so the homepage's two thumbnails load identically. */
+/* UniMate's embed values — its light --ink, --line, --signal over --stage —
+   so the two thumbnails load identically. */
 html.is-embed #loading-overlay {
   color: #171916;
   background: #F0EEE6;
@@ -618,9 +618,8 @@ html.is-embed .spinner {
   border-top-color: #ee5b38;
 }
 
-/* And, when the homepage is dark (the head reads it), UniMate's dark --ink,
-   --line and --signal over the homepage's dark plate (root styles.css
-   --ivory-medium in dark; viewer.js gives the stage the same value). */
+/* Its dark values when the homepage is dark: --ink, --line, --signal over
+   the #151817 stage, the homepage's dark plate. */
 html.is-embed[data-theme="dark"] #loading-overlay {
   color: #f2eee8;
   background: #151817;
@@ -643,7 +642,7 @@ html.is-embed {
   --bg: #F0EEE6;
 }
 
-/* Dark: the stage viewer.js gives the framed dark palette, the page's plate. */
+/* Dark: the framed dark stage (viewer.js THEMES.dark when embedded). */
 html.is-embed[data-theme="dark"] {
   --bg: #151817;
 }

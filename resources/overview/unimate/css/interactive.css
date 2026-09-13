@@ -823,11 +823,9 @@ html.is-embed #viewer-labels {
   visibility: hidden;
 }
 
-/* Framed and dark: the stage is the lab's dark sky, which is the homepage's
-   dark plate (viewer.js VIEWER_THEMES.dark.background when embedded), so
-   what shows before the scene paints has to be that too — the loading
-   overlay and the body behind the canvas. Same value as root styles.css
-   --ivory-medium in dark and DIMO's interactive.css embed block. */
+/* Framed and dark, what shows before the scene paints — the body behind the
+   canvas and the loading overlay — is the framed dark stage, #151817
+   (viewer.js VIEWER_THEMES.dark when embedded; the homepage's dark plate). */
 html.is-embed:not([data-theme='light']) body {
   background: #151817;
 }

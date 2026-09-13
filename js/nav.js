@@ -82,14 +82,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	revealSections();
 
 	// --- Appearance switch ------------------------------------------------
-	// The palette is html[data-theme] (styles.css keys its dark tokens on it).
-	// An inline script in each page's <head> stamps it before first paint —
-	// the stored choice, else the system's — so nothing here decides the
-	// opening state; this only turns the switch and keeps the choice. A choice
-	// once made is kept over the system setting (localStorage, so it holds
-	// across visits and pages) and the system is followed only until then;
-	// there is no third "system" state to explain. The framed labs on the
-	// homepage watch the attribute themselves.
+	// html[data-theme] is stamped in each page's <head> before first paint;
+	// this only turns the switch and keeps the choice in localStorage, which
+	// the labs read too. The system is followed until a choice is made and
+	// not after — there is no "system" state. The framed labs watch the
+	// attribute themselves.
 	var THEME_KEY = 'theme';
 	var root = document.documentElement;
 	var themeSwitch = document.querySelector('.theme-switch');
@@ -104,8 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	function reflectTheme() {
 		var dark = root.dataset.theme === 'dark';
 		if (themeSwitch) themeSwitch.setAttribute('aria-checked', String(dark));
-		// Safari's toolbar tint (the theme-color meta in each head): the page
-		// colour, styles.css --ivory-light in each mode.
+		// Safari's toolbar tint: --ivory-light of the current palette.
 		var tint = document.querySelector('meta[name="theme-color"]');
 		if (tint) tint.content = dark ? '#1e2120' : '#faf9f5';
 	}

@@ -63,12 +63,10 @@ const VIEWER_THEMES = {
     metaColor: '#e8e9e3',
   },
 };
-// Framed by the homepage, dark is the lab's own dark as unimate/interactive
-// draws it (the owner's reference, 2026-09-12): its #151817 sky — which is
-// also the page's dark plate, root styles.css --ivory-medium — and its
-// CHECKER floor (unimate/js/viewer.js VIEWER_THEMES.dark.checker) in place
-// of the graph paper light keeps, one square per paper cell, at the lab's
-// opacity. The DIMO thumbnail beside it takes the same values.
+// Framed and dark: the UniMate lab's own dark (unimate/interactive) — its
+// #151817 sky, also the homepage's dark plate, and its checker floor in place
+// of the graph paper, one square per paper cell. The DIMO thumbnail repeats
+// these values.
 if (viewerConfig.embedded) {
   Object.assign(VIEWER_THEMES.dark, {
     background: 0x151817,
@@ -626,9 +624,9 @@ fadeCanvas.width = fadeCanvas.height = 256;
 }
 const fadeTex = new THREE.CanvasTexture(fadeCanvas);
 
-// A theme's `paper` is either graph paper ({ cell, line }: one cell per tile)
-// or a checker ({ checker: [base, alternate] }: a 2 × 2 tile, each square one
-// cell, as the lab's floor is drawn); `opacity` dims either over the sky.
+// `paper` is graph paper ({ cell, line }, one cell per tile) or a checker
+// ({ checker: [base, alternate] }, a 2 × 2 tile of one-cell squares);
+// `opacity` dims either over the sky.
 let floorSize = 0;   // the last floor's side, so a theme change can re-tile it
 function paperTiles(theme = viewerTheme) {
   return VIEWER_THEMES[theme].paper.checker ? 2 : 1;   // cells per texture tile
@@ -682,11 +680,8 @@ function applyViewerTheme(theme) {
 
 applyViewerTheme(viewerTheme);
 
-// Framed, the palette is the homepage's (interactive.html's head reads it
-// first, through window.pageTheme): its switch rewrites html[data-theme] on
-// the page framing this one, which is watched here, same-origin, so the stage
-// turns with the page. The system query is the fallback the head falls to,
-// followed the same way.
+// Framed: follow the framing page's html[data-theme] (same-origin), and the
+// system query, which pageTheme falls back to without a parent.
 if (viewerConfig.embedded) {
   const follow = () => applyViewerTheme(window.pageTheme ? window.pageTheme() : 'light');
   try {

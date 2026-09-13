@@ -7,8 +7,8 @@
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!-- Safari's toolbar takes the page colour; nav.js rewrites it on a switch.
-	     Both values are styles.css's --ivory-light, light and dark. -->
+	<!-- Safari's toolbar tint: --ivory-light of the current palette. The head
+	     script below and nav.js keep it in step. -->
 	<meta name="theme-color" content="#faf9f5">
 	<meta name="description" content="Publications of Linzhan Mou - CS Ph.D. student at Princeton University. Papers in vision, graphics, robot learning, and machine learning.">
 	<meta name="robots" content="index, follow">
@@ -16,10 +16,9 @@
 
 	<!-- Section-reveal gate; must stay in the head. See index.html. -->
 	<script>document.documentElement.classList.add('js-anim');</script>
-	<!-- The appearance, also before any body markup: the choice made at the
-	     navbar switch (nav.js keeps it in localStorage), else the system's.
-	     styles.css keys its dark tokens on this attribute, so the first paint is
-	     already the right palette. Identical on all three root pages. -->
+	<!-- Stamps html[data-theme] before any body markup, so the first paint is
+	     the right palette: the stored choice (localStorage "theme"), else the
+	     system's. Identical on all three root pages. -->
 	<script>
 		(function () {
 			var theme = null;
@@ -58,8 +57,8 @@
 					<strong>Linzhan Mou</strong>
 				</a>
 			</div>
-			<!-- Appearance switch: nav.js flips html[data-theme] and keeps the
-			     choice; the head script above reads it back on the next page. -->
+			<!-- Appearance switch: nav.js flips html[data-theme], stores the choice
+			     and sets aria-checked. -->
 			<button class="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Dark appearance"><span class="theme-switch-knob"></span></button>
 				<button class="navbar-burger" type="button" aria-label="Menu" aria-expanded="false"
 					aria-controls="navbar-main">
@@ -110,16 +109,6 @@
 							[<a target="_blank" href="https://arxiv.org/abs/2602.02331">arXiv</a>]
 							[<a target="_blank" href="https://ttt-parkour.github.io/">website</a>]
 							[<a target="_blank" href="https://github.com/project-instinct/InstinctLab">code</a>]
-						</p>
-					</article>
-
-					<article class="pubs-entry">
-						<p class="pub-title">Generative Control as Optimization: Time Unconditional Flow Matching for Adaptive and Robust Robotic Control</p>
-						<p class="pub-authors">Zunzhe Zhang*, Runhan Huang*, Yicheng Liu, Shaoting Zhu, <u>Linzhan Mou</u>, Hang Zhao</p>
-						<p class="pub-venue">International Conference on Learning Representations (<b>ICLR</b>) Workshops, 2026.</p>
-						<p class="pub-links">
-							[<a target="_blank" href="https://arxiv.org/abs/2603.17834">arXiv</a>]
-							[<a target="_blank" href="https://hrh6666.github.io/GeCO/">website</a>]
 						</p>
 					</article>
 				</div>

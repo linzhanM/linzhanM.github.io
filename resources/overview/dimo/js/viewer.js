@@ -87,13 +87,10 @@ const THEMES = {
     hemi: ['#ffffff', '#a9aebb'], shadow: 0.24, keypointCore: '#1a1033',
   },
 };
-// Framed, dark takes the UniMate lab's dark as unimate/interactive draws it
-// (the owner's reference, 2026-09-12; UniMate's thumbnail takes the same):
-// its #151817 sky, which is the page's dark plate (root styles.css
-// --ivory-medium), and its checker floor (unimate/js/viewer.js
-// VIEWER_THEMES.dark.checker) in place of the paper light keeps — so the two
-// thumbnails sit side by side in the page under either palette. No pool: the
-// thumbnail is the stage, not the project page's hero.
+// Framed and dark: the UniMate lab's dark (unimate/interactive), as its
+// thumbnail takes it — the #151817 sky, also the homepage's dark plate, and
+// its checker floor in place of the paper. No pool: the thumbnail is a stage,
+// not the project page's hero.
 if (config.embedded) {
   Object.assign(THEMES.dark, { background: '#151817', grid: { checker: ['#35312c', '#222321'], opacity: 0.88 }, pool: null });
 }
@@ -218,9 +215,9 @@ function paintFloor(theme) {
     ctx.fillRect(0, 0, size, size);
     poolTexture.needsUpdate = true;
   }
-  // One tile: paper (one cell, half a line along each edge so lines meet
-  // across cells) or, for a `checker` grid, a 2 × 2 tile with each square one
-  // cell, as the UniMate lab's floor is drawn; `opacity` dims it over the sky.
+  // One tile: a paper cell with half a line on each edge (lines meet across
+  // cells), or for a `checker` grid a 2 × 2 tile of one-cell squares;
+  // `opacity` dims it over the sky.
   const fctx = floorCanvas.getContext('2d'), n = floorCanvas.width;
   if (theme.grid.checker) {
     const [base, alternate] = theme.grid.checker, h = n / 2;
@@ -322,8 +319,8 @@ function applyTheme(name) {
   themeName = name === 'light' ? 'light' : 'dark';
   const theme = THEMES[themeName];
   document.documentElement.dataset.theme = themeName;
-  // The key the root pages' navbar switch uses (root nav.js): one setting for
-  // the site and the lab. Framed, the homepage owns it.
+  // Stored under the root pages' key, so the site and the lab are one
+  // setting; framed, the homepage owns it.
   if (!config.embedded) {
     try { localStorage.setItem('theme', themeName); } catch (e) { /* private mode */ }
   }
@@ -1207,11 +1204,8 @@ window.addEventListener('hashchange', () => { if (stage.ready && hashIndex() >= 
 
 applyTheme(themeName);
 
-// Framed, the palette is the homepage's (interactive.html's head reads it
-// first, through window.pageTheme): its switch rewrites html[data-theme] on
-// the page framing this one, which is watched here, same-origin, so the stage
-// turns with the page. The system query is the fallback the head falls to,
-// followed the same way.
+// Framed: follow the framing page's html[data-theme] (same-origin), and the
+// system query, which pageTheme falls back to without a parent.
 if (config.embedded) {
   const follow = () => applyTheme(window.pageTheme ? window.pageTheme() : 'light');
   try {

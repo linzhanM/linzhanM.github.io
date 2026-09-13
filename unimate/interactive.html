@@ -22,11 +22,9 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://linzhanmou.com/unimate/assets/images/og-motion-lab.png" />
 
-  <!-- The lab opens in the appearance chosen at the root pages' navbar switch
-       (localStorage `theme`, the key root nav.js writes), and its own Theme
-       button writes the same key (viewer.js), so the site and the lab are one
-       setting. With no choice made it opens dark, its own default — not the
-       system's, which the root pages follow. -->
+  <!-- Opens in the appearance stored by the root pages' navbar switch
+       (localStorage "theme"); the lab's Theme button writes the same key
+       (viewer.js). No choice stored: dark, the lab's own default. -->
   <script>
     (function () {
       var theme = null;

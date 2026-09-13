@@ -13,20 +13,16 @@
   <meta property="og:description" content="Several bodies of one object play the motions decoded from their own latent codes. Move a code, resample, interpolate, and watch neural key points drive Gaussians." />
   <meta property="og:url" content="https://linzhanmou.com/resources/overview/dimo/interactive" />
 
-  <!-- Decided here so the first paint is already right. ?embed is the root
-       homepage's DIMO thumbnail (index.html frames this page): the ducks and
-       the UR5e in turn, no chrome, and the homepage's own palette (it stamps
-       html[data-theme] from its navbar switch or the system, and this page
-       reads that, same-origin; light is its ivory plate, dark its dark one,
-       both UniMate's stage values); interactive.css hides the chrome off
-       html.is-embed, and viewer.js follows a change. Otherwise the appearance
-       chosen at the root pages' navbar switch (localStorage `theme`, which
-       this lab's own toggle writes too, so the site and the lab are one
-       setting), and with no choice made, dark (the project page's hero). -->
+  <!-- Decided in the head so the first paint is right. ?embed: the root
+       homepage's DIMO thumbnail (index.html frames this page) — the ducks and
+       the UR5e in turn, no chrome (interactive.css, off html.is-embed), and
+       the homepage's palette: it stamps html[data-theme], read here
+       same-origin; viewer.js follows a change. Opened on its own: the choice
+       stored by the root pages' switch (localStorage "theme", which this
+       lab's toggle writes too), else dark, the project page's hero. -->
   <script>
-    // The palette of the page framing this one (root index.html stamps
-    // html[data-theme] in its head), else the system's — for a frame on some
-    // other origin, or this page opened ?embed on its own.
+    // The framing page's html[data-theme]; the system query when there is
+    // none (another origin, or ?embed opened on its own).
     function pageTheme() {
       try {
         var t = window.parent !== window && window.parent.document.documentElement.dataset.theme;
