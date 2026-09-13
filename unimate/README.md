@@ -163,12 +163,11 @@ Chrome and ffmpeg; no npm packages. `--help` lists every option.
 homepage-unimate` / `homepage-dimo`: the labs under `resources/overview/`,
 opened `?embed` as the root `index.html` frames them). `lib/labs.mjs` is the
 adapter — where each page's stage list, load state and stage switch live — and
-the default `--lab unimate` is the same adapter for this lab. The DIMO
-recording the homepage serves to phones (`assets/videos/dimo-lab.mp4`) was made
-so on 2026-09-12; the UniMate one (`unimate-lab.mp4`) comes from Blender since
-that day (`resources/overview/render/`, the paper teaser's renderer animated —
-CLAUDE.md has the section), and the `homepage-unimate` line below renders the
-web lab instead, for a comparison:
+the default `--lab unimate` is the same adapter for this lab. These lines made
+the recordings the homepage served to phones from 2026-09-12 to 09-13
+(`assets/videos/unimate-lab.mp4`, `dimo-lab.mp4`, deleted once phones got the
+live labs; UniMate's was later re-rendered in Blender, a pipeline deleted with
+them — both recoverable from `e5852c5`). They still render either lab to a clip:
 
 ```bash
 # 3840x2160 laid out at 1280x720: those two labs take --scale as their pixel

@@ -590,17 +590,15 @@ hr {
 /* The UniMate and DIMO thumbnails are their motion labs themselves
    (resources/overview/<project>/interactive.html?embed: no chrome, this page's
    palette — they read html[data-theme] here — its stage --ivory-medium in both),
-   so each is an <iframe> in the same frame as the videos, inside a <figure>. An iframe has no intrinsic size, so it takes
-   the teaser's 16:9. */
+   so each is an <iframe> in the same frame as the videos, inside a <figure>, at
+   every width. On a phone the embed's canvas keeps only sideways drags, so a
+   vertical swipe still scrolls this page. An iframe has no intrinsic size, so
+   it takes the teaser's 16:9. */
 .pub-live {
-  position: relative; /* the phone link's hit area, below */
   margin: 0;
 }
 
-/* The recording too: with preload="none" it has no intrinsic size until it
-   plays, and would stand 2:1 and then jump. */
-.pub-live-frame,
-.pub-live-video {
+.pub-live-frame {
   aspect-ratio: 16 / 9;
   height: auto;
 }
@@ -610,44 +608,6 @@ hr {
 .pub-live-frame:hover {
   transform: none;
   box-shadow: var(--shadow-plate);
-}
-
-/* The way into the lab on a phone. Desktop gets none: the frame takes the
-   click there, and a link hidden under it would be a tab stop with nothing to
-   see. */
-.pub-live-cover {
-  display: none;
-}
-
-/* The lab's recording (index.html: rendered from the same page). Desktop shows
-   the lab itself. */
-.pub-live-video {
-  display: none;
-}
-
-/* Below md the columns stack and the frame would be a full-width band a thumb
-   can't scroll past (OrbitControls takes the touch), and a lab's models are
-   megabytes a phone would only watch — so the recording stands in for it and
-   the cover link takes the tap. A script in index.html removes whichever of
-   the two the width hides, so neither is fetched in vain. */
-@media (max-width: 767.98px) {
-  .pub-live-frame {
-    display: none;
-  }
-
-  .pub-live-video {
-    display: block;
-  }
-
-  .pub-live-cover {
-    display: block;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    border-radius: var(--radius-md);
-  }
 }
 
 /* Palatino, deliberately a third voice beside Fraunces and Source Serif. It is

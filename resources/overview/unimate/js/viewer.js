@@ -152,12 +152,17 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(0, 1.4, 4);
 
+// Framed on a touch screen (the homepage thumbnail on a phone), the stage draws
+// lighter: a 1.5 pixel ratio and a 1024 shadow map read as 2 and 2048 do at
+// 350 CSS px, for ~44% fewer pixels a frame and a quarter of the shadow memory.
+const touchEmbed = viewerConfig.embedded && window.matchMedia('(pointer: coarse)').matches;
+
 const renderer = new THREE.WebGLRenderer({ antialias: true });
-// Capped at 2 as unimate/'s lab is; `maxPixelRatio` lifts the cap for
-// unimate/tools/render-category.mjs, which lays this page out at a fraction of
-// its output size so the skeleton hairlines keep a phone's weight in a 4K
-// frame (its --lab homepage-unimate).
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, viewerConfig.maxPixelRatio || 2));
+// Capped at 2 as unimate/'s lab is (1.5 in touchEmbed); `maxPixelRatio` lifts
+// the cap for unimate/tools/render-category.mjs, which lays this page out at a
+// fraction of its output size so the skeleton hairlines keep a phone's weight
+// in a 4K frame (its --lab homepage-unimate).
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, viewerConfig.maxPixelRatio || (touchEmbed ? 1.5 : 2)));
 renderer.setSize(wrapper.clientWidth, wrapper.clientHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 // No tone mapping, as in unimate/: ACES was tried (2026-09-12) and paled
@@ -182,7 +187,7 @@ scene.add(keyLight);
 // The key light casts the ground shadows. Its ortho shadow frustum is fitted to
 // the stage in frameStage(); bias/normalBias tame skinned-mesh shadow acne.
 keyLight.castShadow = true;
-keyLight.shadow.mapSize.set(2048, 2048);
+keyLight.shadow.mapSize.setScalar(touchEmbed ? 1024 : 2048);
 keyLight.shadow.bias = -0.0004;
 keyLight.shadow.normalBias = 0.02;
 scene.add(keyLight.target);
@@ -199,10 +204,13 @@ controls.dampingFactor = 0.08;
 // Framed on the homepage (interactive.js `embedded`): drag still orbits, but the
 // wheel and pinch are left to the page — with enableZoom off OrbitControls never
 // preventDefaults the wheel, so it scroll-chains out of the frame instead of
-// zooming a thumbnail.
+// zooming a thumbnail. Touch likewise: OrbitControls sets touch-action none,
+// which traps a phone's thumb in the frame; pan-y hands a vertical swipe (and a
+// pinch) back to the page and keeps sideways drags for orbiting.
 if (viewerConfig.embedded) {
   controls.enableZoom = false;
   controls.enablePan = false;
+  renderer.domElement.style.touchAction = 'pan-y pinch-zoom';
 }
 if (viewerConfig.autoOrbitControls) {
   controls.autoRotate = settings['auto orbit'];

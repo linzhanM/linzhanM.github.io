@@ -111,12 +111,16 @@ scene.fog = new THREE.Fog(0x000000, 7, 16);   // range refitted per object (fram
 
 const DEFAULT_FOV = 32;   // vertical degrees; an object's camera.fov overrides it
 const camera = new THREE.PerspectiveCamera(DEFAULT_FOV, 1, 0.05, 60);
+// Framed on a touch screen (the homepage thumbnail on a phone), the stage draws
+// lighter: a 1.5 pixel ratio and a 1024 shadow map read as 2 and 2048 do at
+// 350 CSS px, for ~44% fewer pixels a frame and a quarter of the shadow memory.
+const touchEmbed = config.embedded && window.matchMedia('(pointer: coarse)').matches;
 const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
-// Capped at 2; `maxPixelRatio` lifts the cap for unimate/tools/
-// render-category.mjs (--lab homepage-dimo), which lays this page out at a
-// fraction of its output size so the pixel-sized trails and key points keep
-// a phone's weight in a 4K frame. The latent sheet keeps its own 2 below.
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, config.maxPixelRatio || 2));
+// Capped at 2 (1.5 in touchEmbed); `maxPixelRatio` lifts the cap for
+// unimate/tools/render-category.mjs (--lab homepage-dimo), which lays this page
+// out at a fraction of its output size so the pixel-sized trails and key points
+// keep a phone's weight in a 4K frame. The latent sheet keeps its own 2 below.
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, config.maxPixelRatio || (touchEmbed ? 1.5 : 2)));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -141,7 +145,7 @@ const hemi = new THREE.HemisphereLight(0xffffff, 0x000000, 0.5);
 const key = new THREE.DirectionalLight('#ffffff', 1.7);
 key.position.set(2.4, 4.6, 2.8);
 key.castShadow = true;
-key.shadow.mapSize.set(2048, 2048);
+key.shadow.mapSize.setScalar(touchEmbed ? 1024 : 2048);
 key.shadow.camera.near = 1;
 key.shadow.camera.far = 14;
 key.shadow.bias = -0.0006;
@@ -248,8 +252,14 @@ controls.maxDistance = 30;
 controls.maxPolarAngle = Math.PI / 2 - 0.03;
 controls.autoRotateSpeed = config.orbitSpeed ?? 4 / 6;
 // Framed on the homepage: drag still orbits, but the wheel is left to the
-// page — with zoom off OrbitControls never preventDefaults it.
-if (config.embedded) controls.enableZoom = false;
+// page — with zoom off OrbitControls never preventDefaults it. Touch likewise:
+// OrbitControls sets touch-action none, which traps a phone's thumb in the
+// frame; pan-y hands a vertical swipe (and a pinch) back to the page and keeps
+// sideways drags for orbiting.
+if (config.embedded) {
+  controls.enableZoom = false;
+  renderer.domElement.style.touchAction = 'pan-y pinch-zoom';
+}
 
 // Gaussians: a Gaussian falloff per point, sized in world units.
 const splatMaterial = new THREE.ShaderMaterial({
