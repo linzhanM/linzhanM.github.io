@@ -25,7 +25,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { OBJECTS, CYCLE_SECONDS, LATENT_SIGMA, KEYPOINTS, GAUSSIANS } from './examples.js?v=3';
+import { OBJECTS, CYCLE_SECONDS, LATENT_SIGMA, KEYPOINTS, GAUSSIANS } from './examples.js?v=4';
 import { buildRig, cloneRig } from './rigs.js?v=3';
 import { controlNames, weightsAt, decodePose, bindGaussians, skinGaussians, transformKeypoints } from './decoder.js?v=1';
 

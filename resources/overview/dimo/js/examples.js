@@ -132,6 +132,15 @@ const GRID_ANCHORS = [
   [0.16, 0.84], [0.5, 0.86], [0.84, 0.84],
 ];
 
+// The clips were authored to the bare flange; with the lab's gripper hanging
+// 0.16 past it, three of them reach below the floor — measured over the loop
+// on 2026-09-13, fingers at polish −7.6 cm, peg insert −5.1, dispense −1.7.
+// Each is raised at the shoulder by this much (rad) with wrist_1 turned back
+// the same, so the tool keeps its orientation; the smallest step that leaves
+// the fingers 2 cm clear, rounded up (polish needed 0.28, peg insert 0.18,
+// dispense 0.14). The other six stay as extracted.
+const UR5E_RAISE = { polish: 0.3, 'peg insert': 0.2, dispense: 0.15 };
+
 const UR5E = {
   label: 'UR5e arm',
   slug: 'ur5e',
@@ -190,7 +199,13 @@ const UR5E = {
     caption: e.caption,
     z: GRID_ANCHORS[i],
     source: e.source,
-    joints: Object.fromEntries(Object.entries(e.joints).map(([control, values]) => [control, sampled(values)])),
+    joints: Object.fromEntries(Object.entries(e.joints).map(([control, values]) => {
+      const raise = UR5E_RAISE[e.name] || 0;
+      const shifted = control === 'shoulder_lift' ? values.map((v) => v - raise)
+        : control === 'wrist_1' ? values.map((v) => v + raise)
+        : values;
+      return [control, sampled(shifted)];
+    })),
   })),
 };
 

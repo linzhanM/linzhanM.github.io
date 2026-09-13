@@ -38,4 +38,4 @@ window.DIMO_LAB_CONFIG = {
   trailFrames: 14,
 };
 
-await import('./viewer.js?v=10');
+await import('./viewer.js?v=11');
