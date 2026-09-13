@@ -591,9 +591,8 @@ hr {
    (resources/overview/<project>/interactive.html?embed: no chrome, this page's
    palette — they read html[data-theme] here — its stage --ivory-medium in both),
    so each is an <iframe> in the same frame as the videos, inside a <figure>, at
-   every width. On a phone the embed's canvas keeps only sideways drags, so a
-   vertical swipe still scrolls this page. An iframe has no intrinsic size, so
-   it takes the teaser's 16:9. */
+   every width. On a phone the stage doesn't orbit, so a swipe over it scrolls
+   this page. An iframe has no intrinsic size, so it takes the teaser's 16:9. */
 .pub-live {
   margin: 0;
 }

@@ -111,10 +111,14 @@ scene.fog = new THREE.Fog(0x000000, 7, 16);   // range refitted per object (fram
 
 const DEFAULT_FOV = 32;   // vertical degrees; an object's camera.fov overrides it
 const camera = new THREE.PerspectiveCamera(DEFAULT_FOV, 1, 0.05, 60);
-// Framed on a touch screen (the homepage thumbnail on a phone), the stage draws
-// lighter: a 1.5 pixel ratio and a 1024 shadow map read as 2 and 2048 do at
-// 350 CSS px, for ~44% fewer pixels a frame and a quarter of the shadow memory.
+// Framed on a touch screen (the homepage thumbnail on a phone), the stage is a
+// picture, not an instrument, and draws lighter: nothing orbits (a swipe over
+// the frame scrolls the page), it draws TOUCH_EMBED_FPS frames a second rather
+// than the display's rate, and a 1.5 pixel ratio and a 1024 shadow map read as
+// 2 and 2048 do at 350 CSS px — about a quarter of the pixels a second, and a
+// quarter of the shadow memory.
 const touchEmbed = config.embedded && window.matchMedia('(pointer: coarse)').matches;
+const TOUCH_EMBED_FPS = 30;
 const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
 // Capped at 2 (1.5 in touchEmbed); `maxPixelRatio` lifts the cap for
 // unimate/tools/render-category.mjs (--lab homepage-dimo), which lays this page
@@ -252,13 +256,16 @@ controls.maxDistance = 30;
 controls.maxPolarAngle = Math.PI / 2 - 0.03;
 controls.autoRotateSpeed = config.orbitSpeed ?? 4 / 6;
 // Framed on the homepage: drag still orbits, but the wheel is left to the
-// page — with zoom off OrbitControls never preventDefaults it. Touch likewise:
-// OrbitControls sets touch-action none, which traps a phone's thumb in the
-// frame; pan-y hands a vertical swipe (and a pinch) back to the page and keeps
-// sideways drags for orbiting.
+// page — with zoom off OrbitControls never preventDefaults it. On a touch
+// screen nothing orbits: the controls are off and the canvas gives back the
+// touch-action OrbitControls set to none, so a swipe or a pinch over the frame
+// moves the page as anywhere else.
 if (config.embedded) {
   controls.enableZoom = false;
-  renderer.domElement.style.touchAction = 'pan-y pinch-zoom';
+  if (touchEmbed) {
+    controls.enabled = false;
+    renderer.domElement.style.touchAction = 'auto';
+  }
 }
 
 // Gaussians: a Gaussian falloff per point, sized in world units.
@@ -1188,10 +1195,21 @@ if (config.embedded && 'IntersectionObserver' in window) {
   new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; }, { rootMargin: '120px 0px' })
     .observe(renderer.domElement);
 }
+// On a touch screen the loop draws at most TOUCH_EMBED_FPS: a skipped frame's
+// time is carried into the next drawn one, so the motion and the cycle keep
+// their speed and only the steps get coarser. 0.9, because two 60 Hz frames
+// can sum to a hair under 1/30 s and would otherwise wait for a third.
+let touchCarry = 0;
 (function frame() {
   requestAnimationFrame(frame);
-  const dt = Math.min(clock.getDelta(), MAX_FRAME_DELTA);
+  let dt = Math.min(clock.getDelta(), MAX_FRAME_DELTA);
   if (!onScreen) return;   // the clock was read, so nothing accumulates
+  if (touchEmbed) {
+    touchCarry += dt;
+    if (touchCarry < 0.9 / TOUCH_EMBED_FPS) return;
+    dt = Math.min(touchCarry, MAX_FRAME_DELTA);
+    touchCarry = 0;
+  }
   if (!settings.paused) elapsed += dt;
   const obj = stage.shown;
   if (obj) {
