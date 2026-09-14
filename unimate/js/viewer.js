@@ -2159,10 +2159,11 @@ if (isFullscreenLab) {
   themeToggle?.addEventListener('click', () => {
     const next = viewerTheme === 'dark' ? 'light' : 'dark';
     applyViewerTheme(next);
-    // Store the click under the root pages' key, so the homepage follows;
-    // never on load — a default or a read-back is not a choice.
+    // Store the click under the lab's own key, never the root pages' — the
+    // lab is dark until this button says otherwise, whatever the homepage or
+    // the system shows. Never on load: a default is not a choice.
     if (isFullscreenLab) {
-      try { localStorage.setItem('theme', next); } catch (e) { /* private mode */ }
+      try { localStorage.setItem('unimate-lab-theme', next); } catch (e) { /* private mode */ }
     }
   });
 

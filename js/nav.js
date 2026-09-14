@@ -84,9 +84,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	// --- Appearance switch ------------------------------------------------
 	// html[data-theme] is stamped in each page's <head> before first paint;
 	// this only turns the switch and keeps the choice in localStorage, which
-	// the labs read too. The system is followed until a choice is made and
-	// not after — there is no "system" state. The framed labs watch the
-	// attribute themselves.
+	// the DIMO lab reads too (UniMate's full lab keeps its own). The system
+	// is followed until a choice is made and not after — there is no
+	// "system" state. The framed labs watch the attribute themselves.
 	var THEME_KEY = 'theme';
 	var root = document.documentElement;
 	var themeSwitch = document.querySelector('.theme-switch');

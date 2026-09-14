@@ -22,13 +22,13 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://linzhanmou.com/unimate/assets/images/og-motion-lab.png" />
 
-  <!-- Opens in the appearance stored by the root pages' navbar switch
-       (localStorage "theme"); the lab's Theme button writes the same key
-       (viewer.js). No choice stored: dark, the lab's own default. -->
+  <!-- Dark, unless this lab's own Theme button chose light (localStorage
+       "unimate-lab-theme", written by viewer.js on the click). Neither the
+       system appearance nor the root pages' navbar switch reaches it. -->
   <script>
     (function () {
       var theme = null;
-      try { theme = localStorage.getItem('theme'); } catch (e) { /* private mode */ }
+      try { theme = localStorage.getItem('unimate-lab-theme'); } catch (e) { /* private mode */ }
       document.documentElement.dataset.theme = theme === 'light' ? 'light' : 'dark';
     })();
   </script>
@@ -102,7 +102,7 @@
       }
     }
   </script>
-  <script type="module" src="js/interactive.js?v=150"></script>
+  <script type="module" src="js/interactive.js?v=151"></script>
 
   <script type="text/javascript">
     var sc_project = 12925377;
