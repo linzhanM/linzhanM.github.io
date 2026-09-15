@@ -3,8 +3,10 @@
 // before it builds the scene.
 window.DIMO_LAB_CONFIG = {
   // interactive.html?embed — the root homepage frames the lab as DIMO's
-  // thumbnail. The chrome is hidden by interactive.css; the engine drops zoom,
-  // keys and the selection ring, keeps its palette off localStorage, takes the
+  // thumbnail. The chrome is hidden by interactive.css; the engine lets the
+  // wheel zoom about the fitted view (never scrolling the page), drops keys
+  // and the selection ring, keeps its palette
+  // off localStorage, takes the
   // homepage's palette on its plate (light or dark), and renders only while
   // the frame is on screen.
   embedded: document.documentElement.classList.contains('is-embed'),
@@ -38,4 +40,4 @@ window.DIMO_LAB_CONFIG = {
   trailFrames: 14,
 };
 
-await import('./viewer.js?v=13');
+await import('./viewer.js?v=14');

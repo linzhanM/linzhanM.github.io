@@ -7,9 +7,10 @@ const embedded = document.documentElement.classList.contains('is-embed');
 window.UNIMATE_VIEWER_CONFIG = {
   fullscreenLab: true,
   // interactive.html?embed — the root homepage frames the lab as its UniMate
-  // thumbnail. The chrome is hidden by interactive.css; the engine drops zoom,
-  // pan and the dock keys (the wheel then scrolls the page the frame sits in)
-  // and renders only while the frame is on screen.
+  // thumbnail. The chrome is hidden by interactive.css; the engine drops pan
+  // and the dock keys, lets the wheel zoom about the fitted view (never
+  // scrolling the page the frame sits in), and renders only while the frame
+  // is on screen.
   embedded,
   cameraPadding: 1.32,
   mobileCameraPadding: 0.96,
@@ -34,7 +35,7 @@ window.UNIMATE_VIEWER_CONFIG = {
   autoOrbitControls: !embedded,
 };
 
-await import('./viewer.js?v=266');
+await import('./viewer.js?v=267');
 
 // Category-panel collapse — lab-only chrome, so wired here, not in the shared
 // engine. The canvas never resizes: only the floating panel and its handle

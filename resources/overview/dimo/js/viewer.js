@@ -255,16 +255,34 @@ controls.minDistance = 0.9;
 controls.maxDistance = 30;
 controls.maxPolarAngle = Math.PI / 2 - 0.03;
 controls.autoRotateSpeed = config.orbitSpeed ?? 4 / 6;
-// Framed on the homepage: drag still orbits, but the wheel is left to the
-// page — with zoom off OrbitControls never preventDefaults it. On a touch
+// Framed on the homepage: drag orbits and the wheel zooms, between
+// EMBED_ZOOM_IN and EMBED_ZOOM_OUT of the fitted view's distance (frameCamera
+// sets the limits; the owner's range, 2026-09-15). A wheel over the frame is
+// the frame's alone — at a limit too, and mid-drag, where OrbitControls lets it
+// through — so the page never scrolls under a zoom (owner's request,
+// 2026-09-15). A zoom outlasts the cycle's cuts: frameCamera opens
+// the next object at the same share of its own fit. The fog range is fitted at
+// the fit's distance and moves with the zoom, so it stays on the scene: a zoom
+// runs along the view axis, which is what fog depth measures, and a zoom out
+// would otherwise fog the bodies. On a touch
 // screen nothing orbits: the controls are off and the canvas gives back the
 // touch-action OrbitControls set to none, so a swipe or a pinch over the frame
 // moves the page as anywhere else.
+const EMBED_ZOOM_IN = 0.4, EMBED_ZOOM_OUT = 1.2;
+let fogFit = null;   // frameCamera's fog range and the distance it was fitted at
+function fogToZoom() {
+  if (!fogFit) return;
+  const pull = fogFit.distance - camera.position.distanceTo(controls.target);
+  scene.fog.near = fogFit.near - pull;
+  scene.fog.far = fogFit.far - pull;
+}
 if (config.embedded) {
-  controls.enableZoom = false;
   if (touchEmbed) {
     controls.enabled = false;
     renderer.domElement.style.touchAction = 'auto';
+  } else {
+    renderer.domElement.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
+    controls.addEventListener('change', fogToZoom);
   }
 }
 
@@ -561,6 +579,9 @@ function frameCamera() {
   const obj = stage.shown;
   const w = dom.wrapper.clientWidth, h = dom.wrapper.clientHeight;
   if (!obj || !w || !h) return;
+  // Framed, the visitor's zoom as a share of the last fit, kept for this one.
+  const zoom = config.embedded && fogFit
+    ? THREE.MathUtils.clamp(camera.position.distanceTo(controls.target) / fogFit.distance, EMBED_ZOOM_IN, EMBED_ZOOM_OUT) : 1;
   const cloud = sweptCloud(obj);
   const lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
   for (let i = 0; i < cloud.length; i += 3) {
@@ -648,7 +669,14 @@ function frameCamera() {
   }
   target.addScaledVector(right, sx).addScaledVector(up, sy);
   controls.target.copy(target);
-  controls.maxDistance = Math.max(controls.maxDistance, d);
+  // Framed on the homepage, the wheel's range is a share of this fit (see the
+  // controls); the lab keeps its own range.
+  if (config.embedded) {
+    controls.minDistance = d * EMBED_ZOOM_IN;
+    controls.maxDistance = d * EMBED_ZOOM_OUT;
+  } else {
+    controls.maxDistance = Math.max(controls.maxDistance, d);
+  }
   // The floor in view units (see FLOOR_VIEW_SHARE): the same cells on screen,
   // and the same run of them out to the fog, for every object.
   const floorScale = (d * Math.tan(camera.fov * Math.PI / 360) * FLOOR_VIEW_SHARE) / FLOOR_CELL;
@@ -658,7 +686,9 @@ function frameCamera() {
   for (let i = 2; i < view.length; i += 3) farthest = Math.max(farthest, d - view[i]);
   scene.fog.near = farthest + 0.5 * floorScale;
   scene.fog.far = farthest + 9 * floorScale;
-  camera.position.copy(target).addScaledVector(back, d);
+  fogFit = { near: scene.fog.near, far: scene.fog.far, distance: d };
+  camera.position.copy(target).addScaledVector(back, d * zoom);
+  fogToZoom();
   controls.update();
 }
 

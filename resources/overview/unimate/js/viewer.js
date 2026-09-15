@@ -205,18 +205,22 @@ LIGHTS.forEach((l) => { l.userData.baseIntensity = l.intensity; });
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
-// Framed on the homepage (interactive.js `embedded`): drag still orbits, but the
-// wheel is left to the page — with enableZoom off OrbitControls never
-// preventDefaults the wheel, so it scroll-chains out of the frame instead of
-// zooming a thumbnail. On a touch screen nothing orbits: the controls are off
-// and the canvas gives back the touch-action OrbitControls set to none, so a
-// swipe or a pinch over the frame moves the page as anywhere else.
+// Framed on the homepage (interactive.js `embedded`): drag orbits and the wheel
+// zooms, between EMBED_ZOOM_IN and EMBED_ZOOM_OUT of the fitted view's distance
+// (frameStage sets the limits; the owner's range, 2026-09-15). A wheel over the frame is the frame's alone — at a limit too, and
+// mid-drag, where OrbitControls lets it through — so the page never scrolls
+// under a zoom (owner's request, 2026-09-15). On a touch screen nothing
+// orbits: the controls are off and the canvas gives back the touch-action
+// OrbitControls set to none, so a swipe or a pinch over the frame moves the
+// page as anywhere else.
+const EMBED_ZOOM_IN = 0.4, EMBED_ZOOM_OUT = 1.2;
 if (viewerConfig.embedded) {
-  controls.enableZoom = false;
   controls.enablePan = false;
   if (touchEmbed) {
     controls.enabled = false;
     renderer.domElement.style.touchAction = 'auto';
+  } else {
+    renderer.domElement.addEventListener('wheel', (event) => event.preventDefault(), { passive: false });
   }
 }
 if (viewerConfig.autoOrbitControls) {
@@ -766,6 +770,13 @@ function frameStage(pad = 1.0, orbitAngleDegrees = viewerConfig.initialOrbitAngl
   camera.near = dist / 100;
   camera.far = dist * 100;
   camera.updateProjectionMatrix();
+  // Framed on the homepage, the wheel's range is a share of this fit (see the
+  // controls). Before update(), which would clamp this view to the last fit's.
+  if (viewerConfig.embedded) {
+    const fit = camera.position.distanceTo(controls.target);
+    controls.minDistance = fit * EMBED_ZOOM_IN;
+    controls.maxDistance = fit * EMBED_ZOOM_OUT;
+  }
   controls.update();
 
   // (Re)build the paper floor sized to the stage — at least the framed width, so
