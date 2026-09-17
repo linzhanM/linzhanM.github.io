@@ -45,7 +45,7 @@ window.UNIMATE_VIEWER_CONFIG = {
   autoOrbitControls: true,
 };
 
-await import('./viewer.js?v=199');
+await import('./viewer.js?v=200');
 
 // Category-panel collapse — lab-only chrome, so wired here, not in the shared
 // engine. The canvas never resizes: only the floating panel and its handle

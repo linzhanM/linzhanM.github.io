@@ -28,8 +28,7 @@ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
-import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=98';
+import { EXAMPLES as DEFAULT_CATALOG } from './examples.js?v=99';
 
 const wrapper = document.getElementById('viewer-wrapper');
 const overlay = document.getElementById('loading-overlay');
@@ -174,41 +173,8 @@ const fillLight = new THREE.DirectionalLight(0xffffff, 0.8);
 fillLight.position.set(-5, 3, -4);
 scene.add(fillLight);
 
-// Two more, lit only by the `dimo` look below: DIMO's pink rim from behind the
-// left shoulder and its blue fill from the front left.
-const rimLight = new THREE.DirectionalLight('#ff5c8a', 0);
-rimLight.position.set(-2.2, 2.2, -3);
-scene.add(rimLight);
-const tintLight = new THREE.DirectionalLight('#3b82f6', 0);
-tintLight.position.set(-3, 1.2, 2.4);
-scene.add(tintLight);
-
-const LIGHTS = [hemiLight, keyLight, fillLight, rimLight, tintLight];
-
-// A stage's `look` (examples.js): how the same rigs are lit and finished.
-// `default` is this lab's own — direct light, no tone mapping, materials as
-// the files ship them. `dimo` is the DIMO Motion Lab's studio, brought over at
-// the owner's request (2026-09-12) for the Tabletop stage, whose duck, arm and
-// lamp are that lab's kind of object: a room environment to reflect (PMREM of
-// three's RoomEnvironment), ACES tone mapping, its hemisphere, key, pink rim
-// and blue fill at the values its homepage thumbnail settled on, and every
-// material re-cast as its clearcoat "shell" or anodised "metal" finish
-// (applyLookMaterials). The intensities are the base `lighting` multiplies.
-const LOOKS = {
-  default: {
-    hemi: 2.2, key: 2.0, fill: 0.8, rim: 0, tint: 0,
-    hemiColor: null,   // the theme's own (VIEWER_THEMES hemisphereGround)
-    environment: false, toneMapping: THREE.NoToneMapping, exposure: 1,
-  },
-  dimo: {
-    hemi: 0.45, key: 1.6, fill: 0, rim: 0.8, tint: 0.6,
-    hemiColor: { light: ['#ffffff', '#a9aebb'], dark: ['#cfd8ff', '#241c33'] },
-    environment: true, toneMapping: THREE.ACESFilmicToneMapping, exposure: 0.88,
-  },
-};
-let activeLook = 'default';
-let activeLightMult = 1;
-let roomEnvironment = null;   // built once, the first time a stage asks for it
+const LIGHTS = [hemiLight, keyLight, fillLight];
+LIGHTS.forEach((l) => { l.userData.baseIntensity = l.intensity; });
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -235,78 +201,9 @@ function applyWireframe() {
   });
 }
 
-// Scale every light by `mult` off the active look's base (mult = 1 is that
-// look as written).
+// Scale every light by `mult` off its base (mult = 1 restores the default look).
 function applyLighting(mult = 1) {
-  activeLightMult = mult;
-  const look = LOOKS[activeLook];
-  hemiLight.intensity = look.hemi * mult;
-  keyLight.intensity = look.key * mult;
-  fillLight.intensity = look.fill * mult;
-  rimLight.intensity = look.rim * mult;
-  tintLight.intensity = look.tint * mult;
-}
-
-// Switch the stage's look (LOOKS): lights, hemisphere colours, environment and
-// tone mapping. Runs again on a theme change, since the hemisphere colours
-// follow the theme. A tone-mapping change recompiles every material, so they
-// are all flagged; the floor is drawn without tone mapping under either look
-// (its material is toneMapped: false where it is built), as DIMO's is.
-function applyLook(name) {
-  const look = LOOKS[name] || LOOKS.default;
-  activeLook = LOOKS[name] ? name : 'default';
-  if (look.hemiColor) {
-    const [sky, ground] = look.hemiColor[viewerTheme];
-    hemiLight.color.set(sky);
-    hemiLight.groundColor.set(ground);
-  } else {
-    hemiLight.color.set(0xffffff);
-    hemiLight.groundColor.setHex(VIEWER_THEMES[viewerTheme].hemisphereGround);
-  }
-  if (look.environment && !roomEnvironment) {
-    const pmrem = new THREE.PMREMGenerator(renderer);
-    roomEnvironment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-    pmrem.dispose();
-  }
-  scene.environment = look.environment ? roomEnvironment : null;
-  const remap = renderer.toneMapping !== look.toneMapping;
-  renderer.toneMapping = look.toneMapping;
-  renderer.toneMappingExposure = look.exposure;
-  if (remap) scene.traverse((o) => { for (const m of [].concat(o.material || [])) if (m) m.needsUpdate = true; });
-  applyLighting(activeLightMult);
-}
-
-// The `dimo` look's finishes, DIMO's own (its rigs.js presets): a painted
-// shell with a clearcoat, or anodised metal — picked by the file's own
-// metalness, where DIMO picks by how dark the colour is (its models carry
-// flat colours; these carry maps, which stay). A MeshStandardMaterial has no
-// clearcoat, so it is rebuilt as a MeshPhysicalMaterial over the same maps.
-const DIMO_FINISH = {
-  shell: { roughness: 0.42, metalness: 0.04, clearcoat: 0.55, clearcoatRoughness: 0.28 },
-  metal: { roughness: 0.38, metalness: 0.62 },
-};
-const DIMO_ENV_INTENSITY = 0.55;
-function applyLookMaterials(model, name) {
-  if (name !== 'dimo') return;
-  model.traverse((o) => {
-    if (!o.isMesh) return;
-    const recast = (m) => {
-      if (!m || !m.isMeshStandardMaterial) return m;
-      const finish = m.metalness >= 0.5 && !m.metalnessMap ? 'metal' : 'shell';
-      let p = m;
-      if (!m.isMeshPhysicalMaterial) {
-        p = new THREE.MeshPhysicalMaterial();
-        THREE.MeshStandardMaterial.prototype.copy.call(p, m);
-        p.defines = { STANDARD: '', PHYSICAL: '' };
-        m.dispose();
-      }
-      Object.assign(p, DIMO_FINISH[finish]);
-      p.envMapIntensity = DIMO_ENV_INTENSITY;
-      p.needsUpdate = true;
-      return p;
-    };
-    o.material = Array.isArray(o.material) ? o.material.map(recast) : recast(o.material);
-  });
+  for (const l of LIGHTS) l.intensity = l.userData.baseIntensity * mult;
 }
 
 // ── 5. Model loading & material repair ───────────────────────────────────────
@@ -764,7 +661,7 @@ function applyViewerTheme(theme) {
   const palette = VIEWER_THEMES[viewerTheme];
   if (isFullscreenLab) document.documentElement.dataset.theme = viewerTheme;
   scene.background.setHex(palette.background);
-  applyLook(activeLook);   // the hemisphere colours follow the theme
+  hemiLight.groundColor.setHex(palette.hemisphereGround);
   paintChecker(viewerTheme);
   setFloorRepeat();
   if (grid) grid.material.opacity = palette.floorOpacity;
@@ -860,12 +757,9 @@ function frameStage(pad = 1.0, orbitAngleDegrees = viewerConfig.initialOrbitAngl
   setFloorRepeat(squares);
   grid = new THREE.Mesh(
     new THREE.PlaneGeometry(gridSize, gridSize),
-    // Unlit, so the floor tone ignores the per-window lighting multiplier,
-    // and not tone-mapped, so it holds its colour under the `dimo` look's
-    // ACES as well (applyLook), as DIMO's own floor does.
+    // Unlit, so the floor tone ignores the per-window lighting multiplier.
     new THREE.MeshBasicMaterial({
       map: checkerTex,
-      toneMapped: false,
       transparent: true,
       opacity: VIEWER_THEMES[viewerTheme].floorOpacity,
       side: THREE.DoubleSide,
@@ -1916,7 +1810,7 @@ function loadExample(index) {
     };
   });
   return loadStage(specs, index, {
-    scale: ex.scale, spacing: ex.spacing, rowSpacing: ex.rowSpacing, pad: ex.pad, lighting: ex.lighting, look: ex.look,
+    scale: ex.scale, spacing: ex.spacing, rowSpacing: ex.rowSpacing, pad: ex.pad, lighting: ex.lighting,
     evenGaps: ex.evenGaps, sizeBy: ex.sizeBy, stagger: ex.stagger, rowDepth: ex.rowDepth, rowOrder: ex.rowOrder, fileOffsets: ex.fileOffsets,
     stageShift: ex.stageShift, floor: ex.floor, liftScale: ex.liftScale, sameRig: ex.sameRig,
     cameraPadding: viewerConfig.cameraPaddingByCategory?.[ex.label],
@@ -1973,7 +1867,6 @@ async function loadStage(specs, activeIndex, opts = {}) {
       const { model, animations, isFbx } = loaded[li];
       fixMaterials(model, isFbx);
       applyMaterialOverride(model, specs[li].material);
-      applyLookMaterials(model, opts.look);
       model.visible = settings['show model'];
 
       // The pivot takes the ground + normalize transform; the model's own is untouched.
@@ -2032,7 +1925,6 @@ async function loadStage(specs, activeIndex, opts = {}) {
     applyStageShift(activeShift);
 
     applyWireframe();
-    applyLook(opts.look || 'default');
     applyLighting(opts.lighting || 1);
     buildLabels(specs); // anchors ride the pivots, so this may run before or after layout
     activeCameraPadding = opts.cameraPadding ?? viewerConfig.cameraPadding ?? 1;
