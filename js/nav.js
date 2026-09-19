@@ -1,8 +1,9 @@
-/* Shared by the three root pages: the appearance switch, the mobile burger,
-   the section reveal, and the keypoint that marks the section you're reading. The keypoint is driven
-   by writing --kp-x (offset along the rail) and --kp-o (opacity) onto
-   .navbar-sections, so all easing stays in CSS. Links are plain anchors —
-   without JS the nav still navigates, it just doesn't track. */
+/* Shared by the three root pages (loaded at the foot of each): the section
+   reveal, the appearance switch, the mobile burger, and the keypoint that
+   marks the section you're reading. The keypoint is driven by writing --kp-x
+   (offset along the rail) and --kp-o (opacity) onto .navbar-sections, so all
+   easing stays in CSS (custom-navbar.css). Links are plain anchors — without
+   JS the nav still navigates, it just doesn't track. */
 
 /* Unfold each .page-section as it comes on screen. The hidden state is CSS
    (styles.css, gated behind .js-anim); this only decides *when* each one is

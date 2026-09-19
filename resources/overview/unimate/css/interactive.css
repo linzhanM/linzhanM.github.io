@@ -1,4 +1,8 @@
-/* Full-screen motion lab interface. */
+/* Full-screen motion lab interface: unimate/css/interactive.css as copied on
+   2026-09-11 for the root homepage's UniMate thumbnail, plus the ?embed block
+   near the end (html.is-embed, set in interactive.html's head), which hides
+   every piece of chrome and paints the framed dark stage. The loading overlay
+   here is the model for the DIMO thumbnail's (../dimo/css/interactive.css). */
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
 
 :root {
@@ -331,10 +335,11 @@ button:focus-visible {
 .control-bar {
   top: 12px;
   right: 12px;
-  /* Wide enough that the catalog's longest label ("Unitree G1 Robot", 13px
-     sans, after the mono "Category" and 16px gap) fits without the ellipsis.
-     The ellipsis is insurance for drop-in FILE names only (viewer.js puts the
-     full name in a title); at 194px it was also eating catalog names. */
+  /* Wide enough that unimate/'s longest label ("Unitree G1 Robot", 13px sans,
+     after the mono "Category" and 16px gap) fits without the ellipsis; kept as
+     copied, though this catalog is "Teaser Scene" alone. The ellipsis is
+     insurance for drop-in FILE names only (viewer.js puts the full name in a
+     title); at 194px it was also eating catalog names. */
   width: 216px;
   flex-direction: column;
   align-items: stretch;

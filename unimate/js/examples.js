@@ -118,7 +118,7 @@ export const EXAMPLES = [
       // to its rig once they part. Moot in the lab, which shows one prompt at
       // the cursor and never runs the anchored solver.
       //
-      // The -open cut of the greet, not the one the WALL-E Robot stage runs:
+      // The spread_wave cut, not wall_e-greet (the WALL-E Robot stage's):
       // arms swinging out to the sides instead of lifting a little. At this
       // size a small gesture reads as nothing happening.
       { url: 'resources/glbs/wall_e-spread_wave.glb', groundToMesh: true, labelOffset: [-60, 0] },
@@ -153,8 +153,9 @@ export const EXAMPLES = [
     spacing: 0.6, lighting: 2.0, evenGaps: true,
   },
   {
-    // Row 0 (front, ground): gyarados · jellyfish · whale, with a bird above.
-    // Row 1 (back, ground):  monster · stego, with two dragons above.
+    // Row 0 (front): gyarados · jellyfish · whale (lifted off the ground).
+    // Row 1 (back):  monster · stego, the chicken on the ground between them,
+    //                and the bird and two dragons hovering above.
     label: 'Creatures',
     files: [
       // Row 0. The whole front row is nudged left (−x) and forward (+z).

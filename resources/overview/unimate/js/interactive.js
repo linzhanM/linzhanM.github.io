@@ -12,6 +12,8 @@ window.UNIMATE_VIEWER_CONFIG = {
   // scrolling the page the frame sits in), and renders only while the frame
   // is on screen.
   embedded,
+  // Page-wide paddings, unimate/'s lab values: only a drop-in stage reaches
+  // them, since the one catalog stage sets its own below.
   cameraPadding: 1.32,
   mobileCameraPadding: 0.96,
   // The stage frames on its own `pad` (homepage.js) at every width: the frame

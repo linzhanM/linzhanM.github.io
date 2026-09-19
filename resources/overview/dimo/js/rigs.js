@@ -120,8 +120,8 @@ function materialFor(color, finish) {
 }
 
 // The models in resources/glbs/ are meshopt-compressed (EXT_meshopt_compression;
-// how they were made is in CLAUDE.md), so the decoder is registered or none of them
-// parses. Each URL is fetched once per session; every build clones it.
+// how they were made is in AGENTS.md), so the decoder is registered or none of
+// them parses. Each URL is fetched once per session; every build clones it.
 const gltfLoader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
 const models = new Map();
 function loadModel(url) {

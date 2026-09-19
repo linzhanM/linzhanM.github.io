@@ -260,14 +260,14 @@ controls.autoRotateSpeed = config.orbitSpeed ?? 4 / 6;
 // sets the limits; the owner's range, 2026-09-15). A wheel over the frame is
 // the frame's alone — at a limit too, and mid-drag, where OrbitControls lets it
 // through — so the page never scrolls under a zoom (owner's request,
-// 2026-09-15). A zoom outlasts the cycle's cuts: frameCamera opens
-// the next object at the same share of its own fit. The fog range is fitted at
-// the fit's distance and moves with the zoom, so it stays on the scene: a zoom
-// runs along the view axis, which is what fog depth measures, and a zoom out
-// would otherwise fog the bodies. On a touch
-// screen nothing orbits: the controls are off and the canvas gives back the
-// touch-action OrbitControls set to none, so a swipe or a pinch over the frame
-// moves the page as anywhere else.
+// 2026-09-15). A zoom outlasts the cycle's cuts: frameCamera opens the next
+// object at the same share of its own fit. The fog range is fitted at the
+// fit's distance and moves with the zoom (fogToZoom), so it stays on the
+// scene: a zoom runs along the view axis, which is what fog depth measures,
+// and a zoom out would otherwise fog the bodies. On a touch screen nothing
+// orbits: the controls are off and the canvas gives back the touch-action
+// OrbitControls set to none, so a swipe or a pinch over the frame moves the
+// page as anywhere else.
 const EMBED_ZOOM_IN = 0.4, EMBED_ZOOM_OUT = 1.2;
 let fogFit = null;   // frameCamera's fog range and the distance it was fitted at
 function fogToZoom() {
@@ -344,9 +344,6 @@ const keypointMaterial = new THREE.ShaderMaterial({
 });
 
 const TRAIL_OPACITY = 0.9;
-// Plain GL lines, one device pixel wide: three's fat segments (LineSegments2
-// at 1.25 CSS px) were tried on 2026-09-12 and taken out the same day at the
-// owner's request.
 // What trails fade into: the stage's own colour, in the renderer's linear space.
 const trailFade = new THREE.Color();
 
@@ -401,7 +398,9 @@ function makeBody(obj, i, rig) {
 
   // Trails: the last `trailFrames` samples of each traced key point's period,
   // re-cut every frame behind the live point (cutTrail) from a loop sampled
-  // once per latent change (sampleTrails).
+  // once per latent change (sampleTrails). Plain GL lines, one device pixel
+  // wide: three's fat segments (LineSegments2 at 1.25 CSS px) were tried on
+  // 2026-09-12 and taken out the same day at the owner's request.
   const trailCount = Math.min(config.trailCount ?? 48, KEYPOINTS);
   const trailSamples = config.trailSamples ?? 48;
   const trailFrames = Math.max(2, Math.min(config.trailFrames ?? 14, trailSamples));
@@ -698,7 +697,7 @@ function frameCamera() {
 function syncDrawn() {
   const gaussians = settings.surface === 'gaussians';
   for (const obj of stage.objects) {
-    if (!obj) continue;   // not built (the homepage thumbnail builds one)
+    if (!obj) continue;   // not built (the homepage thumbnail builds only its cycle's objects)
     const shown = obj === stage.shown;
     for (const link of obj.base.links) {
       for (const { mesh } of link.meshes) {

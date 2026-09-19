@@ -79,7 +79,7 @@ button:focus-visible,
 }
 
 /* ── 3. Table of contents (fixed left rail, shown ≥1400px) ──────────────────── */
-/* A book's contents page, not a tree diagram: at rest the rail is the eight
+/* A book's contents page, not a tree diagram: at rest the rail is the seven
    section names alone, and the section being read unfolds its numbered parts
    beneath it (js/toc.js sets .is-open on them). The parts are numbered because
    they are numbered on the page — "1. Diverse Skeletons, Diverse Prompts." —
@@ -635,7 +635,7 @@ button:focus-visible,
   line-height: 1.5;
 }
 
-/* Right-aligned so 1–9 and 10–15 line up on the units. Quiet: they index the
+/* Right-aligned so 1–9 and 10–16 line up on the units. Quiet: they index the
    lines, they aren't content. */
 .algo-n {
   width: 2.6em;
@@ -886,7 +886,7 @@ button:focus-visible,
   height: auto;
 }
 
-/* Experiments §1 is one sheet per view: each clip (diverse-N.mp4) is a 2x4
+/* Experiments §1 is one sheet per view: each clip (diverse-skeletons-N.mp4) is a 2x4
    sheet of prompt + result panels with the prompts baked in, which read at
    960px and not much below, so a clip is the full column and the strip steps
    one sheet at a time. The row is 100% so the percentage resolves (a row of two
@@ -1101,7 +1101,7 @@ button:focus-visible,
 }
 
 /* The embedded rail is a RULED REGISTER: full-bleed rows, one hairline above
-   each, so the rail reads as ruled paper with sixteen lines on it — the same
+   each, so the rail reads as ruled paper with one line per stage — the same
    rules-and-mono setting as .algo and .toc. It replaced a sheet of framed
    cells, which read as an unfinished table. Full bleed is what keeps a row from
    reading as a prompt chip: a chip is an OBJECT, a row is a LINE.
@@ -1149,7 +1149,7 @@ button:focus-visible,
 
 /* The header's bottom rule is already the register's first line. Transparent,
    not removed: the rows share the column with flex: 1 1 auto, so a border-box
-   row missing its border is 1px shorter than the fifteen below it. */
+   row missing its border is 1px shorter than every row below it. */
 .interactive-showcase .example-item:first-child {
   border-top-color: transparent;
 }
@@ -1171,7 +1171,7 @@ button:focus-visible,
    blur; a blurred one is a soft-UI dialect this page doesn't speak. And the
    plate is a PSEUDO-ELEMENT inset inside the row, never a border or margin on
    the row: both change the row's main-axis size, so selecting a stage would
-   re-cut all sixteen lines and shift every label. No accent: frame, shadow and
+   re-cut every line and shift every label. No accent: frame, shadow and
    700 ink are three signals already. */
 .interactive-showcase .example-item::before {
   content: '';
@@ -1203,7 +1203,7 @@ button:focus-visible,
 }
 
 /* Names only. The rig count was tried here as a right-edge numeral and taken
-   out: a second column turns sixteen controls into a table you read. viewer.js
+   out: a second column turns a column of controls into a table you read. viewer.js
    still writes it and puts the fact in every row's aria-label and title, so
    this hides it from the screen, not from a screen reader. The lab hides it
    too (css/interactive.css). */

@@ -81,13 +81,13 @@ document.addEventListener('DOMContentLoaded', function () {
       + container.scrollLeft;
 
     // Every place the strip may come to rest, left to right: each clip's left
-    // edge, and — when a clip is wider than the view, as the Experiments §1
-    // sheets are on a phone (responsive.css) — one more stop per view-width
-    // across it, so a page turn walks the sheet a column at a time instead of
-    // leaping to the next sheet and leaving its far columns to the swipe. On
-    // every other strip a clip fits the view and has exactly one stop, so this
-    // is the list of clip edges it always was. Live, never cached: video sizes
-    // and the view width both change under the page.
+    // edge, and — should a clip ever be wider than the view — one more stop
+    // per view-width across it, so a page turn walks it a column at a time
+    // instead of leaping past its far columns. No clip is today (the oversized
+    // phone sheets of 2026-09-08 were; below 720px every strip is now a column,
+    // responsive.css), so this is the list of clip edges, with the oversized
+    // case kept for a layout that brings one back. Live, never cached: video
+    // sizes and the view width both change under the page.
     const stops = () => {
       const view = container.clientWidth;
       const out = [];

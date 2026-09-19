@@ -1,5 +1,6 @@
 // How long the video runs, read out of the rigs themselves.
 
+import { open } from 'node:fs/promises';
 import { extname, join } from 'node:path';
 
 import { REPO_ROOT } from './paths.mjs';
@@ -9,7 +10,6 @@ import { REPO_ROOT } from './paths.mjs';
 // the header and the JSON chunk are read, so a 40 MB rig costs a few hundred
 // bytes.
 export async function glbClipSeconds(file) {
-  const { open } = await import('node:fs/promises');
   const fh = await open(file, 'r');
   try {
     const head = Buffer.alloc(20);

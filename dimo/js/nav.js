@@ -1,6 +1,7 @@
-// Side navigation: reveal once the hero scrolls away, highlight the section
-// in view, and grow the progress fill to it. Pure enhancement — the links are
-// plain anchors and work without JS.
+// Side navigation for dimo/index.html (loaded at its foot; hidden by CSS below
+// 1480px): reveal once the hero scrolls away, highlight the section in view,
+// and grow the progress fill to it. Pure enhancement — the links are plain
+// anchors and work without JS.
 (function () {
   const sidenav = document.querySelector('.sidenav');
   const hero = document.querySelector('.hero');

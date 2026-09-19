@@ -77,12 +77,12 @@
 			<!-- Appearance switch: nav.js flips html[data-theme], stores the choice
 			     and sets aria-checked. -->
 			<button class="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Dark appearance"><span class="theme-switch-knob"></span></button>
-				<button class="navbar-burger" type="button" aria-label="Menu" aria-expanded="false"
-					aria-controls="navbar-main">
-					<span></span>
-					<span></span>
-					<span></span>
-				</button>
+			<button class="navbar-burger" type="button" aria-label="Menu" aria-expanded="false"
+				aria-controls="navbar-main">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
 			<div class="navbar-menu" id="navbar-main">
 				<!-- The rail is a section index. Only About resolves to a section
 				     here (the hero's id), so the keypoint parks under it; Publications
@@ -146,8 +146,8 @@
 				     copy of UniMate's lab kept for this frame alone (unimate/ stays as
 				     committed), opened ?embed with its chrome hidden (see that page's
 				     head and interactive.css) on its Teaser Scene stage, the paper
-				     teaser's bottom row (js/homepage.js there). Drag orbits it and
-				     the wheel zooms it, never scrolling this page; on a touch
+				     teaser's bottom two rows (js/homepage.js there). Drag orbits it
+				     and the wheel zooms it, never scrolling this page; on a touch
 				     screen nothing orbits, a swipe over it scrolls, and it draws
 				     at 30 frames a second.
 				     The same frame at every width — a phone gets the lab too. No
@@ -214,7 +214,9 @@
 		</div>
 
 		<!-- Shelved, not deleted: <template> renders nothing. The two selectors in
-		     styles.css that step over a <template> exist for this element. -->
+		     styles.css that step over a <template> exist for this element. If the
+		     row comes back, its thumbnail is the lab in resources/overview/letoccflow/
+		     (?embed, in a .pub-live figure as the two rows above), not this video. -->
 		<template>
 		<div class="pub-row row align-items-start">
 			<div class="col-md-3">

@@ -1,10 +1,14 @@
 // Shared helpers. `fail` is the exit path for a misuse or an unusable
-// environment: one line on stderr, no stack, exit 1. A thrown error instead
-// reaches the entry point's catch and prints its stack — the right shape for
-// a bug.
+// environment: one line on stderr, prefixed with the running tool's name, no
+// stack, exit 1. A thrown error instead reaches the entry point's catch and
+// prints its stack — the right shape for a bug.
+
+import { basename } from 'node:path';
+
+const TOOL = basename(process.argv[1] || 'render-category.mjs', '.mjs');
 
 export function fail(message) {
-  console.error(`render-category: ${message}`);
+  console.error(`${TOOL}: ${message}`);
   process.exit(1);
 }
 

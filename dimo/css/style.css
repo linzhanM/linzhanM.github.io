@@ -1,7 +1,9 @@
 /* ============================================================
    DIMO — Diverse 3D Motion Generation for Arbitrary Objects
-   Dark "latent space" hero over a light "paper" body; the tokens
-   split the same way. The only script is js/nav.js.
+   Loaded by dimo/index.html alone; nothing else on the site shares
+   it. Dark "latent space" hero over a light "paper" body; the tokens
+   split the same way. The page's one script of its own is js/nav.js
+   (StatCounter is the only other).
    ============================================================ */
 
 /* ---------- Design tokens ---------- */

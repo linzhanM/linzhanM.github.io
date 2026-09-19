@@ -5,7 +5,7 @@
 :root {
   /* Surfaces */
   --ivory-light:   #faf9f5;  /* page background (also the theme-color meta, set in each head and nav.js) */
-  --ivory-medium:  #f0eee6;  /* subtle hover backgrounds */
+  --ivory-medium:  #f0eee6;  /* media plates (.pub-thumbnail, the framed labs' stage) and the switch track */
   --ivory-dark:    #e8e6dc;  /* borders / dividers */
   --accent-bg:     #fdf6ee;  /* tinted block (abstract) background */
 
@@ -81,7 +81,7 @@
     color-scheme: dark;
 
     --ivory-light:   #1e2120;  /* page background (also the theme-color meta's dark value) */
-    --ivory-medium:  #151817;  /* media plates, subtle hover backgrounds */
+    --ivory-medium:  #151817;  /* media plates and the switch track */
     --ivory-dark:    #303432;  /* borders / dividers */
     --accent-bg:     #2a2420;  /* tinted block (abstract) background */
 

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<!-- Example post. It is the template for every post in this folder: copy
+	     it, change the head's title, description and canonical, the .post-head,
+	     the contents list (one link per h2, by id) and the body. -->
+	<title>The thumbnails are the demos | Linzhan Mou</title>
+	<link rel="icon" type="image/x-icon" href="/assets/logos/princeton-logo.jpg" />
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#faf9f5">
+	<meta name="description" content="Why two paper previews on this site are live scenes rather than clips, and what it took to make them light enough to ship.">
+	<link rel="canonical" href="https://linzhanmou.com/resources/blog/live-thumbnails.html" />
+	<!-- Kept out of results while this is the example. Remove this tag and add
+	     the URL to sitemap.xml when the post is real. -->
+	<meta name="robots" content="noindex, follow">
+
+	<!-- Stamps html[data-theme] before any body markup, so the first paint is
+	     the right palette: the stored choice (localStorage "theme"), else the
+	     system's. Identical to the root pages' head script. -->
+	<script>
+		(function () {
+			var theme = null;
+			try { theme = localStorage.getItem('theme'); } catch (e) {}
+			if (theme !== 'light' && theme !== 'dark') {
+				theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			}
+			document.documentElement.dataset.theme = theme;
+			var tint = document.querySelector('meta[name="theme-color"]');
+			if (tint) tint.content = theme === 'dark' ? '#1e2120' : '#faf9f5';
+		})();
+	</script>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600,0,0;9..144,700,0,0&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/blog.css?v=1">
+</head>
+
+<body>
+	<div class="column">
+		<header class="masthead">
+			<a class="masthead-name" href="/">Linzhan Mou</a>
+			<a class="masthead-index" href="./">Writing</a>
+			<button class="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Dark appearance"><span class="theme-switch-knob"></span></button>
+		</header>
+
+		<main>
+			<article>
+				<header class="post-head">
+					<h1 class="post-title">The thumbnails are the demos</h1>
+					<p class="post-subtitle">Why two paper previews on this site are live scenes, and what it took to make them light</p>
+					<p class="post-date"><time datetime="2026-09-19">September 2026</time></p>
+				</header>
+
+				<!-- One link per h2, in order, by id. On a wide window this is a
+				     fixed rail to the left of the column and the keypoint follows
+				     the heading in view; on a narrow one it sits here in the flow. -->
+				<nav class="contents" aria-label="Contents">
+					<span class="contents-keypoint" aria-hidden="true"></span>
+					<p class="contents-heading">Contents</p>
+					<ol>
+						<li><a href="#a-clip-is-a-promise">A clip is a promise</a></li>
+						<li><a href="#what-a-live-frame-costs">What a live frame costs</a></li>
+						<li><a href="#the-wheel-and-the-thumb">The wheel and the thumb</a></li>
+						<li><a href="#one-palette">One palette</a></li>
+						<li><a href="#what-i-would-still-change">What I would still change</a></li>
+					</ol>
+				</nav>
+
+				<div class="post-body">
+					<p>Every paper page on the web has the same first row: a title, an author list, and a small video that plays the teaser on loop. The video is a promise. It says the method does this, and it asks you to take that on trust until you clone the repo. For two of the papers on this site I stopped asking. The thumbnails on the home page are now the papers' own interactive scenes, framed at the size a clip used to be.<sup class="fn" id="ref-1"><a href="#fn-1">1</a></sup></p>
+
+					<h2 id="a-clip-is-a-promise">A clip is a promise</h2>
+					<p>A teaser video is rendered once, at one camera, on one machine. Whatever it shows is true of that render. A live scene is rendered on the reader's machine, from wherever they drag the camera, on whatever frame of the loop they happen to be looking at. It can still be curated, and mine are, but it cannot hide a foot clipping through the floor behind the camera's back. That is a small honesty, and I have come to think it is the right default for a page whose whole point is that the motion is generated.</p>
+					<p>The other argument is quieter. A clip in a thumbnail is a clip; nobody leans in. A scene that turns under the pointer is an invitation, and the leaning in is the point.</p>
+
+					<figure class="plate">
+						<video autoplay muted loop playsinline preload="metadata" src="/assets/videos/unimate.mp4"></video>
+						<figcaption>The UniMate teaser as a clip, which the home page showed until September. The same seven rigs now play live in its place.</figcaption>
+					</figure>
+
+					<h2 id="what-a-live-frame-costs">What a live frame costs</h2>
+					<p>The honest answer is bytes. The seven rigs in the UniMate scene were 107 MB as exported, and the humanoid alone was 44 MB. No one should pay that to see a home page. The fix is not clever, it is just two compressions applied without exception: meshopt on the geometry and 512-pixel WebP on every texture. The scene shipped at 10.8 MB, about a tenth of its raw size, with the animation tables and triangle counts unchanged.<sup class="fn" id="ref-2"><a href="#fn-2">2</a></sup></p>
+					<p>The second cost is the renderer itself. Two WebGL contexts on one page, each with its own copy of three.js, each drawing every frame whether or not it is on screen, would make the page warm to the touch. So each frame renders only while it is in view, and on a touch screen it draws at most thirty frames a second, at a pixel ratio of 1.5 rather than 2, with a smaller shadow map. At the size of a phone's thumbnail none of that is visible, and it is about a quarter of the pixels a second.</p>
+					<blockquote>
+						<p>The rule I ended up with: a thumbnail may cost what a good image costs, and not a byte more than a bad video.</p>
+					</blockquote>
+
+					<h2 id="the-wheel-and-the-thumb">The wheel and the thumb</h2>
+					<p>The part that took the longest was not rendering. It was deciding what the reader's hands should do. A frame that eats the scroll wheel is a trap in the middle of a page; a frame that ignores it cannot zoom. The compromise on this site is that the wheel zooms the frame between fixed limits and never scrolls the page, which sounds like the trap until you notice that the frame is small and the page around it is large: the wheel only reaches it if the pointer is deliberately over it.</p>
+					<p>On a phone I gave up entirely, and I think rightly. A thumb on a live scene either orbits it, which traps the swipe, or scrolls the page, which makes the scene a picture. Two versions that tried to have both were replaced in one afternoon. The thumbnails are pictures on a touch screen now, and the full labs are a tap away for anyone who wants their hands on them.</p>
+
+					<h2 id="one-palette">One palette</h2>
+					<p>A framed scene that keeps its own colours looks like an advertisement. Each lab reads the page's appearance from the frame it sits in, and watches it, so flipping the switch at the top of the page turns the floors and skies with it. In light the stage is graph paper; in dark it is the checker from the UniMate lab. Both labs show the same spinner while they build, in the same face, on the same plate, so the two thumbnails load as one thing rather than as two products.<sup class="fn" id="ref-3"><a href="#fn-3">3</a></sup></p>
+
+					<h2 id="what-i-would-still-change">What I would still change</h2>
+					<p>A phone still downloads both scenes, about eighteen megabytes, to show two pictures. The right fix is to defer the frame's source until it is near the viewport, or to ship a still and load the scene on the first touch. I have not done it because the numbers are not yet a problem, and because every earlier attempt to give the phone something different produced a page with two code paths and one that was tested. When it becomes a problem the notes are already in the repo.</p>
+
+					<section class="footnotes" aria-label="Footnotes">
+						<ol>
+							<li id="fn-1">The two are <a href="/unimate/">UniMate</a> and <a href="/dimo/">DIMO</a>. Their scenes on the home page are trimmed copies of the projects' own labs, kept apart from the project pages so that a change made for the thumbnail never reaches the paper page. <a class="fn-back" href="#ref-1" aria-label="Back to text">&#8617;</a></li>
+							<li id="fn-2">The recipe is in the UniMate lab's README. The one thing to verify after a rebuild is that only the vertex counts and textures differ; the animation table must be identical. <a class="fn-back" href="#ref-2" aria-label="Back to text">&#8617;</a></li>
+							<li id="fn-3">The page and the DIMO lab share one stored setting. The UniMate lab keeps its own, and opens dark, on the grounds that a full-screen lab is a room of its own. <a class="fn-back" href="#ref-3" aria-label="Back to text">&#8617;</a></li>
+						</ol>
+					</section>
+				</div>
+
+				<p class="post-foot"><a href="./">All posts</a></p>
+			</article>
+		</main>
+
+		<footer class="site-footer">
+			<p>&copy; <span id="copyright-year"></span> Linzhan Mou</p>
+		</footer>
+	</div>
+
+	<script src="js/blog.js?v=1"></script>
+</body>
+
+</html>

@@ -1,4 +1,18 @@
-/* Full-screen motion lab interface. */
+/* ============================================================================
+   UniMate — the full-screen motion lab (interactive.html).
+
+   The only stylesheet that page loads; it shares nothing with style.css, so the
+   lab's copies of the rail, chips and overlays are styled here in full. Dark by
+   default, with html[data-theme='light'] re-valuing the tokens (the choice is
+   the lab's own key, unimate-lab-theme — see interactive.html's head).
+
+   In order: tokens (dark, then the light override) · shell · category panel
+   and its collapse handle · control bar (top right) and dock (top centre) ·
+   light-theme overrides for the chrome · prompt chips, pinned and hover
+   (viewer.js toggles .is-pinned-prompts) · loading and drop overlays · the two
+   bottom-corner notes · breakpoints, 900px (strip and corner pills) and 560px
+   (the fused phone console), then short landscape · reduced motion.
+   ============================================================================ */
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
 
 :root {

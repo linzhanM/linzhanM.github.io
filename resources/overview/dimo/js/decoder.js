@@ -6,9 +6,9 @@
 // transform. The lab's stands in for it with two honest simplifications:
 //
 //   1. The latent sheet is 2-D so a visitor can point at it, and the decoder
-//      is an RBF blend over the object's basis motions (the UR5e's motion
-//      clips, hand-authored ball loops): at a
-//      latent z the joint pose at phase u is Σ_m w_m(z) · θ_m(u), with
+//      is an RBF blend over the object's basis motions (the UR5e's and the
+//      duck's clips, hand-authored ball loops): at a latent z the joint pose
+//      at phase u is Σ_m w_m(z) · θ_m(u), with
 //      w = softmax-normalised exp(−|z − z_m|² / 2σ²). At an anchor it plays
 //      that motion; between anchors it interpolates in joint space, which is
 //      what makes the latent walk in the panel read as continuous.

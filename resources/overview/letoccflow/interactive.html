@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Explore Let Occ Flow's self-supervision: a street in 0.4 m voxels as 3D occupancy and occupancy flow, rendered into the camera as depth and optical flow with NeuS weights, and split into static and dynamic motion." />
+  <meta name="robots" content="noindex, follow" />
+  <meta name="theme-color" content="#0D0F13" />
+  <title>Let Occ Flow Lab</title>
+
+  <!-- Decided in the head so the first paint is right. ?embed: a homepage
+       thumbnail — the stage alone (interactive.css, off html.is-embed) in the
+       framing page's html[data-theme], read same-origin; viewer.js follows a
+       change. Opened on its own: this lab's own stored choice, else dark. -->
+  <script>
+    function pageTheme() {
+      try {
+        var t = window.parent !== window && window.parent.document.documentElement.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+      } catch (e) { /* cross-origin frame */ }
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    window.pageTheme = pageTheme;
+    var embed = new URLSearchParams(location.search).has('embed');
+    if (embed) document.documentElement.classList.add('is-embed');
+    var theme = 'dark';
+    if (embed) theme = pageTheme();
+    else { try { if (localStorage.getItem('letoccflow-lab-theme') === 'light') theme = 'light'; } catch (e) { /* private mode */ } }
+    document.documentElement.dataset.theme = theme;
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/interactive.css?v=1" />
+</head>
+<body>
+  <main class="lab-shell">
+    <section class="stage" aria-label="Stage">
+      <div class="viewer-wrapper is-loading" id="viewer-wrapper">
+        <div id="loading-overlay"><span class="spinner"></span><span>Building scene</span></div>
+
+        <header class="stage-head">
+          <a class="wordmark" href="https://eliliu2233.github.io/letoccflow/" aria-label="Let Occ Flow project page">Let Occ Flow <span>Lab</span></a>
+          <span class="clock" id="stage-clock">t = 00.0 s</span>
+        </header>
+
+        <div class="stage-side">
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Switch palette"><i aria-hidden="true"></i><span>Dark</span></button>
+          <p class="stage-facts">80 &times; 80 &times; 6.4 m around the ego car in 0.4 m voxels: the paper's nuScenes volume.</p>
+        </div>
+
+        <!-- One speed tag per moving agent, placed by the engine. -->
+        <div class="stage-tags" id="stage-tags" aria-hidden="true"></div>
+
+        <div class="legend" aria-hidden="true">
+          <div class="legend-occupancy">
+            <span class="legend-label">Height</span>
+            <span class="legend-ramp"></span>
+            <span class="legend-ends"><span>0 m</span><span>5 m</span></span>
+          </div>
+          <div class="legend-flow">
+            <canvas id="legend-wheel"></canvas>
+            <span class="legend-flow-words">
+              <span class="legend-label">Heading</span>
+              <span>Red travels with the car, blue against it</span>
+              <span class="legend-still"><i></i>Grey is still</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="dock" aria-label="Display controls">
+          <div class="dock-group" role="group" aria-label="Prediction">
+            <button type="button" data-view="occupancy" aria-pressed="false"><span>Occupancy</span></button>
+            <button type="button" data-view="flow" aria-pressed="true"><span>Occupancy flow</span><kbd>V</kbd></button>
+          </div>
+          <div class="dock-group" role="group" aria-label="Surface">
+            <button type="button" data-surface="mesh" aria-pressed="true"><span>Surface</span></button>
+            <button type="button" data-surface="voxels" aria-pressed="false"><span>Voxels</span><kbd>M</kbd></button>
+          </div>
+          <div class="dock-group" role="group" aria-label="Overlays">
+            <button type="button" data-toggle="arrows" aria-pressed="false"><span>Arrows</span><kbd>A</kbd></button>
+            <button type="button" data-toggle="history" aria-pressed="false"><span>Past frames</span><kbd>H</kbd></button>
+            <button type="button" data-toggle="sensor" aria-pressed="true"><span>Camera ray</span><kbd>C</kbd></button>
+          </div>
+          <div class="dock-group" role="group" aria-label="Playback and camera">
+            <button type="button" data-toggle="paused" aria-pressed="false"><span>Pause</span><kbd>Space</kbd></button>
+            <button type="button" id="reset-view"><span>Reset view</span><kbd>R</kbd></button>
+          </div>
+          <div class="phase-bar" id="phase-bar"></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel" aria-label="Rendering self-supervision">
+      <header class="panel-head">
+        <p class="kicker">CoRL 2024 &middot; camera only &middot; no 3D labels</p>
+        <h1>Rendering self-supervision</h1>
+        <p>The network is never shown a 3D label. It renders its SDF and flow fields back into the camera and is scored against 2D cues. Press the image to follow one ray.</p>
+      </header>
+
+      <figure class="pane">
+        <canvas id="pane-canvas" aria-label="Camera view. Press to choose the ray to inspect."></canvas>
+        <div class="chips" role="group" aria-label="Camera view">
+          <button type="button" class="chip" data-pane="image" data-caption="Frame t from CAM_FRONT, one of nuScenes' six cameras: at test time, the only input.">Image</button>
+          <button type="button" class="chip" data-pane="depth" data-caption="Rendered depth, d = Σ wᵢdᵢ. The photometric reprojection loss (eq. 8) supervises it.">Depth</button>
+          <button type="button" class="chip" data-pane="flow" data-caption="Rendered optical flow to the next keyframe, 0.5 s on: where each point lands once the car and the point have moved. L_flow (eq. 9) matches it to a 2D flow prior.">Optical flow</button>
+          <button type="button" class="chip" data-pane="static" data-caption="Static flow: the same points held still, so only depth and ego motion move them.">Static flow</button>
+          <button type="button" class="chip" data-pane="dynamic" data-caption="Dynamic mask (eq. 10): pixels of movable objects whose optical flow and static flow differ by more than τ. Parked cars are movable but stay out.">Dynamic mask</button>
+          <button type="button" class="chip" data-pane="occupancy" data-caption="The predicted occupancy seen from the camera, coloured by height.">Occupancy</button>
+        </div>
+        <figcaption id="pane-caption"></figcaption>
+      </figure>
+
+      <section class="panel-section">
+        <h2>One ray</h2>
+        <p class="ray-hit" id="ray-hit">&nbsp;</p>
+        <canvas id="ray-plot" aria-label="Signed distance and NeuS weights along the inspected ray"></canvas>
+        <p class="plot-key"><span class="key-sdf">SDF sᵢ</span><span class="key-weight">weight wᵢ</span><span class="key-depth">rendered depth d</span></p>
+        <dl class="readout">
+          <div><dt>Depth d = Σ wᵢdᵢ</dt><dd id="ray-depth">—</dd></div>
+          <div><dt>Σ wᵢ</dt><dd id="ray-sum">—</dd></div>
+          <div><dt>Flow f = Σ wᵢfᵢ</dt><dd id="ray-flow3d">—</dd></div>
+          <div><dt>Optical flow</dt><dd id="ray-optical">—</dd></div>
+          <div><dt>Static flow</dt><dd id="ray-static">—</dd></div>
+          <div><dt>Dynamic flow |f<sub>d</sub>|</dt><dd id="ray-dynamic">—</dd></div>
+        </dl>
+        <label class="slider">
+          <span>Sharpness &xi;<output id="xi-value">24</output></span>
+          <input type="range" id="xi" min="4" max="80" step="1" />
+        </label>
+        <p class="panel-hint">&alpha;ᵢ = max((&Phi;(sᵢ) &minus; &Phi;(sᵢ₊₁)) / &Phi;(sᵢ), 0), with &Phi;(s) = 1 / (1 + e<sup>&minus;&xi;s</sup>). A larger &xi; gathers the weight onto the surface.</p>
+      </section>
+
+      <section class="panel-section">
+        <h2>Dynamic disentanglement</h2>
+        <label class="slider">
+          <span>Threshold &tau;<output id="tau-value">2.0</output> px</span>
+          <input type="range" id="tau" min="0.2" max="12" step="0.1" />
+        </label>
+        <dl class="readout">
+          <div><dt>Movable (mask)</dt><dd id="stat-movable">—</dd></div>
+          <div><dt>Dynamic</dt><dd id="stat-dynamic">—</dd></div>
+          <div><dt>M<sub>all</sub> / M<sub>d</sub></dt><dd id="stat-ratio">—</dd></div>
+        </dl>
+        <p class="panel-hint">Shares of the rays that hit a surface. Dynamic rays are rare, so their flow loss is scaled by M<sub>all</sub> / M<sub>d</sub>, capped (eq. 11).</p>
+      </section>
+
+      <section class="panel-section">
+        <h2>Reported results</h2>
+        <table class="results">
+          <caption>SemanticKITTI occupancy and depth (Table 1)</caption>
+          <thead><tr><th>Method</th><th>RayIoU &uarr;</th><th>Abs Rel &darr;</th></tr></thead>
+          <tbody>
+            <tr><td>MonoScene <small>3D labels</small></td><td>37.19</td><td>&mdash;</td></tr>
+            <tr><td>SceneRF</td><td>37.58</td><td>0.146</td></tr>
+            <tr><td>OccNeRF</td><td>41.99</td><td>0.132</td></tr>
+            <tr><td>SelfOcc</td><td>36.27</td><td>0.152</td></tr>
+            <tr class="is-ours"><td>Let Occ Flow</td><td>47.06</td><td>0.117</td></tr>
+          </tbody>
+        </table>
+        <table class="results">
+          <caption>nuScenes occupancy flow (Table 3)</caption>
+          <thead><tr><th>Method</th><th>RayIoU &uarr;</th><th>mAVE &darr;</th></tr></thead>
+          <tbody>
+            <tr><td>OccNet <small>3D labels</small></td><td>39.66</td><td>1.61</td></tr>
+            <tr class="group"><td>OccNeRF-C* <small>C</small></td><td>21.61</td><td>1.53</td></tr>
+            <tr class="is-ours"><td>Ours-C <small>C</small></td><td>30.12</td><td>1.42</td></tr>
+            <tr class="group"><td>RenderOcc* <small>L</small></td><td>36.67</td><td>1.63</td></tr>
+            <tr><td>OccNeRF-L* <small>C+L</small></td><td>31.68</td><td>1.59</td></tr>
+            <tr class="is-ours"><td>Ours-L <small>C+L</small></td><td>40.48</td><td>1.45</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- The first sentence must stay: the stage is a hand-built street, not
+           the trained model's output (scene.js header). -->
+      <p class="panel-foot"><strong>Illustrative simulation.</strong> A procedural street at the paper's nuScenes volume and voxel size stands in for the network's predictions. The camera view is rendered from it the way the paper renders its fields (NeuS weights, eqs. 9, 10, 13, 14), with an exact flow prior, so every loss here would be zero. The method itself is on the <a href="https://eliliu2233.github.io/letoccflow/">project page</a> and in the <a href="https://arxiv.org/abs/2407.07587">paper</a>.</p>
+    </aside>
+  </main>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="js/interactive.js?v=1"></script>
+
+  <script type="text/javascript">
+    var sc_project = 12925377;
+    var sc_invisible = 1;
+    var sc_security = "43deea45";
+  </script>
+  <!-- Top-level visits only: framed on the homepage this page would otherwise
+       log a lab visit for every homepage load. -->
+  <script type="text/javascript">
+    if (window.self === window.top) {
+      var sc = document.createElement('script');
+      sc.src = 'https://www.statcounter.com/counter/counter.js';
+      sc.async = true;
+      document.body.appendChild(sc);
+    }
+  </script>
+</body>
+</html>

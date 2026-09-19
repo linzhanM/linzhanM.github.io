@@ -233,7 +233,7 @@
    Bones, joints, labels and chips: the vocabulary every plate is drawn in. */
 
 /* Bones: stroked, never filled. non-scaling-stroke keeps the line weight equal
-   on the big editing rigs (scale 1.4) and the small column ones (0.8). */
+   on the big editing rigs (scale 2.1) and the small column ones (0.8). */
 .dg-rig {
   fill: none;
   stroke-width: 2;
@@ -264,8 +264,9 @@
    Radius and ring are a PAIR: the ring stroke doesn't scale, so the hole is
    `2r × scale − stroke` and shrinks with the rig. At r 1.6 / 1.2px the
    0.8-scale figures had a 1.4px hole and read as solid dots. The current pair
-   holds the hole open at every scale used (0.8 / 0.85 / 1.4) — redo that
-   arithmetic before changing either number or a rig's scale. */
+   holds the hole open at every scale used (0.8 in-betweening, 1 the expansion
+   bird, 2.1 editing) — redo that arithmetic before changing either number or
+   a rig's scale. */
 .dg-joint {
   fill: var(--app-stage);
   stroke-width: 1.45;

@@ -595,8 +595,9 @@ kbd {
 /* ---------- Embedded (interactive.html?embed) ---------- */
 /* The root homepage frames the lab as DIMO's thumbnail, ~255px wide: the
    stage alone. Every piece of chrome goes — the head, the facts, the body
-   tags, the dock, the latent panel, both spectrum hairlines — and the shell
-   drops to one cell. The class is set in the page's head script. */
+   tags, the dock (and the phase bar inside it), the latent panel, the top
+   spectrum hairline — and the shell drops to one cell. The class is set in
+   the page's head script. */
 html.is-embed .stage-head,
 html.is-embed .stage-side,
 html.is-embed .stage-tags,

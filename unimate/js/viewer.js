@@ -905,7 +905,7 @@ function placeBehind(specs) {
 }
 
 // `above: [index, height]` — take that model's X/Z and hover `height` units over
-// it. Targets may themselves be `above` models (bird → dragon → leopard), so
+// it. A target may itself be an `above` model (a flyer stacked over a flyer), so
 // resolve in dependency order: a model is placed only once its target is final.
 function placeAbove(specs) {
   const placed = new Set();
@@ -1546,8 +1546,8 @@ function updateLabels(dt) {
 
     visible.push({
       label: l, el: l.el, pin: l.pin, halfW, halfH, depth: labelNdc.z, dist,
-      // A locked chip may sit outside the group margin (the putter prompt sits
-      // beneath the Controls panel).
+      // A locked chip's slot was chosen by hand, so it may sit outside the
+      // group margin; canvasX only keeps it on the canvas.
       x: l.lockSlot ? canvasX(chosen.x, halfW) : spanX(chosen.x, halfW),
       cy: chosen.cy,
       ax, ay, box: own,

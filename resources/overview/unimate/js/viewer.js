@@ -1,10 +1,20 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // Interactive 3D viewer (Three.js) — drives #example-sidebar / #viewer-wrapper.
 //
+// unimate/js/viewer.js, copied on 2026-09-11 and trimmed to what the root
+// homepage's UniMate thumbnail runs (no FBX, no lil-gui, no hidden-stage
+// filter), plus what unimate/ lacks: the ?embed frame (interactive.js
+// `embedded`), its wheel zoom, touch picture and on-screen-only rendering, and
+// the `frameEnvelope` stage option. A fix to unimate/'s engine reaches this
+// copy only by being ported.
+//
 // Loads the rigs listed in examples.js, normalizes + grounds them (a port of the
 // Blender render_mesh_skeleton_stage.py pipeline), lays them out on a stage, and
 // accepts drag-and-drop of .glb / .gltf. The scene catalog is data-only in
-// examples.js; everything below is the engine.
+// examples.js; everything below is the engine. `fullscreenLab` is always on
+// here (interactive.js), so the lab-only branches below are the live ones and
+// the project-page branches (the anchored label solver in updateLabels) are
+// carried for parity with the source.
 //
 // Sections:
 //   1. Imports & DOM refs
@@ -33,9 +43,6 @@ const overlay = document.getElementById('loading-overlay');
 const sidebar = document.getElementById('example-sidebar');
 const labelLayer = document.getElementById('viewer-labels');
 const stageName = document.getElementById('stage-name');
-// The project page's "Open full screen" link — absent in the lab, which is
-// where it goes. loadStage keeps its hash on the stage currently on screen.
-const expandLink = document.querySelector('.interactive-expand');
 const LOADING_HTML = overlay.innerHTML;
 const viewerConfig = window.UNIMATE_VIEWER_CONFIG || {};
 const EXAMPLES = DEFAULT_CATALOG;
@@ -57,7 +64,8 @@ const VIEWER_THEMES = {
   light: {
     background: 0xf0eee6,
     hemisphereGround: 0x9a9a9a,
-    // The DIMO thumbnail's paper beside it (dimo/js/viewer.js THEMES.light).
+    // The same paper as the DIMO thumbnail beside it on the homepage
+    // (../dimo/js/viewer.js THEMES.light.grid).
     paper: { cell: '#F0EEE6', line: '#D3CCB9' },
     shadowOpacity: 0.25,
     metaColor: '#e8e9e3',
@@ -207,12 +215,12 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 // Framed on the homepage (interactive.js `embedded`): drag orbits and the wheel
 // zooms, between EMBED_ZOOM_IN and EMBED_ZOOM_OUT of the fitted view's distance
-// (frameStage sets the limits; the owner's range, 2026-09-15). A wheel over the frame is the frame's alone — at a limit too, and
-// mid-drag, where OrbitControls lets it through — so the page never scrolls
-// under a zoom (owner's request, 2026-09-15). On a touch screen nothing
-// orbits: the controls are off and the canvas gives back the touch-action
-// OrbitControls set to none, so a swipe or a pinch over the frame moves the
-// page as anywhere else.
+// (frameStage sets the limits; the owner's range, 2026-09-15). A wheel over the
+// frame is the frame's alone — at a limit too, and mid-drag, where
+// OrbitControls lets it through — so the page never scrolls under a zoom
+// (owner's request, 2026-09-15). On a touch screen nothing orbits: the controls
+// are off and the canvas gives back the touch-action OrbitControls set to none,
+// so a swipe or a pinch over the frame moves the page as anywhere else.
 const EMBED_ZOOM_IN = 0.4, EMBED_ZOOM_OUT = 1.2;
 if (viewerConfig.embedded) {
   controls.enablePan = false;
@@ -694,7 +702,6 @@ function applyViewerTheme(theme) {
     const themeName = themeToggle.querySelector('.theme-name');
     if (themeName) themeName.textContent = viewerTheme === 'light' ? 'Light' : 'Dark';
   }
-
 }
 
 applyViewerTheme(viewerTheme);
@@ -1208,7 +1215,7 @@ renderer.domElement.addEventListener('wheel', () => {
 }, { passive: true });
 
 const GAP = 12;      // px of air between a chip's edge and the rig's silhouette
-const PIN_RADIUS = 2.5; // .viewer-pin's outer radius, incl. its halo (style.css §8)
+const PIN_RADIUS = 2.5; // .viewer-pin's outer radius, incl. its halo (interactive.css)
 const LEADER_COST = 0.5; // chip-areas charged per 100px of leader when scoring slots
 const MARGIN_REACH = 40; // px a chip's outer edge may pass the outermost rig. The
                          // margins relieve a jam; they are not for chips to occupy —
@@ -1830,14 +1837,6 @@ async function loadStage(specs, activeIndex, opts = {}) {
     b.classList.toggle('active', on);
     b.setAttribute('aria-pressed', String(on));
   });
-  // "Open full screen" hands the visitor's place to the lab on the slug the lab
-  // writes to its own address bar, so the pages agree by LABEL and neither depends
-  // on the other's indices. The markup ships bare interactive.html: the JS-off
-  // fallback, and where a drop-in sends you, having no stage for the lab to open on.
-  if (expandLink) {
-    const slug = activeIndex == null ? '' : '#' + stageSlug(EXAMPLES[activeIndex].label);
-    expandLink.href = 'interactive.html' + slug;
-  }
   if (stageName) {
     // A drop-in names itself (opts.label); 'Imported model' if it has no name.
     const heading = (activeIndex == null) ? (opts.label || 'Imported model') : EXAMPLES[activeIndex].label;
@@ -1964,7 +1963,6 @@ function loadFiles(fileList) {
 // ── 11. UI wiring ────────────────────────────────────────────────────────────
 // The lab drives its settings from a keyboard-first dock.
 const dockControls = [...wrapper.querySelectorAll('[data-setting]')];
-const embedControls = [...document.querySelectorAll('.embed-control-bar [data-setting]')];
 const dockActions = [...wrapper.querySelectorAll('[data-action]')];
 const themeToggle = wrapper.querySelector('[data-theme-toggle]');
 
@@ -1981,18 +1979,6 @@ function setDisplaySetting(key, value, buttons) {
       button.classList.toggle('is-active', value);
       button.setAttribute('aria-pressed', String(value));
     }
-}
-
-for (const button of embedControls) {
-  button.addEventListener('click', () => {
-    const key = button.dataset.setting;
-    if (!key) return;
-    setDisplaySetting(key, !settings[key], embedControls);
-    if (key === 'paused') {
-      const label = button.querySelector('[data-playback-label]');
-      if (label) label.textContent = settings.paused ? 'Play' : 'Pause';
-    }
-  });
 }
 
 if (isFullscreenLab) {
@@ -2152,11 +2138,12 @@ window.addEventListener('resize', () => {
 });
 
 // ── Deep links (lab only) ────────────────────────────────────────────────────
-// interactive.html#unitree-g1-robot opens straight onto that stage: the slug is
-// the label lowercased with runs of non-alphanumerics collapsed to "-", so every
+// interactive.html#teaser-scene opens straight onto that stage: the slug is the
+// label lowercased with runs of non-alphanumerics collapsed to "-", so every
 // stage has a stable, guessable address. loadExample writes the current slug
 // back to the bar; hashchange lets a pasted or edited URL retarget an open lab.
-// The embedded page ignores all of this — its hash is the document's TOC anchors.
+// The homepage frames interactive.html?embed#teaser-scene, so its thumbnail
+// opens by the same route.
 let currentStageIndex = -1;
 const stageSlug = (label) => label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 

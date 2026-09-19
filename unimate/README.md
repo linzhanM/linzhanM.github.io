@@ -51,9 +51,13 @@ resources/
                         figure, the "Poster" quick link, and the homepage's
                         poster link by absolute URL. Keep it around 4 MB
   unimate-poster.pdf    Poster PDF, offered from the #poster caption
-tools/
-  render-category.mjs   Offline: render one lab category to a video. Not shipped
-                        — nothing under css/ or js/ imports it
+tools/                  Offline renderers. Not shipped — nothing under css/ or
+                        js/ imports them (see "Rendering a category to video")
+  render-category.mjs   Render one lab category, or a homepage thumbnail, to a
+                        video
+  render-lab-video.mjs  The same recorder with chips, camera, skeleton and
+                        callouts under direct control
+  lib/                  One module per step; both entry files are the sequence
 ```
 
 ## Rig compression
@@ -214,6 +218,38 @@ fade=t=in:st=6:d=0.18:color=0xF0EEE6:enable='between(t,6,6.18)'" \
 | `output.mjs` | frame geometry, the ffmpeg command, the frame sink |
 | `capture.mjs` | the step-screenshot-write loop |
 | `paths.mjs`, `util.mjs` | repo root and the default lab URL; `fail` / `slugify` / `waitUntil` |
+
+`render-lab-video.mjs` is the same sequence over the same modules, plus four of
+its own — the recorder with the chips, camera, skeleton and callouts under
+direct control, for the figure clips. Every recorder flag applies; its own are
+listed by its `--help`:
+
+```bash
+node unimate/tools/render-lab-video.mjs -c welcome --4k --prompt-scale 1.4 --seconds 8
+node unimate/tools/render-lab-video.mjs -c welcome --loops 1 --orbit-arc 60 --skeleton-width 3
+node unimate/tools/render-lab-video.mjs -c welcome --dim-middle 0.3 --annotate '[{"match":"head","text":"head","dx":60,"dy":-40}]'
+```
+
+| | |
+|---|---|
+| `lab-video-options.mjs` | its own flags: usage text and the splitter that leaves the rest to `options.mjs` |
+| `overlays.mjs` | page-side sources injected after the bootstrap: fat skeleton and joint dots, bone highlight, joint rings, callouts, dimmed or hidden middle rigs, chip size |
+| `patches.mjs` | served modules rewritten as Chrome fetches them (CDP Fetch): the auto-orbit rate in `OrbitControls.js`, extra catalog stages appended to `examples.js` for one run |
+| `framing.mjs` | run-time config edits the reload frames on: orbit rate, stage options, camera padding, a sweep centred on the opening angle |
+
+Three seams of its own. The overlays reach the scene through the bootstrap's
+`window.__THREE_DEVTOOLS__` hook and wrap each renderer's own `render`, so they
+must be injected *after* the bootstrap; they import three's addons through the
+page's import map, so they share the viewer's instance. The orbit rate is the
+one thing the page gives no handle on — `viewer.js` sets `autoRotateSpeed` and
+advances the controls itself — so it is scaled by rewriting the one term in
+`getAutoRotationAngle` as the module is fetched; without `--orbit-speed` or
+`--orbit-arc` nothing is intercepted. And the run-time framing edits work
+because `viewer.js` re-reads the config global at every stage open, so a value
+written before the capture's reload is what that reload frames on — `--zoom`
+alone never reached a category with its own `cameraPaddingByCategory` entry
+(Welcome's 1.37 replaces the global padding), which `--pad` and `framing.mjs`
+scale too.
 
 Two seams are worth knowing before editing any of them. `bootstrap.mjs` is the
 *only* channel into the page — it is stringified into

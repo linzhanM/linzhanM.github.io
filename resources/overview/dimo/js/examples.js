@@ -2,12 +2,12 @@
 // DIMO Motion Lab — object catalog. Data only; the engine is viewer.js,
 // the rig builder rigs.js and the toy decoder decoder.js.
 //
-// Every object is a rig: a skinned model rigs.js loads (the UR5e) or a
-// kinematic tree of primitives it builds (the bouncing balls). Either way it
-// samples 512 neural key points from the surface and covers it in Gaussians.
-// Its motions are a BASIS — one periodic joint-space curve per
-// motion (the project's motion clips for the UR5e, hand-authored loops for the
-// balls), each pinned to a point of the 2-D latent sheet — which
+// Every object is a rig: a skinned model rigs.js loads (the UR5e, the robot
+// duck) or a kinematic tree of primitives it builds (the bouncing balls).
+// Either way it samples 512 neural key points from the surface and covers it
+// in Gaussians. Its motions are a BASIS — one periodic joint-space curve per
+// motion (the project's own clips for the UR5e and the duck, hand-authored
+// loops for the balls), each pinned to a point of the 2-D latent sheet — which
 // decoder.js blends by RBF weights around the current latent code. That is an
 // illustration of the paper's mechanism (a shared decoder conditioned on a
 // latent code and time, driving key points that drive Gaussians), not the
@@ -38,7 +38,7 @@
 //             <drive>_tx/_ty/_tz (translation from rest, parent frame) and
 //             _rx/_ry/_rz (XYZ Euler angles after rest). Every mesh
 //             part must be rigidly bound to one bone. Compress it first
-//             (meshopt, as CLAUDE.md describes): the loader expects it.
+//             (meshopt, as AGENTS.md describes): the loader expects it.
 //   joints    a kinematic tree, parent before child: the whole object when
 //             there is no model, extra links when there is (`parent` may name
 //             a bone). Each entry is one LINK carrying the joint that moves it:
@@ -192,7 +192,7 @@ const UR5E = {
   rest: Object.fromEntries(Object.entries(UR5E_MOTIONS[0].joints).map(([c, v]) => [c, v[0]])),
   // The motions are the project's nine UR5e clips
   // (dimo/resources/glbs-raw/ur5e_<motion>.glb), read into joint angles in the
-  // generated ur5e-motions.js (CLAUDE.md says how a clip became a loop). Each
+  // generated ur5e-motions.js (AGENTS.md says how a clip became a loop). Each
   // keeps its file and length in `source`.
   motions: UR5E_MOTIONS.map((e, i) => ({
     name: e.name,

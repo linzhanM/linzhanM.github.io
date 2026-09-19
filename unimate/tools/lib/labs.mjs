@@ -2,7 +2,8 @@
 // the renderer; an adapter only says where its stage list, load state and
 // stage switch live, as expressions evaluated in the page. Three pages today:
 // UniMate's own lab, and the two homepage thumbnails under resources/overview/
-// (each a lab opened ?embed, framed by the root index.html).
+// (each a lab opened ?embed, framed by the root index.html). The Let Occ Flow
+// lab (resources/overview/letoccflow/) has no adapter: nothing frames it yet.
 
 import { LAB_PATH } from './paths.mjs';
 

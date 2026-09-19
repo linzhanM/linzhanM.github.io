@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Writing | Linzhan Mou</title>
+	<link rel="icon" type="image/x-icon" href="/assets/logos/princeton-logo.jpg" />
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#faf9f5">
+	<meta name="description" content="Essays and notes by Linzhan Mou on vision, robot learning, and building things for the web.">
+	<link rel="canonical" href="https://linzhanmou.com/resources/blog/" />
+	<!-- Kept out of results while the only post is the example. Remove this tag
+	     and add the URL to sitemap.xml when the first real post goes up. -->
+	<meta name="robots" content="noindex, follow">
+
+	<!-- Stamps html[data-theme] before any body markup, so the first paint is
+	     the right palette: the stored choice (localStorage "theme"), else the
+	     system's. Identical to the root pages' head script. -->
+	<script>
+		(function () {
+			var theme = null;
+			try { theme = localStorage.getItem('theme'); } catch (e) {}
+			if (theme !== 'light' && theme !== 'dark') {
+				theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+			}
+			document.documentElement.dataset.theme = theme;
+			var tint = document.querySelector('meta[name="theme-color"]');
+			if (tint) tint.content = theme === 'dark' ? '#1e2120' : '#faf9f5';
+		})();
+	</script>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,600,0,0;9..144,700,0,0&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/blog.css?v=1">
+</head>
+
+<body>
+	<div class="column">
+		<header class="masthead">
+			<a class="masthead-name" href="/">Linzhan Mou</a>
+			<!-- Appearance switch: blog.js flips html[data-theme] and stores the
+			     choice under the key the root pages use. -->
+			<button class="theme-switch" type="button" role="switch" aria-checked="false" aria-label="Dark appearance"><span class="theme-switch-knob"></span></button>
+		</header>
+
+		<main>
+			<p class="lede">Occasional writing about vision, robot learning, and the craft of putting research on the web. Shorter than a paper, longer than a tweet.</p>
+
+			<h2 class="posts-heading">Posts</h2>
+			<!-- One <li> per post, newest first. The <time> takes the post's date;
+			     the link text is the post's title exactly. -->
+			<ul class="posts">
+				<li>
+					<a href="live-thumbnails.html">The thumbnails are the demos</a>
+					<time datetime="2026-09-19">September 2026</time>
+				</li>
+			</ul>
+		</main>
+
+		<footer class="site-footer">
+			<p>&copy; <span id="copyright-year"></span> Linzhan Mou</p>
+		</footer>
+	</div>
+
+	<script src="js/blog.js?v=1"></script>
+</body>
+
+</html>
