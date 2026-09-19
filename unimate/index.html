@@ -37,7 +37,7 @@
   <link rel="canonical" href="https://linzhanmou.com/unimate/" />
   <link rel="icon" type="image/png" sizes="2048x2048" href="assets/images/favicon-baymax.png" />
   <link rel="apple-touch-icon" href="assets/images/favicon-baymax.png" />
-  <link rel="stylesheet" href="css/style.css?v=39" />
+  <link rel="stylesheet" href="css/style.css?v=42" />
   <!-- The Applications schematics' own figure system, kept out of the page
        sheet. Loaded after it so it can read the tokens. -->
   <link rel="stylesheet" href="css/schematics.css?v=1" />
@@ -99,7 +99,7 @@
       <img src="assets/logos/mit.png" alt="Massachusetts Institute of Technology" />
     </div>
 
-    <!-- The four marks are inline SVG: this page loads no icon stylesheet.
+    <!-- The five marks are inline SVG: this page loads no icon stylesheet.
          Code carries none — see .quick-links in style.css. -->
     <div class="quick-links">
       <a class="quick-link" href="https://arxiv.org/abs/2609.05415" target="_blank" rel="noopener"><svg
@@ -109,6 +109,13 @@
           <path d="M7.4 0.75V4.6h3.85" />
           <path d="M3.4 8.2h5.2M3.4 11.2h5.2" />
         </svg>arXiv</a>
+      <span class="quick-link-sep" aria-hidden="true">&#183;</span>
+      <a class="quick-link" href="https://youtu.be/xbndC-dEuVw" target="_blank" rel="noopener"><svg
+          class="quick-link-icon quick-link-icon-play" viewBox="0 0 15 15" aria-hidden="true"
+          focusable="false">
+          <circle cx="7.5" cy="7.5" r="6.75" />
+          <path d="M6 4.6 10.6 7.5 6 10.4Z" />
+        </svg>Video</a>
       <span class="quick-link-sep" aria-hidden="true">&#183;</span>
       <a class="quick-link" href="resources/unimate-poster.png" target="_blank" rel="noopener"><svg
           class="quick-link-icon quick-link-icon-poster" viewBox="0 0 15 16" aria-hidden="true"
@@ -230,6 +237,19 @@
     </div>
     <button class="abstract-toggle" type="button" aria-expanded="false"
       aria-controls="abstract-copy" hidden>Read full abstract <span aria-hidden="true">↓</span></button>
+
+    <!-- The talk, hosted on YouTube rather than shipped as another mp4: it is
+         minutes long with narration, and every clip on this page is a silent
+         two-second loop the browser autoplays. No heading of its own — it
+         closes the abstract, the way the teaser closes the title block. Lazy,
+         so the player's scripts load when the reader reaches it, not with the
+         hero. -->
+    <div class="video-embed">
+      <iframe src="https://www.youtube.com/embed/xbndC-dEuVw"
+        title="UniMate: One Unified Model to Animate Diverse Skeletons" loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
 
     <h2 class="tagline" id="experiments"><span>Experiments.</span></h2>
 

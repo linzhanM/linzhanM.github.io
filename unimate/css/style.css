@@ -441,6 +441,7 @@ button:focus-visible,
 /* All line work. Each mark is sized on its own below, because what matches
    across the row is optical weight, not bounding boxes. */
 .quick-link-icon-doc,
+.quick-link-icon-play,
 .quick-link-icon-poster,
 .quick-link-icon-pad,
 .quick-link-icon-db {
@@ -459,6 +460,16 @@ button:focus-visible,
    that stays open at this size; closer hairlines fill into a block. */
 .quick-link-icon-doc {
   width: 12px;
+  height: 15px;
+}
+
+/* The talk, not a file: a play button is the one mark everyone already reads.
+   A round frame, where the pad three links along is the row's rectangle — two
+   landscape boxes side by side blurred into one another. The triangle is
+   stroked, not filled, so it weighs what the doc's rules do; solid, it was the
+   heaviest thing in the row. Same height as the doc beside it. */
+.quick-link-icon-play {
+  width: 15px;
   height: 15px;
 }
 
@@ -502,7 +513,7 @@ button:focus-visible,
   height: 15px;
 }
 
-/* ── 5. Teaser video, figure captions, dataset curation table ──────────────── */
+/* ── 5. Teaser video, talk embed, figure captions, dataset curation table ──── */
 /* The one video with no frame: it opens the page under the title block, where
    a border would box the first thing on it. Everything below is framed — see
    .gallery-video (style.css §7) for why. */
@@ -553,6 +564,32 @@ button:focus-visible,
   border-radius: 15px;
   background-color: #000;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* The YouTube player, under the abstract. Framed like the poster and not like
+   the clips: the player is black to its own edges, letterboxes whatever it is
+   given, and paints its own chrome, so a slate hairline on it would read as a
+   second, lighter edge. aspect-ratio holds the 16:9 box before the iframe
+   loads, so nothing below jumps; overflow clips the player's square corners to
+   the page's radius, which the iframe cannot round itself. */
+.video-embed {
+  position: relative;
+  width: 100%;
+  /* It follows the abstract with no heading between, so it carries its own
+     air above; below, .tagline's 56px does the work. */
+  margin-top: 8px;
+  aspect-ratio: 16 / 9;
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: #000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.video-embed iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
 }
 
 .figure-caption {
